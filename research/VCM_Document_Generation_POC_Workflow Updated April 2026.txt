@@ -1,0 +1,199 @@
+
+ALLOTROPE PARTNERS
+INTERNAL WORKING DOCUMENT
+
+VCM Document Generation Tool Updated
+Proof of Concept Workflow & Execution Plan
+
+
+Date: April 2026 (Previous version March 2026)
+Classification: Internal — For Staff Discussion
+Sprint Target: 
+
+1. Executive Summary
+This document outlines a minimal-cost proof of concept (POC) for an AI-powered tool that generates Voluntary Carbon Market (VCM) project documents — specifically Project Design Documents (PDDs), monitoring reports, and verification support materials — by learning from a corpus of completed project documents that follow fixed registry templates.
+The VCM documentation ecosystem represents a significant structural bottleneck: PDD preparation alone costs $30,000–$150,000, total project documentation costs reach $100,000–$350,000, and the process consumes 12–36 months of developer time. Across approximately 10,000 registered projects, the market generates an estimated 20–50 million pages of documentation, yet the workflow remains dominated by manual drafting against rigid templates.
+The POC leverages a critical structural advantage unique to the VCM: templates are publicly mandated by registries (Verra, Gold Standard, ACR), completed examples are publicly downloadable, and content is highly repetitive across similar project types. This means we skip the most expensive step in typical document automation — template discovery — and go straight to intelligent population and compliance checking.
+
+POC Target Metrics
+Timeline: 
+Cost: 
+Output: 60–70% complete PDD draft in formatted DOCX, with flagged sections for human review
+Scope: Grid-connected renewable energy projects in Southeast Asia (Verra/VCS)
+2. Why VCM Is Uniquely Suited for This Approach
+Before detailing the technical workflow, it is important to understand why the voluntary carbon market is an unusually favorable domain for AI-assisted document generation — more so than most document-heavy industries.
+2.1 Templates Are Known, Not Discovered
+Unlike consulting, legal, or construction sectors where templates are implicit and vary by firm, VCM registries publish mandatory templates with strict formatting rules. Verra provides 12+ templates (currently v4.4) specifying fonts (Arial 10.5pt), heading structures, and required sections. Gold Standard offers 20+ templates that explicitly may not be altered. This eliminates the most expensive phase of typical document automation: reverse-engineering templates from completed examples.
+2.2 Completed Examples Are Publicly Available
+Every registered VCM project has its PDD and monitoring reports publicly available through the registry. Verra alone has 2,300+ registered projects with downloadable documentation. This provides a free, high-quality corpus of completed examples for each template type — no need to negotiate data access or build synthetic training data.
+2.3 Content Is Highly Repetitive Across Similar Projects
+A 50MW solar PDD in Vietnam and a 50MW solar PDD in Thailand share approximately 70% of their content structure. Differences are primarily in location-specific data (grid emission factors, regulatory context, geographic coordinates), technology specifications, and stakeholder details. The additionality arguments, monitoring plan structures, baseline methodologies, and environmental/social safeguards language are largely reusable with contextual adaptation.
+2.4 The Pain Point Is Acute and Quantifiable
+PDD preparation costs $30,000–$150,000 and takes 3–12 months. VVB capacity constraints add further delays. Emerging competitors (Verst Carbon, Genvision, Mantle Labs) validate market demand but remain nascent with no dominant platform. A tool that reduces PDD drafting time by 50–70% addresses a clearly monetizable pain point.
+3. POC Architecture Overview
+The POC follows a five-step pipeline, each buildable as an independent module. The architecture deliberately separates document parsing, template schema, generation, and compliance checking to allow iterative improvement of each component.
+Pipeline: 
+1. Corpus Assembly 
+2. Document Parsing (restructure the documents for machine interpretation)
+3. Template Schema (define logic per section)
+4. Input clarification (required inputs, optional inputs, input file type)
+5. Section-by-Section Generation (Large language model LLM and or Retrieval-Augmented Generation RAG) 
+6. Compliance Review
+7. Document assembly (DOCX)
+Key Design Principle: For each module, it should be created for additional changes, meaning it should be easy to update according to new templates and regulations changes. 
+
+4. Step-by-Step Execution Plan
+4.1 Corpus Assembly
+Objective: Download completed PDDs from a single project type to serve as the reference corpus, plus the official Verra PDD template and the target methodology document.
+Cost: $0 — all documents are publicly available through the Verra registry.
+Tasks
+• Download VCS project documents for grid connected solar projects in Vietnam/Southeast Asia from Verra registry (through web service / API calls / python requests)
+• Download the current VCS PDD template (v4.4) and the relevant methodology (e.g., ACM0002 for grid-connected electricity generation)
+• Organize files into a structured directory: corpus/pdds/, templates/, methodologies/
+Success Criteria
+• 20+ PDDs downloaded and organized from a single project category
+• Template and methodology documents saved locally
+• File inventory log created with project IDs, countries, and methodology references
+Additional information:
+Research literature indicates that the number of corpora that are deemed sufficient should be defined per homogeneous bucket, not across the market. The relevant bucket is usually: registry × template version × methodology family/version × project structure (single project vs. grouped/PoA/VPA) × language/region. A clear separation should be clearly defined for pipeline development.
+Complexity bucketMinimum corpusTarget corpusSaturation zoneExpected output at targetResidual riskSimple15–2540–6080–120Strong section-wise first draft; human review focused on facts, local context, and evidenceVersion drift; location-specific wording; numeric/source errorsMedium30–6080–150150–250Good draft quality but continued reviewer effort on sampling, inclusion logic, and stakeholder specificsGrouped-project logic; target-group variation; monitoring-plan edge casesComplex60–100150–250300–500Useful scaffold plus partial drafting; expert rewrite still needed in tail sectionsMethodology logic, leakage, permanence, QA/QC, remote-sensing, uncertainty
+4.2 Document Parsing & Section Extraction
+Objective: Normalize all documents into the same structure, parse each downloaded PDD into structured sections (JSON, etc.), extracting content by the standardized section headings defined in the VCS template.
+Tasks
+• Build a parser module that handles DOCX input formats (with PDF addition after)
+• Extract content section-by-section following the VCS PDD template structure (project description, applicability conditions, additionality, baseline scenario, monitoring plan, emission calculations, etc.)
+• Output structured JSON for each PDD with section headings as keys and content as values
+• Handle edge cases: inconsistent heading formatting, merged sections, appendices
+Output Format (Example)
+{
+  "project_id": "VCS-1234",
+  "sections": {
+    "1.1_project_description": "...",
+    "1.2_project_location": "...",
+    "2.1_methodology": "...",
+    "3.1_additionality": "...",
+    ...
+  }
+}
+Success Criteria
+• All 20+ PDDs parsed into structured JSON without data loss
+• Section alignment rate of 90%+ against the official template structure
+• Edge case handling documented for future improvement
+Additional information:
+This approach can potentially make or break the generation process. Parsing the document reserves the most important information with the risk of losing important contexts for model generation and inferences. 
+4.3 Template Schema Creation
+Objective: Create a formal schema that categorizes every PDD section by content type, identifying what is boilerplate vs. project-specific vs. quantitative vs. methodology-dependent.
+Tasks
+• Analyze the VCS PDD template and categorize each section
+• Categories: boilerplate (copy as-is), project_specific_narrative (needs project context), quantitative (needs calculation inputs), methodology_dependent (varies by methodology)
+• For each section, define the expected inputs (what project parameters are needed to generate it)
+• Cross-reference with the parsed corpus to validate categorization
+Success Criteria
+• Complete schema covering all PDD sections with type categorization
+• Input parameter mapping for every project-specific section
+• Validated against 3–5 sample PDDs from the corpus
+4.4  Input clarification
+Objective: Create a throughout input template that:
+* Clear required inputs
+* Sections for optional inputs 
+* Clear wording for input user 
+Tasks
+• Create a project configuration format (YAML/JSON) that captures all required project parameters: project type, location, capacity, technology, methodology, grid emission factor, crediting period, etc.
+Example input (YAML format)
+project:
+type: solar
+capacity_mw: 50
+country: Vietnam 
+Success Criteria
+• A clear input selection that are agreed upon.
+Additional information
+This phase is needed to standardize the input process, streamline changes, help in output validation, and model hallucination prevention.
+
+4.5 Generation Engine
+Objective: Build the core pipeline that takes project parameters as input and generates a draft PDD section by section, using few-shot examples from the corpus.
+Tasks
+• Build the generation pipeline with section-by-section construction
+• For each section: retrieve the template requirement, select 3–5 most similar examples from the corpus, include project parameters and feed into the document generation. 
+• Generates a draft based on the required templates 
+• Flag sections that need human review with confidence scores
+Example CLI Usage
+python generate_pdd.py \
+  --project-type "grid-solar" \
+  --country "Vietnam" \
+  --methodology "ACM0002" \
+  --capacity-mw 50 \
+  --location "Ninh Thuan" \
+  --grid-ef 0.8 \
+  --output draft_pdd.js / output draft_pdd.yaml
+Success Criteria
+• End-to-end generation of a PDD draft from project parameters
+• Correct output against the inputs (from input files)
+• Remaining sections are clearly flagged with specific guidance on what human input is needed
+4.6 Compliance Checker 
+Objective: Build a review module that validates the generated PDD draft against the applicable methodology and VCS Standard requirements.
+Tasks
+• Ingest the methodology document and VCS Standard rules as reference
+• Run a section-by-section compliance check comparing generated content against methodology requirements
+• Produce a structured review report identifying: missing required elements, inconsistencies with the methodology, sections needing quantitative data, and an overall completeness score
+• Provide specific remediation guidance for each flagged issue
+Success Criteria
+• Identifies 80%+ of known compliance gaps when tested against intentionally incomplete PDDs
+• Produces actionable remediation guidance, not just flags
+• Review report is formatted for easy error handling and validation
+4.7 Document assembly (DOCX) + DEMO
+Objective: Generates the final documents (for both the PDD and compliance check) using the template formats for development team.
+Tasks
+• Generate the PDD drafts that are complied with VCS standards 
+• Run a full end-to-end demo: generate a PDD for a hypothetical 50MW solar project in Ninh Thuan, Vietnam using ACM0002
+• Compare the generated draft against a real PDD for a similar project to assess quality
+• Document limitations, known gaps, and recommended next steps
+• Prepare a 10-minute demo walkthrough for team review
+Success Criteria
+• Complete end-to-end demo producing a reviewable PDD draft
+• Side-by-side comparison document showing generated vs. real PDD quality
+• Clear documentation of tool usage, limitations, and extension points
+5. Cost Breakdown
+Depending on the implementation of the pipeline, the cost may vary. 
+6. Execution Timeline
+
+StepTimelineOwner / Notes4.1 Corpus AssemblyDeveloper + Claude Code4.2 Document ParsingDeveloper + Claude Code4.3 Template SchemaDeveloper + domain expert review4.4 Input clarification4.4 Generation EngineDeveloper + Claude Code + API4.5 Compliance CheckerDeveloper + Claude Code + API4.6 Document assembly + DEMODeveloper + team review
+7. Risks, Assumptions & Pre-Build Validation
+7.1 Key Assumptions
+• Verra registry PDDs for grid-connected solar are accessible and parseable in sufficient quantity (20+)
+• VCS PDD template v4.4 section structure is consistent enough across projects for automated parsing
+7.2 Key Risks
+• Corpus quality variance: Downloaded PDDs may have inconsistent formatting, scanned pages, or non-standard structures. Mitigation: manual curation of the initial 20–30 document corpus.
+• Section parsing accuracy: PDF text extraction may lose table structures or special characters. Mitigation: prefer DOCX sources where available; build fallback parsing logic.
+• Generation quality for technical sections: Additionality arguments and emission calculations require domain accuracy. Mitigation: use Sonnet for these sections; always flag for human review.
+• VVB acceptance: Auditors may resist AI-generated documents. Mitigation: validate with 1–2 VVB contacts before investing beyond POC.
+• Model hallucination: The outputs that need model inference (instead of facts) have potential to be hallucinated (important!!!)
+8. Competitive Landscape
+AI-powered VCM document tools are emerging but remain nascent. No dominant platform exists for end-to-end document lifecycle management. The current players include:
+• Verst Carbon (Africa-focused): LLM-powered PDD creation claiming 70% cost reduction. Developer-facing.
+• Genvision (Belgium/NY): AI validation and compliance platform. VVB-facing. Accepts PDD uploads and auto-generates compliance reports.
+• Mantle Labs / GeoTree (India): Gen AI on AWS SageMaker for PDD generation. Claims 40% reduction in compliance setbacks.
+• Evercity: Automates PIN and PDD generation with template alignment and blockchain integration.
+
+Our potential differentiator: Existing competitors are either geography-limited (Verst in Africa), focused on the review side rather than creation (Genvision), or infrastructure-heavy (Mantle Labs on AWS). A lightweight, Claude Code-based POC can validate the generation + compliance-checking combination at a fraction of the cost, with potential to integrate into Allotrope’s existing project development workflow and VIDA pipeline.
+9. Beyond the POC — If It Works
+If the POC demonstrates viable PDD generation quality, the following extensions represent the natural product roadmap:
+1. Multi-methodology support: Expand from ACM0002 (grid solar) to other high-volume methodologies — AMS-I.D (small-scale renewables), VM0048 (consolidated REDD+), and cookstove methodologies (AMS-II.G).
+2. Multi-standard support: Extend to Gold Standard and ACR templates.
+3. Monitoring report generation: Apply the same pipeline to recurring monitoring reports — higher volume, more repetitive, and directly tied to credit issuance velocity.
+4. VVB-facing review tools: Flip the compliance checker to serve VVBs reviewing submitted PDDs. SustainCERT’s digital verification enables one auditor to handle 10 projects/day vs. 100–150/year manually — similar multipliers are achievable for document review.
+5. ICVCM / Article 6 compliance layer: As integrity frameworks add documentation requirements (CCP labels, corresponding adjustments, VCMI Claims Code disclosures), build automated checking against these evolving standards.
+10. Discussion Questions for Team Review
+The following questions should guide the team’s evaluation of this POC proposal:
+
+6. Do we pursue this as an internal productivity tool for Allotrope’s own project development, or as a potential product/service offering?
+7. Which project type should we target for the POC? Grid-connected solar in SEA is recommended for corpus availability, but should we consider industrial energy efficiency given VIDA’s focus?
+8. Who should own the VVB pre-validation conversation? This is the single most important de-risking step before the build.
+9. What is our tolerance for generation quality at the POC stage? Is 60–70% completeness sufficient to prove the concept, or do stakeholders need to see higher fidelity?
+10. Should we request competitive demos from Verst Carbon and/or Genvision before or in parallel with our own build?
+11. If the POC succeeds, what is the resource allocation model for taking it to a production-grade tool? Internal development, contracted development, or partnership?
+
+End of Document
+Allotrope Partners — VCM Document Generation POC
+
+Internal Working Document — Page 2
+

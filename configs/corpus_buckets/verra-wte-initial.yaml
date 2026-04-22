@@ -1,0 +1,57 @@
+bucket_name: verra-wte-initial
+description: "Initial homogeneous bucket: Verra-style waste-to-energy PDDs from the shared VERRA Drive folder, covering MSW, WTE, AD, RDF, and landfill-diversion project types. Excludes non-WTE and non-Verra standards."
+version: 0.1.0
+bucket_rules:
+  include:
+    name_patterns:
+      - vcs_.*project.*description
+      - vcs_.*waste.*power
+      - vcs_.*msw
+      - vcs_.*renewable.*energy
+      - vcs_.*soc.*son
+      - vcs_.*guangxi
+      - vcs_.*linfen
+      - vcs_.*yingoku
+      - vcs_.*bergama
+      - vcs_.*inegol
+      - vcs_.*mahindra
+      - vcs_.*tamil
+      - vcs_.*odemis
+      - vcs_.*yanzhou
+      - vcs_.*shunping
+      - vcs_.*lizuhou
+    mime_types:
+      - application/pdf
+      - application/vnd.openxmlformats-officedocument.wordprocessingml.document
+      - application/msword
+    min_word_count: 500
+    methodology_family:
+      - ACM0022
+      - AMS-III.AJ
+      - ACM0003
+      - VMR0044
+    registry:
+      - VCS
+      - Verra
+    geography:
+      - Vietnam
+      - China
+      - India
+      - Turkey
+      - Southeast Asia
+  exclude:
+    name_patterns:
+      - draft.*internal
+      - note|todo|meeting
+      - methodology.*pdf
+      - template.*docx
+    mime_types:
+      - application/vnd.google-apps.folder
+      - application/vnd.google-apps.document
+      - application/vnd.google-apps.spreadsheet
+      - text/plain
+      - text/html
+notes: >
+  The include patterns intentionally list known WTE project names from the
+  VERRA Drive folder to bootstrap a narrow first bucket. Expand patterns
+  after the first demo run once section parsing quality is confirmed.

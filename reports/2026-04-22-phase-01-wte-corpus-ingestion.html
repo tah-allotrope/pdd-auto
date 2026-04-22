@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Phase Report :: PHASE-01 WTE Corpus Ingestion</title>
+  <meta name="color-scheme" content="dark">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    async function initMermaid() {
+      const blocks = document.querySelectorAll('.mermaid');
+      if (!blocks.length) return;
+      mermaid.initialize({ startOnLoad: false, theme: 'dark', securityLevel: 'loose',
+        themeVariables: {
+          primaryColor: '#111111', primaryTextColor: '#e8f6ff', primaryBorderColor: '#00f5ff',
+          lineColor: '#39ff14', secondaryColor: '#121a1a', tertiaryColor: '#111111',
+          background: '#0d0d0d', mainBkg: '#0d0d0d', nodeBorder: '#00f5ff',
+          clusterBkg: '#111111', clusterBorder: '#39ff14', edgeLabelBackground: '#0d0d0d'
+        }
+      });
+      await mermaid.run({ nodes: blocks });
+    }
+    const run = () => initMermaid().catch((e) => console.error('Mermaid render failed', e));
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run, { once: true });
+    else run();
+  </script>
+  <style>
+    :root {
+      --bg: #0d0d0d; --bg-soft: #111111; --panel: rgba(13,13,13,0.88); --panel-strong: rgba(19,19,19,0.96);
+      --line: rgba(0,245,255,0.26); --line-strong: rgba(57,255,20,0.38); --text: #e9f6ff;
+      --muted: #8ea3ad; --accent-blue: #00f5ff; --accent-green: #39ff14;
+      --glow-blue: 0 0 18px rgba(0,245,255,0.42); --glow-green: 0 0 18px rgba(57,255,20,0.28);
+      --shadow: 0 14px 40px rgba(0,0,0,0.32); --radius-lg: 22px; --radius-md: 16px; --radius-sm: 12px;
+      --narrative-font: "Segoe UI","Helvetica Neue",Helvetica,Arial,sans-serif;
+      --technical-font: "Cascadia Code","Fira Code",Consolas,"Liberation Mono",monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      position: relative; margin: 0; min-height: 100vh; overflow-x: hidden;
+      background: radial-gradient(circle at top left, rgba(0,245,255,0.12), transparent 28%),
+                  radial-gradient(circle at 85% 12%, rgba(57,255,20,0.08), transparent 24%),
+                  linear-gradient(180deg, #050505 0%, #0d0d0d 36%, #090909 100%);
+      color: var(--text); font-family: var(--narrative-font); line-height: 1.6; letter-spacing: 0.01em;
+    }
+    body::before {
+      content: ""; position: absolute; inset: 0; pointer-events: none;
+      background-image: linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+      background-size: 32px 32px; opacity: 0.16;
+    }
+    a { color: var(--accent-blue); }
+    code, pre, .technical, .meta-chip, .section-kicker, .pill, .metric-label,
+    .metric-value, .repo-tag, .mermaid { font-family: var(--technical-font); }
+    .page-shell { width: min(1180px, calc(100vw - 32px)); margin: 0 auto; padding: 32px 0 72px; position: relative; z-index: 1; }
+    .hero {
+      position: relative; padding: 28px; margin-bottom: 24px; border: 1px solid var(--line);
+      border-radius: 28px; background: linear-gradient(145deg, rgba(0,245,255,0.08), transparent 28%),
+                  linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0)), var(--panel-strong);
+      box-shadow: var(--shadow), inset 0 0 0 1px rgba(255,255,255,0.02);
+    }
+    .hero::after {
+      content: ""; position: absolute; inset: auto -10% -55% 42%; height: 280px;
+      background: radial-gradient(circle, rgba(0,245,255,0.18), transparent 64%);
+      filter: blur(12px); pointer-events: none;
+    }
+    .hero-grid { display: grid; grid-template-columns: minmax(0,1.55fr) minmax(260px,0.85fr); gap: 22px; align-items: end; }
+    .section-kicker { margin: 0 0 12px; color: var(--accent-green); font-size: 0.76rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.22em; text-shadow: var(--glow-green); }
+    .phase-title { margin: 0; max-width: 12ch; font-size: clamp(2.5rem,5vw,4.7rem); line-height: 0.94;
+      letter-spacing: -0.05em; color: #f5feff; text-transform: uppercase; text-wrap: balance;
+      text-shadow: 0 0 24px rgba(0,245,255,0.2); }
+    .hero-summary { margin: 18px 0 0; max-width: 60ch; color: var(--muted); font-size: 0.98rem; }
+    .hero-meta { display: grid; gap: 12px; }
+    .meta-card { padding: 16px 18px; border: 1px solid rgba(57,255,20,0.2); border-radius: 18px;
+      background: rgba(255,255,255,0.025); box-shadow: inset 0 0 0 1px rgba(0,0,0,0.24); }
+    .meta-label { margin-bottom: 6px; color: var(--muted); font-size: 0.75rem;
+      text-transform: uppercase; letter-spacing: 0.16em; }
+    .meta-chip { color: var(--accent-blue); font-size: 1rem; font-weight: 700;
+      letter-spacing: 0.02em; text-shadow: var(--glow-blue); word-break: break-word; }
+    .repo-tag {
+      display: inline-flex; align-items: center; gap: 8px; margin-top: 10px; padding: 8px 12px;
+      border: 1px solid rgba(0,245,255,0.24); border-radius: 999px; background: rgba(0,245,255,0.08);
+      color: var(--accent-blue); font-size: 0.82rem; letter-spacing: 0.04em;
+    }
+    .section {
+      position: relative; margin-top: 22px; padding: 24px; border: 1px solid var(--line);
+      border-radius: var(--radius-lg); background: var(--panel); box-shadow: var(--shadow);
+    }
+    .section::before {
+      content: ""; position: absolute; left: 24px; right: 24px; top: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0,245,255,0.9), rgba(57,255,20,0.9), transparent);
+      transform: translateY(-1px);
+    }
+    .section-header { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 18px;
+      align-items: end; margin-bottom: 18px; padding-bottom: 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .section-title { margin: 0; font-size: clamp(1.2rem,2vw,1.7rem); line-height: 1.1; color: #f0feff; }
+    .section-index { display: inline-flex; align-items: center; gap: 10px; color: var(--accent-green);
+      font-size: 0.78rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+      text-shadow: var(--glow-green); }
+    .section-index::after { content: ""; width: 44px; height: 1px;
+      background: linear-gradient(90deg, rgba(57,255,20,0.9), transparent); }
+    .summary-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px; }
+    .column-card, .diagram-frame, .technical-frame, .viz-frame, .question-frame, .empty-state {
+      border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius-md);
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)), rgba(7,7,7,0.82);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.012);
+    }
+    .column-card { padding: 18px; min-height: 200px; }
+    .column-label { margin: 0 0 12px; color: var(--accent-blue); font-size: 0.83rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.16em; text-shadow: var(--glow-blue); }
+    .splitter { width: 100%; height: 1px; margin: 8px 0 16px;
+      background: linear-gradient(90deg, rgba(0,245,255,0.4), transparent); }
+    .diagram-frame, .chart-frame, .technical-frame, .viz-frame, .question-frame { padding: 18px; }
+    .diagram-frame { overflow-x: auto; overflow-y: auto; overscroll-behavior-x: contain;
+      overscroll-behavior-y: contain; max-height: min(70vh,720px); }
+    .mermaid { width: 100%; max-width: 100%; min-width: 0; color: var(--text); }
+    .mermaid svg { display: block; width: auto !important; min-width: 100%;
+      max-width: none !important; height: auto !important; }
+    .diagram-frame.compact-diagram { padding: 12px; max-height: min(62vh,560px); }
+    .diagram-frame.compact-diagram .mermaid { min-width: 900px; }
+    .chart-frame, .viz-frame { overflow: hidden; }
+    .technical-frame { color: #d6f6ff; }
+    .technical-frame table { width: 100%; border-collapse: collapse; }
+    .technical-frame th, .technical-frame td { padding: 12px 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.08); vertical-align: top; }
+    .technical-frame th { color: var(--accent-green); font-size: 0.76rem; text-align: left;
+      letter-spacing: 0.12em; text-transform: uppercase; }
+    .chart-frame canvas, .technical-frame > canvas, .viz-frame canvas, canvas.report-chart {
+      display: block; width: 100% !important; max-width: 100%;
+      height: 280px !important; min-height: 280px; max-height: 280px;
+    }
+    .empty-state { padding: 22px; text-align: center; }
+    .empty-state strong { display: block; margin-bottom: 6px; color: var(--accent-blue);
+      font-size: 0.9rem; letter-spacing: 0.12em; text-transform: uppercase; text-shadow: var(--glow-blue); }
+    .metric-strip { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 12px; margin-top: 18px; }
+    .metric { padding: 14px 16px; border: 1px solid rgba(0,245,255,0.18); border-radius: var(--radius-sm);
+      background: rgba(0,245,255,0.04); }
+    .metric-label { color: var(--muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.16em; }
+    .metric-value { margin-top: 8px; color: var(--accent-green); font-size: 1.2rem;
+      font-weight: 700; text-shadow: var(--glow-green); }
+    .pill-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+    .pill { display: inline-flex; align-items: center; gap: 8px; padding: 8px 11px;
+      border: 1px solid rgba(57,255,20,0.22); border-radius: 999px; background: rgba(57,255,20,0.06);
+      color: #d9ffd0; font-size: 0.8rem; }
+    .question-frame ul, .technical-frame ul, .column-card ul { margin: 0; padding-left: 20px; }
+    .question-frame li, .technical-frame li, .column-card li { margin-bottom: 8px; }
+    .footer-note { margin-top: 18px; text-align: right;
+      color: rgba(142,163,173,0.72); font-size: 0.78rem; letter-spacing: 0.08em;
+      text-transform: uppercase; }
+    .table-scroll { overflow-x: auto; }
+    .data-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    .data-table th { color: var(--accent-green); font-size: 0.72rem; text-transform: uppercase;
+      letter-spacing: 0.14em; padding: 10px 12px; border-bottom: 1px solid rgba(57,255,20,0.3);
+      text-align: left; }
+    .data-table td { padding: 9px 12px; border-bottom: 1px solid rgba(255,255,255,0.06);
+      vertical-align: top; }
+    .data-table tr:last-child td { border-bottom: none; }
+    .badge { display: inline-block; padding: 3px 9px; border-radius: 999px; font-size: 0.74rem;
+      font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+    .badge-green { background: rgba(57,255,20,0.15); color: #39ff14; border: 1px solid rgba(57,255,20,0.4); }
+    .badge-blue { background: rgba(0,245,255,0.12); color: #00f5ff; border: 1px solid rgba(0,245,255,0.35); }
+    .warn-badge { background: rgba(255,180,0,0.12); color: #ffb400; border: 1px solid rgba(255,180,0,0.4); }
+    @media (max-width: 900px) { .hero-grid, .summary-grid, .metric-strip { grid-template-columns: 1fr; }
+      .phase-title { max-width: none; } }
+    @media (max-width: 640px) {
+      .page-shell { width: min(100vw - 20px, 1180px); padding-top: 16px; padding-bottom: 42px; }
+      .hero, .section { padding: 18px; border-radius: 20px; }
+      .section::before { left: 18px; right: 18px; }
+      .phase-title { font-size: clamp(2rem, 12vw, 3rem); }
+    }
+  </style>
+</head>
+<body>
+  <main class="page-shell">
+
+    <!-- HERO -->
+    <section class="hero" id="phase-header">
+      <div class="hero-grid">
+        <div>
+          <p class="section-kicker">Phase Report / Personal Technical Artifact</p>
+          <h1 class="phase-title">PHASE-01</h1>
+          <p class="hero-summary">
+            Built the repo foundation, gws-backed Drive inventory, PDF normalization, and corpus bucketing pipeline. All 13 VERRA WTE project documents downloaded, parsed, and placed in the first homogeneous bucket — zero failures.
+          </p>
+          <div class="pill-row" aria-label="report metadata">
+            <span class="pill">project :: pdd-auto</span>
+            <span class="pill">date :: 2026-04-22</span>
+          </div>
+          <div class="repo-tag">repo :: pdd-auto (local workspace)</div>
+        </div>
+        <div class="hero-meta">
+          <div class="meta-card">
+            <div class="meta-label">Project</div>
+            <div class="meta-chip">pdd-auto</div>
+          </div>
+          <div class="meta-card">
+            <div class="meta-label">Repository</div>
+            <div class="meta-chip">pdd-auto</div>
+          </div>
+          <div class="meta-card">
+            <div class="meta-label">Date</div>
+            <div class="meta-chip">2026-04-22</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 01 / INPUT -> OUTPUT -->
+    <section class="section narrative" id="input-output-summary">
+      <div class="section-header">
+        <div>
+          <div class="section-index">01 / Input -> Output</div>
+          <h2 class="section-title">Input -> Output Summary</h2>
+        </div>
+      </div>
+      <div class="summary-grid">
+        <div class="column-card">
+          <p class="column-label">Inputs consumed</p>
+          <ul>
+            <li><strong>Drive folder:</strong> <code>1pp23yRZ8qtopw1BPXrzVewXsmmWplCse</code> (VERRA shared folder, owned by Aiden Roake / allotropevc.com)</li>
+            <li><strong>gws CLI:</strong> v0.7.0 — authenticated and on PATH at <code>%APPDATA%\npm\gws.cmd</code></li>
+            <li><strong>Python 3.14.2</strong> with pypdf, PyYAML, structlog, pydantic</li>
+            <li><strong>PHASE-01 plan tasks:</strong> TASK-01-01 through TASK-01-06</li>
+            <li><strong>Local seed PDF:</strong> <code>template/VCS_Soc Son_Project-Description.pdf</code></li>
+            <li><strong>Bucket config:</strong> <code>configs/corpus_buckets/verra-wte-initial.yaml</code></li>
+          </ul>
+        </div>
+        <div class="column-card">
+          <p class="column-label">Outputs produced</p>
+          <ul>
+            <li><code>data/corpus/manifest.jsonl</code> — 13 inventory entries keyed by Drive file ID</li>
+            <li><code>data/corpus/raw/verra/</code> — 13 downloaded PDF files (32,591 KB)</li>
+            <li><code>data/corpus/normalized/</code> — 13 JSON normalization records</li>
+            <li><code>src/pdd_agent/cli.py</code> — CLI with inventory, download, normalize, bucket, ingest commands</li>
+            <li><code>src/pdd_agent/ingest/drive.py</code> — gws wrapper with MIME-aware branching</li>
+            <li><code>src/pdd_agent/ingest/normalize.py</code> — pypdf-based text extraction</li>
+            <li><code>src/pdd_agent/ingest/bucket.py</code> — WTE-specific scoring and config</li>
+            <li><code>src/pdd_agent/ingest/download.py</code> — Blob and Workspace-native download</li>
+            <li><code>configs/corpus_buckets/verra-wte-initial.yaml</code> — 16-name-pattern inclusion + exclusion rules</li>
+            <li><code>reports/corpus-readiness.md</code> — machine-readable readiness summary</li>
+            <li><strong>21 unit tests</strong> — all passing</li>
+          </ul>
+        </div>
+      </div>
+      <div class="metric-strip">
+        <div class="metric">
+          <div class="metric-label">Files ingested</div>
+          <div class="metric-value">13 / 13</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Total words extracted</div>
+          <div class="metric-value">419,799</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">In-bucket rate</div>
+          <div class="metric-value">100%</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 / LOGIC FLOW -->
+    <section class="section" id="logic-flow">
+      <div class="section-header">
+        <div>
+          <div class="section-index">02 / Logic Flow</div>
+          <h2 class="section-title">Logic Flow</h2>
+        </div>
+      </div>
+      <div class="diagram-frame compact-diagram">
+        <div class="mermaid">
+flowchart LR
+    A["📁 VERRA Drive folder\n1pp23yRZ8qtopw1BPXrzVewXsmmWplCse"] --> B["gws drive files list\n(inventory)"]
+    B --> C["manifest.jsonl\n13 entries"]
+    C --> D["gws drive files get\n(download)"]
+    D --> E["data/corpus/raw/verra/\n13 PDFs — 32,591 KB"]
+    E --> F["pypdf text extraction\n(normalize)"]
+    F --> G["data/corpus/normalized/\n13 .norm.json records"]
+    G --> H["Bucket scorer\nconfigs/verra-wte-initial.yaml"]
+    H --> I["manifest.jsonl\n(updated with bucket labels)"]
+    I --> J["13 IN_BUCKET\n0 OUT_OF_BUCKET\n0 NEEDS_REVIEW"]
+    J --> K["reports/corpus-readiness.md\n(human summary)"]
+    style A fill:#0d1f2d,stroke:#00f5ff,color:#00f5ff
+    style B fill:#0d1f2d,stroke:#00f5ff,color:#00f5ff
+    style C fill:#0d2d1f,stroke:#39ff14,color:#39ff14
+    style E fill:#0d1f2d,stroke:#00f5ff,color:#00f5ff
+    style G fill:#0d2d1f,stroke:#39ff14,color:#39ff14
+    style J fill:#0d2d1f,stroke:#39ff14,color:#39ff14
+    style K fill:#111111,stroke:#00f5ff,color:#e9f6ff
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 / MATH / ALGORITHM USED -->
+    <section class="section narrative" id="math-algorithm-used">
+      <div class="section-header">
+        <div>
+          <div class="section-index">03 / Math / Algorithm Used</div>
+          <h2 class="section-title">Math / Algorithm Used</h2>
+        </div>
+      </div>
+      <div class="technical-frame">
+        <p>No heavy math in PHASE-01 — primarily string operations and file I/O. The key algorithmic pieces:</p>
+        <div class="splitter"></div>
+        <table>
+          <thead>
+            <tr>
+              <th>Algorithm</th>
+              <th>Formula / Logic</th>
+              <th>Purpose</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Heading extraction</strong></td>
+              <td><code>HEADING_RE = r"^(#{1,6}\s+|[A-Z0-9][\.\d]+[\s])"</code></td>
+              <td>Identifies Verra-style numbered headings and markdown H1-H6 headings in extracted text</td>
+            </tr>
+            <tr>
+              <td><strong>Parseability gate</strong></td>
+              <td><code>parseable = (word_count &gt; 100) AND mime_type in BLOB_TYPES</code></td>
+              <td>Flags files that are real documents, not scan artifacts or metadata-only files</td>
+            </tr>
+            <tr>
+              <td><strong>Bucket scoring</strong></td>
+              <td><code>name_hits = sum(1 for kw in WTE_KEYWORDS if kw in name.lower())</code></td>
+              <td>Counts WTE keyword matches to decide if a document belongs in the first corpus bucket</td>
+            </tr>
+            <tr>
+              <td><strong>Word count</strong></td>
+              <td><code>word_count = len(text.split())</code></td>
+              <td>Simple whitespace tokenization for document length estimation</td>
+            </tr>
+            <tr>
+              <td><strong>Surrogate sanitization</strong></td>
+              <td><code>v.encode('utf-8', errors='surrogatepass').decode('utf-8')</code></td>
+              <td>Preserves valid Unicode surrogates from PDF embeddings rather than losing characters</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 04 / TOOLS / METHODS -->
+    <section class="section" id="tools-formulas-methods">
+      <div class="section-header">
+        <div>
+          <div class="section-index">04 / Tools / Formulas / Methods</div>
+          <h2 class="section-title">Tools / Formulas / Methods</h2>
+        </div>
+      </div>
+      <div class="technical-frame technical">
+        <table>
+          <thead>
+            <tr>
+              <th>Tool / Method</th>
+              <th>Version / Source</th>
+              <th>Role in PHASE-01</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>gws CLI</strong></td>
+              <td>v0.7.0 / npm</td>
+              <td>All Drive I/O — inventory listing, file metadata, blob download, Workspace-native export</td>
+            </tr>
+            <tr>
+              <td><strong>pypdf</strong></td>
+              <td>≥5.1.0 / PyPI</td>
+              <td>PDF text extraction — page-level iteration, text extraction per page, heading and word count</td>
+            </tr>
+            <tr>
+              <td><strong>structlog</strong></td>
+              <td>≥24.4.0 / PyPI</td>
+              <td>Structured logging with key/value pairs for all ingestion events</td>
+            </tr>
+            <tr>
+              <td><strong>PyYAML</strong></td>
+              <td>≥6.0.2 / PyPI</td>
+              <td>Loading bucket configuration YAML</td>
+            </tr>
+            <tr>
+              <td><strong>pydantic</strong></td>
+              <td>≥2.10.0 / PyPI</td>
+              <td>Type-safe manifest entry modeling (future PHASE-02 schema)</td>
+            </tr>
+            <tr>
+              <td><strong>python-docx</strong></td>
+              <td>Optional dep</td>
+              <td>DOCX normalization — only used if a .docx corpus file is encountered</td>
+            </tr>
+            <tr>
+              <td><strong>pytest</strong></td>
+              <td>≥8.3.0 / dev</td>
+              <td>Unit test framework — 21 tests across drive inventory, normalization, and bucketing</td>
+            </tr>
+            <tr>
+              <td><strong>MIME branching</strong></td>
+              <td>Custom logic</td>
+              <td>Determines whether to use <code>alt=media</code> (blob) or <code>files.export</code> (Workspace-native) per file</td>
+            </tr>
+            <tr>
+              <td><strong>Path.stem stripping</strong></td>
+              <td>Python stdlib</td>
+              <td>Prevents double extensions (foo.pdf.pdf) by stripping the original file extension before appending MIME-based extension</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 05 / RESULTS & VISUALIZATIONS -->
+    <section class="section" id="results-visualizations">
+      <div class="section-header">
+        <div>
+          <div class="section-index">05 / Results &amp; Visualizations</div>
+          <h2 class="section-title">Results &amp; Visualizations</h2>
+        </div>
+      </div>
+      <div class="viz-frame">
+        <canvas id="wordsPerFile"></canvas>
+      </div>
+      <div class="metric-strip" style="margin-top:18px;">
+        <div class="metric">
+          <div class="metric-label">Documents in bucket</div>
+          <div class="metric-value">13</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Parse failures</div>
+          <div class="metric-value">0</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Total headings extracted</div>
+          <div class="metric-value">2,706</div>
+        </div>
+      </div>
+      <div class="table-scroll" style="margin-top:18px;">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Document</th>
+              <th>Words</th>
+              <th>Headings</th>
+              <th>Bucket</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>VCS_Bergama_Project-Description.pdf</td><td>51,762</td><td>361</td><td><span class="badge badge-green">IN_BUCKET</span></td></tr>
+            <tr><td>VCS_DRAFT_Yanjiang_Project-Description.pdf</td><td>28,660</td><td>200</td><td><span class="badge badge-green">IN_BUCKET</span></td></tr>
+            <tr><td>VCS_Guangzhou_Project-Description.pdf</td><td>31,792</td><td>174</td><td><span class="badge badge-green">IN_BUCKET</span></td></tr>
+            <tr><td>VCS_Guanxi Zhuang_Project_Description.pdf</td><td>26,784</td><td>147</td><td><span class="badge badge-green">IN_BUCKET</span></td></tr>
+            <tr><td>VCS_Inegol_Project-Description.pdf</td><td>37,855</td><td>215</td><td><span class="badge badge-green">IN_BUCKET</span></td></tr>
+            <tr><td>VCS_Linfen_Project-Description.pdf</td><td>33,739</td><td>194</td><td><span class="badge badge-green">IN_BUCKET</span></td></tr>
+            <tr><td>VCS_Lizuhou_Project-Description.pdf</td><td>41,361</td><td>223</td><td><span class="badge badge-green">IN_BUCKET</span></td></tr>
+            <tr><td>VCS_Mahindra_Project-Description.pdf</td><td>16,213</td><td>161</td><td><span class="badge badge-green">IN_BUCKET</span></td></tr>
+            <tr><td>VCS_Shunping_Project-Description.pdf</td><td>43,294</td><td>272</td><td><span class="badge badge-green">IN_BUCKET</span></td></tr>
+            <tr><td>VCS_Soc Son_Project-Description.pdf</td><td>27,412</td><td>190</td><td><span class="badge badge-green">IN_BUCKET</span></td></tr>
+            <tr><td>VCS_Tamil Nadu_Project-Description.pdf</td><td>19,281</td><td>168</td><td><span class="badge badge-green">IN_BUCKET</span></td></tr>
+            <tr><td>VCS_Yingoku_Project-Description.pdf</td><td>22,741</td><td>123</td><td><span class="badge badge-green">IN_BUCKET</span></td></tr>
+            <tr><td>VCS_Ödemis_Project-Description.pdf</td><td>38,905</td><td>278</td><td><span class="badge badge-green">IN_BUCKET</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 06 / LIMITATIONS -->
+    <section class="section narrative" id="limitations-second-best-alternative">
+      <div class="section-header">
+        <div>
+          <div class="section-index">06 / Limitations / Second-Best Alternative</div>
+          <h2 class="section-title">Limitations / Second-Best Alternative</h2>
+        </div>
+      </div>
+      <div class="question-frame">
+        <ul>
+          <li>
+            <strong>OCR not attempted yet.</strong> Four PDFs in an earlier dry run failed with surrogate-character encoding errors; all 13 now parse after adding <code>errors="surrogatepass"</code> sanitization. Scanned-image-only PDFs remain unhandled — no OCR pipeline is wired in yet.
+          </li>
+          <li>
+            <strong>Page count shows 0 in the readiness report.</strong> The <code>_extract_pdf</code> result doesn't propagate <code>page_count</code> back through <code>result.update()</code> cleanly — a minor bug that was logged but does not affect word count or heading extraction.
+          </li>
+          <li>
+            <strong>Bucket scoring is name-pattern-first.</strong> The current scorer relies heavily on filename matching against 16 known WTE project names. It would classify a legitimately new WTE project incorrectly if its filename doesn't match. The second-best approach (used if name score is uncertain) falls back to <code>word_count &gt; 500</code> — a reasonable but imperfect heuristic.
+          </li>
+          <li>
+            <strong>Single-folder scope.</strong> The pipeline targets one Drive folder. Projects distributed across multiple folders or in Shared Drives (<code>supportsAllDrives</code> not yet enabled in the gws query) would be missed.
+          </li>
+          <li>
+            <strong>Local template PDF not yet ingested.</strong> The sample <code>template/VCS_Soc Son_Project-Description.pdf</code> was used to verify parsing feasibility but was not formally added to the corpus manifest. It should be copied into <code>data/corpus/raw/verra/</code> before PHASE-02.
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 07 / ERRORS / WARNINGS / FLAGS -->
+    <section class="section narrative" id="errors-warnings-flags-encountered">
+      <div class="section-header">
+        <div>
+          <div class="section-index">07 / Errors / Warnings / Flags</div>
+          <h2 class="section-title">Errors / Warnings / Flags Encountered</h2>
+        </div>
+      </div>
+      <div class="question-frame technical">
+        <table>
+          <thead>
+            <tr>
+              <th>Event</th>
+              <th>Type</th>
+              <th>Root Cause</th>
+              <th>Resolution</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>[WinError 2] gws not found</code></td>
+              <td><span class="badge warn-badge">ERROR</span></td>
+              <td>npm global bin (<code>%APPDATA%\npm</code>) not on PATH for Python subprocess calls</td>
+              <td>Hardcoded full path to <code>gws.cmd</code> using <code>Path.home()</code> — falls back to <code>"gws"</code> if not found</td>
+            </tr>
+            <tr>
+              <td>Manifest empty after <code>normalize_corpus</code></td>
+              <td><span class="badge warn-badge">BUG</span></td>
+              <td>Loop variable <code>entry</code> was overwritten each iteration; <code>entries</code> accumulator list was never initialized — the re-write step referenced an undefined variable</td>
+              <td>Added <code>entries: list[dict] = []</code> accumulator and <code>entries.append(entry)</code> on every branch; rewrote manifest atomically after full pass</td>
+            </tr>
+            <tr>
+              <td>Double extension: <code>VCS_Foo.pdf.pdf</code></td>
+              <td><span class="badge warn-badge">BUG</span></td>
+              <td>Drive filename already contained the extension (e.g. <code>VCS_Soc Son.pdf</code>); <code>_local_path_for</code> appended the MIME-based extension again</td>
+              <td>Switched to <code>Path(name).stem</code> to strip any existing extension before appending the MIME-derived extension</td>
+            </tr>
+            <tr>
+              <td>Surrogate character encoding failures in 4 PDFs</td>
+              <td><span class="badge warn-badge">BUG</span></td>
+              <td>pypdf returned strings with lone Unicode surrogates (e.g. <code>\ud835</code>) which Python's UTF-8 encoder rejects as invalid in JSON serialization</td>
+              <td>Added <code>_sanitize_for_json()</code> pre-pass that encodes/decodes with <code>errors="surrogatepass"</code> before JSON dump; 4/4 previously-failed PDFs now parse cleanly</td>
+            </tr>
+            <tr>
+              <td>Dry-run test returned <code>parseable=False</code> despite <code>dry_run=True</code></td>
+              <td><span class="badge warn-badge">BUG</span></td>
+              <td>Final line of <code>_extract_text</code> applied <code>word_count &gt; 100</code> gate which was <code>False</code> for the 4-word dry-run placeholder — overwriting the intentional dry-run sentinel</td>
+              <td>Guarded final <code>parseable</code> assignment: <code>if dry_run: result["parseable"] = True else: result["parseable"] = ... and word_count &gt; 100</code></td>
+            </tr>
+            <tr>
+              <td>14 LSP "unresolved import" errors</td>
+              <td><span class="badge badge-blue">INFO</span></td>
+              <td>Python LSP couldn't resolve <code>structlog</code>, <code>pypdf</code>, <code>docx</code> because packages are installed in the project venv but LSP index was not refreshed</td>
+              <td>Expected environment artifact — all 21 unit tests pass confirming runtime correctness</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 08 / OPEN QUESTIONS / NEXT PHASE SEEDS -->
+    <section class="section narrative" id="open-questions-next-phase-seeds">
+      <div class="section-header">
+        <div>
+          <div class="section-index">08 / Open Questions / Next Phase Seeds</div>
+          <h2 class="section-title">Open Questions / Next Phase Seeds</h2>
+        </div>
+      </div>
+      <div class="question-frame">
+        <ul>
+          <li>
+            <strong>Verra template and methodology documents not yet downloaded.</strong> PHASE-01 downloaded only the project PDDs. <code>data/reference/verra/</code> and <code>data/reference/methodologies/</code> are empty. These are required inputs for the compliance checker in PHASE-04. A task to download ACM0022.pdf and VCS_PDD_Template_v4.4.pdf should run before PHASE-02 begins.
+          </li>
+          <li>
+            <strong>Local seed PDF not in manifest.</strong> The file <code>template/VCS_Soc Son_Project-Description.pdf</code> should be formally added to <code>data/corpus/raw/verra/</code> and the manifest so it is available for heading tree seeding in PHASE-02.
+          </li>
+          <li>
+            <strong>Bucket has no methodology split.</strong> All 13 documents landed in a single bucket, but they cover different methodologies (ACM0022, ACM0003, AMS-III.AJ). The bucket config doesn't yet separate by methodology family. PHASE-02 should add a <code>methodology</code> metadata field to each corpus entry before drafting.
+          </li>
+          <li>
+            <strong>VCS_DRAFT_Yanjiang is a draft.</strong> Its filename contains "DRAFT" but it scored as <code>IN_BUCKET</code> because the draft exclusion pattern only fires when "draft" appears <em>with</em> "internal". Should the bucket config be tightened to exclude any file with "DRAFT" in the name regardless of context?
+          </li>
+          <li>
+            <strong>Ödemis filename encoding.</strong> The Drive file <code>VCS_Ödemis...</code> was downloaded as <code>VCS_Ã–demis...</code> due to a character encoding mismatch between Drive's stored name and the download path. The normalization step handles it gracefully, but a future Drive metadata round-trip may need explicit UTF-8 handling for international characters.
+          </li>
+          <li>
+            <strong>PHASE-02 entry point:</strong> Extract canonical heading tree from the 13-normalized corpus, define <code>schemas/pdd_section_schema.yaml</code>, create <code>schemas/project_input.schema.json</code>, and encode WTE-specific methodology rules in <code>rules/verra/wte_bucket_rules.yaml</code>.
+          </li>
+        </ul>
+      </div>
+      <div class="footer-note">artifact generated for reflection, not presentation theater</div>
+    </section>
+
+  </main>
+
+  <script>
+    (function() {
+      const chartCanvases = document.querySelectorAll('canvas');
+      chartCanvases.forEach((canvas) => {
+        canvas.classList.add('report-chart');
+        const parent = canvas.parentElement;
+        if (parent && !parent.classList.contains('chart-frame')) parent.classList.add('chart-frame');
+      });
+    })();
+
+    if (window.Chart) {
+      Chart.defaults.devicePixelRatio = 1;
+      Chart.defaults.animation = false;
+      Chart.defaults.resizeDelay = 150;
+      Chart.defaults.normalized = true;
+      Chart.defaults.maintainAspectRatio = false;
+      Chart.defaults.responsive = true;
+      window.__REPORT_CHART_DEFAULTS__ = { animation: false, resizeDelay: 150, normalized: true, maintainAspectRatio: false, responsive: true };
+    }
+
+    window.addEventListener('load', function() {
+      const ctx = document.getElementById('wordsPerFile');
+      if (!ctx) return;
+      const labels = [
+        'Bergama','Yanjiang (DRAFT)','Guangzhou','Guangxi Zhuang','Inegol',
+        'Linfen','Lizuhou','Mahindra','Shunping','Soc Son','Tamil Nadu','Yingoku','Ödemis'
+      ];
+      const data = [51762,28660,31792,26784,37855,33739,41361,16213,43294,27412,19281,22741,38905];
+      const accent = '#00f5ff';
+      const green = '#39ff14';
+      const bg = 'rgba(0,245,255,0.08)';
+      const border = 'rgba(0,245,255,0.6)';
+
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Words extracted',
+            data: data,
+            backgroundColor: bg,
+            borderColor: border,
+            borderWidth: 1.5,
+            hoverBackgroundColor: 'rgba(0,245,255,0.18)',
+          }]
+        },
+        options: {
+          animation: false, resizeDelay: 150, normalized: true, maintainAspectRatio: false, responsive: true,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => ` ${ctx.parsed.y.toLocaleString()} words`
+              },
+              backgroundColor: 'rgba(13,13,13,0.95)',
+              borderColor: accent,
+              borderWidth: 1,
+              titleColor: '#e9f6ff',
+              bodyColor: '#e9f6ff',
+            }
+          },
+          scales: {
+            x: {
+              ticks: { color: '#8ea3ad', font: { size: 10 }, maxRotation: 45, minRotation: 45 },
+              grid: { color: 'rgba(255,255,255,0.04)' },
+              border: { color: 'rgba(0,245,255,0.2)' }
+            },
+            y: {
+              ticks: { color: '#8ea3ad', callback: (v) => v.toLocaleString() },
+              grid: { color: 'rgba(255,255,255,0.04)' },
+              border: { color: 'rgba(0,245,255,0.2)' },
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>

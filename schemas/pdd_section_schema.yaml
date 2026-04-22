@@ -1,0 +1,553 @@
+# Canonical PDD Section Schema — Verra WTE Bucket
+# Derived from: VCS_Soc_Son_Project-Description, VCS_Bergama, VCS_Linfen, VCS_Yanjiang
+# Version: 0.1.0
+# Scope: Verra VCS PDDs for waste-to-energy / MSW projects (ACM0022, ACM0003, AMS-III.AJ)
+
+section_taxonomy_version: "0.1.0"
+corpus_bucket: "verra-wte-initial"
+total_sections: 5
+notes: >
+  This schema defines every section required in a Verra VCS PDD for WTE projects.
+  Each section is typed by content class, evidence requirement, and review sensitivity.
+  Aliases reflect observed heading drift across Bergama, Soc Son, Linfen, and Yanjiang PDDs.
+  Sections marked HIGH_REVIEW must not be produced by free-form generation — they require
+  explicit project evidence, retrieved corpus examples, or official methodology text.
+
+sections:
+
+  # ─────────────────────────────────────────────
+  # SECTION 1 — PROJECT DETAILS
+  # ─────────────────────────────────────────────
+  - section_id: "1"
+    canonical_heading: "PROJECT DETAILS"
+    section_type: "meta"
+    content_class: "BOILERPLATE"
+    review_sensitivity: "LOW"
+    boilerplate_level: "HIGH"  # reused with minor variation across projects
+    aliases:
+      - "1 PROJECT DETAILS"
+      - "1. PROJECT DETAILS"
+    sub_sections:
+      - sub_section_id: "1.1"
+        heading: "Summary Description of the Project"
+        content_class: "BOILERPLATE"
+        review_sensitivity: "LOW"
+        boilerplate_level: "HIGH"
+        aliases:
+          - "1.1 Summary Description of the Project"
+        evidence_required: []
+        guidance: "Lead paragraph reused across all WTE projects. Adapt project name, location, technology, and capacity only."
+
+      - sub_section_id: "1.2"
+        heading: "Sectoral Scope and Project Type"
+        content_class: "FACTUAL"
+        review_sensitivity: "LOW"
+        boilerplate_level: "NONE"
+        aliases:
+          - "1.2 Sectoral Scope and Project Type"
+          - "1.3 Sectoral Scope and Project Type"  # Linfen has Audit History before 1.3
+        evidence_required:
+          - "Applicable VCS sectoral scope code"
+          - "Project type code"
+        guidance: "Straight factual lookup from VCS sector scope list."
+
+      - sub_section_id: "1.3"
+        heading: "Project Eligibility"
+        content_class: "METHODOLOGY_DEPENDENT"
+        review_sensitivity: "MEDIUM"
+        boilerplate_level: "NONE"
+        aliases:
+          - "1.3 Project Eligibility"
+          - "1.4 Project Eligibility"  # Linfen
+        evidence_required:
+          - "Methodology eligibility criteria checklist"
+        guidance: "Methodology-specific. For ACM0022: confirm waste type, capacity, and geographic applicability."
+
+      - sub_section_id: "1.4"
+        heading: "Project Design"
+        content_class: "FACTUAL"
+        review_sensitivity: "LOW"
+        boilerplate_level: "LOW"
+        aliases:
+          - "1.4 Project Design"
+          - "1.5 Project Design"  # Linfen
+        evidence_required:
+          - "Technical description of waste treatment process"
+          - "Energy generation or fuel substitution technology"
+        guidance: "Mostly boilerplate structure with project-specific technical parameters."
+
+      - sub_section_id: "1.5"
+        heading: "Project Proponent"
+        content_class: "FACTUAL"
+        review_sensitivity: "LOW"
+        boilerplate_level: "NONE"
+        aliases:
+          - "1.5 Project Proponent"
+          - "1.6 Project Proponent"  # Linfen
+        evidence_required:
+          - "Legal entity name"
+          - "Contact information"
+        guidance: "Direct factual input."
+
+      - sub_section_id: "1.6"
+        heading: "Other Entities Involved in the Project"
+        content_class: "FACTUAL"
+        review_sensitivity: "LOW"
+        boilerplate_level: "NONE"
+        aliases:
+          - "1.6 Other Entities Involved in the Project"
+          - "1.7 Other Entities Involved in the Project"  # Linfen
+        evidence_required:
+          - "List of named entities"
+          - "Role of each entity"
+        guidance: "Direct factual input."
+
+      - sub_section_id: "1.7"
+        heading: "Ownership"
+        content_class: "FACTUAL"
+        review_sensitivity: "LOW"
+        boilerplate_level: "NONE"
+        aliases:
+          - "1.7 Ownership"
+          - "1.8 Ownership"  # Linfen
+        evidence_required:
+          - "Ownership structure"
+        guidance: "Direct factual input."
+
+      - sub_section_id: "1.8"
+        heading: "Project Start Date"
+        content_class: "FACTUAL"
+        review_sensitivity: "LOW"
+        boilerplate_level: "NONE"
+        aliases:
+          - "1.8 Project Start Date"
+          - "1.9 Project Start Date"  # Linfen
+        evidence_required:
+          - "Start date (ISO 8601)"
+        guidance: "Direct factual input. Critical for additionality and crediting period determination."
+
+      - sub_section_id: "1.9"
+        heading: "Project Crediting Period"
+        content_class: "FACTUAL"
+        review_sensitivity: "LOW"
+        boilerplate_level: "LOW"
+        aliases:
+          - "1.9 Project Crediting Period"
+          - "1.10 Project Crediting Period"  # Linfen
+        evidence_required:
+          - "Crediting period start date"
+          - "Crediting period duration (years)"
+        guidance: "Usually 10 years for WTE projects under ACM0022. Confirm against methodology."
+
+      - sub_section_id: "1.10"
+        heading: "Project Scale and Estimated GHG Emission Reductions or Removals"
+        content_class: "QUANTITATIVE"
+        review_sensitivity: "HIGH"
+        boilerplate_level: "NONE"
+        aliases:
+          - "1.10 Project Scale and Estimated GHG Emission Reductions or Removals"
+          - "1.11 Project Scale and Estimated GHG Emission Reductions or Removals"  # Linfen
+        evidence_required:
+          - "Annual waste throughput (tonnes/year)"
+          - "Installed capacity (MW)"
+          - "Estimated annual tCO2e reductions"
+        guidance: "Key summary numbers. Must match section 4 calculations. HIGH_REVIEW — verify against methodology."
+
+      - sub_section_id: "1.11"
+        heading: "Description of the Project Activity"
+        content_class: "NARRATIVE"
+        review_sensitivity: "MEDIUM"
+        boilerplate_level: "MEDIUM"
+        aliases:
+          - "1.11 Description of the Project Activity"
+          - "1.12 Description of the Project Activity"  # Linfen
+        guidance: "Detailed technical narrative. Retrieve similar sections from corpus for structure, fill with project-specific facts."
+
+      - sub_section_id: "1.12"
+        heading: "Project Location"
+        content_class: "FACTUAL"
+        review_sensitivity: "MEDIUM"
+        boilerplate_level: "NONE"
+        aliases:
+          - "1.12 Project Location"
+          - "1.13 Project Location"  # Linfen
+        evidence_required:
+          - "Country"
+          - "Region / Province / City"
+          - "GPS coordinates (decimal degrees)"
+          - " landfill coordinates for baseline if landfill-diversion claim"
+        guidance: "Must include GPS coordinates. Required for project boundary definition."
+
+      - sub_section_id: "1.13"
+        heading: "Conditions Prior to Project Initiation"
+        content_class: "EVIDENCE_BASED"
+        review_sensitivity: "HIGH"
+        boilerplate_level: "NONE"
+        aliases:
+          - "1.13 Conditions Prior to Project Initiation"
+          - "1.14 Conditions Prior to Project Initiation"  # Linfen
+        evidence_required:
+          - "Description of pre-project waste handling practice"
+          - "Evidence of baseline waste stream"
+        guidance: "Critical for baseline scenario and additionality. Retrieve examples from corpus; fill with site-specific facts. HIGH_REVIEW."
+
+      - sub_section_id: "1.14"
+        heading: "Compliance with Laws, Statutes and Other Regulatory Frameworks"
+        content_class: "EVIDENCE_BASED"
+        review_sensitivity: "MEDIUM"
+        boilerplate_level: "LOW"
+        aliases:
+          - "1.14 Compliance with Laws, Statutes and Other Regulatory Frameworks"
+          - "1.15 Compliance with Laws, Statutes and Other Regulatory Frameworks"  # Linfen
+        evidence_required:
+          - "List of applicable laws and regulations"
+          - "Compliance statement"
+        guidance: "Retrieve boilerplate language; customize with project-specific regulatory context."
+
+      - sub_section_id: "1.15"
+        heading: "Participation under Other GHG Programs"
+        content_class: "EVIDENCE_BASED"
+        review_sensitivity: "HIGH"
+        boilerplate_level: "NONE"
+        aliases:
+          - "1.15 Participation under Other GHG Programs"
+          - "1.16 Double Counting and Participation under Other GHG Programs"  # Linfen variant
+        guidance: "MUST NOT double-count. Explicitly state no overlapping claims. HIGH_REVIEW for WTE."
+
+      - sub_section_id: "1.16"
+        heading: "Other Forms of Credit"
+        content_class: "EVIDENCE_BASED"
+        review_sensitivity: "HIGH"
+        boilerplate_level: "NONE"
+        aliases:
+          - "1.16 Other Forms of Credit"
+          - "1.17 Double Claiming, Other Forms of Credit, and Scope 3 Emissions"  # Linfen variant
+        guidance: "CRITICAL — WTE projects risk double-counting landfill avoidance (ACM0022) vs fuel substitution (ACM0003). Clearly delineate credit ownership. HIGH_REVIEW."
+
+      - sub_section_id: "1.17"
+        heading: "Sustainable Development Contributions"
+        content_class: "BOILERPLATE"
+        review_sensitivity: "LOW"
+        boilerplate_level: "MEDIUM"
+        aliases:
+          - "1.17 Sustainable Development Contributions"
+          - "1.18 Sustainable Development Contributions"  # Linfen
+        guidance: "Retrieve boilerplate language; add project-specific SDG contributions."
+
+      - sub_section_id: "1.18"
+        heading: "Additional Information Relevant to the Project"
+        content_class: "OPTIONAL"
+        review_sensitivity: "LOW"
+        boilerplate_level: "LOW"
+        aliases:
+          - "1.18 Additional Information Relevant to the Project"
+          - "1.19 Additional Information Relevant to the Project"  # Linfen
+        guidance: "Optional. Fill only if project has unusual circumstances."
+
+  # ─────────────────────────────────────────────
+  # SECTION 2 — SAFEGUARDS
+  # ─────────────────────────────────────────────
+  - section_id: "2"
+    canonical_heading: "SAFEGUARDS"
+    section_type: "safeguards"
+    content_class: "EVIDENCE_BASED"
+    review_sensitivity: "MEDIUM"
+    boilerplate_level: "MEDIUM"
+    aliases:
+      - "2 SAFEGUARDS"
+    sub_sections:
+      - sub_section_id: "2.1"
+        heading: "No Net Harm"
+        content_class: "BOILERPLATE"
+        review_sensitivity: "MEDIUM"
+        boilerplate_level: "HIGH"
+        aliases:
+          - "2.1 No Net Harm"
+        guidance: "Standard boilerplate. Retrieve and adapt."
+
+      - sub_section_id: "2.2"
+        heading: "Local Stakeholder Consultation"
+        content_class: "EVIDENCE_BASED"
+        review_sensitivity: "MEDIUM"
+        boilerplate_level: "LOW"
+        aliases:
+          - "2.2 Local Stakeholder Consultation"
+          - "2.2 Stakeholder Engagement and Consultation"  # Linfen variant
+        evidence_required:
+          - "Stakeholder consultation evidence"
+          - "Summary of concerns raised"
+        guidance: "Retrieve boilerplate; attach project-specific consultation evidence."
+
+      - sub_section_id: "2.3"
+        heading: "Environmental Impact"
+        content_class: "EVIDENCE_BASED"
+        review_sensitivity: "MEDIUM"
+        boilerplate_level: "LOW"
+        aliases:
+          - "2.3 Environmental Impact"
+          - "2.3 Risks to Stakeholders and the Environment"  # Linfen variant
+        evidence_required:
+          - "EIA or environmental permit"
+        guidance: "Retrieve boilerplate; attach project-specific EIA reference."
+
+      - sub_section_id: "2.4"
+        heading: "Public Comments"
+        content_class: "BOILERPLATE"
+        review_sensitivity: "LOW"
+        boilerplate_level: "HIGH"
+        aliases:
+          - "2.4 Public Comments"
+        guidance: "Standard boilerplate if no public comments received."
+
+      - sub_section_id: "2.5"
+        heading: "AFOLU-Specific Safeguards"
+        content_class: "BOILERPLATE"
+        review_sensitivity: "LOW"
+        boilerplate_level: "HIGH"
+        aliases:
+          - "2.5 AFOLU-Specific Safeguards"
+        guidance: "WTE projects typically copy standard boilerplate here as AFOLU-specific safeguards are not primary concern."
+
+  # ─────────────────────────────────────────────
+  # SECTION 3 — APPLICATION OF METHODOLOGY
+  # ─────────────────────────────────────────────
+  - section_id: "3"
+    canonical_heading: "APPLICATION OF METHODOLOGY"
+    section_type: "methodology"
+    content_class: "METHODOLOGY_DEPENDENT"
+    review_sensitivity: "HIGH"
+    boilerplate_level: "NONE"
+    aliases:
+      - "3 APPLICATION OF METHODOLOGY"
+    sub_sections:
+      - sub_section_id: "3.1"
+        heading: "Title and Reference of Methodology"
+        content_class: "FACTUAL"
+        review_sensitivity: "MEDIUM"
+        boilerplate_level: "NONE"
+        aliases:
+          - "3.1 Title and Reference of Methodology"
+        evidence_required:
+          - "Methodology ID (e.g. ACM0022 v2.0)"
+          - "Methodology title"
+        guidance: "Direct factual input. Must match the methodology used throughout."
+
+      - sub_section_id: "3.2"
+        heading: "Applicability of Methodology"
+        content_class: "METHODOLOGY_DEPENDENT"
+        review_sensitivity: "HIGH"
+        boilerplate_level: "NONE"
+        aliases:
+          - "3.2 Applicability of Methodology"
+        evidence_required:
+          - "Checklist of all applicability conditions"
+          - "Evidence for each condition"
+        guidance: "HIGH_REVIEW. Retrieve examples from corpus for each eligibility check. Fill with project-specific evidence."
+
+      - sub_section_id: "3.3"
+        heading: "Project Boundary"
+        content_class: "METHODOLOGY_DEPENDENT"
+        review_sensitivity: "HIGH"
+        boilerplate_level: "LOW"
+        aliases:
+          - "3.3 Project Boundary"
+        evidence_required:
+          - "Included emission sources"
+          - "Excluded emission sources"
+          - "Geographic boundary (GPS coordinates)"
+          - "Temporal boundary (crediting period)"
+          - "Project type (single project vs. PoA)"
+        guidance: "HIGH_REVIEW. Table format. Retrieve examples from corpus; customize per project."
+
+      - sub_section_id: "3.4"
+        heading: "Baseline Scenario"
+        content_class: "METHODOLOGY_DEPENDENT"
+        review_sensitivity: "HIGH"
+        boilerplate_level: "NONE"
+        aliases:
+          - "3.4 Baseline Scenario"
+        guidance: "HIGH_REVIEW. Most critical section for additionality. Retrieve carefully from corpus; MUST be project-specific. Free-form generation is prohibited for this section."
+
+      - sub_section_id: "3.5"
+        heading: "Additionality"
+        content_class: "METHODOLOGY_DEPENDENT"
+        review_sensitivity: "CRITICAL"
+        boilerplate_level: "NONE"
+        aliases:
+          - "3.5 Additionality"
+        guidance: "CRITICAL — Core of the PDD. MUST use retrieved corpus examples as structural guides. All claims must be supported by project-specific evidence. No free-form generation. HIGH_REVIEW mandatory."
+
+      - sub_section_id: "3.6"
+        heading: "Methodology Deviations"
+        content_class: "METHODOLOGY_DEPENDENT"
+        review_sensitivity: "MEDIUM"
+        boilerplate_level: "LOW"
+        aliases:
+          - "3.6 Methodology Deviations"
+        guidance: "If no deviations: 'Not applicable.' Otherwise describe deviation with justification."
+
+  # ─────────────────────────────────────────────
+  # SECTION 4 — QUANTIFICATION / BASELINE EMISSIONS
+  # ─────────────────────────────────────────────
+  - section_id: "4"
+    canonical_heading: "QUANTIFICATION OF GHG EMISSION REDUCTIONS AND REMOVALS"
+    section_type: "quantification"
+    content_class: "QUANTITATIVE"
+    review_sensitivity: "HIGH"
+    boilerplate_level: "NONE"
+    aliases:
+      - "4 QUANTIFICATION OF ESTIMATED GHG EMISSION REDUCTIONS AND REMOVALS"  # Linfen
+      - "4 ESTIMATED GHG EMISSION REDUCTIONS AND REMOVALS"  # Bergama
+      - "4. ESTIMATED GHG EMISSION REDUCTIONS AND REMOVALS"  # Soc Son (no sub-section numbering)
+    sub_sections:
+      - sub_section_id: "4.1"
+        heading: "Baseline Emissions"
+        content_class: "QUANTITATIVE"
+        review_sensitivity: "HIGH"
+        boilerplate_level: "NONE"
+        aliases:
+          - "4.1 Baseline Emissions"
+          - "4.1 Baseline Emissions"  # Soc Son uses different heading
+        evidence_required:
+          - "Baseline emission factor (tonnes CO2/tonne waste)"
+          - "Annual waste throughput (tonnes/year)"
+          - "Methane capture rate (if landfill baseline)"
+          - "Grid emission factor (if electricity displacement)"
+        guidance: "HIGH_REVIEW. All numbers must be from official sources. Retrieve example calculations from corpus."
+
+      - sub_section_id: "4.2"
+        heading: "Project Emissions"
+        content_class: "QUANTITATIVE"
+        review_sensitivity: "HIGH"
+        boilerplate_level: "NONE"
+        aliases:
+          - "4.2 Project Emissions"
+        evidence_required:
+          - "Direct emissions from project activity"
+          - "Emission factor for project technology"
+        guidance: "HIGH_REVIEW. Retrieve example calculations; verify with project-specific data."
+
+      - sub_section_id: "4.3"
+        heading: "Leakage"
+        content_class: "METHODOLOGY_DEPENDENT"
+        review_sensitivity: "HIGH"
+        boilerplate_level: "LOW"
+        aliases:
+          - "4.3 Leakage"
+          - "4.3 Leakage Emissions"  # Linfen variant
+        evidence_required:
+          - "Leakage assessment"
+          - "Mitigation measures"
+        guidance: "WTE-specific leakage risks: waste-shifting to other landfills, increased transportation emissions. Retrieve corpus examples."
+
+      - sub_section_id: "4.4"
+        heading: "Net GHG Emission Reductions and Removals"
+        content_class: "QUANTITATIVE"
+        review_sensitivity: "HIGH"
+        boilerplate_level: "LOW"
+        aliases:
+          - "4.4 Net GHG Emission Reductions and Removals"
+          - "4.4 Estimated Net GHG Emission Reductions and Removals"
+          - "4.4 Estimated GHG Emission Reductions and Carbon Dioxide Removals"  # Linfen
+        evidence_required:
+          - "Net tCO2e/year"
+          - "Crediting period total"
+        guidance: "HIGH_REVIEW. Must match section 1.10. Verify calculation formula against methodology."
+
+  # ─────────────────────────────────────────────
+  # SECTION 5 — MONITORING
+  # ─────────────────────────────────────────────
+  - section_id: "5"
+    canonical_heading: "MONITORING"
+    section_type: "monitoring"
+    content_class: "METHODOLOGY_DEPENDENT"
+    review_sensitivity: "MEDIUM"
+    boilerplate_level: "MEDIUM"
+    aliases:
+      - "5 MONITORING"
+      - "5 QUANTIFICATION OF GHG EMISSION REDUCTIONS AND REMOVALS"  # Soc Son variant
+    sub_sections:
+      - sub_section_id: "5.1"
+        heading: "Data and Parameters Available at Validation"
+        content_class: "EVIDENCE_BASED"
+        review_sensitivity: "MEDIUM"
+        boilerplate_level: "HIGH"
+        aliases:
+          - "5.1 Data and Parameters Available at Validation"
+        guidance: "Table of fixed and monitored parameters. Retrieve boilerplate table from corpus."
+
+      - sub_section_id: "5.2"
+        heading: "Data and Parameters Monitored"
+        content_class: "METHODOLOGY_DEPENDENT"
+        review_sensitivity: "HIGH"
+        boilerplate_level: "LOW"
+        aliases:
+          - "5.2 Data and Parameters Monitored"
+        guidance: "HIGH_REVIEW. Per-methodology parameter lists. ACM0022 requires specific WTE monitoring parameters. Retrieve from corpus."
+
+      - sub_section_id: "5.3"
+        heading: "Monitoring Plan"
+        content_class: "NARRATIVE"
+        review_sensitivity: "MEDIUM"
+        boilerplate_level: "MEDIUM"
+        aliases:
+          - "5.3 Monitoring Plan"
+          - "5.3 Monitoring Plan"  # Soc Son has different structure
+        guidance: "Retrieve corpus example for structure. Fill with project-specific data collection procedures."
+
+# ─────────────────────────────────────────────
+# CONTENT CLASS GLOSSARY
+# ─────────────────────────────────────────────
+content_classes:
+  BOILERPLATE: >
+    Text that can be copied and lightly adapted from any similar project.
+    Generation: LOW_RISK — retrieve from corpus and substitute project-specific placeholders.
+  FACTUAL: >
+    Direct project-specific inputs that cannot be generated.
+    Generation: LOW_RISK — user provides these; no model generation.
+  EVIDENCE_BASED: >
+    Narrative or table requiring project-specific supporting documents.
+    Generation: MEDIUM_RISK — retrieve similar examples; human must attach evidence.
+  METHODOLOGY_DEPENDENT: >
+    Content governed by specific methodology clauses. Requires careful retrieval.
+    Generation: HIGH_RISK — retrieve ONLY from methodology-aligned corpus examples.
+  QUANTITATIVE: >
+    Tables, formulas, and numerical calculations.
+    Generation: HIGH_RISK — no free-form generation; must use official formula.
+  NARRATIVE: >
+    Project-specific prose requiring retrieved examples as structural guides.
+    Generation: MEDIUM_RISK — always cite retrieved source(s).
+  OPTIONAL: >
+    Section may be omitted or contain boilerplate only.
+    Generation: LOW_RISK — fill with standard text or skip.
+
+review_sensitivity_levels:
+  LOW: "Human review needed for accuracy; generation risk is low."
+  MEDIUM: "Human review strongly recommended; generation risk is moderate."
+  HIGH: "Human review mandatory; generation risk is high. Retrieve corpus examples; do not generate from scratch."
+  CRITICAL: "Human review is insufficient — domain expert sign-off required. No free-form generation permitted."
+
+# ─────────────────────────────────────────────
+# KNOWN HEADING DRIFT MAP
+# Maps observed section numbers across corpus to canonical schema
+# ─────────────────────────────────────────────
+heading_drift_map:
+  # Bergama has section 4 as Implementation Status then 5-7 as quantification
+  bergama:
+    "4": "IMPLEMENTATION_STATUS"  # not in canonical schema — appendix
+    "5": "ESTIMATED_GHG_REDUCTIONS"  # maps to section 4 in canonical
+    "6": "MONITORING"
+    "7": "QUANTIFICATION"
+  # Linfen has Audit History at 1.2 and different safeguard numbering
+  linfen:
+    "1.2": "Audit History"  # additional item
+    "2.1": "Stakeholder Engagement and Consultation"
+    "2.2": "Risks to Stakeholders and the Environment"
+    "2.3": "Respect for Human Rights and Equity"
+    "2.4": "Ecosystem Health"
+    "1.16": "Double Counting and Participation under Other GHG Programs"
+    "1.17": "Double Claiming, Other Forms of Credit, and Scope 3 Emissions"
+  # Soc Son merges 4/5/6/7 differently
+  soc_son:
+    "4": "QUANTIFICATION"
+    "5": "MONITORING"

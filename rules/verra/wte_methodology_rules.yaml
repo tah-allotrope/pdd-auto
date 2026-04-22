@@ -1,0 +1,194 @@
+# WTE-Specific Methodology Rules for Verra VCS PDD Drafting
+# Version: 0.1.0
+# Scope: ACM0022 (Alternative waste treatment), ACM0003 (Fuel substitution),
+#        AMS-III.AJ (Recyclables recovery), VMR0044 (Biochar)
+# Purpose: Encode domain rules that cannot be safely generated and must be
+#          enforced or explicitly checked before any section is considered complete.
+
+version: "0.1.0"
+bucket: "verra-wte-initial"
+methodologies:
+  ACM0022:
+    full_name: "Alternative waste treatment processes (large-scale)"
+    url: "https://verra.org/methodologies/acm0022/"
+    applicability_conditions:
+      - id: "ACM0022-AC-01"
+        text: "The project must treat waste that would otherwise be disposed of in a landfill or uncontrolled disposal site."
+        evidence_required: ["Evidence of baseline waste disposal practice", "Waste characterization study"]
+        section_ref: "1.13, 3.4"
+        risk: "HIGH"
+      - id: "ACM0022-AC-02"
+        text: "The project must result in measurable greenhouse gas emission reductions compared to the baseline scenario."
+        evidence_required: ["Baseline emission calculation", "Project emission calculation"]
+        section_ref: "4.1, 4.2"
+        risk: "HIGH"
+      - id: "ACM0022-AC-03"
+        text: "The project must not cause any net increase in methane emissions from the waste treatment process."
+        evidence_required: ["Methane monitoring plan", " Fugitive emission assessment"]
+        section_ref: "4.2, 5.2"
+        risk: "HIGH"
+    double_counting_risks:
+      - scenario: "Landfill diversion claim overlaps with RDF fuel substitution claim"
+        description: >
+          If a project claims credits for diverting waste from landfill (ACM0022) AND claims credits
+          for the resulting RDF being used as fuel substitute (ACM0003), the same waste stream
+          generates two separate credit claims. This constitutes double-counting.
+        mitigation: >
+          The project input MUST clearly specify whether landfill diversion, fuel substitution, or both
+          are being claimed. If both are claimed, the project must demonstrate that the emissions
+          reductions are physically distinct and arise from different sources. Credit ownership must
+          be explicitly delineated per activity.
+        sections_affected: ["1.16", "3.4", "4.3"]
+      - scenario: "Project receives renewable energy certificates (RECs) for the same electricity"
+        description: >
+          If the project sells electricity generated from waste and also claims carbon credits for the
+          displaced grid electricity, the renewable energy attribute may be double-counted.
+        mitigation: >
+          Section 1.16 must explicitly state whether RECs are being claimed. If yes, the grid
+          emission factor used in the baseline must be adjusted accordingly.
+        sections_affected: ["1.15", "1.16", "4.1"]
+    additionality_rules:
+      - rule_id: "ACM0022-ADD-01"
+        text: "The project must demonstrate additionality through regulatory compliance or common practice analysis."
+        regulatory_additionality: >
+          The project activity is not mandated by law. Evidence: no legal requirement to implement
+          this specific waste treatment technology.
+        common_practice_threshold: ">50% of similar projects in the region use this technology"
+        required_evidence: ["Regulatory compliance checklist", "Survey of comparable facilities", "Investment analysis (if applicable)"]
+        section_ref: "3.5"
+    parameters:
+      - id: "ACM0022-PARAM-01"
+        name: "Annual waste throughput"
+        unit: "tonnes/year"
+        source: "Project records / weighbridge"
+        frequency: "Continuously"
+        section_ref: "5.2"
+      - id: "ACM0022-PARAM-02"
+        name: "Biogas methane concentration"
+        unit: "% CH4"
+        source: "Gas composition analysis"
+        frequency: "Monthly or per batch"
+        section_ref: "5.2"
+      - id: "ACM0022-PARAM-03"
+        name: "Recovered electricity"
+        unit: "MWh/year"
+        source: "Electricity metering"
+        frequency: "Continuously"
+        section_ref: "5.2"
+      - id: "ACM0022-PARAM-04"
+        name: "Grid emission factor"
+        unit: "tCO2e/MWh"
+        source: "ACM0022 default or national grid authority"
+        frequency: "Annual update"
+        section_ref: "4.1"
+
+  ACM0003:
+    full_name: "Partial substitution of fossil fuels in cement manufacture"
+    url: "https://verra.org/methodologies/acm0003/"
+    applicability_conditions:
+      - id: "ACM0003-AC-01"
+        text: "The project must replace fossil fuel with waste-derived fuel in a cement kiln or similar industrial furnace."
+        evidence_required: ["Fuel purchase / supply contract", "Kiln operating parameters"]
+        section_ref: "1.4, 3.2"
+        risk: "MEDIUM"
+    double_counting_risks:
+      - scenario: "Same waste diversion credited under ACM0022 (landfill avoidance) AND ACM0003 (fuel displacement)"
+        description: >
+          If the same waste stream is used to produce RDF for cement kiln fuel substitution AND
+          credited as landfill diversion, the avoided methane emissions and the avoided fossil CO2
+          emissions may both be claimed for the same waste.
+        mitigation: >
+          Clearly separate the credited activities. Credits for landfill avoidance (ACM0022) apply to
+          the waste not entering landfill. Credits for fuel substitution (ACM0003) apply to the
+          coal/petcoke displaced by the RDF. Both cannot be claimed for the same waste tonnage
+          without explicit credit allocation.
+        sections_affected: ["1.16", "3.4", "4.3", "4.4"]
+    parameters:
+      - id: "ACM0003-PARAM-01"
+        name: "RDF calorific value"
+        unit: "MJ/kg"
+        source: "Laboratory analysis"
+        frequency: "Per batch or monthly"
+        section_ref: "4.2"
+      - id: "ACM0003-PARAM-02"
+        name: "Coal/petcoke displacement rate"
+        unit: "tonnes/year"
+        source: "Fuel consumption records"
+        frequency: "Monthly"
+        section_ref: "4.2"
+
+safeguards:
+  wte_specific:
+    - safeguard_id: "WTE-SAFE-01"
+      text: "No net increase in CH4 emissions from the project compared to baseline landfill flaring"
+      assessment_method: "Compare measured CH4 recovery rate vs. theoretical landfill CH4 generation rate"
+      sections_affected: ["4.2", "5.2"]
+      risk_level: "HIGH"
+    - safeguard_id: "WTE-SAFE-02"
+      text: "No waste shifting — waste diverted by the project was previously going to landfill, not from other cleaner waste streams"
+      assessment_method: "Waste origin documentation and waste characterization study"
+      sections_affected: ["3.4", "4.3"]
+      risk_level: "HIGH"
+    - safeguard_id: "WTE-SAFE-03"
+      text: "Ash and residues from WTE process are managed responsibly and do not create new environmental risks"
+      assessment_method: "Ash disposal permits and monitoring records"
+      sections_affected: ["2.3"]
+      risk_level: "MEDIUM"
+    - safeguard_id: "WTE-SAFE-04"
+      text: "No net increase in net operational emissions from the WTE facility compared to grid-average emissions for equivalent electricity"
+      assessment_method: "Lifecycle analysis of WTE emissions vs. grid baseline"
+      sections_affected: ["4.2"]
+      risk_level: "MEDIUM"
+
+compliance_checks:
+  pre_draft:
+    - check_id: "PRE-001"
+      description: "Confirm project does not claim BOTH landfill diversion AND fuel substitution without explicit credit allocation"
+      severity: "CRITICAL"
+      applies_to: ["ACM0022", "ACM0003"]
+    - check_id: "PRE-002"
+      description: "Confirm grid emission factor source is official and consistent with methodology"
+      severity: "HIGH"
+      applies_to: ["ACM0022", "ACM0003"]
+    - check_id: "PRE-003"
+      description: "Confirm baseline scenario is described in sufficient detail to support additionality argument"
+      severity: "HIGH"
+      applies_to: ["ACM0022"]
+    - check_id: "PRE-004"
+      description: "Confirm monitoring plan covers all parameters required by the methodology"
+      severity: "HIGH"
+      applies_to: ["ACM0022", "ACM0003"]
+
+  post_draft:
+    - check_id: "POST-001"
+      description: "Section 1.10 estimated tCO2e must match Section 4 net calculation"
+      severity: "CRITICAL"
+    - check_id: "POST-002"
+      description: "Methodology applicability conditions in Section 3.2 must be checked YES/NO individually"
+      severity: "HIGH"
+    - check_id: "POST-003"
+      description: "All cited sources in quantitative sections must be attached as evidence"
+      severity: "HIGH"
+    - check_id: "POST-004"
+      description: "Section 1.16 (Other Forms of Credit) must explicitly address RECs if electricity is sold"
+      severity: "HIGH"
+      applies_to: ["ACM0022"]
+
+double_counting_prevention:
+  description: >
+    The most significant compliance risk in WTE projects is double-counting — claiming
+    the same emission reduction under two different methodologies or programs.
+    The rules below define the boundaries that MUST be respected.
+  boundaries:
+    - activity: "Landfill diversion (ACM0022)"
+      credits_for: "Avoided methane emissions from waste not landfilled"
+      overlaps_with: "RDF fuel substitution (ACM0003) — same physical waste stream"
+      resolution: "Credit ownership must allocate distinct waste fractions to each claim"
+    - activity: "Grid electricity displacement"
+      credits_for: "Avoided CO2 from displaced grid electricity"
+      overlaps_with: "RECs / renewable energy certificates"
+      resolution: "Disclose and net off if RECs are also sold"
+    - activity: "RDF production from non-recyclables"
+      credits_for: "Avoided landfill methane from combustible fraction"
+      overlaps_with: "Fuel substitution in cement kiln"
+      resolution: "Clarify whether the SAME RDF tonnes are claimed under both"

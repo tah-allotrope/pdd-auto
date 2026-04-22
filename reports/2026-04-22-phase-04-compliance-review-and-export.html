@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Phase Report :: PHASE-04 Compliance Review and Export</title>
+  <meta name="color-scheme" content="dark">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    async function initMermaid() {
+      const blocks = document.querySelectorAll('.mermaid');
+      if (!blocks.length) { return; }
+      mermaid.initialize({ startOnLoad: false, theme: 'dark', securityLevel: 'loose',
+        themeVariables: { primaryColor: '#111111', primaryTextColor: '#e8f6ff',
+          primaryBorderColor: '#00f5ff', lineColor: '#39ff14', secondaryColor: '#121a1a',
+          tertiaryColor: '#111111', background: '#0d0d0d', mainBkg: '#0d0d0d',
+          nodeBorder: '#00f5ff', clusterBkg: '#111111', clusterBorder: '#39ff14',
+          edgeLabelBackground: '#0d0d0d' } });
+      await mermaid.run({ nodes: blocks });
+    }
+    const run = () => initMermaid().catch((error) => console.error('Mermaid render failed', error));
+    if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', run, { once: true }); }
+    else { run(); }
+  </script>
+  <style>
+    :root { --bg: #0d0d0d; --bg-soft: #111111; --panel: rgba(13, 13, 13, 0.88); --panel-strong: rgba(19, 19, 19, 0.96); --line: rgba(0, 245, 255, 0.26); --line-strong: rgba(57, 255, 20, 0.38); --text: #e9f6ff; --muted: #8ea3ad; --accent-blue: #00f5ff; --accent-green: #39ff14; --glow-blue: 0 0 18px rgba(0, 245, 255, 0.42); --glow-green: 0 0 18px rgba(57, 255, 20, 0.28); --shadow: 0 14px 40px rgba(0, 0, 0, 0.32); --radius-lg: 22px; --radius-md: 16px; --radius-sm: 12px; --narrative-font: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif; --technical-font: "Cascadia Code", "Fira Code", Consolas, "Liberation Mono", monospace; }
+    * { box-sizing: border-box; }
+    body { position: relative; margin: 0; min-height: 100vh; overflow-x: hidden; background: radial-gradient(circle at top left, rgba(0, 245, 255, 0.12), transparent 28%), radial-gradient(circle at 85% 12%, rgba(57, 255, 20, 0.08), transparent 24%), linear-gradient(180deg, #050505 0%, #0d0d0d 36%, #090909 100%); color: var(--text); font-family: var(--narrative-font); line-height: 1.6; letter-spacing: 0.01em; }
+    body::before { content: ""; position: absolute; inset: 0; pointer-events: none; background-image: linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px); background-size: 32px 32px; opacity: 0.16; }
+    a { color: var(--accent-blue); }
+    code, pre, .technical, .meta-chip, .section-kicker, .pill, .metric-label, .metric-value, .repo-tag, .mermaid { font-family: var(--technical-font); }
+    .page-shell { width: min(1180px, calc(100vw - 32px)); margin: 0 auto; padding: 32px 0 72px; position: relative; z-index: 1; }
+    .hero { position: relative; padding: 28px; margin-bottom: 24px; border: 1px solid var(--line); border-radius: 28px; background: linear-gradient(145deg, rgba(0, 245, 255, 0.08), transparent 28%), linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0)), var(--panel-strong); box-shadow: var(--shadow), inset 0 0 0 1px rgba(255, 255, 255, 0.02); }
+    .hero::after { content: ""; position: absolute; inset: auto -10% -55% 42%; height: 280px; background: radial-gradient(circle, rgba(0, 245, 255, 0.18), transparent 64%); filter: blur(12px); pointer-events: none; }
+    .hero-grid { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(260px, 0.85fr); gap: 22px; align-items: end; }
+    .section-kicker { margin: 0 0 12px; color: var(--accent-green); font-size: 0.76rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.22em; text-shadow: var(--glow-green); }
+    .phase-title { margin: 0; max-width: 18ch; font-size: clamp(2.5rem, 5vw, 4.7rem); line-height: 0.94; letter-spacing: -0.05em; color: #f5feff; text-transform: uppercase; text-wrap: balance; text-shadow: 0 0 24px rgba(0, 245, 255, 0.2); }
+    .hero-summary { margin: 18px 0 0; max-width: 60ch; color: var(--muted); font-size: 0.98rem; }
+    .hero-meta { display: grid; gap: 12px; }
+    .meta-card { padding: 16px 18px; border: 1px solid rgba(57, 255, 20, 0.2); border-radius: 18px; background: rgba(255, 255, 255, 0.025); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.24); }
+    .meta-label { margin-bottom: 6px; color: var(--muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.16em; }
+    .meta-chip { color: var(--accent-blue); font-size: 1rem; font-weight: 700; letter-spacing: 0.02em; text-shadow: var(--glow-blue); word-break: break-word; }
+    .repo-tag { display: inline-flex; align-items: center; gap: 8px; margin-top: 10px; padding: 8px 12px; border: 1px solid rgba(0, 245, 255, 0.24); border-radius: 999px; background: rgba(0, 245, 255, 0.08); color: var(--accent-blue); font-size: 0.82rem; letter-spacing: 0.04em; }
+    .section { position: relative; margin-top: 22px; padding: 24px; border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--panel); box-shadow: var(--shadow); }
+    .section::before { content: ""; position: absolute; left: 24px; right: 24px; top: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(0, 245, 255, 0.9), rgba(57, 255, 20, 0.9), transparent); transform: translateY(-1px); }
+    .section-header { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 18px; align-items: end; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+    .section-title { margin: 0; font-size: clamp(1.2rem, 2vw, 1.7rem); line-height: 1.1; color: #f0feff; }
+    .section-index { display: inline-flex; align-items: center; gap: 10px; color: var(--accent-green); font-size: 0.78rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; text-shadow: var(--glow-green); }
+    .section-index::after { content: ""; width: 44px; height: 1px; background: linear-gradient(90deg, rgba(57, 255, 20, 0.9), transparent); }
+    .summary-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .column-card, .diagram-frame, .technical-frame, .viz-frame, .question-frame, .empty-state { border: 1px solid rgba(255, 255, 255, 0.08); border-radius: var(--radius-md); background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01)), rgba(7, 7, 7, 0.82); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.012); }
+    .column-card { padding: 18px; min-height: 200px; }
+    .column-label { margin: 0 0 12px; color: var(--accent-blue); font-size: 0.83rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.16em; text-shadow: var(--glow-blue); }
+    .splitter { width: 100%; height: 1px; margin: 8px 0 16px; background: linear-gradient(90deg, rgba(0, 245, 255, 0.4), transparent); }
+    .diagram-frame, .chart-frame, .technical-frame, .viz-frame, .question-frame { padding: 18px; }
+    .diagram-frame { overflow-x: auto; overflow-y: auto; overscroll-behavior-x: contain; overscroll-behavior-y: contain; max-height: min(70vh, 720px); }
+    .mermaid { width: 100%; max-width: 100%; min-width: 0; color: var(--text); }
+    .mermaid svg { display: block; width: auto !important; min-width: 100%; max-width: none !important; height: auto !important; }
+    .technical-frame { color: #d6f6ff; }
+    .technical-frame table { width: 100%; border-collapse: collapse; }
+    .technical-frame th, .technical-frame td { padding: 12px 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); vertical-align: top; }
+    .technical-frame th { color: var(--accent-green); font-size: 0.76rem; text-align: left; letter-spacing: 0.12em; text-transform: uppercase; }
+    .metric-strip { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 18px; }
+    .metric { padding: 14px 16px; border: 1px solid rgba(0, 245, 255, 0.18); border-radius: var(--radius-sm); background: rgba(0, 245, 255, 0.04); }
+    .metric-label { color: var(--muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.16em; }
+    .metric-value { margin-top: 8px; color: var(--accent-green); font-size: 1.2rem; font-weight: 700; text-shadow: var(--glow-green); }
+    .pill-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+    .pill { display: inline-flex; align-items: center; gap: 8px; padding: 8px 11px; border: 1px solid rgba(57, 255, 20, 0.22); border-radius: 999px; background: rgba(57, 255, 20, 0.06); color: #d9ffd0; font-size: 0.8rem; }
+    .question-frame ul, .technical-frame ul, .column-card ul { margin: 0; padding-left: 20px; }
+    .question-frame li, .technical-frame li, .column-card li { margin-bottom: 8px; }
+    .footer-note { margin-top: 18px; text-align: right; color: rgba(142, 163, 173, 0.72); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; }
+    @media (max-width: 900px) { .hero-grid, .summary-grid, .metric-strip { grid-template-columns: 1fr; } .phase-title { max-width: none; } }
+    @media (max-width: 640px) { .page-shell { width: min(100vw - 20px, 1180px); padding-top: 16px; padding-bottom: 42px; } .hero, .section { padding: 18px; border-radius: 20px; } .section::before { left: 18px; right: 18px; } .phase-title { font-size: clamp(2rem, 12vw, 3rem); } }
+  </style>
+</head>
+<body>
+  <main class="page-shell">
+    <section class="hero" id="phase-header">
+      <div class="hero-grid">
+        <div>
+          <p class="section-kicker">Phase Report / Personal Technical Artifact</p>
+          <h1 class="phase-title">PHASE-04</h1>
+          <p class="hero-summary">
+            Compliance checking, human-review workflow orchestration, DOCX export, Drive upload, and approval state machine — completing the drafting pipeline.
+          </p>
+          <div class="pill-row" aria-label="report metadata">
+            <span class="pill">project :: PDD Auto</span>
+            <span class="pill">date :: 2026-04-22</span>
+          </div>
+          <div class="repo-tag">repo :: pdd-auto / pdd-agent</div>
+        </div>
+        <div class="hero-meta">
+          <div class="meta-card">
+            <div class="meta-label">Project</div>
+            <div class="meta-chip">PDD Auto — WTE Carbon Credit PDD Tool</div>
+          </div>
+          <div class="meta-card">
+            <div class="meta-label">Repository</div>
+            <div class="meta-chip">pdd-auto</div>
+          </div>
+          <div class="meta-card">
+            <div class="meta-label">Date</div>
+            <div class="meta-chip">2026-04-22</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section narrative" id="input-output-summary">
+      <div class="section-header">
+        <div>
+          <div class="section-index">01 / Input -> Output</div>
+          <h2 class="section-title">Input -> Output Summary</h2>
+        </div>
+      </div>
+      <div class="summary-grid">
+        <div class="column-card">
+          <p class="column-label">Inputs</p>
+          <ul>
+            <li>PHASE-02 schemas: <code>pdd_section_schema.yaml</code>, <code>project_input.py</code></li>
+            <li>PHASE-02 domain rules: <code>wte_methodology_rules.yaml</code></li>
+            <li>PHASE-03 orchestrator: <code>section_orchestrator.py</code></li>
+            <li>PHASE-03 provider: <code>provider.py</code>, <code>DraftRun</code></li>
+            <li>PHASE-03 retrieval: <code>index.py</code>, <code>search.py</code></li>
+          </ul>
+        </div>
+        <div class="column-card">
+          <p class="column-label">Outputs</p>
+          <ul>
+            <li><code>rules/verra/wte_review_rules.yaml</code> — structured review checklist YAML</li>
+            <li><code>src/pdd_agent/review/checks.py</code> — rule-based review checks</li>
+            <li><code>src/pdd_agent/review/consistency.py</code> — cross-section numeric consistency</li>
+            <li><code>src/pdd_agent/review/states.py</code> — approval state machine + JSON persistence</li>
+            <li><code>src/pdd_agent/export/docx_export.py</code> — DOCX export from DraftRun</li>
+            <li><code>src/pdd_agent/export/drive_upload.py</code> — gws Drive upload wrapper</li>
+            <li>Wired POST checks into <code>SectionOrchestrator.run_review()</code></li>
+            <li>Added 6 new CLI commands: <code>build-index</code>, <code>draft</code>, <code>review</code>, <code>export</code>, <code>upload</code></li>
+            <li><code>tests/test_review_checks.py</code> — 20 new tests</li>
+          </ul>
+        </div>
+      </div>
+      <div class="metric-strip">
+        <div class="metric">
+          <div class="metric-label">Test Files Changed</div>
+          <div class="metric-value">+1</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">New Source Files</div>
+          <div class="metric-value">+7</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Tests Passing</div>
+          <div class="metric-value">102</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="logic-flow">
+      <div class="section-header">
+        <div>
+          <div class="section-index">02 / Logic Flow</div>
+          <h2 class="section-title">Logic Flow</h2>
+        </div>
+      </div>
+      <div class="diagram-frame technical">
+        <div class="mermaid">flowchart LR
+    A([<code>pdd-agent draft</code>]) --> B[<code>SectionOrchestrator.run()</code>\nDraft all sections]
+    B --> C[<code>orchestrator.run_review()</code>]
+    C --> D[<code>run_review_checks()</code>\nDouble-counting guards\nQuantitative cross-refs\nEvidence requirements\nMethodology POST checks]
+    C --> E[<code>check_quantitative_consistency()</code>\nSection 1.10 ↔ 4.4 net tCO2e\nBaseline/project/leakage arithmetic\nCrediting period total]
+    C --> F[<code>init_review_state()</code>\nCreate ReviewStateStore]
+    F --> G[<code>state_store.save()</code>\nJSON to data/runs/]
+    D --> H{<code>passed?</code>}
+    E --> H
+    H -->|False| I[<code>blocking_issues[]</code>\nCRITICAL flags block approval]
+    H -->|True| J[<code>auto_approved_section_ids[]</code>\nHIGH-confidence BOILERPLATE only]
+    J --> K[<code>pdd-agent export</code>\nDOCX with provenance\nREVIEW REQUIRED styling]
+    K --> L[<code>pdd-agent upload</code>\ngws drive files create]</div>
+      </div>
+    </section>
+
+    <section class="section narrative" id="math-algorithm-used">
+      <div class="section-header">
+        <div>
+          <div class="section-index">03 / Math / Algorithm Used</div>
+          <h2 class="section-title">Math / Algorithm Used</h2>
+        </div>
+      </div>
+      <div class="technical-frame">
+        <table>
+          <thead>
+            <tr><th>Check</th><th>Formula / Rule</th><th>Severity</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Net emissions cross-ref</td>
+              <td><code>\|section_1_10 − net_input\| ≤ 0.01</code><br><code>\|section_4_4 − net_input\| ≤ 0.01</code><br><code>\|val_1_10 − val_4_4\| ≤ 0.01</code></td>
+              <td>CRITICAL</td>
+            </tr>
+            <tr>
+              <td>Baseline / Project arithmetic</td>
+              <td><code>calculated_net = baseline − project</code><br>Flag if <code>\|calculated_net − net_val\| &gt; 0.1</code></td>
+              <td>CRITICAL</td>
+            </tr>
+            <tr>
+              <td>Crediting period total</td>
+              <td><code>expected = net_tco2e/year × crediting_period_years</code><br>Flag if <code>\|expected − crediting_period_total\| &gt; 0.01</code></td>
+              <td>HIGH</td>
+            </tr>
+            <tr>
+              <td>Waste throughput</td>
+              <td><code>\|extracted − project_input.annual_waste_throughput\| ≤ 0.5</code></td>
+              <td>HIGH</td>
+            </tr>
+            <tr>
+              <td>DC-01: dual-claim without allocation</td>
+              <td>Flag if <code>landfill_diversion AND fuel_substitution</code> AND "credit allocation" not in §1.16</td>
+              <td>CRITICAL</td>
+            </tr>
+            <tr>
+              <td>DC-02: RECs not addressed</td>
+              <td>Flag if <code>installed_capacity_mw &gt; 0</code> AND "rec" not in §1.15</td>
+              <td>CRITICAL</td>
+            </tr>
+            <tr>
+              <td>DC-03: waste-shifting leakage</td>
+              <td>Flag if <code>landfill_diversion_claim</code> AND "waste-shift" not in §4.3</td>
+              <td>HIGH</td>
+            </tr>
+            <tr>
+              <td>DC-04: unapproved GEF source</td>
+              <td>Flag if grid_emission_factor_source not in approved list</td>
+              <td>CRITICAL</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="splitter"></div>
+        <p><strong>Number extraction:</strong> <code>re.findall(r"\d[\d,]*", text)[0].replace(",", "")</code> — captures the first comma-formatted integer in section text. Handles "50,000 tCO2e/year" → 50000.</p>
+        <p><strong>State machine:</strong> <code>drafted → needs-input | needs-domain-review | ready-for-human-edit → approved</code>. Direct <code>drafted → approved</code> is blocked. Reversion allowed: <code>needs-input → drafted</code>.</p>
+      </div>
+    </section>
+
+    <section class="section" id="tools-formulas-methods">
+      <div class="section-header">
+        <div>
+          <div class="section-index">04 / Tools / Formulas / Methods</div>
+          <h2 class="section-title">Tools / Formulas / Methods</h2>
+        </div>
+      </div>
+      <div class="technical-frame">
+        <table>
+          <thead>
+            <tr><th>Component</th><th>File</th><th>Key Method / Pattern</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Review rules YAML</td>
+              <td><code>rules/verra/wte_review_rules.yaml</code></td>
+              <td>Double-counting guards (DC-01–04), quantitative cross-refs, evidence requirements, state machine YAML</td>
+            </tr>
+            <tr>
+              <td>Rule-based checks</td>
+              <td><code>src/pdd_agent/review/checks.py</code></td>
+              <td><code>run_review_checks()</code>, <code>_run_double_counting_guard()</code>, <code>_run_quantitative_check()</code>, <code>summarize_review_result()</code></td>
+            </tr>
+            <tr>
+              <td>Consistency engine</td>
+              <td><code>src/pdd_agent/review/consistency.py</code></td>
+              <td><code>check_quantitative_consistency()</code>, <code>_extract_first_number()</code>, <code>ConsistencyReport</code> with <code>passed / critical_flags / high_flags</code> properties</td>
+            </tr>
+            <tr>
+              <td>Approval state store</td>
+              <td><code>src/pdd_agent/review/states.py</code></td>
+              <td><code>ReviewStateStore</code> with <code>set_state()</code>, <code>add_note()</code>, <code>save()</code>, <code>load()</code>. <code>ReviewState</code> enum: drafted / needs-input / needs-domain-review / ready-for-human-edit / approved</td>
+            </tr>
+            <tr>
+              <td>DOCX export</td>
+              <td><code>src/pdd_agent/export/docx_export.py</code></td>
+              <td>python-docx — title page, per-section headings, provenance quotes, yellow highlight for LOW/UNSUPPORTED confidence, review status appendix table, page numbers</td>
+            </tr>
+            <tr>
+              <td>Drive upload</td>
+              <td><code>src/pdd_agent/export/drive_upload.py</code></td>
+              <td>Subprocess <code>gws drive files create --folder-id ... --name ...</code> with timeout, URL parsing, error handling. Falls back to folder URL if file ID not parseable.</td>
+            </tr>
+            <tr>
+              <td>Orchestrator review wiring</td>
+              <td><code>src/pdd_agent/agent/section_orchestrator.py</code></td>
+              <td><code>run_review()</code> — runs <code>draft_all_sections()</code>, then <code>run_review_checks()</code>, <code>check_quantitative_consistency()</code>, <code>init_review_state()</code>, saves both <code>DraftRun</code> and <code>ReviewStateStore</code></td>
+            </tr>
+            <tr>
+              <td>CLI commands</td>
+              <td><code>src/pdd_agent/cli.py</code></td>
+              <td>6 new commands: <code>build-index</code>, <code>draft</code>, <code>review</code>, <code>export</code>, <code>upload</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section" id="results-visualizations">
+      <div class="section-header">
+        <div>
+          <div class="section-index">05 / Results &amp; Visualizations</div>
+          <h2 class="section-title">Results &amp; Visualizations</h2>
+        </div>
+      </div>
+      <div class="viz-frame">
+        <div class="empty-state">
+          <strong>No quantitative benchmark data yet</strong>
+          <p style="margin-top:8px;color:var(--muted)">PHASE-05 (Benchmark &amp; Demo) will run the full pipeline end-to-end and produce comparison scorecards.</p>
+        </div>
+        <div class="chart-frame" style="margin-top:16px">
+          <canvas id="testChart"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <section class="section narrative" id="limitations-second-best-alternative">
+      <div class="section-header">
+        <div>
+          <div class="section-index">06 / Limitations / Second-Best Alternative</div>
+          <h2 class="section-title">Limitations / Second-Best Alternative</h2>
+        </div>
+      </div>
+      <div class="question-frame">
+        <ul>
+          <li><strong>DOCX requires python-docx (not yet installed):</strong> <code>pip install python-docx</code> is required before <code>pdd-agent export</code> will produce output. Gracefully degrades with an error log rather than crashing.</li>
+          <li><strong>Real LLM not wired:</strong> Only <code>NoopProvider</code> is operational. All sections produce structured placeholders. <code>OpenAIProvider</code> and <code>OllamaProvider</code> stubs exist but are not configured. Until an LLM is wired, the full drafting + review pipeline cannot be exercised end-to-end.</li>
+          <li><strong>Double-counting guard DC-01 string matching:</strong> The credit allocation check looks for the substring "credit allocation" in §1.16. A more robust approach would parse a structured table. Current approach is a pragmatic heuristic — domain expert review is mandatory for dual-claim projects.</li>
+          <li><strong>Number extraction from prose:</strong> <code>_extract_first_number</code> uses regex on raw draft text. If section text contains multiple numbers (e.g., "capacity is 25 MW and annual waste is 100,000 tonnes"), the first match may not be the intended value. This is why HIGH/CRITICAL sections require human review before finalization.</li>
+          <li><strong>4 malformed .norm.json files:</strong> Yanjiang, Linfen, Shunping, Yingoku have JSON parse errors. Fixing them would increase corpus coverage from 9/13 to 13/13. These are excluded from FTS5 indexing, reducing retrieval recall for those projects.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section narrative" id="errors-warnings-flags-encountered">
+      <div class="section-header">
+        <div>
+          <div class="section-index">07 / Errors / Warnings / Flags</div>
+          <h2 class="section-title">Errors / Warnings / Flags Encountered</h2>
+        </div>
+      </div>
+      <div class="question-frame technical">
+        <ul>
+          <li><strong>Test failure: <code>test_blocks_critical_severity</code></strong> — <code>ReviewCheckResult.passed</code> started as <code>True</code> but wasn't updated when a CRITICAL flag was added. Fixed: <code>add_check()</code> now sets <code>self.passed = False</code> when a CRITICAL flag is appended.</li>
+          <li><strong>Test failure: <code>test_matching_net_values_passes</code></strong> — Number extraction regex <code>[\d,]+\.?\d*</code> split "50,000" into "50" and "000" as separate matches. Fixed: changed to <code>\d[\d,]*</code> which captures the full formatted integer as one unit.</li>
+          <li><strong>Test failure: <code>test_invalid_transition_drafted_to_approved_blocked</code></strong> — YAML allowed direct <code>drafted → approved</code> transition, contradicting the domain rule that every section must go through <code>ready-for-human-edit</code> before final approval. Fixed: removed <code>approved</code> from <code>drafted</code>'s <code>can_transition_to</code> set in both the YAML and <code>_TRANSITIONS</code> dict.</li>
+          <li><strong>Test failure: <code>test_all_approved_true_when_everything_approved</code></strong> — Same root cause as above: the two-step path (<code>drafted → ready-for-human-edit → approved</code>) was not reflected in the test. Fixed: test now calls <code>set_state(READY_FOR_HUMAN_EDIT)</code> before <code>set_state(APPROVED)</code>.</li>
+          <li><strong>Import error: <code>run_post_draft_checks</code> not found</strong> — Imported as a standalone function but it's a method on <code>MethodologyRules</code>. Fixed import to use <code>get_methodology_rules()</code> instance and call <code>rules_engine.run_post_draft_checks(section_texts)</code>.</li>
+          <li><strong>CLI <code>build-index corpus-dir</code> mismatch:</strong> The CLI argument is <code>--corpus-dir</code> but <code>RetrievalIndex.build(normalized_dir=)</code> parameter name is <code>normalized_dir</code>. Fixed call: <code>idx.build(normalized_dir=Path(args.corpus_dir))</code>.</li>
+          <li><strong>Deprecation warning: <code>datetime.utcnow()</code></strong> — Used in <code>section_orchestrator.py:61</code> (existing, PHASE-03). Marked as known issue. Should be replaced with <code>datetime.now(datetime.UTC)</code>.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section narrative" id="open-questions-next-phase-seeds">
+      <div class="section-header">
+        <div>
+          <div class="section-index">08 / Open Questions / Next Phase Seeds</div>
+          <h2 class="section-title">Open Questions / Next Phase Seeds</h2>
+        </div>
+      </div>
+      <div class="question-frame">
+        <ul>
+          <li><strong>PHASE-05 — Benchmark &amp; Demo:</strong> Run the full <code>pdd-agent draft</code> pipeline with a minimal ProjectInput against the Soc Son corpus reference. Compare generated sections against the real VCS_Soc_Son PDD to score retrieval quality, missing evidence, and compliance gaps. Produce <code>reports/demo-scorecard.md</code> and <code>reports/section-diff.md</code>.</li>
+          <li><strong>python-docx installation:</strong> Add to <code>pyproject.toml</code> as a dependency so <code>pdd-agent export</code> works out of the box.</li>
+          <li><strong>Real LLM wiring:</strong> Wire <code>OpenAIProvider</code> or <code>OllamaProvider</code> via <code>configure_provider()</code> in the CLI. The provider registry is already in place; only the configuration step is missing.</li>
+          <li><strong>Fix 4 malformed .norm.json files:</strong> Yanjiang, Linfen, Shunping, Yingoku have trailing-JSON issues. Correcting them expands the FTS5 corpus to 13/13 docs and improves retrieval for these projects.</li>
+          <li><strong>Demo ProjectInput YAML:</strong> Create <code>configs/projects/demo_socson_like.yaml</code> — a reproducible input for the Soc Son-like project to drive the PHASE-05 benchmark.</li>
+          <li><strong>DATETIME deprecation cleanup:</strong> Replace <code>datetime.utcnow()</code> with <code>datetime.now(datetime.UTC)</code> in <code>index.py</code>, <code>methodology_rules.py</code>, and <code>section_orchestrator.py</code>.</li>
+          <li><strong>PHASE-04 review rules completeness:</strong> The <code>wte_review_rules.yaml</code> is defined but not yet wired into the review CLI command. The <code>review</code> command currently only loads and displays existing state — it should re-run all checks against a loaded DraftRun.</li>
+        </ul>
+      </div>
+      <div class="footer-note">artifact generated for reflection, not presentation theater</div>
+    </section>
+  </main>
+  <script>
+    (function() {
+      const chartCanvases = document.querySelectorAll('canvas');
+      chartCanvases.forEach((canvas) => {
+        canvas.classList.add('report-chart');
+        const parent = canvas.parentElement;
+        if (parent && parent.classList.contains('technical-frame') && !parent.classList.contains('chart-frame')) {
+          parent.classList.add('chart-frame');
+        }
+      });
+    })();
+    if (window.Chart) {
+      Chart.defaults.devicePixelRatio = 1;
+      Chart.defaults.animation = false;
+      Chart.defaults.resizeDelay = 150;
+      Chart.defaults.normalized = true;
+      Chart.defaults.maintainAspectRatio = false;
+      Chart.defaults.responsive = true;
+      window.__REPORT_CHART_DEFAULTS__ = { animation: false, resizeDelay: 150, normalized: true, maintainAspectRatio: false, responsive: true };
+
+      const ctx = document.getElementById('testChart');
+      if (ctx) {
+        const chart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: ['PHASE-01\nIngestion', 'PHASE-02\nDomain & Schema', 'PHASE-03\nRetrieval & Drafting', 'PHASE-04\nReview & Export', 'PHASE-05\nBenchmark'],
+            datasets: [
+              {
+                label: 'Tests Passing',
+                data: [21, 52, 82, 102, null],
+                backgroundColor: 'rgba(0, 245, 255, 0.7)',
+                borderColor: '#00f5ff',
+                borderWidth: 1,
+              },
+              {
+                label: 'New Source Files',
+                data: [4, 5, 4, 7, null],
+                backgroundColor: 'rgba(57, 255, 20, 0.5)',
+                borderColor: '#39ff14',
+                borderWidth: 1,
+              }
+            ]
+          },
+          options: {
+            animation: false,
+            resizeDelay: 150,
+            normalized: true,
+            maintainAspectRatio: false,
+            responsive: true,
+            plugins: {
+              legend: { labels: { color: '#e9f6ff', font: { family: 'Cascadia Code, monospace', size: 11 } } },
+              title: { display: true, text: 'Cumulative Test Count and File Growth by Phase', color: '#e9f6ff', font: { family: 'Segoe UI, sans-serif', size: 14 } }
+            },
+            scales: {
+              x: { ticks: { color: '#8ea3ad', font: { family: 'Cascadia Code, monospace', size: 10 } }, grid: { color: 'rgba(255,255,255,0.06)' } },
+              y: { ticks: { color: '#8ea3ad', font: { family: 'Cascadia Code, monospace', size: 10 } }, grid: { color: 'rgba(255,255,255,0.06)' } }
+            }
+          }
+        });
+      }
+    }
+  </script>
+</body>
+</html>

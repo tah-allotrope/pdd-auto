@@ -1,0 +1,29 @@
+# Byte-compiled / optimized Python files
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Test artifacts
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Lint artifacts
+.ruff_cache/
+
+# Large data — do not commit
+data/corpus/raw/
+data/corpus/normalized/
+data/corpus/manifest.jsonl
+data/index/
+data/runs/
+
+# OS noise
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp

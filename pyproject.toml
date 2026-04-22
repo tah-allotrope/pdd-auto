@@ -1,0 +1,40 @@
+[project]
+name = "pdd-agent"
+version = "0.1.0"
+description = "Agentic low-cost WTE carbon-credit PDD drafting tool"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [{name = "Allotrope Partners"}]
+license = {text = "Apache-2.0"}
+dependencies = [
+    "pypdf>=5.1.0",
+    "PyYAML>=6.0.2",
+    "pydantic>=2.10.0",
+    "structlog>=24.4.0",
+    "python-docx>=1.1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3.0",
+    "pytest-cov>=6.0.0",
+    "ruff>=0.8.0",
+]
+export = [
+    "python-docx>=1.1.0",
+]
+
+[project.scripts]
+pdd-agent = "pdd_agent.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v --tb=short"

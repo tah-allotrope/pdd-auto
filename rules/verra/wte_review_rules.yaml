@@ -1,0 +1,253 @@
+# WTE PDD Review Rules — Verra VCS
+# Version: 0.1.0
+# Scope: ACM0022, ACM0003 WTE projects
+# Purpose: Structured review checklist for human reviewers and rule-based gates.
+
+version: "0.1.0"
+bucket: "verra-wte-initial"
+
+review_sections:
+
+  # ─────────────────────────────────────────────
+  # MANDATORY DOMAIN REVIEW — cannot be auto-approved
+  # ─────────────────────────────────────────────
+  mandatory_domain_review:
+    description: >
+      Sections that require a qualified carbon credit domain expert to review and sign off.
+      No amount of corpus retrieval substitutes for expert judgment on these items.
+    sections:
+      - section_id: "3"
+        sub_section_id: "3.4"
+        heading: "Baseline Scenario"
+        reason: >
+          Baseline scenario is the foundation of additionality. An incorrect baseline
+          invalidates the entire PDD. Domain expert must verify the pre-project waste
+          disposal practice matches project-specific evidence.
+      - section_id: "3"
+        sub_section_id: "3.5"
+        heading: "Additionality"
+        reason: >
+          Additionality is the core regulatory test. Expert must confirm the regulatory
+          compliance and common-practice arguments are sound for this specific project.
+      - section_id: "1"
+        sub_section_id: "1.13"
+        heading: "Conditions Prior to Project Initiation"
+        reason: >
+          Pre-project conditions define the baseline. Must match section 3.4. Expert
+          must verify site-specific evidence.
+      - section_id: "4"
+        sub_section_id: "4.1"
+        heading: "Baseline Emissions"
+        reason: >
+          Baseline emission calculation must use correct methodology formula and official
+          emission factors. Expert must verify calculation.
+      - section_id: "4"
+        sub_section_id: "4.4"
+        heading: "Net GHG Emission Reductions and Removals"
+        reason: >
+          Net calculation is the final credit quantity. Must match section 1.10 exactly.
+          Expert must verify arithmetic.
+
+  # ─────────────────────────────────────────────
+  # REQUIRED EVIDENCE ATTACHMENTS
+  # Maps sections to mandatory evidence types
+  # ─────────────────────────────────────────────
+  evidence_requirements:
+    - section_ref: "1.4"
+      evidence_type: "Technical description"
+      description: "Technical description of waste treatment process"
+    - section_ref: "1.13"
+      evidence_type: "Waste characterization study"
+      description: "Evidence of baseline waste stream composition"
+    - section_ref: "1.14"
+      evidence_type: "Regulatory compliance list"
+      description: "List of applicable laws and regulations"
+    - section_ref: "1.15"
+      evidence_type: "No-overlap declaration"
+      description: "Explicit statement of no participation in other GHG programs"
+    - section_ref: "1.16"
+      evidence_type: "Credit ownership statement"
+      description: "Clear delineation of credit ownership (critical for dual-claim projects)"
+    - section_ref: "2.2"
+      evidence_type: "Stakeholder consultation record"
+      description: "Evidence of stakeholder consultation (date, attendees, concerns)"
+    - section_ref: "2.3"
+      evidence_type: "EIA or environmental permit"
+      description: "Environmental impact assessment or permit number"
+    - section_ref: "3.2"
+      evidence_type: "Methodology applicability checklist"
+      description: "Each applicability condition checked YES/NO with evidence"
+    - section_ref: "3.3"
+      evidence_type: "GPS coordinates and project boundary map"
+      description: "Geographic boundary with coordinates"
+    - section_ref: "3.5"
+      evidence_type: "Regulatory compliance evidence + common practice analysis"
+      description: "Documents proving additionality"
+    - section_ref: "4.1"
+      evidence_type: "Official emission factor source document"
+      description: "Grid emission factor source (ACM0022 default or national authority)"
+    - section_ref: "5.1"
+      evidence_type: "Monitoring parameter table"
+      description: "All fixed and monitored parameters listed"
+
+  # ─────────────────────────────────────────────
+  # AUTO-APPROVAL RULES — sections that can pass without human review
+  # (only if corpus retrieval found HIGH confidence examples)
+  # ─────────────────────────────────────────────
+  auto_approval_candidates:
+    description: >
+      Sections that may be auto-approved if confidence is HIGH and no issues are flagged.
+      All other sections require human review regardless.
+    sections:
+      - section_id: "1"
+        sub_section_id: "1.1"
+        content_class: "BOILERPLATE"
+        required_confidence: "HIGH"
+        required_evidence: []
+      - section_id: "1"
+        sub_section_id: "1.2"
+        content_class: "FACTUAL"
+        required_confidence: "HIGH"
+        required_evidence: []
+      - section_id: "1"
+        sub_section_id: "1.5"
+        content_class: "FACTUAL"
+        required_confidence: "HIGH"
+        required_evidence: []
+      - section_id: "1"
+        sub_section_id: "1.6"
+        content_class: "FACTUAL"
+        required_confidence: "HIGH"
+        required_evidence: []
+      - section_id: "1"
+        sub_section_id: "1.7"
+        content_class: "FACTUAL"
+        required_confidence: "HIGH"
+        required_evidence: []
+      - section_id: "1"
+        sub_section_id: "1.8"
+        content_class: "FACTUAL"
+        required_confidence: "HIGH"
+        required_evidence: []
+      - section_id: "1"
+        sub_section_id: "1.9"
+        content_class: "FACTUAL"
+        required_confidence: "HIGH"
+        required_evidence: []
+      - section_id: "2"
+        sub_section_id: "2.4"
+        content_class: "BOILERPLATE"
+        required_confidence: "HIGH"
+        required_evidence: []
+      - section_id: "2"
+        sub_section_id: "2.5"
+        content_class: "BOILERPLATE"
+        required_confidence: "HIGH"
+        required_evidence: []
+      - section_id: "1"
+        sub_section_id: "1.17"
+        content_class: "BOILERPLATE"
+        required_confidence: "HIGH"
+        required_evidence: []
+
+  # ─────────────────────────────────────────────
+  # QUANTITATIVE CROSS-REFERENCE RULES
+  # Numbers that MUST match across sections
+  # ─────────────────────────────────────────────
+  quantitative_cross_references:
+    - check: "section_1_10_matches_section_4_4"
+      description: "Section 1.10 net tCO2e/year must equal Section 4.4 net calculation"
+      section_a: "1.10"
+      section_b: "4.4"
+      tolerance: 0.01
+      severity: "CRITICAL"
+    - check: "section_4_1_baseline_matches_quant_input"
+      description: "Baseline emissions in Section 4.1 must match ProjectInput.quantification.baseline_emissions_tco2e_per_year"
+      section_ref: "4.1"
+      field_ref: "quantification.baseline_emissions_tco2e_per_year"
+      tolerance: 0.01
+      severity: "CRITICAL"
+    - check: "section_4_2_project_matches_quant_input"
+      description: "Project emissions in Section 4.2 must match ProjectInput.quantification.project_emissions_tco2e_per_year"
+      section_ref: "4.2"
+      field_ref: "quantification.project_emissions_tco2e_per_year"
+      tolerance: 0.01
+      severity: "CRITICAL"
+    - check: "crediting_period_total_consistency"
+      description: "Crediting period total = net tCO2e/year × crediting period years"
+      formula: "net_tco2e_per_year * crediting_period_years"
+      section_ref: "4.4"
+      field_ref: "quantification.crediting_period_total_tco2e"
+      tolerance: 0.01
+      severity: "HIGH"
+    - check: "waste_throughput_consistency"
+      description: "Section 1.10 waste throughput must match ProjectInput"
+      section_ref: "1.10"
+      field_ref: "technology.annual_waste_throughput"
+      tolerance: 0.0
+      severity: "HIGH"
+    - check: "capacity_consistency"
+      description: "Section 1.10 installed capacity must match ProjectInput"
+      section_ref: "1.10"
+      field_ref: "technology.installed_capacity_mw"
+      tolerance: 0.0
+      severity: "HIGH"
+
+  # ─────────────────────────────────────────────
+  # DOUBLE-COUNTING GUARDS
+  # Explicit checks for the most common WTE compliance failures
+  # ─────────────────────────────────────────────
+  double_counting_guards:
+    - guard_id: "DC-01"
+      description: "Project claims BOTH landfill_diversion AND fuel_substitution without explicit credit allocation"
+      trigger_condition: "technology.landfill_diversion_claim == True AND technology.fuel_substitution_claim == True"
+      required_action: >
+        Section 1.16 must contain explicit credit allocation table showing which waste
+        fractions are credited under which methodology. Without this table, the project
+        cannot be validated.
+      blocking: true
+    - guard_id: "DC-02"
+      description: "Section 1.15 does not explicitly address renewable energy certificates (RECs)"
+      trigger_condition: "technology.installed_capacity_mw > 0"
+      required_action: >
+        Section 1.15 must explicitly state whether RECs are being sold. If yes, the
+        baseline grid emission factor must be adjusted to avoid double-counting the
+        same displaced electricity.
+      blocking: true
+    - guard_id: "DC-03"
+      description: "Leakage assessment in Section 4.3 does not address waste-shifting risk"
+      trigger_condition: "technology.landfill_diversion_claim == True"
+      required_action: >
+        Section 4.3 must include evidence that waste diverted by this project was
+        previously destined for landfill (not diverted from another waste stream) and
+        that receiving landfills have not increased operations.
+      blocking: false
+    - guard_id: "DC-04"
+      description: "Grid emission factor source not aligned with methodology"
+      trigger_condition: "quantification.grid_emission_factor_source not in [ACM0022 default, national grid authority, regional grid operator]"
+      required_action: >
+        The grid emission factor must come from an approved methodology source.
+        Using a non-approved source invalidates the baseline calculation.
+      blocking: true
+
+  # ─────────────────────────────────────────────
+  # REVIEW STATUS TRANSITIONS
+  # Valid state machine for section review workflow
+  # ─────────────────────────────────────────────
+  review_status_machine:
+    states:
+      - state: "drafted"
+        description: "Section has been auto-drafted by the system"
+        can_transition_to: ["needs-input", "needs-domain-review", "ready-for-human-edit"]
+      - state: "needs-input"
+        description: "Section requires additional project-specific input from proponent"
+        can_transition_to: ["drafted"]
+      - state: "needs-domain-review"
+        description: "Section requires domain expert review before proceeding"
+        can_transition_to: ["ready-for-human-edit", "drafted"]
+      - state: "ready-for-human-edit"
+        description: "Section is reviewed but requires manual editing in the final document"
+        can_transition_to: ["approved", "needs-domain-review"]
+      - state: "approved"
+        description: "Section has been approved by human reviewer"
+        can_transition_to: []
