@@ -17,6 +17,7 @@ from pdd_agent.retrieval.index import RetrievalIndex
 from pdd_agent.agent.section_orchestrator import SectionOrchestrator
 from pdd_agent.export.docx_export import export_run_to_docx
 from pdd_agent.export.drive_upload import upload_file, upload_docx_run
+from pdd_agent.phase05.benchmark import create_demo_project_input, run_demo_benchmark
 from schemas.project_input import ProjectInput
 
 
@@ -82,6 +83,42 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Target Drive folder ID",
     )
 
+    demo_config_parser = sub.add_parser(
+        "demo-config", help="Write the reproducible Soc Son-like demo ProjectInput"
+    )
+    demo_config_parser.add_argument(
+        "--output",
+        default="configs/projects/demo_socson_like.yaml",
+        help="Output YAML path",
+    )
+
+    benchmark_parser = sub.add_parser(
+        "benchmark", help="Run the Phase 05 demo benchmark and generate scorecards"
+    )
+    benchmark_parser.add_argument(
+        "--input",
+        default="configs/projects/demo_socson_like.yaml",
+        help="Path to demo ProjectInput YAML",
+    )
+    benchmark_parser.add_argument(
+        "--reference",
+        help="Optional normalized Soc Son reference path (.norm.json)",
+    )
+    benchmark_parser.add_argument(
+        "--existing-run",
+        help="Optional path to an existing run JSON to benchmark without re-drafting",
+    )
+    benchmark_parser.add_argument(
+        "--reports-dir",
+        default="reports",
+        help="Directory for demo-scorecard.md and section-diff.md",
+    )
+    benchmark_parser.add_argument(
+        "--no-export",
+        action="store_true",
+        help="Skip DOCX export during benchmark",
+    )
+
     parser.add_argument(
         "--folder-id",
         default="1pp23yRZ8qtopw1BPXrzVewXsmmWplCse",
@@ -121,6 +158,8 @@ def main() -> int:
         "review": lambda: _run_review(args, log),
         "export": lambda: _run_export(args, log),
         "upload": lambda: _run_upload(args, log),
+        "demo-config": lambda: _run_demo_config(args, log),
+        "benchmark": lambda: _run_benchmark(args, log),
     }
 
     try:
@@ -228,6 +267,29 @@ def _run_upload(args, log) -> None:
         log.info("upload_success", drive_url=result["drive_url"])
     else:
         log.error("upload_failed", error=result["error"])
+
+
+def _run_demo_config(args, log) -> None:
+    path = create_demo_project_input(Path(args.output))
+    log.info("demo_config_written", path=str(path))
+
+
+def _run_benchmark(args, log) -> None:
+    artifacts = run_demo_benchmark(
+        project_input_path=Path(args.input),
+        reference_norm_path=Path(args.reference) if args.reference else None,
+        reports_dir=Path(args.reports_dir),
+        existing_run_path=Path(args.existing_run) if args.existing_run else None,
+        export_docx=not args.no_export,
+    )
+    log.info(
+        "benchmark_complete",
+        run_id=artifacts.run_id,
+        scorecard=str(artifacts.demo_scorecard),
+        diff=str(artifacts.section_diff),
+        runtime_seconds=artifacts.runtime_seconds,
+        matched_sections=artifacts.comparison_summary.get("matched_sections"),
+    )
 
 
 if __name__ == "__main__":

@@ -9,7 +9,7 @@ from __future__ import annotations
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, Sequence
 
 import structlog
 import yaml
@@ -104,8 +104,8 @@ class SectionOrchestrator:
         self,
         section_id: str,
         sub_section_id: str | None,
-        examples: list[dict[str, Any]],
-        project_input: ProjectInput,
+        examples: Sequence[Any],
+        project_input: ProjectInput | None = None,
     ) -> str:
         info = self._section_info(section_id, sub_section_id)
         heading = info.get("heading", f"Section {section_id}")
@@ -135,7 +135,7 @@ class SectionOrchestrator:
             prompt_parts.append("\n## Corpus Examples: NONE — human review required.\n")
 
         prompt_parts.append("\n## Project-Specific Facts\n")
-        if self._project:
+        if project_input:
             prompt_parts.append(self._summarize_project())
         else:
             prompt_parts.append("ProjectInput not provided — all content must be placeholder.\n")
@@ -170,7 +170,7 @@ class SectionOrchestrator:
         self,
         section_id: str,
         sub_section_id: str | None = None,
-        examples: list[dict[str, Any]] | None = None,
+        examples: Sequence[Any] | None = None,
         force_regenerate: bool = False,
     ) -> DraftSection:
         """Draft a single section and store result in the run record."""
@@ -185,6 +185,7 @@ class SectionOrchestrator:
 
         if examples is None:
             examples = get_examples_for_section(section_id, sub_section_id, k=5)
+        examples = list(examples)
 
         prompt = self._build_prompt(section_id, sub_section_id, examples, self._project)
 
@@ -277,8 +278,6 @@ class SectionOrchestrator:
             project_name=self._project.project.project_name if self._project else "unknown",
             section_ids=section_ids,
         )
-
-        from pdd_agent.review.checks import ReviewState
 
         for sid, ssid in section_ids:
             key = f"{sid}/{ssid}"

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Final Report :: agentic wte pdd tool</title>
+  <meta name="color-scheme" content="dark light">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    const run = async () => {
+      mermaid.initialize({ startOnLoad: false, theme: 'base', securityLevel: 'loose' });
+      await mermaid.run({ nodes: document.querySelectorAll('.mermaid') });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => run().catch(console.error), { once: true });
+    } else {
+      run().catch(console.error);
+    }
+  </script>
+  <style>
+    :root {
+      --paper: #faf6ef;
+      --paper-2: #fffdf9;
+      --ink: #1f1a14;
+      --muted: #645a4f;
+      --line: #dccdb9;
+      --accent: #966736;
+      --accent-2: #3b6f76;
+      --shadow: 0 16px 34px rgba(49,33,16,0.08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top left, rgba(150,103,54,0.08), transparent 24%), linear-gradient(180deg, #f4eee3, #faf6ef 32%, #f2eadc);
+      color: var(--ink);
+      font: 16px/1.65 "Segoe UI", Arial, sans-serif;
+    }
+    main { width: min(1040px, calc(100vw - 24px)); margin: 0 auto; padding: 24px 0 48px; }
+    .hero, .section, .card, .frame, .stat { background: rgba(255,253,249,0.92); border: 1px solid rgba(95,72,46,0.12); box-shadow: var(--shadow); }
+    .hero, .section { border-radius: 24px; }
+    .hero { padding: 32px; margin-bottom: 20px; }
+    .hero-grid, .grid-2, .phase-grid, .appendix-grid, .stats { display: grid; gap: 16px; }
+    .hero-grid { grid-template-columns: 1.45fr 0.85fr; }
+    .grid-2, .phase-grid, .appendix-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .stats { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 16px; }
+    .eyebrow, .index, .label, .meta-label, .stat-label { font: 700 12px/1.2 Consolas, monospace; letter-spacing: 0.15em; text-transform: uppercase; }
+    .eyebrow, .index, .label { color: var(--accent); }
+    h1 { margin: 8px 0 10px; max-width: 12ch; font: clamp(40px, 5vw, 74px)/0.95 Georgia, serif; letter-spacing: -0.04em; }
+    h2 { margin: 6px 0 0; font: 32px/1.05 Georgia, serif; }
+    .lede { color: var(--muted); max-width: 60ch; margin: 0; }
+    .takeaway { margin-top: 20px; padding: 18px 20px; border-left: 4px solid var(--accent-2); border-radius: 0 12px 12px 0; background: rgba(59,111,118,0.08); }
+    .meta-card, .card, .frame { border-radius: 16px; padding: 18px; }
+    .meta-value { margin-top: 8px; color: var(--accent); font: 700 16px Consolas, monospace; word-break: break-word; }
+    .section { padding: 24px; margin-top: 20px; }
+    .section-header { display: flex; justify-content: space-between; align-items: end; gap: 16px; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+    .stat { border-radius: 14px; padding: 14px 16px; background: rgba(59,111,118,0.06); }
+    .stat-label { color: var(--muted); }
+    .stat-value { margin-top: 8px; color: var(--accent-2); font: 700 22px Consolas, monospace; }
+    .frame table { width: 100%; border-collapse: collapse; }
+    .frame th, .frame td { text-align: left; padding: 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    .frame th { color: var(--accent); font: 700 12px Consolas, monospace; letter-spacing: 0.1em; text-transform: uppercase; }
+    ul, ol { margin: 0; padding-left: 20px; }
+    li { margin-bottom: 8px; }
+    .mermaid { overflow-x: auto; }
+    canvas.report-chart { width: 100% !important; height: 300px !important; }
+    .footer { margin-top: 18px; color: rgba(100,90,79,0.74); text-align: right; text-transform: uppercase; letter-spacing: 0.08em; font-size: 12px; }
+    @media (max-width: 900px) {
+      .hero-grid, .grid-2, .phase-grid, .appendix-grid, .stats { grid-template-columns: 1fr; }
+      h1 { max-width: none; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero" id="title-hero">
+      <div class="hero-grid">
+        <div>
+          <p class="eyebrow">Final Report / Shareable Analysis Artifact</p>
+          <h1>agentic wte pdd tool</h1>
+          <p class="lede">A local-first, multi-phase build to ingest Verra-style waste-to-energy PDDs, draft section-level outputs with provenance, run review checks, export artifacts, and benchmark the workflow on a Soc Son-like case.</p>
+          <div class="takeaway">The repository now completes the planned proof-of-workflow end to end, but the benchmark result still argues for hardening provider quality before claiming a useful first-draft product.</div>
+        </div>
+        <div>
+          <div class="meta-card"><div class="meta-label">Project</div><div class="meta-value">PDD Agent</div></div>
+          <div class="meta-card"><div class="meta-label">Repository</div><div class="meta-value">pdd-auto</div></div>
+          <div class="meta-card"><div class="meta-label">Date</div><div class="meta-value">2026-04-24</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="executive-summary">
+      <div class="section-header"><div><div class="index">01 / Executive Summary</div><h2>Executive Summary</h2></div></div>
+      <div class="grid-2">
+        <div class="card">
+          <h3>What was built</h3>
+          <p>The repository now spans corpus ingestion, schema and rule encoding, retrieval-backed drafting, review workflow, export/upload surfaces, and a reproducible Phase 05 benchmark flow with markdown scorecards and a one-command demo runner.</p>
+        </div>
+        <div class="card">
+          <h3>What matters</h3>
+          <p>The architecture proves that a low-cost, local-first workflow is viable. The benchmark also shows that with `NoopProvider` the system still produces placeholders, so the next leverage point is provider quality rather than more scaffolding.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="background-objective">
+      <div class="section-header"><div><div class="index">02 / Background &amp; Objective</div><h2>Background &amp; Objective</h2></div></div>
+      <div class="frame">
+        <p>The project goal was to build an agentic, near-zero-cost assistant for waste-to-energy carbon credit PDD drafting using Verra-style source documents, local storage and indexing, and optional LLM generation only where needed. The plan deliberately avoided a monolithic hallucination-prone document generator and instead focused on section-level provenance, review gates, and measurable workflow quality.</p>
+        <p>Across five phases, the repo moved from empty scaffolding to a working CLI that can ingest a WTE corpus, normalize and parse it, build an FTS5 retrieval index, draft every canonical section, apply review and consistency checks, export the result, and benchmark the workflow against a Soc Son-like reference case.</p>
+      </div>
+    </section>
+
+    <section class="section" id="inputs-scope">
+      <div class="section-header"><div><div class="index">03 / Inputs &amp; Scope</div><h2>Inputs &amp; Scope</h2></div></div>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Major inputs</h3>
+          <ul>
+            <li>`plans/2026-04-22-agentic-wte-pdd-tool-plan.md` as the multi-phase source of truth.</li>
+            <li>Local research notes and the Soc Son sample PDD in `template/VCS_Soc Son_Project-Description.pdf`.</li>
+            <li>Drive-accessible Verra WTE project corpus and local FTS index.</li>
+            <li>Session verification evidence including benchmark scorecards, tests, and smoke runs.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Out of scope</h3>
+          <ul>
+            <li>Production SaaS UI or hosted retrieval stack.</li>
+            <li>Automatic registry submission or final issuance-ready documents without human review.</li>
+            <li>Broad methodology support beyond the initial WTE bucket.</li>
+            <li>Claims of production drafting quality before a real provider benchmark on multiple projects.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="assumptions-constraints">
+      <div class="section-header"><div><div class="index">04 / Assumptions &amp; Constraints</div><h2>Assumptions &amp; Constraints</h2></div></div>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Assumptions</h3>
+          <ul>
+            <li>A narrow Verra-style WTE corpus is sufficient to prove the workflow before expanding methodologies.</li>
+            <li>Section-level provenance and reviewability matter more than one-shot document fluency at this stage.</li>
+            <li>The Soc Son sample is representative enough to benchmark structure and comparison logic.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Constraints</h3>
+          <ul>
+            <li>Keep recurring infra cost near zero using local files, SQLite FTS5, and `gws` instead of managed services.</li>
+            <li>Human review remains mandatory for high-risk methodology and quantitative sections.</li>
+            <li>Current benchmark still uses `NoopProvider`; DOCX export also depends on `python-docx` being installed in the local runtime.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="methodology">
+      <div class="section-header"><div><div class="index">05 / Methodology</div><h2>Methodology</h2></div></div>
+      <div class="frame">
+        <p>The work followed the plan’s phased architecture: first establish a clean local corpus and bucket, then encode canonical section structure and methodology rules, then build retrieval-backed drafting, then add explicit review/export surfaces, and finally benchmark the resulting workflow on a realistic demo case. Verification emphasized tests, deterministic artifacts, and a real smoke path rather than narrative claims.</p>
+        <p>The final benchmark used a Soc Son-like `ProjectInput`, ran the existing drafting and review pipeline, parsed the normalized Soc Son reference, and generated comparison artifacts summarizing match coverage, provenance presence, placeholder density, and a simple grounding score. That made the Phase 05 recommendation observable rather than subjective.</p>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="stat-label">Orientation</div><div class="stat-value">multi-phase</div></div>
+        <div class="stat"><div class="stat-label">Evidence rule</div><div class="stat-value">no invented data</div></div>
+        <div class="stat"><div class="stat-label">Benchmark result</div><div class="stat-value">workflow proof</div></div>
+      </div>
+    </section>
+
+    <section class="section" id="phase-analysis">
+      <div class="section-header"><div><div class="index">06 / Phase-by-Phase Analysis</div><h2>Phase-by-Phase Analysis</h2></div></div>
+      <div class="phase-grid">
+        <div class="card"><h3>PHASE-01</h3><p>Established the CLI foundation, Drive inventory, download/normalization pipeline, and a first WTE corpus bucket. This created the source-of-truth corpus and readiness reporting needed for every later phase.</p></div>
+        <div class="card"><h3>PHASE-02</h3><p>Converted observed Verra/WTE structure into a canonical five-section schema, a validated `ProjectInput` contract, and methodology rule wrappers. This kept later drafting grounded in explicit structure rather than prompts alone.</p></div>
+        <div class="card"><h3>PHASE-03</h3><p>Added local SQLite FTS5 retrieval and a section orchestrator that assembles prompts, examples, and project facts. The provider abstraction kept the system local-first while leaving room for real models later.</p></div>
+        <div class="card"><h3>PHASE-04</h3><p>Added rule-based review checks, cross-section consistency checks, state persistence, DOCX export, and Drive upload wrappers. This turned draft text into a reviewable handoff package.</p></div>
+        <div class="card"><h3>PHASE-05</h3><p>Completed the missing benchmark layer with reproducible demo input, scorecards, comparison notes, CLI support, and smoke-run verification. The benchmark showed complete workflow execution but also confirmed that placeholder output still dominates until a real provider is wired.</p></div>
+        <div class="card"><h3>What changed across phases</h3><p>The project evolved from corpus plumbing to increasingly opinionated structure, then to execution and finally to measurement. That sequence mattered: the benchmark only has meaning because ingestion, schema, retrieval, and review were already explicit and testable.</p></div>
+      </div>
+      <div class="frame" style="margin-top:16px;">
+        <div class="mermaid">flowchart LR
+          A[PHASE-01\nCorpus and ingestion] --> B[PHASE-02\nSchema and rules]
+          B --> C[PHASE-03\nRetrieval and drafting]
+          C --> D[PHASE-04\nReview and export]
+          D --> E[PHASE-05\nBenchmark and recommendation]
+          E --> F[Next step\nProvider hardening or expansion decision]
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="findings-recommendation">
+      <div class="section-header"><div><div class="index">07 / Findings &amp; Recommendation</div><h2>Findings &amp; Recommendation</h2></div></div>
+      <div class="frame">
+        <p><strong>Finding 1:</strong> The planned architecture is now implemented end to end. The repo can create a demo config, execute the draft-and-review path, and emit benchmark artifacts without ad hoc manual file wrangling.</p>
+        <p><strong>Finding 2:</strong> The benchmark proves structural workflow integrity, not useful draft quality. The most recent smoke run drafted 36 sections, matched all 36 against the reference structure, and achieved an average grounding score of 0.501, but every section remained `UNSUPPORTED` because the current provider is still `NoopProvider`.</p>
+        <p><strong>Finding 3:</strong> The most valuable next investment is provider quality, not additional orchestration. More scaffolding would not change the core benchmark outcome while placeholder text dominates.</p>
+        <p><strong>Recommendation:</strong> Harden the same bucket by wiring one real provider and rerunning the exact Phase 05 benchmark before expanding to a second WTE bucket. If the grounded first-draft quality remains weak even after that, pause and revisit architecture. If it improves materially, then expand to a second project for broader validation.</p>
+      </div>
+      <div class="frame" style="margin-top:16px;">
+        <canvas id="finalChart" class="report-chart"></canvas>
+      </div>
+      <script>
+        if (window.Chart) {
+          Chart.defaults.devicePixelRatio = 1;
+          Chart.defaults.animation = false;
+          Chart.defaults.resizeDelay = 150;
+          Chart.defaults.normalized = true;
+          Chart.defaults.maintainAspectRatio = false;
+          new Chart(document.getElementById('finalChart'), {
+            type: 'bar',
+            data: {
+              labels: ['Sections drafted', 'Matched reference', 'Placeholders', 'Low confidence'],
+              datasets: [{ label: 'Phase 05 benchmark', data: [36, 36, 36, 36], backgroundColor: ['#3b6f76', '#966736', '#e0b35f', '#d47a7a'] }]
+            },
+            options: {
+              animation: false,
+              resizeDelay: 150,
+              normalized: true,
+              maintainAspectRatio: false,
+              scales: {
+                y: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: 'rgba(0,0,0,0.08)' } },
+                x: { grid: { color: 'rgba(0,0,0,0.04)' } }
+              }
+            }
+          });
+        }
+      </script>
+    </section>
+
+    <section class="section" id="implementation-path">
+      <div class="section-header"><div><div class="index">08 / Implementation Path</div><h2>Implementation Path</h2></div></div>
+      <div class="phase-grid">
+        <div class="card"><h3>Step 1</h3><p>Install the missing local runtime dependency for export (`python-docx`) so the benchmark always emits DOCX evidence alongside markdown artifacts.</p></div>
+        <div class="card"><h3>Step 2</h3><p>Wire one real provider into the existing provider registry, keeping the benchmark command unchanged so results stay comparable.</p></div>
+        <div class="card"><h3>Step 3</h3><p>Rerun `pdd-agent benchmark --input configs/projects/demo_socson_like.yaml` and compare grounding, low-confidence count, and reviewer burden against the current placeholder baseline.</p></div>
+        <div class="card"><h3>Step 4</h3><p>If the rerun is materially better, create a second demo project from the same methodology family before expanding buckets or making external quality claims.</p></div>
+      </div>
+    </section>
+
+    <section class="section" id="risks-open-questions">
+      <div class="section-header"><div><div class="index">09 / Risks / Open Questions</div><h2>Risks / Open Questions</h2></div></div>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Risks</h3>
+          <ul>
+            <li>The current benchmark can overstate structural success because every section still carries provenance even when the text is only a placeholder.</li>
+            <li>A single Soc Son-like case is vulnerable to overfitting and should not be treated as broad evidence.</li>
+            <li>Provider integration may surface new cost, latency, or grounding issues that the placeholder path does not reveal.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Open questions</h3>
+          <ul>
+            <li>Should the first real-provider benchmark use local Ollama for cost discipline or OpenAI for a cleaner quality signal?</li>
+            <li>What threshold should define a “materially useful first draft” for high-risk sections like baseline and additionality?</li>
+            <li>Does the project need stronger section-level semantic scoring once true generation is enabled?</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="appendices-evidence">
+      <div class="section-header"><div><div class="index">10 / Appendices / Evidence Notes</div><h2>Appendices / Evidence Notes</h2></div></div>
+      <div class="appendix-grid">
+        <div class="frame">
+          <h3>Key evidence</h3>
+          <table>
+            <thead><tr><th>Artifact</th><th>Role</th></tr></thead>
+            <tbody>
+              <tr><td>`plans/2026-04-22-agentic-wte-pdd-tool-plan.md`</td><td>Primary multi-phase plan and deliverable list.</td></tr>
+              <tr><td>`reports/demo-scorecard.md`</td><td>Current benchmark summary with recommendation.</td></tr>
+              <tr><td>`reports/section-diff.md`</td><td>Per-section benchmark notes against Soc Son reference.</td></tr>
+              <tr><td>`activeContext.md`</td><td>Session plan and verification record for the Phase 05 implementation pass.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="frame">
+          <h3>Verification notes</h3>
+          <ul>
+            <li>Targeted tests passed: `pytest tests/test_phase05_demo.py tests/test_section_orchestrator.py tests/test_review_checks.py`.</li>
+            <li>Latest smoke run passed: `python scripts/run_demo.py`.</li>
+            <li>Latest benchmark run ID: `run-20260424011231-4e5d0d`.</li>
+            <li>DOCX export was skipped in the smoke run because `python-docx` was unavailable in the active runtime.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer">designed for html first, printable without reconstruction</div>
+    </section>
+  </main>
+</body>
+</html>

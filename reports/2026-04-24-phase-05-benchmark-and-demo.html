@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Phase Report :: phase-05-benchmark-and-demo</title>
+  <meta name="color-scheme" content="dark">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    const run = async () => {
+      mermaid.initialize({ startOnLoad: false, theme: 'dark', securityLevel: 'loose' });
+      await mermaid.run({ nodes: document.querySelectorAll('.mermaid') });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => run().catch(console.error), { once: true });
+    } else {
+      run().catch(console.error);
+    }
+  </script>
+  <style>
+    :root {
+      --bg: #0d0d0d;
+      --panel: #151515;
+      --panel-2: #1b1b1b;
+      --line: #2f8f8f;
+      --text: #f2f7f7;
+      --muted: #9eb2b2;
+      --accent: #51e5c2;
+      --accent-2: #72b7ff;
+      --warn: #ffcf66;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top left, rgba(81,229,194,0.12), transparent 25%), linear-gradient(180deg, #080808, #0d0d0d 35%, #111111);
+      color: var(--text);
+      font: 16px/1.6 "Segoe UI", Arial, sans-serif;
+    }
+    main { width: min(1120px, calc(100vw - 24px)); margin: 0 auto; padding: 24px 0 48px; }
+    .hero, .section {
+      background: rgba(21,21,21,0.94);
+      border: 1px solid rgba(81,229,194,0.22);
+      border-radius: 22px;
+      box-shadow: 0 16px 36px rgba(0,0,0,0.28);
+    }
+    .hero { padding: 28px; margin-bottom: 20px; }
+    .hero-grid { display: grid; grid-template-columns: 1.5fr 0.9fr; gap: 18px; }
+    .kicker, .index { text-transform: uppercase; letter-spacing: 0.16em; font: 700 12px/1.2 Consolas, monospace; color: var(--accent); }
+    h1 { margin: 10px 0 8px; font-size: clamp(36px, 5vw, 68px); line-height: 0.95; text-transform: uppercase; }
+    .lede { color: var(--muted); max-width: 58ch; margin: 0; }
+    .meta-card { background: var(--panel-2); border: 1px solid rgba(114,183,255,0.2); border-radius: 16px; padding: 16px; margin-bottom: 12px; }
+    .meta-label { color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em; font: 12px Consolas, monospace; }
+    .meta-value { margin-top: 8px; color: var(--accent-2); font: 700 16px Consolas, monospace; word-break: break-word; }
+    .section { padding: 24px; margin-top: 20px; }
+    .section-header { display: flex; justify-content: space-between; gap: 16px; align-items: end; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    h2 { margin: 6px 0 0; font-size: 28px; }
+    .grid-2, .metrics, .appendix { display: grid; gap: 16px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .metrics { grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 16px; }
+    .card, .frame, .metric, .empty { background: var(--panel-2); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; }
+    .card, .frame, .empty { padding: 18px; }
+    .label { margin: 0 0 10px; color: var(--accent-2); text-transform: uppercase; letter-spacing: 0.12em; font: 700 12px Consolas, monospace; }
+    .metric { padding: 14px 16px; }
+    .metric .name { color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em; font: 12px Consolas, monospace; }
+    .metric .value { margin-top: 8px; color: var(--accent); font: 700 22px Consolas, monospace; }
+    .mermaid { overflow-x: auto; }
+    .frame table { width: 100%; border-collapse: collapse; }
+    .frame th, .frame td { text-align: left; padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.08); vertical-align: top; }
+    .frame th { color: var(--accent); text-transform: uppercase; letter-spacing: 0.1em; font: 12px Consolas, monospace; }
+    ul { margin: 0; padding-left: 20px; }
+    li { margin-bottom: 8px; }
+    .warn { color: var(--warn); }
+    canvas.report-chart { width: 100% !important; height: 300px !important; }
+    @media (max-width: 900px) {
+      .hero-grid, .grid-2, .metrics, .appendix { grid-template-columns: 1fr; }
+      h1 { max-width: none; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero" id="phase-header">
+      <div class="hero-grid">
+        <div>
+          <p class="kicker">Phase Report / Personal Technical Artifact</p>
+          <h1>phase-05 benchmark and demo</h1>
+          <p class="lede">This phase added a reproducible Soc Son-like benchmark workflow, benchmark markdown artifacts, CLI entry points, and a one-command demo runner, then verified the path with targeted tests and a real smoke run.</p>
+        </div>
+        <div>
+          <div class="meta-card"><div class="meta-label">Project</div><div class="meta-value">PDD Agent</div></div>
+          <div class="meta-card"><div class="meta-label">Repository</div><div class="meta-value">pdd-auto</div></div>
+          <div class="meta-card"><div class="meta-label">Date</div><div class="meta-value">2026-04-24</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="input-output-summary">
+      <div class="section-header"><div><div class="index">01 / Input -> Output</div><h2>Input -> Output Summary</h2></div></div>
+      <div class="grid-2">
+        <div class="card">
+          <p class="label">Inputs</p>
+          <ul>
+            <li>Existing PHASE-04 pipeline with run persistence, review, and export surfaces.</li>
+            <li>Multi-phase plan requirement for `configs/projects/demo_socson_like.yaml`, `scripts/run_demo.py`, `reports/demo-scorecard.md`, and `reports/section-diff.md`.</li>
+            <li>Soc Son reference PDF available locally at `template/VCS_Soc Son_Project-Description.pdf`.</li>
+            <li>User request to finish PHASE-05 autonomously, generate phase/final reports, then commit and push.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <p class="label">Outputs</p>
+          <ul>
+            <li>New benchmark package in `src/pdd_agent/phase05/benchmark.py` with comparison and report generation logic.</li>
+            <li>New CLI commands: `pdd-agent demo-config` and `pdd-agent benchmark`.</li>
+            <li>New reproducible config at `configs/projects/demo_socson_like.yaml` and runner at `scripts/run_demo.py`.</li>
+            <li>Generated artifacts: `reports/demo-scorecard.md`, `reports/section-diff.md`, run JSON, review-state JSON, and this HTML report.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="logic-flow">
+      <div class="section-header"><div><div class="index">02 / Logic Flow</div><h2>Logic Flow</h2></div></div>
+      <div class="frame">
+        <div class="mermaid">flowchart LR
+          A[Plan and repo inspection] --> B[Write failing Phase 05 tests]
+          B --> C[Implement benchmark module and CLI]
+          C --> D[Create demo config and runner]
+          D --> E[Run pytest benchmark plus review suites]
+          E --> F[Run real demo smoke path]
+          F --> G[Generate markdown scorecard and section diff]
+          G --> H[Generate phase and final HTML reports]
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="math-algorithm-used">
+      <div class="section-header"><div><div class="index">03 / Math / Algorithm Used</div><h2>Math / Algorithm Used</h2></div></div>
+      <div class="frame">
+        <table>
+          <thead><tr><th>Element</th><th>What it does</th><th>Why it matters</th></tr></thead>
+          <tbody>
+            <tr><td>Grounding score</td><td>`0.4` for provenance presence, up to `0.4` for token overlap with the matched reference section, plus confidence bonus (`0.2` HIGH, `0.1` MEDIUM).</td><td>Gives a bounded, explainable signal for section usefulness without inventing model-eval metrics.</td></tr>
+            <tr><td>Coverage metrics</td><td>Counts matched reference sections, placeholder sections, supported sections, low-confidence sections, and total issues.</td><td>Translates the smoke run into a benchmark scorecard tied to review burden.</td></tr>
+            <tr><td>Recommendation heuristic</td><td>If low-confidence sections dominate, recommend pause/revisit; if reference match is strong enough, recommend expansion; otherwise harden the same bucket.</td><td>Produces the required go/no-go style recommendation from observable run outputs.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section" id="tools-formulas-methods">
+      <div class="section-header"><div><div class="index">04 / Tools / Formulas / Methods</div><h2>Tools / Formulas / Methods</h2></div></div>
+      <div class="frame">
+        <table>
+          <thead><tr><th>Tool / method</th><th>Use in this phase</th></tr></thead>
+          <tbody>
+            <tr><td>Pytest</td><td>Added Phase 05 regression coverage for demo config creation, run loading, comparison scoring, markdown artifacts, and draft-and-review execution.</td></tr>
+            <tr><td>Existing `SectionOrchestrator`</td><td>Reused the current draft and review path rather than inventing a separate benchmark pipeline.</td></tr>
+            <tr><td>Existing parser + normalization</td><td>Used `parse_document()` and normalized Soc Son reference data to compare draft sections against a real PDD structure.</td></tr>
+            <tr><td>Markdown scorecards</td><td>Kept Phase 05 artifacts lightweight, inspectable, and easy to diff in git.</td></tr>
+            <tr><td>Smoke run</td><td>`python scripts/run_demo.py` exercised the real repo workflow and generated `run-20260424011231-4e5d0d` artifacts.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section" id="results-visualizations">
+      <div class="section-header"><div><div class="index">05 / Results &amp; Visualizations</div><h2>Results &amp; Visualizations</h2></div></div>
+      <div class="metrics">
+        <div class="metric"><div class="name">Sections drafted</div><div class="value">36</div></div>
+        <div class="metric"><div class="name">Matched reference</div><div class="value">36</div></div>
+        <div class="metric"><div class="name">Avg grounding</div><div class="value">0.501</div></div>
+        <div class="metric"><div class="name">Manual interventions</div><div class="value">0</div></div>
+      </div>
+      <div class="frame" style="margin-top:16px;">
+        <canvas id="phase05Chart" class="report-chart"></canvas>
+      </div>
+      <script>
+        if (window.Chart) {
+          Chart.defaults.devicePixelRatio = 1;
+          Chart.defaults.animation = false;
+          Chart.defaults.resizeDelay = 150;
+          Chart.defaults.normalized = true;
+          Chart.defaults.maintainAspectRatio = false;
+          new Chart(document.getElementById('phase05Chart'), {
+            type: 'bar',
+            data: {
+              labels: ['Matched reference', 'Supported', 'Placeholders', 'Low confidence'],
+              datasets: [{
+                label: 'Section count',
+                data: [36, 36, 36, 36],
+                backgroundColor: ['#51e5c2', '#72b7ff', '#ffcf66', '#ff8c8c']
+              }]
+            },
+            options: {
+              animation: false,
+              resizeDelay: 150,
+              normalized: true,
+              maintainAspectRatio: false,
+              scales: {
+                y: { beginAtZero: true, ticks: { color: '#f2f7f7', precision: 0 }, grid: { color: 'rgba(255,255,255,0.08)' } },
+                x: { ticks: { color: '#f2f7f7' }, grid: { color: 'rgba(255,255,255,0.04)' } }
+              },
+              plugins: { legend: { labels: { color: '#f2f7f7' } } }
+            }
+          });
+        }
+      </script>
+    </section>
+
+    <section class="section" id="limitations-second-best-alternative">
+      <div class="section-header"><div><div class="index">06 / Limitations / Second-Best Alternative</div><h2>Limitations / Second-Best Alternative</h2></div></div>
+      <div class="grid-2">
+        <div class="card">
+          <p class="label">Limitations</p>
+          <ul>
+            <li>The benchmark still runs on `NoopProvider`, so every section remains placeholder text with `UNSUPPORTED` confidence.</li>
+            <li>The reference comparison measures structural grounding and provenance overlap, not domain correctness of final prose.</li>
+            <li>One Soc Son-like case is useful as workflow proof, but not enough to support broader WTE generalization.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <p class="label">Second-best alternative</p>
+          <ul>
+            <li>A lighter version would only add a shell script around existing commands and skip benchmark scoring.</li>
+            <li>That would be faster, but it would miss the Phase 05 requirement for measurable comparison, decision support, and durable artifacts.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="errors-warnings-flags-encountered">
+      <div class="section-header"><div><div class="index">07 / Errors / Warnings / Flags</div><h2>Errors / Warnings / Flags Encountered</h2></div></div>
+      <div class="frame">
+        <ul>
+          <li>Initial test failure: `ModuleNotFoundError: No module named 'pdd_agent.phase05'` until the new Phase 05 package was implemented.</li>
+          <li>Smoke-run failure: `ImportError` from `SectionOrchestrator.run_review()` trying to import `ReviewState` from the wrong module; fixed by removing the incorrect import.</li>
+          <li>Runner bootstrap failure: `scripts/run_demo.py` needed repo-root path setup so it could run directly without assuming editable-install import behavior.</li>
+          <li class="warn">DOCX export caveat: the smoke run logged that `python-docx` is not installed in the current environment, so benchmark artifacts were generated without DOCX output.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section" id="open-questions-next-phase-seeds">
+      <div class="section-header"><div><div class="index">08 / Open Questions / Next Phase Seeds</div><h2>Open Questions / Next Phase Seeds</h2></div></div>
+      <div class="appendix">
+        <div class="card">
+          <p class="label">Open questions</p>
+          <ul>
+            <li>Which real provider should replace `NoopProvider` first: local Ollama or API-backed OpenAI?</li>
+            <li>Should the next benchmark evaluate a second WTE project before any architecture expansion?</li>
+            <li>Do the current grounding heuristics need stronger section-level domain scoring once non-placeholder text exists?</li>
+          </ul>
+        </div>
+        <div class="card">
+          <p class="label">Next seeds</p>
+          <ul>
+            <li>Install `python-docx` in the active environment so benchmark runs can emit DOCX evidence by default.</li>
+            <li>Wire one real provider and rerun `pdd-agent benchmark` to see whether placeholder-heavy output turns into a materially useful first draft.</li>
+            <li>Run the benchmark on a second methodology-aligned WTE case before expanding the corpus bucket.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

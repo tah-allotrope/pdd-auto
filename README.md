@@ -1,6 +1,6 @@
 # PDD Agent — Agentic Low-Cost WTE Carbon-Credit PDD Drafting Tool
 
-**Status:** PHASE-04 complete. Pipeline is ready for end-to-end benchmarking (PHASE-05).
+**Status:** PHASE-05 complete. The repo now includes a reproducible Soc Son-like benchmark workflow, benchmark scorecards, and a demo runner.
 
 ## What This Tool Does
 
@@ -31,6 +31,12 @@ pdd-agent build-index --corpus-dir data/corpus/normalized --index-db data/index/
 # Draft a project (requires a ProjectInput YAML)
 pdd-agent draft --input configs/projects/demo_socson_like.yaml --provider noop
 
+# Create or refresh the reproducible Soc Son-like demo input
+pdd-agent demo-config
+
+# Run the Phase-05 benchmark and generate scorecards
+pdd-agent benchmark --input configs/projects/demo_socson_like.yaml
+
 # Export to DOCX for human review
 pdd-agent export --run-id <run-id>
 
@@ -48,6 +54,8 @@ pdd-agent upload --run-id <run-id>
 | `pdd-agent review` | Display review state for a run |
 | `pdd-agent export` | Export DraftRun to DOCX |
 | `pdd-agent upload` | Upload DOCX to Google Drive via gws |
+| `pdd-agent demo-config` | Write the reproducible Soc Son-like benchmark input |
+| `pdd-agent benchmark` | Run Phase-05 benchmark and write scorecards |
 
 ## Architecture
 
@@ -92,7 +100,33 @@ pdd-agent upload --run-id <run-id>
 | PHASE-02 | Section schema, domain rules, methodology | ✅ Complete |
 | PHASE-03 | Retrieval, agentic drafting, provider abstraction | ✅ Complete |
 | PHASE-04 | Compliance checks, review workflow, DOCX export | ✅ Complete |
-| PHASE-05 | End-to-end benchmark and demo | Pending |
+| PHASE-05 | End-to-end benchmark and demo | ✅ Complete |
+
+## Phase-05 Deliverables
+
+- `configs/projects/demo_socson_like.yaml` — reproducible Soc Son-like input for benchmark runs
+- `scripts/run_demo.py` — one-command benchmark runner
+- `reports/demo-scorecard.md` — benchmark scorecard with review-burden and grounding metrics
+- `reports/section-diff.md` — per-section comparison notes against the Soc Son reference
+
+## Demo Workflow
+
+```bash
+# One-command benchmark run
+python scripts/run_demo.py
+
+# Equivalent CLI workflow
+pdd-agent demo-config
+pdd-agent benchmark --input configs/projects/demo_socson_like.yaml
+```
+
+The benchmark workflow will:
+
+1. Create or reuse the Soc Son-like demo config
+2. Run the draft and review pipeline end-to-end
+3. Compare the saved run against the normalized Soc Son reference
+4. Write `reports/demo-scorecard.md` and `reports/section-diff.md`
+5. Export DOCX when `python-docx` is installed locally
 
 ## Key Files
 
@@ -116,9 +150,9 @@ src/pdd_agent/
 
 ## Known Gaps
 
-- `python-docx` must be installed (`pip install python-docx`) before `pdd-agent export` will work
-- No real LLM provider wired — only `NoopProvider` is operational
-- 4 corpus PDFs (Yanjiang, Linfen, Shunping, Yingoku) have malformed JSON after normalization; fixing them expands coverage to 13/13
+- `python-docx` is declared in `pyproject.toml`, but local environments still need it installed before DOCX export works at runtime
+- No real LLM provider wired — benchmark runs currently measure workflow quality using the zero-cost `NoopProvider`
+- The first benchmark is a workflow proof on one Soc Son-like case; a second project is still needed before claiming broader WTE coverage
 
 ## Key References
 
