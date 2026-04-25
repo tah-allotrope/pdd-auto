@@ -28,6 +28,11 @@ class DraftSection:
     provenance: list[str]  # e.g. ["[CORPUS: VCS_Soc Son, 3.4 Baseline Scenario]"]
     issues: list[str]  # e.g. ["REVIEW: Baseline scenario requires site-specific evidence"]
     provider: str  # which provider produced this
+    fact_provenance: list[dict[str, Any]] = field(default_factory=list)
+    synthetic_uses: list[dict[str, Any]] = field(default_factory=list)
+    output_references: list[dict[str, Any]] = field(default_factory=list)
+    review_sensitivity: str = "LOW"
+    content_class: str = "NARRATIVE"
 
 
 @dataclass
@@ -101,6 +106,7 @@ class NoopProvider(BaseProvider):
                 f"human input or project-specific evidence needed before finalizing"
             ],
             provider=self.name,
+            output_references=[{"type": "section_body", "description": "noop placeholder output"}],
         )
 
     def close(self) -> None:
@@ -180,6 +186,7 @@ class DraftRun:
     sections: list[DraftSection] = field(default_factory=list)
     provider: str = "noop"
     notes: list[str] = field(default_factory=list)
+    assumption_register: dict[str, Any] | None = None
 
     def add(self, section: DraftSection) -> None:
         self.sections.append(section)
@@ -189,6 +196,7 @@ class DraftRun:
             "run_id": self.run_id,
             "project_name": self.project_name,
             "provider": self.provider,
+            "assumption_register": self.assumption_register,
             "sections": [
                 {
                     "section_id": s.section_id,
@@ -198,6 +206,11 @@ class DraftRun:
                     "provenance": s.provenance,
                     "issues": s.issues,
                     "provider": s.provider,
+                    "fact_provenance": s.fact_provenance,
+                    "synthetic_uses": s.synthetic_uses,
+                    "output_references": s.output_references,
+                    "review_sensitivity": s.review_sensitivity,
+                    "content_class": s.content_class,
                 }
                 for s in self.sections
             ],

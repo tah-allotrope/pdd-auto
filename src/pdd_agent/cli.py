@@ -18,6 +18,7 @@ from pdd_agent.agent.section_orchestrator import SectionOrchestrator
 from pdd_agent.export.docx_export import export_run_to_docx
 from pdd_agent.export.drive_upload import upload_file, upload_docx_run
 from pdd_agent.phase05.benchmark import create_demo_project_input, run_demo_benchmark
+from pdd_agent.phase06.assumptions import load_assumption_register, resolve_assumptions_path
 from pdd_agent.phase06.spreadsheet_mapper import fetch_workbook, generate_project_artifacts
 from schemas.project_input import ProjectInput
 
@@ -264,6 +265,9 @@ def _run_draft(args, log) -> None:
         project_input=project_input,
         run_id=args.run_id,
     )
+    assumptions_path = resolve_assumptions_path(input_path)
+    if assumptions_path:
+        orchestrator.attach_assumption_register(load_assumption_register(assumptions_path))
 
     run = orchestrator.run()
     draft_path = run.save()
@@ -299,10 +303,7 @@ def _run_review(args, log) -> None:
 def _run_export(args, log) -> None:
     output_path = Path(args.output) if args.output else None
     result = export_run_to_docx(run_id=args.run_id, output_path=output_path)
-    if result:
-        log.info("docx_exported", path=str(result))
-    else:
-        log.error("docx_export_failed", run_id=args.run_id)
+    log.info("docx_exported", path=str(result))
 
 
 def _run_upload(args, log) -> None:

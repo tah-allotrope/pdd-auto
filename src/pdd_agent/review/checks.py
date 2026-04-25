@@ -110,6 +110,39 @@ def run_review_checks(
         check = _build_evidence_check(sec_ref, evidence_def["evidence_type"], text)
         result.add_check(check)
 
+    for s in draft_run.sections:
+        section_ref = f"{s.section_id}.{s.sub_section_id}" if s.sub_section_id else s.section_id
+        synthetic_uses = getattr(s, "synthetic_uses", []) or []
+        review_sensitivity = getattr(s, "review_sensitivity", "LOW")
+        blocked = [item for item in synthetic_uses if item.get("blocked_review")]
+        if blocked and review_sensitivity in {"HIGH", "CRITICAL"}:
+            result.add_check(
+                ReviewCheck(
+                    check_id=f"ASSUMPTION-BLOCK-{section_ref.replace('.', '-')}",
+                    severity="CRITICAL" if review_sensitivity == "CRITICAL" else "HIGH",
+                    description="Blocked synthetic assumption in sensitive section",
+                    section_ref=section_ref,
+                    flag=True,
+                    message=(
+                        f"Section {section_ref} depends on review-gated synthetic inputs: "
+                        + ", ".join(item.get("field_path", "unknown") for item in blocked)
+                    ),
+                )
+            )
+        elif synthetic_uses and review_sensitivity in {"HIGH", "CRITICAL"}:
+            result.add_check(
+                ReviewCheck(
+                    check_id=f"ASSUMPTION-WARN-{section_ref.replace('.', '-')}",
+                    severity="HIGH",
+                    description="Synthetic assumptions affect a sensitive section",
+                    section_ref=section_ref,
+                    flag=True,
+                    message=(
+                        f"Section {section_ref} uses {len(synthetic_uses)} synthetic/demo-backed field(s) and must remain review-gated."
+                    ),
+                )
+            )
+
     if project_input:
         rules_engine = get_methodology_rules()
         post_results = rules_engine.run_post_draft_checks(section_texts)

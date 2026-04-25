@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import pytest
 
+from pathlib import Path
+
 from pdd_agent.llm.provider import (
     DraftSection,
     DraftRun,
@@ -14,6 +16,7 @@ from pdd_agent.llm.provider import (
     configure_provider,
 )
 from pdd_agent.agent.section_orchestrator import SectionOrchestrator
+from pdd_agent.review.states import ReviewStateStore
 
 
 class TestNoopProvider:
@@ -37,7 +40,7 @@ class TestNoopProvider:
             section_id="1.1",
             sub_section_id="",
             prompt="Write summary",
-            provenance=['[CORPUS: VCS_Bergama, 1.1 Summary]'],
+            provenance=["[CORPUS: VCS_Bergama, 1.1 Summary]"],
         )
         assert any("REVIEW REQUIRED" in issue for issue in result.issues)
 
@@ -125,11 +128,13 @@ class TestSectionOrchestratorDrafting:
 
     def test_draft_with_examples(self):
         orch = SectionOrchestrator()
-        fake_examples = [{
-            "document_name": "VCS_Soc Son",
-            "canonical_heading": "Summary Description",
-            "text": "The project involves construction of a waste-to-energy facility.",
-        }]
+        fake_examples = [
+            {
+                "document_name": "VCS_Soc Son",
+                "canonical_heading": "Summary Description",
+                "text": "The project involves construction of a waste-to-energy facility.",
+            }
+        ]
         result = orch.draft_section("1.1", "", examples=fake_examples)
         assert result.section_id == "1.1"
         assert len(result.provenance) == 1
@@ -156,6 +161,85 @@ class TestSectionOrchestratorDrafting:
         orch = SectionOrchestrator()
         orch.draft_section("1.2", "")
         assert "1.2/" in orch.drafted_sections or any("1.2" in k for k in orch.drafted_sections)
+
+    def test_attached_assumptions_are_persisted_on_draft_sections(self):
+        orch = SectionOrchestrator()
+        orch.attach_assumption_register(
+            {
+                "assumptions": [
+                    {
+                        "field_path": "project.project_name",
+                        "value": "Soc Son waste to power plant project",
+                        "source_type": "spreadsheet",
+                        "confidence": "high",
+                    },
+                    {
+                        "field_path": "technology.installed_capacity_mw",
+                        "value": 52.115,
+                        "source_type": "synthetic_assumption",
+                        "confidence": "low",
+                    },
+                ],
+                "guardrails": {"blocked_review_paths": []},
+            }
+        )
+
+        result = orch.draft_section("1", "1.1", examples=[])
+
+        assert len(result.fact_provenance) >= 2
+        assert len(result.synthetic_uses) == 1
+        assert result.output_references[0]["type"] == "section narrative"
+
+    def test_high_review_section_with_blocked_synthetic_inputs_stays_review_gated(self):
+        orch = SectionOrchestrator()
+        orch.attach_assumption_register(
+            {
+                "assumptions": [
+                    {
+                        "field_path": "quantification.baseline_emissions_tco2e_per_year",
+                        "value": 594076.0,
+                        "source_type": "synthetic_assumption",
+                        "confidence": "low",
+                    }
+                ],
+                "guardrails": {
+                    "blocked_review_paths": ["quantification.baseline_emissions_tco2e_per_year"]
+                },
+            }
+        )
+
+        result = orch.draft_section("4", "4.1", examples=[])
+
+        assert result.confidence == "LOW"
+        assert any("review-gated synthetic inputs" in issue for issue in result.issues)
+
+    def test_run_review_records_synthetic_gate_in_review_state(self, tmp_path: Path):
+        orch = SectionOrchestrator(run_id="synthetic-review-run")
+        orch.attach_assumption_register(
+            {
+                "assumptions": [
+                    {
+                        "field_path": "quantification.baseline_emissions_tco2e_per_year",
+                        "value": 594076.0,
+                        "source_type": "synthetic_assumption",
+                        "confidence": "low",
+                    }
+                ],
+                "guardrails": {
+                    "blocked_review_paths": ["quantification.baseline_emissions_tco2e_per_year"]
+                },
+            }
+        )
+        orch.draft_section("4", "4.1", examples=[])
+        review = orch.run_review()
+
+        store = ReviewStateStore.load("synthetic-review-run")
+
+        assert Path(review["assumption_burden_path"]).exists()
+        assert store.sections["4/4.1"].state.value == "needs-domain-review"
+        assert any(
+            "Synthetic review gate" in note for note in store.sections["4/4.1"].reviewer_notes
+        )
 
 
 class TestProviderConfigure:

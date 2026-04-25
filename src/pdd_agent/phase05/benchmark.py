@@ -19,6 +19,7 @@ import yaml
 from pdd_agent.agent.section_orchestrator import SectionOrchestrator
 from pdd_agent.export.docx_export import export_run_to_docx
 from pdd_agent.llm.provider import DraftRun, DraftSection, get_provider_registry
+from pdd_agent.phase06.assumptions import load_assumption_register, resolve_assumptions_path
 from pdd_agent.parse.section_parser import parse_document
 from schemas.project_input import ProjectInput
 
@@ -160,6 +161,7 @@ def load_draft_run(run_path: Path | str) -> DraftRun:
         project_name=data.get("project_name", "Unknown Project"),
         provider=data.get("provider", "noop"),
         notes=data.get("notes", []),
+        assumption_register=data.get("assumption_register"),
     )
     for raw_section in data.get("sections", []):
         run.add(
@@ -171,6 +173,11 @@ def load_draft_run(run_path: Path | str) -> DraftRun:
                 provenance=raw_section.get("provenance", []),
                 issues=raw_section.get("issues", []),
                 provider=raw_section.get("provider", data.get("provider", "noop")),
+                fact_provenance=raw_section.get("fact_provenance", []),
+                synthetic_uses=raw_section.get("synthetic_uses", []),
+                output_references=raw_section.get("output_references", []),
+                review_sensitivity=raw_section.get("review_sensitivity", "LOW"),
+                content_class=raw_section.get("content_class", "NARRATIVE"),
             )
         )
     return run
@@ -303,6 +310,9 @@ def run_demo_benchmark(
 
         provider = get_provider_registry().get(provider_name)
         orchestrator = SectionOrchestrator(provider=provider, project_input=project_input)
+        assumptions_path = resolve_assumptions_path(project_input_path)
+        if assumptions_path:
+            orchestrator.attach_assumption_register(load_assumption_register(assumptions_path))
         run = orchestrator.run()
         run_json_path = run.save()
         orchestrator.run_review()

@@ -297,6 +297,68 @@ class TestSummarizeReviewResult:
         assert summary["run_id"] == "r1"
 
 
+class TestAssumptionAwareReviewChecks:
+    def test_blocked_synthetic_inputs_flag_sensitive_sections(self):
+        run = _make_run(
+            [
+                DraftSection(
+                    section_id="4",
+                    sub_section_id="4.1",
+                    text="Baseline emissions placeholder.",
+                    confidence="LOW",
+                    provenance=[],
+                    issues=[],
+                    provider="noop",
+                    synthetic_uses=[
+                        {
+                            "field_path": "quantification.baseline_emissions_tco2e_per_year",
+                            "blocked_review": True,
+                        }
+                    ],
+                    review_sensitivity="HIGH",
+                    content_class="QUANTITATIVE",
+                )
+            ],
+            run_id="assumption-run",
+        )
+
+        result = run_review_checks(run, project_input=None, run_id="assumption-run")
+
+        assert any("review-gated synthetic inputs" in warning for warning in result.warnings)
+
+    def test_critical_synthetic_dependency_creates_blocking_issue(self):
+        run = _make_run(
+            [
+                DraftSection(
+                    section_id="3",
+                    sub_section_id="3.5",
+                    text="Additionality placeholder.",
+                    confidence="UNSUPPORTED",
+                    provenance=[],
+                    issues=[],
+                    provider="noop",
+                    synthetic_uses=[
+                        {
+                            "field_path": "quantification.project_emissions_tco2e_per_year",
+                            "blocked_review": True,
+                        }
+                    ],
+                    review_sensitivity="CRITICAL",
+                    content_class="METHODOLOGY_DEPENDENT",
+                )
+            ],
+            run_id="critical-assumption-run",
+        )
+
+        result = run_review_checks(run, project_input=None, run_id="critical-assumption-run")
+
+        assert result.passed is False
+        assert any(
+            "Section 3.3.5 depends on review-gated synthetic inputs" in item
+            for item in result.blocking_issues
+        )
+
+
 class TestSummarizeConsistencyReport:
     def test_summarize_returns_critical_flags(self):
         report = ConsistencyReport(run_id="r2")

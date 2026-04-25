@@ -1,21 +1,20 @@
-## Phase 01-02 Plan
+## Vietnam WTE Phase 03-04 Plan
 
-- [x] Review current ingestion, CLI, schema, config, and test surfaces for spreadsheet intake and mapping.
-- [x] Add failing tests for workbook profiling, row selection, spreadsheet download pathing, ProjectInput mapping, and synthetic assumptions.
-- [x] Implement Phase 01 workbook fetch/profile/select/snapshot flow for the Vietnam WTE spreadsheet.
-- [x] Implement Phase 02 ProjectInput mapping, assumption registry generation, and guardrails for unsupported critical claims.
-- [x] Add CLI commands and a one-command runner for the Soc Son spreadsheet path.
-- [x] Generate tracked artifacts for source mapping, row snapshot, project YAML, assumptions YAML, and workbook profile report.
-- [x] Run targeted tests and one end-to-end Soc Son generation command.
-- [ ] Produce a completion report, then commit and push the changes.
+- [x] Review the repo against `plans/2026-04-24-vietnam-wte-verra-pdd-plan.md` to confirm PHASE-01 and PHASE-02 are already implemented.
+- [x] Add failing tests for assumption-aware drafting metadata, review gating, and DOCX appendices/disclaimer behavior.
+- [x] Implement PHASE-03 provenance-rich drafting so sections can track spreadsheet, corpus, methodology, synthetic, and demo-default inputs.
+- [x] Implement PHASE-03 review-state/report updates so synthetic-heavy HIGH/CRITICAL sections stay visibly review-gated.
+- [x] Implement PHASE-04 DOCX export upgrades for cover disclaimer, Verra-style metadata, assumption appendix, and reviewer issues appendix.
+- [x] Run targeted tests plus an end-to-end Vietnam draft/review/export flow and record the results.
+- [ ] Commit the completed PHASE-03/04 work and push the branch.
 
 ## Review / Results
 
-- Added `src/pdd_agent/phase06/spreadsheet_mapper.py` and `src/pdd_agent/phase06/__init__.py` for workbook caching, profiling, row selection, ProjectInput generation, and assumptions-register output.
-- Added CLI commands `pdd-agent fetch-workbook` and `pdd-agent map-spreadsheet`, plus `scripts/run_vietnam_pdd.py` for the one-command Phase 01-02 flow.
-- Added tracked mapping/config and source artifacts at `configs/source_mappings/vietnam_wte_projects.yaml`, `data/source_inputs/spreadsheets/WtE_plants_carbon_model_early_draft.xlsx`, `data/source_inputs/spreadsheets/vietnam_wte_profile.json`, and `data/source_inputs/spreadsheets/vietnam_socson_snapshot.json`.
-- Added generated project artifacts at `configs/projects/vietnam_socson_from_sheet.yaml`, `configs/projects/vietnam_socson_from_sheet.assumptions.yaml`, and `reports/source-profile-vietnam-wte.md`.
-- Added regression coverage in `tests/test_spreadsheet_mapper.py`, `tests/test_spreadsheet_intake.py`, and `tests/test_phase06_cli.py`.
-- Updated `README.md`, `docs/provenance-policy.md`, `.gitignore`, and `pyproject.toml` to document the workflow, codify synthetic-assumption rules, keep spreadsheet source inputs tracked, and declare `openpyxl`.
-- Verification passed: `pytest tests/test_input_schema.py tests/test_drive_inventory.py tests/test_spreadsheet_mapper.py tests/test_spreadsheet_intake.py tests/test_phase06_cli.py`.
-- End-to-end smoke path passed: `python scripts/run_vietnam_pdd.py` generated the workbook profile, snapshot JSON, project YAML, assumptions YAML, and source profile report for the Soc Son row.
+- PHASE-01 and PHASE-02 are already present in the repo via `src/pdd_agent/phase06/spreadsheet_mapper.py`, CLI commands, generated Soc Son YAML/assumptions artifacts, and Phase 01-02 tests.
+- Added `src/pdd_agent/phase06/assumptions.py` to load companion assumption registers, route field-level provenance into sections, and write `reports/assumption-burden.md`.
+- Upgraded `src/pdd_agent/llm/provider.py`, `src/pdd_agent/agent/section_orchestrator.py`, `src/pdd_agent/review/checks.py`, and `src/pdd_agent/phase05/benchmark.py` so drafted sections persist fact provenance, synthetic uses, output references, review sensitivity, and assumption-aware review-state/report behavior.
+- Replaced `src/pdd_agent/export/docx_export.py` with a Verra-style review export that adds a front-matter disclaimer, cover metadata, section source summaries, an assumption appendix, and a reviewer issues appendix.
+- Added Phase 03-04 regression coverage in `tests/test_section_orchestrator.py`, `tests/test_review_checks.py`, and `tests/test_docx_export.py`.
+- Verification passed: `pytest tests/test_section_orchestrator.py tests/test_review_checks.py tests/test_docx_export.py tests/test_phase05_demo.py`.
+- End-to-end Vietnam run passed: `python -m pdd_agent.cli draft --input configs/projects/vietnam_socson_from_sheet.yaml --provider noop` produced `data/runs/run-20260425150712-281eb4.json`, `data/runs/review-state-run-20260425150712-281eb4.json`, and `reports/assumption-burden.md`.
+- DOCX export passed after installing `python-docx`: `python -m pdd_agent.cli export --run-id run-20260425150712-281eb4` produced `data/runs/run-20260425150712-281eb4.docx`.

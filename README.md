@@ -1,6 +1,6 @@
 # PDD Agent — Agentic Low-Cost WTE Carbon-Credit PDD Drafting Tool
 
-**Status:** PHASE-05 complete, with PHASE-01 and PHASE-02 of the Vietnam spreadsheet workflow now implemented for the Soc Son row.
+**Status:** PHASE-05 complete, with Vietnam PHASE-01 through PHASE-04 now implemented for the Soc Son row.
 
 ## What This Tool Does
 
@@ -92,14 +92,15 @@ pdd-agent upload --run-id <run-id>
 ### Retrieval & Drafting (PHASE-03)
 - **`src/pdd_agent/retrieval/index.py`** — SQLite FTS5 BM25 index. `RetrievalIndex.build()` indexes the corpus once; `search()` and `get_section_examples()` query it.
 - **`src/pdd_agent/retrieval/search.py`** — Query cleaning, BM25 ranking, centered excerpt highlighting.
-- **`src/pdd_agent/llm/provider.py`** — `BaseProvider` ABC, `NoopProvider` (placeholder), `DraftRun` persistence, `ProviderRegistry`.
-- **`src/pdd_agent/agent/section_orchestrator.py`** — Per-section retrieval → prompt assembly → provider call → review gate pipeline. `run()` and `run_review()` methods.
+- **`src/pdd_agent/llm/provider.py`** — `BaseProvider` ABC, `NoopProvider` (placeholder), `DraftRun` persistence, and section-level provenance / synthetic-use metadata.
+- **`src/pdd_agent/phase06/assumptions.py`** — Companion assumptions-register loader plus section routing and assumption-burden reporting helpers.
+- **`src/pdd_agent/agent/section_orchestrator.py`** — Per-section retrieval → prompt assembly → provider call → assumption-aware review gate pipeline. `run()` and `run_review()` methods.
 
 ### Review & Export (PHASE-04)
-- **`src/pdd_agent/review/checks.py`** — DC-01 to DC-04 double-counting guards, quantitative cross-refs (1.10↔4.4), evidence requirements, auto-approval logic.
+- **`src/pdd_agent/review/checks.py`** — DC-01 to DC-04 double-counting guards, quantitative cross-refs (1.10↔4.4), evidence requirements, auto-approval logic, and assumption-aware review gates.
 - **`src/pdd_agent/review/consistency.py`** — Cross-section numeric consistency: net tCO2e arithmetic, baseline/project/leakage relation, crediting period total.
 - **`src/pdd_agent/review/states.py`** — 5-state review workflow (drafted→needs-input→drafted, drafted→needs-domain-review→ready-for-human-edit→approved). JSON persistence to `data/runs/review-state-{run_id}.json`.
-- **`src/pdd_agent/export/docx_export.py`** — python-docx export with title page, per-section headings, provenance citations, yellow highlights for LOW/UNSUPPORTED confidence.
+- **`src/pdd_agent/export/docx_export.py`** — python-docx export with a front-matter disclaimer, cover metadata, section-level source summaries, an assumption appendix, and a reviewer issues appendix.
 - **`src/pdd_agent/export/drive_upload.py`** — `gws drive files create` subprocess wrapper.
 
 ## Prerequisites
@@ -120,6 +121,8 @@ pdd-agent upload --run-id <run-id>
 | PHASE-05 | End-to-end benchmark and demo | ✅ Complete |
 | Vietnam PHASE-01 | Spreadsheet intake and candidate profiling | ✅ Complete for Soc Son |
 | Vietnam PHASE-02 | ProjectInput mapping and assumptions layer | ✅ Complete for Soc Son |
+| Vietnam PHASE-03 | Assumption-aware drafting and review rules | ✅ Complete for Soc Son |
+| Vietnam PHASE-04 | Verra-style DOCX export and appendices | ✅ Complete for Soc Son |
 
 ## Phase-05 Deliverables
 
@@ -137,6 +140,12 @@ python scripts/run_vietnam_pdd.py
 # Equivalent CLI workflow
 pdd-agent fetch-workbook
 pdd-agent map-spreadsheet --candidate soc-son
+
+# Assumption-aware draft and review run
+pdd-agent draft --input configs/projects/vietnam_socson_from_sheet.yaml --provider noop
+
+# Export the saved run to Word
+pdd-agent export --run-id <run-id>
 ```
 
 The Vietnam spreadsheet workflow will:
@@ -147,6 +156,9 @@ The Vietnam spreadsheet workflow will:
 4. Generate `configs/projects/vietnam_socson_from_sheet.yaml`
 5. Generate `configs/projects/vietnam_socson_from_sheet.assumptions.yaml`
 6. Write `reports/source-profile-vietnam-wte.md` with review-gated assumption notes
+7. Draft a run whose sections persist fact provenance, synthetic usage, and review sensitivity
+8. Write `reports/assumption-burden.md` summarizing material assumption burden by section
+9. Export a DOCX with an internal-draft disclaimer, assumption appendix, and reviewer issues appendix
 
 ## Demo Workflow
 
@@ -189,7 +201,7 @@ src/pdd_agent/
 
 ## Known Gaps
 
-- `python-docx` is declared in `pyproject.toml`, but local environments still need it installed before DOCX export works at runtime
+- `python-docx` is declared in `pyproject.toml`, but local environments still need it installed before DOCX export works at runtime; the exporter now fails with a clear install message instead of skipping silently
 - No real LLM provider wired — benchmark runs currently measure workflow quality using the zero-cost `NoopProvider`
 - The first benchmark is a workflow proof on one Soc Son-like case; a second project is still needed before claiming broader WTE coverage
 - The Soc Son spreadsheet mapper intentionally blocks review-sensitive quantitative splits, coordinates, and safeguards fields when they rely on synthetic assumptions

@@ -22,6 +22,7 @@ Every factual statement in a drafted section MUST cite its source using one of:
 | `[METHODOLOGY: {id}, {section}]` | Text from an official Verra methodology document |
 | `[VERRA REGISTRY: {project_id}]` | Project registration details from Verra's public registry |
 | `[USER INPUT: {field}]` | Project-specific fact supplied by the user via `ProjectInput` |
+| `[SYNTHETIC ASSUMPTION: {field}]` | Explicitly labeled draft-only fill for missing project evidence |
 
 **Do not use any other citation format.** Do not fabricate citations.
 
@@ -51,6 +52,7 @@ Every factual statement in a drafted section MUST cite its source using one of:
 - Cite the methodology source for the formula
 - All numerical values must come from project inputs or official sources
 - No invented statistics
+- If a quantitative split depends on a synthetic assumption, mark it as review-gated rather than presenting it as settled fact
 
 ### NARRATIVE — Medium Risk
 - Use retrieved corpus examples as structural guides
@@ -80,6 +82,7 @@ If you cannot find sufficient support for a statement:
 1. Output the statement as `[REVIEW REQUIRED: {section_id} — description of what is missing]`
 2. Set confidence to `LOW` or `UNSUPPORTED`
 3. Add an item to the `issues` list explaining what evidence is needed
+4. If the missing input was filled through the assumptions register, label it as a synthetic assumption in the output or notes
 
 **Never fabricate a statistic, case study, or regulatory reference.**
 
@@ -106,6 +109,7 @@ If you cannot find sufficient support for a statement:
 - Do not claim credits for activities not in the ProjectInput
 - Do not imply that landfill diversion AND fuel substitution credits both apply without explicit credit allocation
 - Do not remove the [REVIEW REQUIRED] markers from HIGH/CRITICAL sections
+- Do not present synthetic assumptions as confirmed project facts
 
 ---
 

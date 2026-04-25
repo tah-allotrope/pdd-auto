@@ -43,6 +43,7 @@ class OllamaProvider(BaseProvider):
             provenance=provenance,
             issues=["REVIEW REQUIRED: Ollama provider not yet configured"],
             provider=self.name,
+            output_references=[{"type": "section_body", "description": "ollama stub output"}],
         )
 
     def close(self) -> None:

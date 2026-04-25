@@ -43,6 +43,7 @@ class OpenAIProvider(BaseProvider):
             provenance=provenance,
             issues=["REVIEW REQUIRED: OpenAI provider not yet configured"],
             provider=self.name,
+            output_references=[{"type": "section_body", "description": "openai stub output"}],
         )
 
     def close(self) -> None:
