@@ -1,0 +1,21 @@
+source_file:
+  drive_file_id: 1tMcKxUGE5aIs-3BQ7sJtjKHeOdSLUhKG
+  expected_name: WtE plants carbon model early draft.xlsx
+
+selection:
+  sheet_name: Projects
+  header_row: 1
+  candidate_column: project_name
+  country_column: country_or_province
+  methodology_column: vcs_methodology
+  candidates:
+    soc-son:
+      project_name: Soc Son waste to power plant project
+      country_contains: Vietnam
+      methodology: ACM0022
+
+profile_tabs:
+  Model: assumptions
+  Projects: facts
+  DOXACO: audit_notes
+  Claude Log: audit_notes

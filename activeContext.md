@@ -1,18 +1,21 @@
-## Phase 05 Plan
+## Phase 01-02 Plan
 
-- [x] Review current drafting, review, export, and persistence surfaces relevant to benchmark execution.
-- [x] Add failing tests for Phase 05 benchmark and demo artifacts.
-- [x] Implement a reproducible demo project config and one-command benchmark runner.
-- [x] Generate `reports/demo-scorecard.md` and `reports/section-diff.md` from a completed run.
-- [x] Update README guidance to cover the repeatable demo workflow.
-- [x] Run targeted tests and an end-to-end smoke path.
+- [x] Review current ingestion, CLI, schema, config, and test surfaces for spreadsheet intake and mapping.
+- [x] Add failing tests for workbook profiling, row selection, spreadsheet download pathing, ProjectInput mapping, and synthetic assumptions.
+- [x] Implement Phase 01 workbook fetch/profile/select/snapshot flow for the Vietnam WTE spreadsheet.
+- [x] Implement Phase 02 ProjectInput mapping, assumption registry generation, and guardrails for unsupported critical claims.
+- [x] Add CLI commands and a one-command runner for the Soc Son spreadsheet path.
+- [x] Generate tracked artifacts for source mapping, row snapshot, project YAML, assumptions YAML, and workbook profile report.
+- [x] Run targeted tests and one end-to-end Soc Son generation command.
+- [ ] Produce a completion report, then commit and push the changes.
 
 ## Review / Results
 
-- Added `src/pdd_agent/phase05/benchmark.py` and `src/pdd_agent/phase05/__init__.py` for demo input creation, run loading, reference comparison, scorecard generation, and benchmark orchestration.
-- Added CLI commands `pdd-agent demo-config` and `pdd-agent benchmark`, plus the one-command runner `scripts/run_demo.py`.
-- Added reproducible demo input at `configs/projects/demo_socson_like.yaml` and updated `README.md` with Phase 05 workflow guidance.
-- Added regression coverage in `tests/test_phase05_demo.py` for config creation, run loading, comparison scoring, markdown artifact generation, and full benchmark execution.
-- Verification passed: `pytest tests/test_phase05_demo.py tests/test_section_orchestrator.py tests/test_review_checks.py`.
-- End-to-end smoke path passed: `python scripts/run_demo.py` generated `reports/demo-scorecard.md` and `reports/section-diff.md` plus a real run JSON and review-state JSON.
-- Runtime caveat: DOCX export was skipped in the smoke run because `python-docx` is not installed in the current environment even though it is declared in `pyproject.toml`.
+- Added `src/pdd_agent/phase06/spreadsheet_mapper.py` and `src/pdd_agent/phase06/__init__.py` for workbook caching, profiling, row selection, ProjectInput generation, and assumptions-register output.
+- Added CLI commands `pdd-agent fetch-workbook` and `pdd-agent map-spreadsheet`, plus `scripts/run_vietnam_pdd.py` for the one-command Phase 01-02 flow.
+- Added tracked mapping/config and source artifacts at `configs/source_mappings/vietnam_wte_projects.yaml`, `data/source_inputs/spreadsheets/WtE_plants_carbon_model_early_draft.xlsx`, `data/source_inputs/spreadsheets/vietnam_wte_profile.json`, and `data/source_inputs/spreadsheets/vietnam_socson_snapshot.json`.
+- Added generated project artifacts at `configs/projects/vietnam_socson_from_sheet.yaml`, `configs/projects/vietnam_socson_from_sheet.assumptions.yaml`, and `reports/source-profile-vietnam-wte.md`.
+- Added regression coverage in `tests/test_spreadsheet_mapper.py`, `tests/test_spreadsheet_intake.py`, and `tests/test_phase06_cli.py`.
+- Updated `README.md`, `docs/provenance-policy.md`, `.gitignore`, and `pyproject.toml` to document the workflow, codify synthetic-assumption rules, keep spreadsheet source inputs tracked, and declare `openpyxl`.
+- Verification passed: `pytest tests/test_input_schema.py tests/test_drive_inventory.py tests/test_spreadsheet_mapper.py tests/test_spreadsheet_intake.py tests/test_phase06_cli.py`.
+- End-to-end smoke path passed: `python scripts/run_vietnam_pdd.py` generated the workbook profile, snapshot JSON, project YAML, assumptions YAML, and source profile report for the Soc Son row.

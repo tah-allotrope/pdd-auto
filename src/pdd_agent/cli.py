@@ -18,6 +18,7 @@ from pdd_agent.agent.section_orchestrator import SectionOrchestrator
 from pdd_agent.export.docx_export import export_run_to_docx
 from pdd_agent.export.drive_upload import upload_file, upload_docx_run
 from pdd_agent.phase05.benchmark import create_demo_project_input, run_demo_benchmark
+from pdd_agent.phase06.spreadsheet_mapper import fetch_workbook, generate_project_artifacts
 from schemas.project_input import ProjectInput
 
 
@@ -119,6 +120,48 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Skip DOCX export during benchmark",
     )
 
+    workbook_fetch_parser = sub.add_parser(
+        "fetch-workbook", help="Download the Vietnam WTE spreadsheet into the local cache"
+    )
+    workbook_fetch_parser.add_argument(
+        "--mapping-config",
+        default="configs/source_mappings/vietnam_wte_projects.yaml",
+        help="Spreadsheet mapping config path",
+    )
+    workbook_fetch_parser.add_argument(
+        "--cache-dir",
+        default="data/source_inputs/spreadsheets",
+        help="Workbook cache directory",
+    )
+    workbook_fetch_parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Re-download even if the workbook is already cached",
+    )
+
+    spreadsheet_map_parser = sub.add_parser(
+        "map-spreadsheet",
+        help="Profile the workbook, select a Vietnam candidate row, and write ProjectInput artifacts",
+    )
+    spreadsheet_map_parser.add_argument(
+        "--workbook",
+        help="Path to a local workbook; if omitted the CLI fetches the configured workbook first",
+    )
+    spreadsheet_map_parser.add_argument(
+        "--mapping-config",
+        default="configs/source_mappings/vietnam_wte_projects.yaml",
+        help="Spreadsheet mapping config path",
+    )
+    spreadsheet_map_parser.add_argument(
+        "--candidate",
+        default="soc-son",
+        help="Candidate key from the mapping config",
+    )
+    spreadsheet_map_parser.add_argument(
+        "--output-dir",
+        help="Optional output directory for generated profile, snapshot, YAML, and report artifacts",
+    )
+
     parser.add_argument(
         "--folder-id",
         default="1pp23yRZ8qtopw1BPXrzVewXsmmWplCse",
@@ -160,6 +203,8 @@ def main() -> int:
         "upload": lambda: _run_upload(args, log),
         "demo-config": lambda: _run_demo_config(args, log),
         "benchmark": lambda: _run_benchmark(args, log),
+        "fetch-workbook": lambda: _run_fetch_workbook(args, log),
+        "map-spreadsheet": lambda: _run_map_spreadsheet(args, log),
     }
 
     try:
@@ -289,6 +334,36 @@ def _run_benchmark(args, log) -> None:
         diff=str(artifacts.section_diff),
         runtime_seconds=artifacts.runtime_seconds,
         matched_sections=artifacts.comparison_summary.get("matched_sections"),
+    )
+
+
+def _run_fetch_workbook(args, log) -> None:
+    workbook_path = fetch_workbook(
+        mapping_config_path=Path(args.mapping_config),
+        cache_dir=Path(args.cache_dir),
+        force=args.force,
+    )
+    log.info("workbook_ready", path=str(workbook_path))
+
+
+def _run_map_spreadsheet(args, log) -> None:
+    workbook_path = (
+        Path(args.workbook) if args.workbook else fetch_workbook(Path(args.mapping_config))
+    )
+    artifacts = generate_project_artifacts(
+        workbook_path=workbook_path,
+        mapping_config_path=Path(args.mapping_config),
+        candidate_key=args.candidate,
+        output_dir=Path(args.output_dir) if args.output_dir else None,
+    )
+    log.info(
+        "spreadsheet_mapping_complete",
+        workbook=str(artifacts.workbook_path),
+        project_yaml=str(artifacts.project_yaml_path),
+        assumptions_yaml=str(artifacts.assumptions_yaml_path),
+        profile=str(artifacts.profile_json_path),
+        snapshot=str(artifacts.snapshot_json_path),
+        report=str(artifacts.report_path),
     )
 
 

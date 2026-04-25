@@ -42,7 +42,19 @@ Sections may ONLY be sourced from the following sources, in order of preference:
 - Laboratory analysis reports
 - Weighbridge and metering records
 - Fuel supply contracts
+- Structured workbook rows and normalized snapshots derived from the provided Vietnam WTE spreadsheet
 - **Use when:** Filling EVIDENCE_BASED and QUANTITATIVE sections with project-specific facts
+
+### Synthetic Assumptions — Allowed Only With Disclosure
+- Synthetic assumptions may be generated only to keep an internal draft workflow moving when Tier 1-4 evidence is missing.
+- Every synthetic assumption must be captured in a machine-readable assumptions register with:
+  - field path
+  - value
+  - source type
+  - rationale
+  - confidence
+- Synthetic assumptions may not silently replace missing evidence in HIGH_REVIEW or CRITICAL sections.
+- Synthetic assumptions must never introduce methodology deviations, double-counting boundaries, or unsupported quantitative formulas.
 
 ### PROHIBITED — No Free-Form Generation From
 - Training data knowledge (LLM parametric memory)
@@ -77,6 +89,7 @@ Sections with `review_sensitivity: HIGH` or `CRITICAL` require:
 - **Absolutely no free-form generation** — retrieval from Tier 1 or Tier 2 only
 - Structural outline must be copied from corpus example with project-specific facts substituted
 - Human expert sign-off required in addition to standard review gate
+- If a required input to a HIGH_REVIEW or CRITICAL section comes from a synthetic assumption, the section must remain review-gated and the affected field must appear in the blocked review list.
 
 ---
 
@@ -115,6 +128,7 @@ Before any section is marked complete, the following must be verified:
 2. No section contains uncited quantitative claims
 3. HIGH_REVIEW sections have at least one CORPUS or METHODOLOGY citation
 4. CRITICAL sections have human expert sign-off recorded
+5. Any synthetic assumption referenced by the run appears in the assumptions register and blocked review list when material
 
 ---
 

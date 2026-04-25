@@ -1,6 +1,6 @@
 # PDD Agent — Agentic Low-Cost WTE Carbon-Credit PDD Drafting Tool
 
-**Status:** PHASE-05 complete. The repo now includes a reproducible Soc Son-like benchmark workflow, benchmark scorecards, and a demo runner.
+**Status:** PHASE-05 complete, with PHASE-01 and PHASE-02 of the Vietnam spreadsheet workflow now implemented for the Soc Son row.
 
 ## What This Tool Does
 
@@ -37,6 +37,12 @@ pdd-agent demo-config
 # Run the Phase-05 benchmark and generate scorecards
 pdd-agent benchmark --input configs/projects/demo_socson_like.yaml
 
+# Download the Vietnam WTE workbook into the tracked cache
+pdd-agent fetch-workbook
+
+# Map the Soc Son spreadsheet row into ProjectInput + assumptions artifacts
+pdd-agent map-spreadsheet --candidate soc-son
+
 # Export to DOCX for human review
 pdd-agent export --run-id <run-id>
 
@@ -56,6 +62,8 @@ pdd-agent upload --run-id <run-id>
 | `pdd-agent upload` | Upload DOCX to Google Drive via gws |
 | `pdd-agent demo-config` | Write the reproducible Soc Son-like benchmark input |
 | `pdd-agent benchmark` | Run Phase-05 benchmark and write scorecards |
+| `pdd-agent fetch-workbook` | Cache the Vietnam WTE workbook under `data/source_inputs/spreadsheets/` |
+| `pdd-agent map-spreadsheet` | Profile the workbook and generate Vietnam ProjectInput + assumptions artifacts |
 
 ## Architecture
 
@@ -71,6 +79,15 @@ pdd-agent upload --run-id <run-id>
 - **`rules/verra/wte_methodology_rules.yaml`** — ACM0022/ACM0003 applicability conditions, WTE safeguards (WTE-SAFE-01 to 04), PRE/POST compliance checks.
 - **`src/pdd_agent/domain/methodology_rules.py`** — Typed Python wrapper with `run_pre_draft_checks()` and `run_post_draft_checks()`.
 - **`src/pdd_agent/parse/section_parser.py`** — Maps normalized corpus docs to canonical schema, alias index, coverage scoring.
+
+### Vietnam Spreadsheet Intake (PHASE-01 + PHASE-02)
+- **`configs/source_mappings/vietnam_wte_projects.yaml`** — Deterministic workbook selection rules for the Vietnam WTE spreadsheet and Soc Son candidate row.
+- **`src/pdd_agent/phase06/spreadsheet_mapper.py`** — Workbook fetch/profile/select logic plus ProjectInput and assumptions generation.
+- **`scripts/run_vietnam_pdd.py`** — One-command helper for the spreadsheet-to-artifact flow.
+- **`data/source_inputs/spreadsheets/`** — Tracked workbook cache plus generated profile and row snapshot JSON.
+- **`configs/projects/vietnam_socson_from_sheet.yaml`** — Generated Soc Son ProjectInput from the spreadsheet row.
+- **`configs/projects/vietnam_socson_from_sheet.assumptions.yaml`** — Machine-readable assumption register and blocked review items.
+- **`reports/source-profile-vietnam-wte.md`** — Human-readable workbook profile and selected-row report.
 
 ### Retrieval & Drafting (PHASE-03)
 - **`src/pdd_agent/retrieval/index.py`** — SQLite FTS5 BM25 index. `RetrievalIndex.build()` indexes the corpus once; `search()` and `get_section_examples()` query it.
@@ -101,6 +118,8 @@ pdd-agent upload --run-id <run-id>
 | PHASE-03 | Retrieval, agentic drafting, provider abstraction | ✅ Complete |
 | PHASE-04 | Compliance checks, review workflow, DOCX export | ✅ Complete |
 | PHASE-05 | End-to-end benchmark and demo | ✅ Complete |
+| Vietnam PHASE-01 | Spreadsheet intake and candidate profiling | ✅ Complete for Soc Son |
+| Vietnam PHASE-02 | ProjectInput mapping and assumptions layer | ✅ Complete for Soc Son |
 
 ## Phase-05 Deliverables
 
@@ -108,6 +127,26 @@ pdd-agent upload --run-id <run-id>
 - `scripts/run_demo.py` — one-command benchmark runner
 - `reports/demo-scorecard.md` — benchmark scorecard with review-burden and grounding metrics
 - `reports/section-diff.md` — per-section comparison notes against the Soc Son reference
+
+## Vietnam Spreadsheet Workflow
+
+```bash
+# One-command Phase 01-02 run
+python scripts/run_vietnam_pdd.py
+
+# Equivalent CLI workflow
+pdd-agent fetch-workbook
+pdd-agent map-spreadsheet --candidate soc-son
+```
+
+The Vietnam spreadsheet workflow will:
+
+1. Cache `WtE plants carbon model early draft.xlsx` under `data/source_inputs/spreadsheets/`
+2. Profile workbook tabs and save `data/source_inputs/spreadsheets/vietnam_wte_profile.json`
+3. Select the Soc Son row and save `data/source_inputs/spreadsheets/vietnam_socson_snapshot.json`
+4. Generate `configs/projects/vietnam_socson_from_sheet.yaml`
+5. Generate `configs/projects/vietnam_socson_from_sheet.assumptions.yaml`
+6. Write `reports/source-profile-vietnam-wte.md` with review-gated assumption notes
 
 ## Demo Workflow
 
@@ -153,6 +192,7 @@ src/pdd_agent/
 - `python-docx` is declared in `pyproject.toml`, but local environments still need it installed before DOCX export works at runtime
 - No real LLM provider wired — benchmark runs currently measure workflow quality using the zero-cost `NoopProvider`
 - The first benchmark is a workflow proof on one Soc Son-like case; a second project is still needed before claiming broader WTE coverage
+- The Soc Son spreadsheet mapper intentionally blocks review-sensitive quantitative splits, coordinates, and safeguards fields when they rely on synthetic assumptions
 
 ## Key References
 

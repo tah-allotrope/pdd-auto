@@ -19,6 +19,10 @@ data/corpus/manifest.jsonl
 data/index/
 data/runs/
 
+# Keep tracked spreadsheet source inputs for the Vietnam workflow
+!data/source_inputs/
+!data/source_inputs/**
+
 # OS noise
 .DS_Store
 Thumbs.db
