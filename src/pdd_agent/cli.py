@@ -20,6 +20,7 @@ from pdd_agent.export.drive_upload import upload_file, upload_docx_run
 from pdd_agent.phase05.benchmark import create_demo_project_input, run_demo_benchmark
 from pdd_agent.phase06.assumptions import load_assumption_register, resolve_assumptions_path
 from pdd_agent.phase06.spreadsheet_mapper import fetch_workbook, generate_project_artifacts
+from pdd_agent.phase06.vietnam_workflow import run_vietnam_pdd_workflow
 from schemas.project_input import ProjectInput
 
 
@@ -163,6 +164,31 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Optional output directory for generated profile, snapshot, YAML, and report artifacts",
     )
 
+    vietnam_run_parser = sub.add_parser(
+        "run-vietnam-pdd",
+        help="Run the full Vietnam spreadsheet-to-draft-review-DOCX workflow",
+    )
+    vietnam_run_parser.add_argument(
+        "--mapping-config",
+        default="configs/source_mappings/vietnam_wte_projects.yaml",
+        help="Spreadsheet mapping config path",
+    )
+    vietnam_run_parser.add_argument(
+        "--cache-dir",
+        default="data/source_inputs/spreadsheets",
+        help="Workbook cache directory",
+    )
+    vietnam_run_parser.add_argument(
+        "--candidate",
+        default="soc-son",
+        help="Candidate key from the mapping config",
+    )
+    vietnam_run_parser.add_argument(
+        "--provider",
+        default="noop",
+        help="LLM provider name for drafting (default: noop)",
+    )
+
     parser.add_argument(
         "--folder-id",
         default="1pp23yRZ8qtopw1BPXrzVewXsmmWplCse",
@@ -206,6 +232,7 @@ def main() -> int:
         "benchmark": lambda: _run_benchmark(args, log),
         "fetch-workbook": lambda: _run_fetch_workbook(args, log),
         "map-spreadsheet": lambda: _run_map_spreadsheet(args, log),
+        "run-vietnam-pdd": lambda: _run_vietnam_pdd(args, log),
     }
 
     try:
@@ -365,6 +392,27 @@ def _run_map_spreadsheet(args, log) -> None:
         profile=str(artifacts.profile_json_path),
         snapshot=str(artifacts.snapshot_json_path),
         report=str(artifacts.report_path),
+    )
+
+
+def _run_vietnam_pdd(args, log) -> None:
+    artifacts = run_vietnam_pdd_workflow(
+        mapping_config_path=Path(args.mapping_config),
+        cache_dir=Path(args.cache_dir),
+        candidate_key=args.candidate,
+        provider_name=args.provider,
+    )
+    log.info(
+        "vietnam_pdd_workflow_complete",
+        run_id=artifacts.run_id,
+        project_yaml=str(artifacts.project_yaml_path),
+        assumptions_yaml=str(artifacts.assumptions_yaml_path),
+        draft_run=str(artifacts.draft_run_path),
+        review_state=str(artifacts.review_state_path),
+        docx=str(artifacts.docx_path),
+        validation_report=str(artifacts.validation_report_path),
+        gap_analysis=str(artifacts.gap_analysis_path),
+        runbook=str(artifacts.runbook_path),
     )
 
 

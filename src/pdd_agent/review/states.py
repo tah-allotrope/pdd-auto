@@ -136,7 +136,7 @@ class ReviewStateStore:
 
     def blocking_states(self) -> list[str]:
         return [
-            f"{s.section_id}.{s.sub_section_id}: {s.state.label()}"
+            f"{s.sub_section_id or s.section_id}: {s.state.label()}"
             for s in self.sections.values()
             if s.state in (ReviewState.NEEDS_INPUT, ReviewState.NEEDS_DOMAIN_REVIEW)
         ]

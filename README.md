@@ -43,6 +43,9 @@ pdd-agent fetch-workbook
 # Map the Soc Son spreadsheet row into ProjectInput + assumptions artifacts
 pdd-agent map-spreadsheet --candidate soc-son
 
+# Run the full Vietnam spreadsheet -> draft -> review -> DOCX workflow
+pdd-agent run-vietnam-pdd
+
 # Export to DOCX for human review
 pdd-agent export --run-id <run-id>
 
@@ -64,6 +67,7 @@ pdd-agent upload --run-id <run-id>
 | `pdd-agent benchmark` | Run Phase-05 benchmark and write scorecards |
 | `pdd-agent fetch-workbook` | Cache the Vietnam WTE workbook under `data/source_inputs/spreadsheets/` |
 | `pdd-agent map-spreadsheet` | Profile the workbook and generate Vietnam ProjectInput + assumptions artifacts |
+| `pdd-agent run-vietnam-pdd` | Run the full Vietnam spreadsheet-to-review-package workflow |
 
 ## Architecture
 
@@ -80,14 +84,18 @@ pdd-agent upload --run-id <run-id>
 - **`src/pdd_agent/domain/methodology_rules.py`** — Typed Python wrapper with `run_pre_draft_checks()` and `run_post_draft_checks()`.
 - **`src/pdd_agent/parse/section_parser.py`** — Maps normalized corpus docs to canonical schema, alias index, coverage scoring.
 
-### Vietnam Spreadsheet Intake (PHASE-01 + PHASE-02)
+### Vietnam Spreadsheet Intake and Delivery (PHASE-01 to PHASE-05)
 - **`configs/source_mappings/vietnam_wte_projects.yaml`** — Deterministic workbook selection rules for the Vietnam WTE spreadsheet and Soc Son candidate row.
 - **`src/pdd_agent/phase06/spreadsheet_mapper.py`** — Workbook fetch/profile/select logic plus ProjectInput and assumptions generation.
+- **`src/pdd_agent/phase06/vietnam_workflow.py`** — One-command runner that maps the spreadsheet row, drafts the PDD, writes review artifacts, exports DOCX, and produces PHASE-05 reports.
 - **`scripts/run_vietnam_pdd.py`** — One-command helper for the spreadsheet-to-artifact flow.
 - **`data/source_inputs/spreadsheets/`** — Tracked workbook cache plus generated profile and row snapshot JSON.
 - **`configs/projects/vietnam_socson_from_sheet.yaml`** — Generated Soc Son ProjectInput from the spreadsheet row.
 - **`configs/projects/vietnam_socson_from_sheet.assumptions.yaml`** — Machine-readable assumption register and blocked review items.
 - **`reports/source-profile-vietnam-wte.md`** — Human-readable workbook profile and selected-row report.
+- **`reports/vietnam-pdd-validation.md`** — Human-readable validation report for the latest end-to-end Vietnam run.
+- **`reports/vietnam-pdd-gap-analysis.md`** — Missing-evidence prioritization report showing which facts most reduced confidence.
+- **`reports/vietnam-pdd-runbook.md`** — Operator rerun instructions for spreadsheet refreshes and future Vietnam candidates.
 
 ### Retrieval & Drafting (PHASE-03)
 - **`src/pdd_agent/retrieval/index.py`** — SQLite FTS5 BM25 index. `RetrievalIndex.build()` indexes the corpus once; `search()` and `get_section_examples()` query it.
@@ -123,6 +131,7 @@ pdd-agent upload --run-id <run-id>
 | Vietnam PHASE-02 | ProjectInput mapping and assumptions layer | ✅ Complete for Soc Son |
 | Vietnam PHASE-03 | Assumption-aware drafting and review rules | ✅ Complete for Soc Son |
 | Vietnam PHASE-04 | Verra-style DOCX export and appendices | ✅ Complete for Soc Son |
+| Vietnam PHASE-05 | End-to-end run, review package, gap analysis, rerun guidance | ✅ Complete for Soc Son |
 
 ## Phase-05 Deliverables
 
@@ -134,10 +143,13 @@ pdd-agent upload --run-id <run-id>
 ## Vietnam Spreadsheet Workflow
 
 ```bash
-# One-command Phase 01-02 run
+# One-command end-to-end run
 python scripts/run_vietnam_pdd.py
 
-# Equivalent CLI workflow
+# Equivalent CLI one-command workflow
+pdd-agent run-vietnam-pdd
+
+# Equivalent manual CLI workflow
 pdd-agent fetch-workbook
 pdd-agent map-spreadsheet --candidate soc-son
 
@@ -158,7 +170,8 @@ The Vietnam spreadsheet workflow will:
 6. Write `reports/source-profile-vietnam-wte.md` with review-gated assumption notes
 7. Draft a run whose sections persist fact provenance, synthetic usage, and review sensitivity
 8. Write `reports/assumption-burden.md` summarizing material assumption burden by section
-9. Export a DOCX with an internal-draft disclaimer, assumption appendix, and reviewer issues appendix
+9. Write `reports/vietnam-pdd-validation.md`, `reports/vietnam-pdd-gap-analysis.md`, and `reports/vietnam-pdd-runbook.md`
+10. Export a DOCX with an internal-draft disclaimer, assumption appendix, and reviewer issues appendix
 
 ## Demo Workflow
 

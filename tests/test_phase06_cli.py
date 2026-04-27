@@ -68,3 +68,37 @@ def test_fetch_workbook_command_invokes_fetcher(tmp_path: Path):
 
     assert exit_code == 0
     mock_fetch.assert_called_once()
+
+
+def test_run_vietnam_pdd_command_invokes_workflow(tmp_path: Path):
+    with patch(
+        "sys.argv",
+        [
+            "pdd-agent",
+            "run-vietnam-pdd",
+            "--candidate",
+            "soc-son",
+            "--cache-dir",
+            str(tmp_path / "cache"),
+        ],
+    ):
+        with patch("pdd_agent.cli.run_vietnam_pdd_workflow") as mock_workflow:
+            mock_workflow.return_value = type(
+                "Artifacts",
+                (),
+                {
+                    "run_id": "viet-run",
+                    "project_yaml_path": tmp_path / "configs/project.yaml",
+                    "assumptions_yaml_path": tmp_path / "configs/assumptions.yaml",
+                    "draft_run_path": tmp_path / "data/runs/viet-run.json",
+                    "review_state_path": tmp_path / "data/runs/review-state-viet-run.json",
+                    "docx_path": tmp_path / "data/runs/viet-run.docx",
+                    "validation_report_path": tmp_path / "reports/vietnam-pdd-validation.md",
+                    "gap_analysis_path": tmp_path / "reports/vietnam-pdd-gap-analysis.md",
+                    "runbook_path": tmp_path / "reports/vietnam-pdd-runbook.md",
+                },
+            )()
+            exit_code = main()
+
+    assert exit_code == 0
+    mock_workflow.assert_called_once()

@@ -285,6 +285,12 @@ class TestReviewStateStore:
         assert len(store.sections["3/4"].reviewer_notes) == 1
         assert "expert_a" in store.sections["3/4"].updated_by
 
+    def test_blocking_states_use_canonical_section_key(self):
+        store = init_review_state("run-blocking", "Test", [("3", "3.5")])
+        store.set_state("3", "3.5", ReviewState.NEEDS_DOMAIN_REVIEW)
+
+        assert store.blocking_states() == ["3.5: Needs Domain Review"]
+
 
 class TestSummarizeReviewResult:
     def test_summarize_returns_correct_keys(self):
