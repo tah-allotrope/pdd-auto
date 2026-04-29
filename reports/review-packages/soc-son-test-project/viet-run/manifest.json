@@ -1,0 +1,12 @@
+{
+  "run_id": "viet-run",
+  "project_name": "Soc Son Test Project",
+  "project_slug": "soc-son-test-project",
+  "published_docx": "C:\\Users\\tukum\\Downloads\\pdd-auto\\reports\\review-packages\\soc-son-test-project\\viet-run\\viet-run.docx",
+  "source_docx": "C:\\Users\\tukum\\AppData\\Local\\Temp\\pytest-of-tukum\\pytest-62\\test_run_vietnam_pdd_workflow_0\\data\\runs\\viet-run.docx",
+  "validation_report": "C:\\Users\\tukum\\AppData\\Local\\Temp\\pytest-of-tukum\\pytest-62\\test_run_vietnam_pdd_workflow_0\\reports\\vietnam-pdd-validation.md",
+  "gap_analysis": "C:\\Users\\tukum\\AppData\\Local\\Temp\\pytest-of-tukum\\pytest-62\\test_run_vietnam_pdd_workflow_0\\reports\\vietnam-pdd-gap-analysis.md",
+  "assumption_burden": "C:\\Users\\tukum\\AppData\\Local\\Temp\\pytest-of-tukum\\pytest-62\\test_run_vietnam_pdd_workflow_0\\reports\\assumption-burden.md",
+  "assumptions_yaml": "C:\\Users\\tukum\\Downloads\\pdd-auto\\reports\\review-packages\\soc-son-test-project\\viet-run\\vietnam_socson_from_sheet.assumptions.yaml",
+  "project_yaml": "C:\\Users\\tukum\\Downloads\\pdd-auto\\reports\\review-packages\\soc-son-test-project\\viet-run\\vietnam_socson_from_sheet.yaml"
+}

@@ -6,6 +6,7 @@ import importlib.util
 import json
 import zipfile
 from pathlib import Path
+from unittest.mock import patch
 
 import pytest
 
@@ -162,3 +163,21 @@ def test_export_run_to_docx_raises_clear_error_when_run_missing(tmp_path: Path, 
         assert "missing-run" in str(exc)
     else:
         raise AssertionError("Expected FileNotFoundError")
+
+
+def test_upload_review_package_docx_prefers_published_artifact(tmp_path: Path):
+    from pdd_agent.export.drive_upload import upload_review_package_docx
+
+    latest_docx = tmp_path / "reports" / "review-packages" / "soc-son" / "latest.docx"
+    latest_docx.parent.mkdir(parents=True, exist_ok=True)
+    latest_docx.write_bytes(b"docx")
+
+    with patch("pdd_agent.export.drive_upload.upload_file") as mock_upload:
+        mock_upload.return_value = {"success": True, "drive_url": "https://drive.google.com/file/d/abc", "file_id": "abc", "error": None}
+        result = upload_review_package_docx(
+            review_docx_path=latest_docx,
+            drive_folder_id="folder-123",
+        )
+
+    assert result["success"] is True
+    mock_upload.assert_called_once_with(latest_docx, drive_folder_id="folder-123", drive_name=None)

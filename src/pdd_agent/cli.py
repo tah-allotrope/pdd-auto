@@ -16,7 +16,8 @@ from pdd_agent.ingest.download import download_corpus
 from pdd_agent.retrieval.index import RetrievalIndex
 from pdd_agent.agent.section_orchestrator import SectionOrchestrator
 from pdd_agent.export.docx_export import export_run_to_docx
-from pdd_agent.export.drive_upload import upload_file, upload_docx_run
+from pdd_agent.export.drive_upload import upload_docx_run, upload_review_package_docx
+from pdd_agent.export.review_package import publish_docx_run_for_review
 from pdd_agent.phase05.benchmark import create_demo_project_input, run_demo_benchmark
 from pdd_agent.phase06.assumptions import load_assumption_register, resolve_assumptions_path
 from pdd_agent.phase06.spreadsheet_mapper import fetch_workbook, generate_project_artifacts
@@ -75,10 +76,19 @@ def _build_parser() -> argparse.ArgumentParser:
     export_parser.add_argument(
         "--output", "-o", help="Output DOCX path (default: data/runs/{run_id}.docx)"
     )
+    export_parser.add_argument(
+        "--review-output-dir",
+        help="Optional reviewer-facing publication root for the exported DOCX",
+    )
 
     upload_parser = sub.add_parser("upload", help="Upload a DOCX to Google Drive")
-    upload_parser.add_argument(
-        "--run-id", required=True, help="Run identifier to upload (will upload {run-id}.docx)"
+    upload_target = upload_parser.add_mutually_exclusive_group(required=True)
+    upload_target.add_argument(
+        "--run-id", help="Run identifier to upload (will upload {run-id}.docx)"
+    )
+    upload_target.add_argument(
+        "--review-docx",
+        help="Path to a published reviewer-facing DOCX to upload",
     )
     upload_parser.add_argument(
         "--folder-id",
@@ -187,6 +197,20 @@ def _build_parser() -> argparse.ArgumentParser:
         "--provider",
         default="noop",
         help="LLM provider name for drafting (default: noop)",
+    )
+    vietnam_run_parser.add_argument(
+        "--review-output-dir",
+        help="Optional reviewer-facing publication root for published review packages",
+    )
+    vietnam_run_parser.add_argument(
+        "--upload-review-docx",
+        action="store_true",
+        help="Upload the published reviewer-facing DOCX after workflow completion",
+    )
+    vietnam_run_parser.add_argument(
+        "--folder-id",
+        default="1pp23yRZ8qtopw1BPXrzVewXsmmWplCse",
+        help="Target Drive folder ID for optional reviewer-facing upload",
     )
 
     parser.add_argument(
@@ -328,14 +352,30 @@ def _run_review(args, log) -> None:
 
 
 def _run_export(args, log) -> None:
+    if args.review_output_dir:
+        result = publish_docx_run_for_review(
+            run_id=args.run_id,
+            project_name=args.run_id,
+            output_root=Path(args.review_output_dir),
+        )
+        log.info("review_docx_published", path=str(result), review_output_dir=str(args.review_output_dir))
+        return
+
     output_path = Path(args.output) if args.output else None
     result = export_run_to_docx(run_id=args.run_id, output_path=output_path)
     log.info("docx_exported", path=str(result))
 
 
 def _run_upload(args, log) -> None:
-    log.info("upload_start", run_id=args.run_id, folder=args.folder_id)
-    result = upload_docx_run(run_id=args.run_id, drive_folder_id=args.folder_id)
+    if args.review_docx:
+        log.info("upload_start", review_docx=args.review_docx, folder=args.folder_id)
+        result = upload_review_package_docx(
+            Path(args.review_docx),
+            drive_folder_id=args.folder_id,
+        )
+    else:
+        log.info("upload_start", run_id=args.run_id, folder=args.folder_id)
+        result = upload_docx_run(run_id=args.run_id, drive_folder_id=args.folder_id)
     if result["success"]:
         log.info("upload_success", drive_url=result["drive_url"])
     else:
@@ -401,6 +441,9 @@ def _run_vietnam_pdd(args, log) -> None:
         cache_dir=Path(args.cache_dir),
         candidate_key=args.candidate,
         provider_name=args.provider,
+        review_package_dir=Path(args.review_output_dir) if args.review_output_dir else None,
+        upload_review_docx=args.upload_review_docx,
+        drive_folder_id=args.folder_id,
     )
     log.info(
         "vietnam_pdd_workflow_complete",
@@ -415,6 +458,7 @@ def _run_vietnam_pdd(args, log) -> None:
         validation_report=str(artifacts.validation_report_path),
         gap_analysis=str(artifacts.gap_analysis_path),
         runbook=str(artifacts.runbook_path),
+        upload_result=artifacts.upload_result,
     )
 
 

@@ -1,15 +1,15 @@
 # Vietnam PDD Validation Report
 
-- Run ID: `run-20260429041046-2616b7`
+- Run ID: `run-20260429040943-c967fc`
 - Project: `Soc Son waste to power plant project`
 - Workbook: `data\source_inputs\spreadsheets\WtE_plants_carbon_model_early_draft.xlsx`
 - Project YAML: `C:\Users\tukum\Downloads\pdd-auto\configs\projects\vietnam_socson_from_sheet.yaml`
 - Assumptions YAML: `C:\Users\tukum\Downloads\pdd-auto\configs\projects\vietnam_socson_from_sheet.assumptions.yaml`
 - Source profile report: `C:\Users\tukum\Downloads\pdd-auto\reports\source-profile-vietnam-wte.md`
-- Draft run JSON: `C:\Users\tukum\Downloads\pdd-auto\data\runs\run-20260429041046-2616b7.json`
-- Review state JSON: `C:\Users\tukum\Downloads\pdd-auto\data\runs\review-state-run-20260429041046-2616b7.json`
+- Draft run JSON: `C:\Users\tukum\Downloads\pdd-auto\data\runs\run-20260429040943-c967fc.json`
+- Review state JSON: `C:\Users\tukum\Downloads\pdd-auto\data\runs\review-state-run-20260429040943-c967fc.json`
 - Assumption burden report: `C:\Users\tukum\Downloads\pdd-auto\reports\assumption-burden.md`
-- DOCX draft: `C:\Users\tukum\Downloads\pdd-auto\reports\review-packages\soc-son-waste-to-power-plant-project\run-20260429041046-2616b7\run-20260429041046-2616b7.docx`
+- DOCX draft: `C:\Users\tukum\Downloads\pdd-auto\data\runs\run-20260429040943-c967fc.docx`
 
 ## Workflow Outcome
 

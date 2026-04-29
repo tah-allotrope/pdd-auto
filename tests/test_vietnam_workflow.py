@@ -327,6 +327,7 @@ def test_run_vietnam_pdd_workflow_writes_phase05_reports(tmp_path: Path):
     assert artifacts.docx_path.exists()
     assert artifacts.review_package_manifest_path.exists()
     assert artifacts.latest_docx_path.exists()
+    assert artifacts.upload_result is None
     assert "quantification.baseline_emissions_tco2e_per_year" in artifacts.gap_analysis_path.read_text(
         encoding="utf-8"
     )
@@ -334,3 +335,177 @@ def test_run_vietnam_pdd_workflow_writes_phase05_reports(tmp_path: Path):
     assert "Workflow Outcome" in validation_text
     assert "reports\\review-packages\\soc-son-test-project\\viet-run\\viet-run.docx" in validation_text
     assert "python scripts/run_vietnam_pdd.py" in artifacts.runbook_path.read_text(encoding="utf-8")
+
+
+def test_run_vietnam_pdd_workflow_can_upload_published_review_docx(tmp_path: Path):
+    workbook = tmp_path / "cache" / "workbook.xlsx"
+    workbook.parent.mkdir(parents=True, exist_ok=True)
+    workbook.write_bytes(b"xlsx")
+
+    project_yaml = tmp_path / "configs" / "vietnam_socson_from_sheet.yaml"
+    project_yaml.parent.mkdir(parents=True, exist_ok=True)
+    project_yaml.write_text(
+        yaml.safe_dump(
+            {
+                "project": {
+                    "project_name": "Soc Son Upload Project",
+                    "project_id_vcs": "VCS-1234",
+                    "proponent_name": "Synthetic Proponent",
+                    "proponent_contact_email": "owner@example.com",
+                    "other_entities": ["Entity"],
+                    "ownership": "Ownership text",
+                },
+                "location": {
+                    "country": "Vietnam",
+                    "region": "Hanoi",
+                    "city": "Soc Son",
+                    "latitude": 21.261,
+                    "longitude": 105.847,
+                    "landfill_latitude": 21.275,
+                    "landfill_longitude": 105.86,
+                },
+                "dates": {
+                    "start_date": "2022-07-24",
+                    "crediting_period_start": "2022-07-24",
+                    "crediting_period_years": 7,
+                    "project_scale_small": False,
+                },
+                "technology": {
+                    "methodology_ids": ["ACM0022"],
+                    "technology_type": "incineration_with_energy_recovery",
+                    "waste_type": ["municipal_solid_waste"],
+                    "annual_waste_throughput": 182500.0,
+                    "installed_capacity_mw": 10.0,
+                    "energy_generation_mwh_year": 74460.0,
+                    "tip_fee_usd_per_tonne": 18.0,
+                    "landfill_diversion_claim": True,
+                    "fuel_substitution_claim": False,
+                },
+                "methodology_applicability": {
+                    "eligibility_checklist": {"project treats municipal solid waste": True},
+                    "deviation_from_methodology": None,
+                },
+                "quantification": {
+                    "baseline_emissions_tco2e_per_year": 120000.0,
+                    "project_emissions_tco2e_per_year": 50000.0,
+                    "leakage_tco2e_per_year": 0.0,
+                    "net_emissions_tco2e_per_year": 70000.0,
+                    "grid_emission_factor": 0.92,
+                    "grid_emission_factor_source": "placeholder source",
+                    "methane_capture_rate": 0.2,
+                    "methane_generation_factor": 0.06,
+                    "crediting_period_total_tco2e": 490000.0,
+                },
+                "monitoring": {
+                    "parameters_monitored": [
+                        {
+                            "name": "Waste throughput",
+                            "unit": "tonnes/day",
+                            "frequency": "daily",
+                            "method": "weighbridge",
+                            "data_source": "placeholder",
+                        }
+                    ],
+                    "monitoring_equipment": ["weighbridge"],
+                    "data_management": "placeholder",
+                },
+                "safeguards": {
+                    "no_net_harm_statement": "placeholder",
+                    "stakeholder_consultation_completed": False,
+                    "stakeholder_consultation_date": None,
+                    "environmental_impact_assessment": False,
+                    "eia_reference": None,
+                },
+                "compliance_and_ownership": {
+                    "no_participation_other_programs": True,
+                    "no_other_forms_of_credit": True,
+                    "other_ghg_programs": [],
+                    "credit_ownership_statement": "placeholder",
+                    "double_counting_risk": False,
+                },
+                "sustainable_development": {
+                    "sd_contributions": ["Improves municipal waste handling"],
+                    "sd_comments": "placeholder",
+                },
+            },
+            sort_keys=False,
+        ),
+        encoding="utf-8",
+    )
+
+    assumptions_yaml = tmp_path / "configs" / "vietnam_socson_from_sheet.assumptions.yaml"
+    assumptions_yaml.write_text(yaml.safe_dump({"assumptions": [], "guardrails": {}}, sort_keys=False), encoding="utf-8")
+
+    source_report = tmp_path / "reports" / "source-profile-vietnam-wte.md"
+    source_report.parent.mkdir(parents=True, exist_ok=True)
+    source_report.write_text("# Source Profile\n", encoding="utf-8")
+
+    spreadsheet_artifacts = SpreadsheetArtifacts(
+        workbook_path=workbook,
+        profile_json_path=tmp_path / "cache" / "profile.json",
+        snapshot_json_path=tmp_path / "cache" / "snapshot.json",
+        project_yaml_path=project_yaml,
+        assumptions_yaml_path=assumptions_yaml,
+        report_path=source_report,
+    )
+
+    internal_docx = tmp_path / "data" / "runs" / "viet-upload.docx"
+    internal_docx.parent.mkdir(parents=True, exist_ok=True)
+    internal_docx.write_bytes(b"docx-binary")
+
+    draft_run = DraftRun(run_id="viet-upload", project_name="Soc Son Upload Project", provider="noop")
+    draft_run.add(_section("4", "4.4", "LOW", [], []))
+
+    with patch("pdd_agent.phase06.vietnam_workflow.fetch_workbook", return_value=workbook), patch(
+        "pdd_agent.phase06.vietnam_workflow.generate_project_artifacts",
+        return_value=spreadsheet_artifacts,
+    ), patch(
+        "pdd_agent.phase06.vietnam_workflow.get_provider_registry"
+    ) as mock_registry, patch(
+        "pdd_agent.phase06.vietnam_workflow.SectionOrchestrator"
+    ) as mock_orchestrator_cls, patch(
+        "pdd_agent.phase06.vietnam_workflow.export_run_to_docx",
+        return_value=internal_docx,
+    ), patch(
+        "pdd_agent.phase06.vietnam_workflow.ReviewStateStore.load"
+    ) as mock_review_state_load, patch(
+        "pdd_agent.phase06.vietnam_workflow.upload_review_package_docx"
+    ) as mock_upload:
+        mock_registry.return_value.get.return_value = object()
+        mock_orchestrator = mock_orchestrator_cls.return_value
+        mock_orchestrator.run_id = "viet-upload"
+        mock_orchestrator.run.return_value = draft_run
+        mock_orchestrator.run_review.return_value = {
+            "run_id": "viet-upload",
+            "review": {"passed": True, "blocking_issues": [], "auto_approved_sections": []},
+            "consistency": {"passed": True, "issues": []},
+            "review_state_path": str(tmp_path / "data" / "runs" / "review-state-viet-upload.json"),
+            "draft_run_path": str(tmp_path / "data" / "runs" / "viet-upload.json"),
+            "assumption_burden_path": str(tmp_path / "reports" / "assumption-burden.md"),
+        }
+        mock_review_state_load.return_value.to_dict.return_value = {
+            "blocking_states": [],
+            "sections": {"4/4.4": {"state": "ready-for-human-edit"}},
+        }
+        mock_upload.return_value = {
+            "success": True,
+            "drive_url": "https://drive.google.com/file/d/abc",
+            "file_id": "abc",
+            "error": None,
+        }
+
+        artifacts = run_vietnam_pdd_workflow(
+            review_package_dir=tmp_path / "reports" / "review-packages",
+            validation_report_path=tmp_path / "reports" / "vietnam-pdd-validation.md",
+            gap_analysis_path=tmp_path / "reports" / "vietnam-pdd-gap-analysis.md",
+            runbook_path=tmp_path / "reports" / "vietnam-pdd-runbook.md",
+            upload_review_docx=True,
+            drive_folder_id="folder-123",
+        )
+
+    assert artifacts.upload_result is not None
+    assert artifacts.upload_result["success"] is True
+    mock_upload.assert_called_once_with(
+        artifacts.docx_path,
+        drive_folder_id="folder-123",
+    )

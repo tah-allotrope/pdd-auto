@@ -1,7 +1,7 @@
 # Vietnam WTE Spreadsheet Source Profile
 
 - Workbook: `WtE_plants_carbon_model_early_draft.xlsx`
-- Mapping config: `C:\Users\tukum\Downloads\pdd-auto\configs\source_mappings\vietnam_wte_projects.yaml`
+- Mapping config: `configs\source_mappings\vietnam_wte_projects.yaml`
 - Candidate key: `soc-son`
 - Selected sheet/row: `Projects` / `9`
 

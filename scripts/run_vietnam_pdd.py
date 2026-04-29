@@ -30,6 +30,9 @@ def main() -> int:
     print(f"Validation Report: {artifacts.validation_report_path}")
     print(f"Gap Analysis: {artifacts.gap_analysis_path}")
     print(f"Runbook: {artifacts.runbook_path}")
+    if artifacts.upload_result:
+        print(f"Upload Success: {artifacts.upload_result.get('success')}")
+        print(f"Drive URL: {artifacts.upload_result.get('drive_url')}")
     return 0
 
 

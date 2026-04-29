@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Phase Report :: pdd-review-delivery-phase34</title>
+  <meta name="color-scheme" content="dark">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    async function initMermaid() {
+      const blocks = document.querySelectorAll('.mermaid');
+      if (!blocks.length) return;
+      mermaid.initialize({ startOnLoad: false, theme: 'dark', securityLevel: 'loose' });
+      await mermaid.run({ nodes: blocks });
+    }
+    const run = () => initMermaid().catch((error) => console.error('Mermaid render failed', error));
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', run, { once: true });
+    } else {
+      run();
+    }
+  </script>
+  <style>
+    :root { --bg:#0d0d0d; --panel:rgba(13,13,13,.88); --line:rgba(0,245,255,.26); --text:#e9f6ff; --muted:#8ea3ad; --accent-blue:#00f5ff; --accent-green:#39ff14; --shadow:0 14px 40px rgba(0,0,0,.32); --radius-lg:22px; --radius-md:16px; --radius-sm:12px; --narrative-font:"Segoe UI","Helvetica Neue",Helvetica,Arial,sans-serif; --technical-font:"Cascadia Code",Consolas,monospace; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; background:linear-gradient(180deg,#050505 0%,#0d0d0d 36%,#090909 100%); color:var(--text); font-family:var(--narrative-font); line-height:1.6; }
+    .page-shell { width:min(1180px,calc(100vw - 32px)); margin:0 auto; padding:32px 0 72px; }
+    .hero,.section { margin-top:22px; padding:24px; border:1px solid var(--line); border-radius:var(--radius-lg); background:var(--panel); box-shadow:var(--shadow); }
+    .hero { margin-top:0; }
+    .hero-grid,.summary-grid,.metric-strip { display:grid; gap:16px; }
+    .hero-grid { grid-template-columns:minmax(0,1.55fr) minmax(260px,.85fr); }
+    .summary-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .metric-strip { grid-template-columns:repeat(3,minmax(0,1fr)); margin-top:18px; }
+    .section-kicker,.section-index,.meta-chip,.repo-tag,.pill,code,pre,.mermaid { font-family:var(--technical-font); }
+    .section-kicker,.section-index { color:var(--accent-green); text-transform:uppercase; letter-spacing:.16em; }
+    .phase-title { margin:0; font-size:clamp(2.5rem,5vw,4.7rem); line-height:.94; text-transform:uppercase; }
+    .hero-summary,.meta-label { color:var(--muted); }
+    .meta-card,.column-card,.diagram-frame,.technical-frame,.viz-frame,.question-frame { border:1px solid rgba(255,255,255,.08); border-radius:var(--radius-md); background:rgba(7,7,7,.82); padding:18px; }
+    .pill-row { display:flex; flex-wrap:wrap; gap:10px; margin-top:16px; }
+    .pill,.repo-tag { display:inline-flex; align-items:center; gap:8px; padding:8px 11px; border-radius:999px; border:1px solid rgba(57,255,20,.22); background:rgba(57,255,20,.06); }
+    .section-header { display:flex; justify-content:space-between; align-items:end; margin-bottom:18px; padding-bottom:14px; border-bottom:1px solid rgba(255,255,255,.08); }
+    .section-title { margin:0; font-size:clamp(1.2rem,2vw,1.7rem); }
+    .technical-frame table { width:100%; border-collapse:collapse; }
+    .technical-frame th,.technical-frame td { padding:12px 10px; border-bottom:1px solid rgba(255,255,255,.08); vertical-align:top; text-align:left; }
+    .technical-frame th { color:var(--accent-green); text-transform:uppercase; font-size:.76rem; }
+    .metric { padding:14px 16px; border:1px solid rgba(0,245,255,.18); border-radius:var(--radius-sm); background:rgba(0,245,255,.04); }
+    .metric-label { color:var(--muted); text-transform:uppercase; font-size:.72rem; letter-spacing:.16em; }
+    .metric-value { margin-top:8px; color:var(--accent-green); font-size:1.2rem; font-weight:700; }
+    .question-frame ul,.technical-frame ul,.column-card ul { margin:0; padding-left:20px; }
+    canvas.report-chart { width:100% !important; height:280px !important; }
+    .footer-note { margin-top:18px; text-align:right; color:rgba(142,163,173,.72); font-size:.78rem; text-transform:uppercase; }
+    @media (max-width:900px) { .hero-grid,.summary-grid,.metric-strip { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <main class="page-shell">
+    <section class="hero">
+      <div class="hero-grid">
+        <div>
+          <p class="section-kicker">Phase Report / Personal Technical Artifact</p>
+          <h1 class="phase-title">pdd-review-delivery-phase34</h1>
+          <p class="hero-summary">Completed the reviewer-facing delivery loop by adding CLI discoverability, manual reviewer-package export, optional published-DOCX upload, and live verification against the real <code>gws</code> surface.</p>
+          <div class="pill-row"><span class="pill">project :: PDD Agent</span><span class="pill">date :: 2026-04-29</span></div>
+          <div class="repo-tag">repo :: pdd-auto</div>
+        </div>
+        <div class="hero-meta">
+          <div class="meta-card"><div class="meta-label">Project</div><div class="meta-chip">PDD Agent</div></div>
+          <div class="meta-card"><div class="meta-label">Repository</div><div class="meta-chip">pdd-auto</div></div>
+          <div class="meta-card"><div class="meta-label">Current Run</div><div class="meta-chip">run-20260429041046-2616b7</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header"><div><div class="section-index">01 / Input -> Output</div><h2 class="section-title">Input -> Output Summary</h2></div></div>
+      <div class="summary-grid">
+        <div class="column-card">
+          <p class="section-kicker">Input</p>
+          <ul>
+            <li>PHASE-03 goals from the plan: CLI surfacing, manual export publication, optional upload from published package.</li>
+            <li>PHASE-04 goals: fresh end-to-end artifacts, aligned reports, and a verified current review package.</li>
+            <li>Existing reviewer-package publisher from PHASE-01/02.</li>
+          </ul>
+        </div>
+        <div class="column-card">
+          <p class="section-kicker">Output</p>
+          <ul>
+            <li><code>pdd-agent export --review-output-dir ...</code> publishes reviewer-facing output.</li>
+            <li><code>pdd-agent upload --review-docx ...</code> uploads the published draft instead of internal <code>data/runs</code> output.</li>
+            <li>Latest verified published/uploaded draft: <code>reports/review-packages/soc-son-waste-to-power-plant-project/run-20260429041046-2616b7/run-20260429041046-2616b7.docx</code></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header"><div><div class="section-index">02 / Logic Flow</div><h2 class="section-title">Logic Flow</h2></div></div>
+      <div class="diagram-frame"><div class="mermaid">flowchart LR
+        A[CLI parse] --> B[run-vietnam-pdd or export]
+        B --> C[Generate internal DOCX]
+        C --> D[Publish reviewer package]
+        D --> E[Return published paths]
+        E --> F{Upload requested?}
+        F -- No --> G[Refresh validation and runbook]
+        F -- Yes --> H[Upload published DOCX via gws]
+        H --> G
+      </div></div>
+    </section>
+
+    <section class="section">
+      <div class="section-header"><div><div class="section-index">03 / Math / Algorithm Used</div><h2 class="section-title">Math / Algorithm Used</h2></div></div>
+      <div class="technical-frame">
+        <p>No new domain math was added. The key deterministic logic was command routing and artifact alignment:</p>
+        <ul>
+          <li>Manual export path branches to reviewer-package publication when <code>--review-output-dir</code> is provided.</li>
+          <li>Upload path branches to the published review DOCX when <code>--review-docx</code> or <code>--upload-review-docx</code> is used.</li>
+          <li>Validation remains tied to the published package path, not the internal export path.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header"><div><div class="section-index">04 / Tools / Formulas / Methods</div><h2 class="section-title">Tools / Formulas / Methods</h2></div></div>
+      <div class="technical-frame">
+        <table>
+          <thead><tr><th>Surface</th><th>Use</th></tr></thead>
+          <tbody>
+            <tr><td><code>src/pdd_agent/cli.py</code></td><td>Added reviewer-facing flags for export, upload, and one-command workflow.</td></tr>
+            <tr><td><code>src/pdd_agent/export/drive_upload.py</code></td><td>Added published-package upload helper and fixed real <code>gws</code> request shape to use <code>--json</code> + <code>--upload</code>.</td></tr>
+            <tr><td><code>pytest</code></td><td>Validated 13 targeted tests spanning publication, upload contract, and CLI routing.</td></tr>
+            <tr><td><code>python -m pdd_agent.cli run-vietnam-pdd --upload-review-docx</code></td><td>Verified live Drive upload of the published review DOCX.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header"><div><div class="section-index">05 / Results &amp; Visualizations</div><h2 class="section-title">Results &amp; Visualizations</h2></div></div>
+      <div class="viz-frame">
+        <div class="metric-strip">
+          <div class="metric"><div class="metric-label">Targeted Tests</div><div class="metric-value">13 passed</div></div>
+          <div class="metric"><div class="metric-label">Live Upload</div><div class="metric-value">success</div></div>
+          <div class="metric"><div class="metric-label">Current Published Run</div><div class="metric-value">run-20260429041046-2616b7</div></div>
+        </div>
+        <div class="technical-frame" style="margin-top:16px;"><canvas id="phase34Chart" class="report-chart"></canvas></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header"><div><div class="section-index">06 / Limitations / Second-Best Alternative</div><h2 class="section-title">Limitations / Second-Best Alternative</h2></div></div>
+      <div class="question-frame">
+        <ul>
+          <li>The draft is now discoverable and uploadable, but the content still carries one blocking review issue and all sections remain in domain review state.</li>
+          <li>The uploader currently returns a Drive folder URL fallback rather than a direct file URL unless stdout includes the file URL explicitly.</li>
+          <li>Second-best alternative would have been to keep upload tied to <code>data/runs/{run_id}.docx</code>, but that would split the review surface from the shareable surface again.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header"><div><div class="section-index">07 / Errors / Warnings / Flags</div><h2 class="section-title">Errors / Warnings / Flags Encountered</h2></div></div>
+      <div class="question-frame">
+        <ul>
+          <li>Live upload initially failed because <code>gws drive files create</code> rejected <code>--folder-id</code>; fixed by switching to <code>--json {"name":..., "parents":[...]}</code> with <code>--upload</code>.</li>
+          <li>One CLI fixture lacked the new <code>upload_result</code> field and was updated to reflect the expanded workflow contract.</li>
+          <li>The real workflow still reports a domain-review blocker for section <code>3.5</code>, which is expected and preserved.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header"><div><div class="section-index">08 / Open Questions / Next Phase Seeds</div><h2 class="section-title">Open Questions / Next Phase Seeds</h2></div></div>
+      <div class="question-frame">
+        <ul>
+          <li>Should the uploader persist the returned Drive file ID into the review-package manifest and validation report for stronger traceability?</li>
+          <li>Should manual <code>pdd-agent export --review-output-dir ...</code> resolve the real project name from the saved run instead of using the run ID as a fallback publication label?</li>
+          <li>Should older run directories under <code>reports/review-packages/</code> be pruned automatically or left as immutable review history?</li>
+        </ul>
+      </div>
+      <div class="footer-note">artifact generated for reflection, not presentation theater</div>
+    </section>
+  </main>
+  <script>
+    if (window.Chart) {
+      Chart.defaults.devicePixelRatio = 1;
+      Chart.defaults.animation = false;
+      Chart.defaults.resizeDelay = 150;
+      Chart.defaults.normalized = true;
+      Chart.defaults.maintainAspectRatio = false;
+      new Chart(document.getElementById('phase34Chart'), {
+        type: 'bar',
+        data: {
+          labels: ['Tests Passed', 'Published + Uploaded Run', 'Blocking Issues'],
+          datasets: [{ label: 'Count', data: [13, 1, 1], backgroundColor: ['#00f5ff', '#39ff14', '#ff8a00'] }]
+        },
+        options: {
+          animation: false,
+          resizeDelay: 150,
+          normalized: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { ticks: { color: '#e9f6ff' }, grid: { color: 'rgba(255,255,255,0.08)' } },
+            y: { beginAtZero: true, ticks: { color: '#e9f6ff', precision: 0 }, grid: { color: 'rgba(255,255,255,0.08)' } }
+          }
+        }
+      });
+    }
+  </script>
+</body>
+</html>

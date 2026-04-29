@@ -1,0 +1,73 @@
+project:
+  project_name: Soc Son Test Project
+  project_id_vcs: VCS-1234
+  proponent_name: Synthetic Proponent
+  proponent_contact_email: owner@example.com
+  other_entities:
+  - Entity
+  ownership: Ownership text
+location:
+  country: Vietnam
+  region: Hanoi
+  city: Soc Son
+  latitude: 21.261
+  longitude: 105.847
+  landfill_latitude: 21.275
+  landfill_longitude: 105.86
+dates:
+  start_date: '2022-07-24'
+  crediting_period_start: '2022-07-24'
+  crediting_period_years: 7
+  project_scale_small: false
+technology:
+  methodology_ids:
+  - ACM0022
+  technology_type: incineration_with_energy_recovery
+  waste_type:
+  - municipal_solid_waste
+  annual_waste_throughput: 182500.0
+  installed_capacity_mw: 10.0
+  energy_generation_mwh_year: 74460.0
+  tip_fee_usd_per_tonne: 18.0
+  landfill_diversion_claim: true
+  fuel_substitution_claim: false
+methodology_applicability:
+  eligibility_checklist:
+    project treats municipal solid waste: true
+  deviation_from_methodology: null
+quantification:
+  baseline_emissions_tco2e_per_year: 120000.0
+  project_emissions_tco2e_per_year: 50000.0
+  leakage_tco2e_per_year: 0.0
+  net_emissions_tco2e_per_year: 70000.0
+  grid_emission_factor: 0.92
+  grid_emission_factor_source: placeholder source
+  methane_capture_rate: 0.2
+  methane_generation_factor: 0.06
+  crediting_period_total_tco2e: 490000.0
+monitoring:
+  parameters_monitored:
+  - name: Waste throughput
+    unit: tonnes/day
+    frequency: daily
+    method: weighbridge
+    data_source: placeholder
+  monitoring_equipment:
+  - weighbridge
+  data_management: placeholder
+safeguards:
+  no_net_harm_statement: placeholder
+  stakeholder_consultation_completed: false
+  stakeholder_consultation_date: null
+  environmental_impact_assessment: false
+  eia_reference: null
+compliance_and_ownership:
+  no_participation_other_programs: true
+  no_other_forms_of_credit: true
+  other_ghg_programs: []
+  credit_ownership_statement: placeholder
+  double_counting_risk: false
+sustainable_development:
+  sd_contributions:
+  - Improves municipal waste handling
+  sd_comments: placeholder

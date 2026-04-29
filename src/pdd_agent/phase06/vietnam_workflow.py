@@ -11,6 +11,7 @@ import yaml
 
 from pdd_agent.agent.section_orchestrator import SectionOrchestrator
 from pdd_agent.export.docx_export import export_run_to_docx
+from pdd_agent.export.drive_upload import upload_review_package_docx
 from pdd_agent.export.review_package import publish_review_package
 from pdd_agent.llm.provider import get_provider_registry
 from pdd_agent.phase06.assumptions import load_assumption_register
@@ -49,6 +50,7 @@ class VietnamWorkflowArtifacts:
     validation_report_path: Path
     gap_analysis_path: Path
     runbook_path: Path
+    upload_result: dict[str, Any] | None = None
 
 
 def run_vietnam_pdd_workflow(
@@ -57,9 +59,11 @@ def run_vietnam_pdd_workflow(
     candidate_key: str = "soc-son",
     provider_name: str = "noop",
     gap_analysis_path: Path | str = DEFAULT_GAP_ANALYSIS_PATH,
-    review_package_dir: Path | str = DEFAULT_REVIEW_PACKAGE_DIR,
+    review_package_dir: Path | str | None = DEFAULT_REVIEW_PACKAGE_DIR,
     runbook_path: Path | str = DEFAULT_RUNBOOK_PATH,
     validation_report_path: Path | str = DEFAULT_VALIDATION_REPORT_PATH,
+    upload_review_docx: bool = False,
+    drive_folder_id: str | None = None,
 ) -> VietnamWorkflowArtifacts:
     """Run the full Vietnam spreadsheet-to-DOCX workflow and write PHASE-05 reports."""
     workbook_path = fetch_workbook(mapping_config_path=mapping_config_path, cache_dir=cache_dir)
@@ -86,6 +90,7 @@ def run_vietnam_pdd_workflow(
 
     run_data = draft_run.to_dict()
     review_state_data = ReviewStateStore.load(orchestrator.run_id).to_dict()
+    review_output_root = Path(review_package_dir) if review_package_dir else DEFAULT_REVIEW_PACKAGE_DIR
 
     validation_report_path = write_validation_report(
         run_data=run_data,
@@ -111,7 +116,7 @@ def run_vietnam_pdd_workflow(
         assumption_burden_path=assumption_burden_path,
         assumptions_yaml_path=spreadsheet_artifacts.assumptions_yaml_path,
         project_yaml_path=spreadsheet_artifacts.project_yaml_path,
-        output_root=review_package_dir,
+        output_root=review_output_root,
     )
     validation_report_path = write_validation_report(
         run_data=run_data,
@@ -121,6 +126,12 @@ def run_vietnam_pdd_workflow(
         docx_path=review_package.docx_path,
         output_path=validation_report_path,
     )
+    upload_result = None
+    if upload_review_docx:
+        upload_result = upload_review_package_docx(
+            review_package.docx_path,
+            drive_folder_id=drive_folder_id,
+        )
 
     return VietnamWorkflowArtifacts(
         workbook_path=spreadsheet_artifacts.workbook_path,
@@ -139,6 +150,7 @@ def run_vietnam_pdd_workflow(
         validation_report_path=validation_report_path,
         gap_analysis_path=gap_analysis_path,
         runbook_path=runbook_path,
+        upload_result=upload_result,
     )
 
 
@@ -208,7 +220,7 @@ def write_validation_report(
             "- No corpus examples were retrieved for this run, so the current output remains a disclosure-first placeholder draft rather than a narrative-quality submission draft."
         )
     lines.append(
-        "- The DOCX export, review-state JSON, and assumption burden report were all generated from the same run to keep the review package deterministic."
+        "- The published review DOCX, review-state JSON, and assumption burden report were all generated from the same run to keep the review package deterministic."
     )
     if not Path(docx_path).exists():
         raise FileNotFoundError(f"Published DOCX draft not found at `{docx_path}`")
@@ -346,20 +358,21 @@ def write_vietnam_runbook(output_path: Path | str = DEFAULT_RUNBOOK_PATH) -> Pat
         "1. Run `pdd-agent fetch-workbook` to refresh the cached workbook under `data/source_inputs/spreadsheets/`.",
         "2. Run `pdd-agent map-spreadsheet --candidate soc-son` to regenerate the workbook profile, row snapshot, project YAML, assumptions YAML, and source profile report.",
         "3. Run `pdd-agent draft --input configs/projects/vietnam_socson_from_sheet.yaml --provider noop` to draft and review the current project input.",
-        "4. Run `pdd-agent export --run-id <run-id>` to produce the internal DOCX artifact, then publish it into `reports/review-packages/` if you need a reviewer-facing package outside the one-command workflow.",
+        "4. Run `pdd-agent export --run-id <run-id> --review-output-dir reports/review-packages` to publish a reviewer-facing DOCX package from a saved run.",
+        "5. Run `pdd-agent upload --review-docx reports/review-packages/soc-son-waste-to-power-plant-project/latest.docx` when you want to upload the published review draft to Drive.",
         "",
         "## When the Spreadsheet Changes",
         "",
         "1. Re-run `pdd-agent fetch-workbook --force` if the Drive workbook changed.",
         "2. Re-run `pdd-agent map-spreadsheet --candidate soc-son` and inspect `reports/source-profile-vietnam-wte.md` for header or row drift.",
         "3. Review `configs/projects/vietnam_socson_from_sheet.assumptions.yaml` for any new blocked-review paths before sharing the draft.",
-        "4. Re-run `python scripts/run_vietnam_pdd.py` so the validation report, gap analysis, and DOCX stay aligned to the latest row snapshot.",
+        "4. Re-run `python scripts/run_vietnam_pdd.py` so the validation report, gap analysis, and published review package stay aligned to the latest row snapshot.",
         "",
         "## Reusing the Flow for Another Vietnam Candidate",
         "",
         "1. Add a new candidate entry to `configs/source_mappings/vietnam_wte_projects.yaml`.",
         "2. Run `pdd-agent map-spreadsheet --candidate <candidate-key>` to generate the new project and assumptions artifacts.",
-        "3. Run `pdd-agent draft --input <new-project-yaml> --provider noop` followed by `pdd-agent export --run-id <run-id>`.",
+        "3. Run `pdd-agent draft --input <new-project-yaml> --provider noop` followed by `pdd-agent export --run-id <run-id> --review-output-dir reports/review-packages`.",
     ]
     output_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return output_path

@@ -8,6 +8,8 @@ from pathlib import Path
 import re
 import shutil
 
+from pdd_agent.export.docx_export import export_run_to_docx
+
 
 @dataclass(frozen=True)
 class ReviewPackagePaths:
@@ -89,3 +91,24 @@ def _copy_if_exists(path: Path | str, destination_dir: Path) -> Path | None:
     destination = destination_dir / source.name
     shutil.copy2(source, destination)
     return destination
+
+
+def publish_docx_run_for_review(
+    run_id: str,
+    project_name: str,
+    output_root: Path | str,
+) -> Path:
+    """Export a run and publish the DOCX to the reviewer-facing package area."""
+    source_docx = export_run_to_docx(run_id=run_id)
+    package = publish_review_package(
+        run_id=run_id,
+        project_name=project_name,
+        docx_path=source_docx,
+        validation_report_path=Path(""),
+        gap_analysis_path=Path(""),
+        assumption_burden_path=Path(""),
+        assumptions_yaml_path=Path(""),
+        project_yaml_path=Path(""),
+        output_root=output_root,
+    )
+    return package.docx_path

@@ -147,7 +147,7 @@ pdd-agent upload --run-id <run-id>
 python scripts/run_vietnam_pdd.py
 
 # Equivalent CLI one-command workflow
-pdd-agent run-vietnam-pdd
+pdd-agent run-vietnam-pdd --upload-review-docx
 
 # Equivalent manual CLI workflow
 pdd-agent fetch-workbook
@@ -156,8 +156,11 @@ pdd-agent map-spreadsheet --candidate soc-son
 # Assumption-aware draft and review run
 pdd-agent draft --input configs/projects/vietnam_socson_from_sheet.yaml --provider noop
 
-# Export the saved run to Word
-pdd-agent export --run-id <run-id>
+# Export the saved run to the reviewer-facing package area
+pdd-agent export --run-id <run-id> --review-output-dir reports/review-packages
+
+# Upload a published reviewer-facing DOCX
+pdd-agent upload --review-docx reports/review-packages/<project-slug>/latest.docx
 ```
 
 The Vietnam spreadsheet workflow will:
@@ -173,6 +176,7 @@ The Vietnam spreadsheet workflow will:
 9. Write `reports/vietnam-pdd-validation.md`, `reports/vietnam-pdd-gap-analysis.md`, and `reports/vietnam-pdd-runbook.md`
 10. Export a DOCX with an internal-draft disclaimer, assumption appendix, and reviewer issues appendix
 11. Publish a reviewer-facing package under `reports/review-packages/<project-slug>/<run-id>/` and refresh `reports/review-packages/<project-slug>/latest.docx`
+12. Optionally upload the published reviewer-facing DOCX to Drive and surface the resulting URL in the workflow logs
 
 ## Demo Workflow
 

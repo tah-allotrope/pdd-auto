@@ -98,6 +98,71 @@ def test_run_vietnam_pdd_command_invokes_workflow(tmp_path: Path):
                     "validation_report_path": tmp_path / "reports/vietnam-pdd-validation.md",
                     "gap_analysis_path": tmp_path / "reports/vietnam-pdd-gap-analysis.md",
                     "runbook_path": tmp_path / "reports/vietnam-pdd-runbook.md",
+                    "upload_result": None,
+                },
+            )()
+            exit_code = main()
+
+    assert exit_code == 0
+    mock_workflow.assert_called_once()
+
+
+def test_export_command_passes_review_output_dir(tmp_path: Path):
+    output_dir = tmp_path / "reports" / "review-packages"
+    export_path = output_dir / "project" / "run-1" / "run-1.docx"
+
+    with patch(
+        "sys.argv",
+        [
+            "pdd-agent",
+            "export",
+            "--run-id",
+            "run-1",
+            "--review-output-dir",
+            str(output_dir),
+        ],
+    ):
+        with patch("pdd_agent.cli.publish_docx_run_for_review", return_value=export_path) as mock_publish:
+            exit_code = main()
+
+    assert exit_code == 0
+    mock_publish.assert_called_once()
+
+
+def test_run_vietnam_pdd_command_passes_upload_flags(tmp_path: Path):
+    with patch(
+        "sys.argv",
+        [
+            "pdd-agent",
+            "run-vietnam-pdd",
+            "--candidate",
+            "soc-son",
+            "--cache-dir",
+            str(tmp_path / "cache"),
+            "--review-output-dir",
+            str(tmp_path / "review-packages"),
+            "--upload-review-docx",
+            "--folder-id",
+            "folder-123",
+        ],
+    ):
+        with patch("pdd_agent.cli.run_vietnam_pdd_workflow") as mock_workflow:
+            mock_workflow.return_value = type(
+                "Artifacts",
+                (),
+                {
+                    "run_id": "viet-run",
+                    "project_yaml_path": tmp_path / "configs/project.yaml",
+                    "assumptions_yaml_path": tmp_path / "configs/assumptions.yaml",
+                    "draft_run_path": tmp_path / "data/runs/viet-run.json",
+                    "review_state_path": tmp_path / "data/runs/review-state-viet-run.json",
+                    "docx_path": tmp_path / "reports/review-packages/project/viet-run/viet-run.docx",
+                    "review_package_manifest_path": tmp_path / "reports/review-packages/project/viet-run/manifest.json",
+                    "latest_docx_path": tmp_path / "reports/review-packages/project/latest.docx",
+                    "validation_report_path": tmp_path / "reports/vietnam-pdd-validation.md",
+                    "gap_analysis_path": tmp_path / "reports/vietnam-pdd-gap-analysis.md",
+                    "runbook_path": tmp_path / "reports/vietnam-pdd-runbook.md",
+                    "upload_result": {"success": True, "drive_url": "https://drive.google.com/file/d/abc", "file_id": "abc", "error": None},
                 },
             )()
             exit_code = main()

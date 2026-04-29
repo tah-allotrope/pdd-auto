@@ -6,6 +6,7 @@ in the VERRA project folder by default.
 
 from __future__ import annotations
 
+import json
 import subprocess
 import structlog
 from pathlib import Path
@@ -37,16 +38,16 @@ def upload_file(
 
     folder_id = drive_folder_id or _DEFAULT_FOLDER_ID
     name = drive_name or local_path.name
+    body = json.dumps({"name": name, "parents": [folder_id]})
 
     cmd = [
         str(_GWS_PATH),
         "drive",
         "files",
         "create",
-        "--folder-id",
-        folder_id,
-        "--name",
-        name,
+        "--json",
+        body,
+        "--upload",
         str(local_path.resolve()),
     ]
 
@@ -116,6 +117,19 @@ def upload_docx_run(
 
     docx_path = runs_dir / f"{run_id}.docx"
     return upload_file(docx_path, drive_folder_id=drive_folder_id)
+
+
+def upload_review_package_docx(
+    review_docx_path: Path | str,
+    drive_folder_id: str | None = None,
+    drive_name: str | None = None,
+) -> dict:
+    """Upload a reviewer-facing published DOCX package artifact."""
+    return upload_file(
+        Path(review_docx_path),
+        drive_folder_id=drive_folder_id,
+        drive_name=drive_name,
+    )
 
 
 def _parse_drive_url(stdout: str) -> str | None:

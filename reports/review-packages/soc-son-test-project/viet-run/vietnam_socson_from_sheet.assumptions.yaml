@@ -1,0 +1,14 @@
+assumptions:
+- field_path: quantification.baseline_emissions_tco2e_per_year
+  source_type: synthetic_assumption
+  confidence: low
+  rationale: Workbook only provides net annual emission reductions.
+  value: 120000.0
+guardrails:
+  blocked_review_paths:
+  - quantification.baseline_emissions_tco2e_per_year
+  blocked_review_items:
+  - field_path: quantification.baseline_emissions_tco2e_per_year
+    reason: Synthetic split requires human review
+  notes:
+  - Synthetic assumptions must remain review-gated.

@@ -1,6 +1,6 @@
 # Assumption Burden Report
 
-- Run ID: `run-20260429041046-2616b7`
+- Run ID: `run-20260429040943-c967fc`
 - Project: `Soc Son waste to power plant project`
 - Sections with synthetic or demo inputs: `28`
 - Material review gaps: `20`
