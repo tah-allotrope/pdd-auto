@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Final Report :: pdd-review-word-delivery</title>
+  <meta name="color-scheme" content="dark light">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    async function initMermaid() {
+      const blocks = document.querySelectorAll('.mermaid');
+      if (!blocks.length) return;
+      mermaid.initialize({ startOnLoad: false, theme: 'base', securityLevel: 'loose' });
+      await mermaid.run({ nodes: blocks });
+    }
+    const run = () => initMermaid().catch((error) => console.error('Mermaid render failed', error));
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', run, { once: true });
+    } else {
+      run();
+    }
+  </script>
+  <style>
+    :root { --paper:#fbf7f1; --paper-strong:#fffdf9; --ink:#1f1912; --ink-soft:#5f564c; --line:#dccdb6; --accent:#9d6b37; --accent-soft:#efe4d0; --accent-2:#3b6f76; --shadow:0 18px 40px rgba(49,33,16,.08); --radius-lg:24px; --radius-md:18px; --radius-sm:12px; --page-width:1040px; --display-font:Georgia,"Times New Roman",serif; --body-font:"Segoe UI","Helvetica Neue",Helvetica,Arial,sans-serif; --mono-font:"Cascadia Code",Consolas,monospace; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; color:var(--ink); background:linear-gradient(180deg,#f7f1e7 0%,#fbf7f1 28%,#f6efe5 100%); font-family:var(--body-font); line-height:1.65; }
+    .page-shell { width:min(var(--page-width),calc(100vw - 32px)); margin:0 auto; padding:28px 0 56px; }
+    .hero { padding:34px; border:1px solid rgba(159,123,79,.28); border-radius:30px; background:linear-gradient(135deg,rgba(157,107,55,.1),transparent 34%),linear-gradient(180deg,rgba(255,255,255,.58),rgba(255,255,255,.86)),var(--paper-strong); box-shadow:var(--shadow); }
+    .hero-grid,.summary-grid,.dual-grid,.phase-grid,.stat-grid,.appendix-grid { display:grid; gap:16px; }
+    .hero-grid { grid-template-columns:minmax(0,1.45fr) minmax(260px,.85fr); }
+    .summary-grid,.dual-grid,.phase-grid,.appendix-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .stat-grid { grid-template-columns:repeat(3,minmax(0,1fr)); margin-top:16px; }
+    .eyebrow,.meta-chip,.section-index,code,pre,.mermaid { font-family:var(--mono-font); }
+    .eyebrow,.section-index { color:var(--accent); text-transform:uppercase; letter-spacing:.16em; }
+    .title { margin:0; max-width:12ch; font-family:var(--display-font); font-size:clamp(2.8rem,5vw,4.8rem); line-height:.95; }
+    .lede,.meta-label { color:var(--ink-soft); }
+    .takeaway { margin-top:22px; padding:18px 20px; border-left:4px solid var(--accent-2); border-radius:0 var(--radius-sm) var(--radius-sm) 0; background:rgba(59,111,118,.08); }
+    .meta-card,.section,.subcard,.narrative,.chart-frame,.technical-frame,.diagram-frame,.viz-frame { border:1px solid rgba(95,72,46,.12); background:rgba(255,253,249,.88); box-shadow:var(--shadow); }
+    .meta-card,.subcard,.narrative,.chart-frame,.technical-frame,.diagram-frame,.viz-frame { padding:18px; border-radius:var(--radius-md); }
+    .section { margin-top:22px; padding:24px; border-radius:var(--radius-lg); }
+    .section-header { display:flex; justify-content:space-between; align-items:end; margin-bottom:18px; padding-bottom:12px; border-bottom:1px solid var(--line); }
+    .section-title { margin:0; font-family:var(--display-font); font-size:clamp(1.45rem,2vw,2rem); }
+    .stat { padding:14px 16px; border:1px solid rgba(59,111,118,.16); border-radius:var(--radius-sm); background:rgba(59,111,118,.06); }
+    .stat-label { color:var(--ink-soft); font-size:.72rem; text-transform:uppercase; letter-spacing:.14em; }
+    .stat-value { margin-top:8px; color:var(--accent-2); font-size:1.18rem; font-weight:700; font-family:var(--mono-font); }
+    .diagram-frame { overflow:auto; max-height:min(70vh,720px); }
+    .technical-frame table { width:100%; border-collapse:collapse; font-size:.95rem; }
+    .technical-frame th,.technical-frame td { padding:12px 10px; border-bottom:1px solid var(--line); vertical-align:top; text-align:left; }
+    .technical-frame th { color:var(--accent); font-size:.76rem; text-transform:uppercase; }
+    ul,ol { margin:0; padding-left:20px; }
+    li { margin-bottom:8px; }
+    canvas.report-chart { width:100% !important; height:300px !important; }
+    .footer-note { margin-top:18px; color:rgba(95,86,76,.74); font-size:.78rem; text-transform:uppercase; text-align:right; }
+    @media (max-width:920px) { .hero-grid,.summary-grid,.dual-grid,.phase-grid,.stat-grid,.appendix-grid { grid-template-columns:1fr; } .title { max-width:none; } }
+  </style>
+</head>
+<body>
+  <main class="page-shell">
+    <section class="hero">
+      <div class="hero-grid">
+        <div>
+          <p class="eyebrow">Final Report / Shareable Analysis Artifact</p>
+          <h1 class="title">pdd-review-word-delivery</h1>
+          <p class="lede">A presentation-ready synthesis of the multi-phase effort to make PDD Word drafts discoverable, reviewable, and optionally shareable from the actual workflow surface.</p>
+          <div class="takeaway">The delivery plan is complete: the Vietnam PDD workflow now publishes a stable local review package under <code>reports/review-packages/</code>, refreshes a latest Word draft, and can upload that published draft to Drive from the same user-facing flow.</div>
+        </div>
+        <div class="meta-grid">
+          <div class="meta-card"><div class="meta-label">Project</div><div class="meta-chip">PDD Agent</div></div>
+          <div class="meta-card"><div class="meta-label">Repository</div><div class="meta-chip">pdd-auto</div></div>
+          <div class="meta-card"><div class="meta-label">Date</div><div class="meta-chip">2026-04-29</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header"><div><div class="section-index">01 / Executive Summary</div><h2 class="section-title">Executive Summary</h2></div></div>
+      <div class="summary-grid">
+        <div class="subcard">
+          <h3>What changed</h3>
+          <p>The workflow stopped treating <code>data/runs/</code> as the effective review surface and now publishes reviewer-facing packages, exposes those paths in CLI and script outputs, and supports optional upload of the published Word draft.</p>
+        </div>
+        <div class="subcard">
+          <h3>Why it matters</h3>
+          <p>The user’s original complaint was correct: export capability existed, but review delivery did not. That gap is now closed without changing the core drafting or review-state logic.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header"><div><div class="section-index">02 / Background &amp; Objective</div><h2 class="section-title">Background &amp; Objective</h2></div></div>
+      <div class="narrative">
+        <p>The repository already generated DOCX artifacts internally, but those files landed in gitignored internal storage and were not reliably surfaced to reviewers. The objective of the plan was to turn internal export into real delivery: a stable local review package, a latest alias, aligned reports, and optional remote sharing through the existing Drive path.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header"><div><div class="section-index">03 / Inputs &amp; Scope</div><h2 class="section-title">Inputs &amp; Scope</h2></div></div>
+      <div class="dual-grid">
+        <div class="subcard">
+          <h3>Inputs</h3>
+          <ul>
+            <li><code>plans/2026-04-29-pdd-review-word-delivery-plan.md</code></li>
+            <li><code>reports/vietnam-pdd-validation.md</code></li>
+            <li>Published package manifests under <code>reports/review-packages/</code></li>
+            <li>Active session verification: targeted tests, fresh workflow runs, live upload</li>
+          </ul>
+        </div>
+        <div class="subcard">
+          <h3>Out of scope</h3>
+          <ul>
+            <li>Improving narrative quality of the draft</li>
+            <li>Reducing assumption burden or domain-review blockers</li>
+            <li>Introducing a web UI or changing the core review-state model</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header"><div><div class="section-index">04 / Assumptions &amp; Constraints</div><h2 class="section-title">Assumptions &amp; Constraints</h2></div></div>
+      <div class="dual-grid">
+        <div class="subcard">
+          <h3>Assumptions</h3>
+          <ul>
+            <li>The Soc Son Vietnam workflow is the right first delivery surface.</li>
+            <li>Review packages need companion artifacts, not just a DOCX file.</li>
+            <li>Published drafts remain valid even when domain review is still blocking final use.</li>
+          </ul>
+        </div>
+        <div class="subcard">
+          <h3>Constraints</h3>
+          <ul>
+            <li><code>data/runs/</code> remains the internal source of truth for raw run data.</li>
+            <li>Published DOCX artifacts must preserve review disclaimers.</li>
+            <li>Drive upload must route through the existing <code>gws</code> CLI surface.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header"><div><div class="section-index">05 / Methodology</div><h2 class="section-title">Methodology</h2></div></div>
+      <div class="narrative">
+        <p>The work followed the plan in four phases. First, codify the review-package contract. Second, publish immutable local review packages with a stable latest alias. Third, expose those artifacts through CLI and script surfaces and add optional upload from the published DOCX. Fourth, prove the result with targeted tests, fresh local workflow runs, and a live upload-enabled run against the real Drive CLI.</p>
+      </div>
+      <div class="stat-grid">
+        <div class="stat"><div class="stat-label">Plan Phases</div><div class="stat-value">4 complete</div></div>
+        <div class="stat"><div class="stat-label">Targeted Tests</div><div class="stat-value">13 passed</div></div>
+        <div class="stat"><div class="stat-label">Live Upload</div><div class="stat-value">verified</div></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header"><div><div class="section-index">06 / Phase-by-Phase Analysis</div><h2 class="section-title">Phase-by-Phase Analysis</h2></div></div>
+      <div class="phase-grid">
+        <div class="subcard"><h3>Phase 1</h3><p>Defined the reviewer-facing contract and confirmed the root cause: export existed, but discoverability failed because output only landed in gitignored internal storage.</p></div>
+        <div class="subcard"><h3>Phase 2</h3><p>Added <code>src/pdd_agent/export/review_package.py</code> and made published review packages under <code>reports/review-packages/&lt;project-slug&gt;/&lt;run-id&gt;/</code> the canonical local review surface.</p></div>
+        <div class="subcard"><h3>Phase 3</h3><p>Extended CLI and script surfaces so users can publish reviewer-facing packages manually and optionally upload the published DOCX to Drive.</p></div>
+        <div class="subcard"><h3>Phase 4</h3><p>Refreshed end-to-end artifacts, corrected the live <code>gws</code> upload request shape, and verified the current package and upload result on a fresh run.</p></div>
+      </div>
+      <div class="diagram-frame" style="margin-top:16px;"><div class="mermaid">flowchart LR
+        A[Internal DOCX export] --> B[Publish local review package]
+        B --> C[Refresh latest.docx alias]
+        C --> D[Expose paths in CLI and script]
+        D --> E[Optional upload of published DOCX]
+        E --> F[Validation and runbook point to current package]
+      </div></div>
+    </section>
+
+    <section class="section">
+      <div class="section-header"><div><div class="section-index">07 / Findings &amp; Recommendation</div><h2 class="section-title">Findings &amp; Recommendation</h2></div></div>
+      <div class="narrative">
+        <p>The plan’s delivery objective is complete. Reviewable Word artifacts now exist in a stable local package, can be located without internal run IDs, and can be uploaded from the same reviewer-facing artifact instead of from internal storage. The remaining issue is not delivery but draft quality: the current run still has one blocking review issue and all sections remain in domain review state.</p>
+        <p>The recommended next move is not more delivery work. It is content-quality or evidence work, such as reducing assumption burden and resolving the current quantification blocker in section <code>3.5</code>.</p>
+      </div>
+      <div class="chart-frame" style="margin-top:16px;"><canvas id="finalChart" class="report-chart"></canvas></div>
+    </section>
+
+    <section class="section">
+      <div class="section-header"><div><div class="section-index">08 / Implementation Path</div><h2 class="section-title">Implementation Path</h2></div></div>
+      <div class="phase-grid">
+        <div class="subcard"><h3>Current local draft</h3><p><code>reports/review-packages/soc-son-waste-to-power-plant-project/latest.docx</code></p></div>
+        <div class="subcard"><h3>Current verified run</h3><p><code>run-20260429041046-2616b7</code> under <code>reports/review-packages/soc-son-waste-to-power-plant-project/</code></p></div>
+        <div class="subcard"><h3>Remote sharing path</h3><p>Upload is now available through <code>pdd-agent upload --review-docx ...</code> and one-command workflow upload.</p></div>
+        <div class="subcard"><h3>Next engineering target</h3><p>Focus on evidence quality and reducing review-gated synthetic inputs rather than more artifact-path work.</p></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header"><div><div class="section-index">09 / Risks / Open Questions</div><h2 class="section-title">Risks / Open Questions</h2></div></div>
+      <div class="dual-grid">
+        <div class="subcard">
+          <h3>Remaining risks</h3>
+          <ul>
+            <li>The published draft may still appear more complete than its evidence quality warrants if the validation report is ignored.</li>
+            <li>The uploader currently falls back to a folder URL unless the CLI returns a file URL directly.</li>
+          </ul>
+        </div>
+        <div class="subcard">
+          <h3>Open questions</h3>
+          <ul>
+            <li>Should the Drive file ID be written into the manifest and validation report?</li>
+            <li>Should historical review-package runs be pruned automatically?</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header"><div><div class="section-index">10 / Appendices / Evidence Notes</div><h2 class="section-title">Appendices / Evidence Notes</h2></div></div>
+      <div class="appendix-grid">
+        <div class="subcard">
+          <h3>Key evidence</h3>
+          <ul>
+            <li>Validation report run: <code>run-20260429041046-2616b7</code></li>
+            <li>Published DOCX: <code>reports/review-packages/soc-son-waste-to-power-plant-project/run-20260429041046-2616b7/run-20260429041046-2616b7.docx</code></li>
+            <li>Latest alias: <code>reports/review-packages/soc-son-waste-to-power-plant-project/latest.docx</code></li>
+            <li>Drive destination: <code>https://drive.google.com/drive/folders/1pp23yRZ8qtopw1BPXrzVewXsmmWplCse</code></li>
+          </ul>
+        </div>
+        <div class="subcard">
+          <h3>Verification notes</h3>
+          <ul>
+            <li><code>pytest tests/test_docx_export.py tests/test_vietnam_workflow.py tests/test_phase06_cli.py</code></li>
+            <li><code>python scripts/run_vietnam_pdd.py</code></li>
+            <li><code>python -m pdd_agent.cli run-vietnam-pdd --upload-review-docx --folder-id 1pp23yRZ8qtopw1BPXrzVewXsmmWplCse</code></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-note">designed for html first, printable without reconstruction</div>
+    </section>
+  </main>
+  <script>
+    if (window.Chart) {
+      Chart.defaults.devicePixelRatio = 1;
+      Chart.defaults.animation = false;
+      Chart.defaults.resizeDelay = 150;
+      Chart.defaults.normalized = true;
+      Chart.defaults.maintainAspectRatio = false;
+      new Chart(document.getElementById('finalChart'), {
+        type: 'bar',
+        data: {
+          labels: ['Plan Phases Complete', 'Targeted Tests Passed', 'Blocking Review Issues'],
+          datasets: [{ label: 'Count', data: [4, 13, 1], backgroundColor: ['#9d6b37', '#3b6f76', '#d97706'] }]
+        },
+        options: {
+          animation: false,
+          resizeDelay: 150,
+          normalized: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { ticks: { color: '#1f1912' }, grid: { color: 'rgba(31,25,18,0.08)' } },
+            y: { beginAtZero: true, ticks: { color: '#1f1912', precision: 0 }, grid: { color: 'rgba(31,25,18,0.08)' } }
+          }
+        }
+      });
+    }
+  </script>
+</body>
+</html>
