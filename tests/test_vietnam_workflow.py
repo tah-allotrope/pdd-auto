@@ -248,6 +248,10 @@ def test_run_vietnam_pdd_workflow_writes_phase05_reports(tmp_path: Path):
         report_path=source_report,
     )
 
+    internal_docx = tmp_path / "data" / "runs" / "viet-run.docx"
+    internal_docx.parent.mkdir(parents=True, exist_ok=True)
+    internal_docx.write_bytes(b"docx-binary")
+
     draft_run = DraftRun(run_id="viet-run", project_name="Soc Son Test Project", provider="noop")
     draft_run.assumption_register = assumptions_payload
     draft_run.add(
@@ -276,7 +280,7 @@ def test_run_vietnam_pdd_workflow_writes_phase05_reports(tmp_path: Path):
         "pdd_agent.phase06.vietnam_workflow.SectionOrchestrator"
     ) as mock_orchestrator_cls, patch(
         "pdd_agent.phase06.vietnam_workflow.export_run_to_docx",
-        return_value=tmp_path / "data" / "runs" / "viet-run.docx",
+        return_value=internal_docx,
     ), patch(
         "pdd_agent.phase06.vietnam_workflow.ReviewStateStore.load"
     ) as mock_review_state_load:
@@ -307,17 +311,26 @@ def test_run_vietnam_pdd_workflow_writes_phase05_reports(tmp_path: Path):
 
         artifacts = run_vietnam_pdd_workflow(
             gap_analysis_path=tmp_path / "reports" / "vietnam-pdd-gap-analysis.md",
+            review_package_dir=tmp_path / "reports" / "review-packages",
             runbook_path=tmp_path / "reports" / "vietnam-pdd-runbook.md",
             validation_report_path=tmp_path / "reports" / "vietnam-pdd-validation.md",
         )
 
     assert isinstance(artifacts, VietnamWorkflowArtifacts)
     assert artifacts.run_id == "viet-run"
+    assert artifacts.docx_path == tmp_path / "reports" / "review-packages" / "soc-son-test-project" / "viet-run" / "viet-run.docx"
+    assert artifacts.review_package_manifest_path == tmp_path / "reports" / "review-packages" / "soc-son-test-project" / "viet-run" / "manifest.json"
+    assert artifacts.latest_docx_path == tmp_path / "reports" / "review-packages" / "soc-son-test-project" / "latest.docx"
     assert artifacts.gap_analysis_path.exists()
     assert artifacts.runbook_path.exists()
     assert artifacts.validation_report_path.exists()
+    assert artifacts.docx_path.exists()
+    assert artifacts.review_package_manifest_path.exists()
+    assert artifacts.latest_docx_path.exists()
     assert "quantification.baseline_emissions_tco2e_per_year" in artifacts.gap_analysis_path.read_text(
         encoding="utf-8"
     )
-    assert "Workflow Outcome" in artifacts.validation_report_path.read_text(encoding="utf-8")
+    validation_text = artifacts.validation_report_path.read_text(encoding="utf-8")
+    assert "Workflow Outcome" in validation_text
+    assert "reports\\review-packages\\soc-son-test-project\\viet-run\\viet-run.docx" in validation_text
     assert "python scripts/run_vietnam_pdd.py" in artifacts.runbook_path.read_text(encoding="utf-8")

@@ -9,7 +9,7 @@
 - Draft run JSON: `C:\Users\tukum\Downloads\pdd-auto\data\runs\run-20260429035927-42a1ea.json`
 - Review state JSON: `C:\Users\tukum\Downloads\pdd-auto\data\runs\review-state-run-20260429035927-42a1ea.json`
 - Assumption burden report: `C:\Users\tukum\Downloads\pdd-auto\reports\assumption-burden.md`
-- DOCX draft: `C:\Users\tukum\Downloads\pdd-auto\reports\review-packages\soc-son-waste-to-power-plant-project\run-20260429035927-42a1ea\run-20260429035927-42a1ea.docx`
+- DOCX draft: `C:\Users\tukum\Downloads\pdd-auto\data\runs\run-20260429035927-42a1ea.docx`
 
 ## Workflow Outcome
 

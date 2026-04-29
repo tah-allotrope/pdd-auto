@@ -1,0 +1,91 @@
+project:
+  project_name: Soc Son waste to power plant project
+  project_id_vcs: VCS-2567
+  proponent_name: Soc Son Waste-to-Power Project Company (synthetic assumption)
+  proponent_contact_email: socson-pdd-draft@example.com
+  other_entities:
+  - Synthetic placeholder pending project sponsor confirmation
+  ownership: 'Synthetic draft assumption: the project company owns and operates the
+    facility and retains carbon credit ownership pending documentary confirmation.'
+location:
+  country: Vietnam
+  region: Hanoi
+  city: Soc Son
+  latitude: 21.261
+  longitude: 105.847
+  landfill_latitude: 21.275
+  landfill_longitude: 105.86
+dates:
+  start_date: '2022-07-24'
+  crediting_period_start: '2022-07-24'
+  crediting_period_years: 7
+  project_scale_small: false
+technology:
+  methodology_ids:
+  - ACM0022
+  technology_type: incineration_with_energy_recovery
+  waste_type:
+  - municipal_solid_waste
+  - food_waste
+  - plastics
+  annual_waste_throughput: 1460000.0
+  installed_capacity_mw: 52.115
+  energy_generation_mwh_year: 388050.0
+  tip_fee_usd_per_tonne: 18.0
+  landfill_diversion_claim: true
+  fuel_substitution_claim: false
+methodology_applicability:
+  eligibility_checklist:
+    project treats municipal solid waste: true
+    waste would otherwise be landfilled: true
+    electricity displacement is eligible: true
+  deviation_from_methodology: null
+quantification:
+  baseline_emissions_tco2e_per_year: 594076.0
+  project_emissions_tco2e_per_year: 50000.0
+  leakage_tco2e_per_year: 0.0
+  net_emissions_tco2e_per_year: 544076.0
+  grid_emission_factor: 0.92
+  grid_emission_factor_source: Synthetic assumption using Vietnam national grid factor
+    placeholder pending official citation.
+  methane_capture_rate: 0.2
+  methane_generation_factor: 0.06
+  crediting_period_total_tco2e: 3808532.0
+monitoring:
+  parameters_monitored:
+  - name: Waste throughput
+    unit: tonnes/day
+    frequency: daily
+    method: weighbridge
+    data_source: Synthetic assumption based on standard WTE operations monitoring
+  - name: Net electricity exported
+    unit: MWh
+    frequency: monthly
+    method: revenue meter
+    data_source: Synthetic assumption based on standard power export settlement data
+  monitoring_equipment:
+  - Calibrated weighbridge
+  - Revenue-grade electricity meter
+  data_management: 'Synthetic assumption: plant operations data is recorded digitally,
+    reviewed monthly, and archived for verification.'
+safeguards:
+  no_net_harm_statement: 'Synthetic assumption: a no-net-harm review is required before
+    external use of this draft.'
+  stakeholder_consultation_completed: false
+  stakeholder_consultation_date: null
+  environmental_impact_assessment: false
+  eia_reference: null
+compliance_and_ownership:
+  no_participation_other_programs: true
+  no_other_forms_of_credit: true
+  other_ghg_programs: []
+  credit_ownership_statement: 'Synthetic draft assumption: credit ownership remains
+    with the project proponent unless superseded by executed agreements.'
+  double_counting_risk: false
+sustainable_development:
+  sd_contributions:
+  - Improves municipal waste handling
+  - Reduces landfill methane emissions
+  - Supplies lower-carbon electricity to the grid
+  sd_comments: Generated from the Vietnam WTE spreadsheet with explicit synthetic
+    assumptions for missing project facts.

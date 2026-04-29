@@ -172,6 +172,7 @@ The Vietnam spreadsheet workflow will:
 8. Write `reports/assumption-burden.md` summarizing material assumption burden by section
 9. Write `reports/vietnam-pdd-validation.md`, `reports/vietnam-pdd-gap-analysis.md`, and `reports/vietnam-pdd-runbook.md`
 10. Export a DOCX with an internal-draft disclaimer, assumption appendix, and reviewer issues appendix
+11. Publish a reviewer-facing package under `reports/review-packages/<project-slug>/<run-id>/` and refresh `reports/review-packages/<project-slug>/latest.docx`
 
 ## Demo Workflow
 

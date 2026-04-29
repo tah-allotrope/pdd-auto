@@ -12,6 +12,49 @@ import pytest
 from pdd_agent.export.docx_export import export_run_to_docx
 
 
+def test_publish_review_package_creates_run_archive_and_latest_alias(tmp_path: Path):
+    from pdd_agent.export.review_package import publish_review_package
+
+    source_docx = tmp_path / "data" / "runs" / "run-123.docx"
+    source_docx.parent.mkdir(parents=True, exist_ok=True)
+    source_docx.write_bytes(b"docx-binary")
+
+    validation_report = tmp_path / "reports" / "vietnam-pdd-validation.md"
+    validation_report.parent.mkdir(parents=True, exist_ok=True)
+    validation_report.write_text("validation", encoding="utf-8")
+
+    gap_analysis = tmp_path / "reports" / "vietnam-pdd-gap-analysis.md"
+    gap_analysis.write_text("gap", encoding="utf-8")
+
+    assumption_burden = tmp_path / "reports" / "assumption-burden.md"
+    assumption_burden.write_text("assumptions", encoding="utf-8")
+
+    assumptions_yaml = tmp_path / "configs" / "project.assumptions.yaml"
+    assumptions_yaml.parent.mkdir(parents=True, exist_ok=True)
+    assumptions_yaml.write_text("assumptions: []\n", encoding="utf-8")
+
+    project_yaml = tmp_path / "configs" / "project.yaml"
+    project_yaml.write_text("project: {}\n", encoding="utf-8")
+
+    package = publish_review_package(
+        run_id="run-123",
+        project_name="Soc Son Test Project",
+        docx_path=source_docx,
+        validation_report_path=validation_report,
+        gap_analysis_path=gap_analysis,
+        assumption_burden_path=assumption_burden,
+        assumptions_yaml_path=assumptions_yaml,
+        project_yaml_path=project_yaml,
+        output_root=tmp_path / "reports" / "review-packages",
+    )
+
+    assert package.docx_path == tmp_path / "reports" / "review-packages" / "soc-son-test-project" / "run-123" / "run-123.docx"
+    assert package.latest_docx_path == tmp_path / "reports" / "review-packages" / "soc-son-test-project" / "latest.docx"
+    assert package.manifest_path.exists()
+    assert package.docx_path.read_bytes() == b"docx-binary"
+    assert package.latest_docx_path.read_bytes() == b"docx-binary"
+
+
 def _write_run(tmp_path: Path, run_id: str = "docx-run") -> Path:
     run_dir = tmp_path / "data" / "runs"
     run_dir.mkdir(parents=True, exist_ok=True)

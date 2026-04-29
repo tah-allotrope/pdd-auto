@@ -2,14 +2,15 @@
 
 ## Primary One-Command Path
 
-1. Run `python scripts/run_vietnam_pdd.py` to fetch the workbook, regenerate the Soc Son mapping artifacts, draft the run, review it, export DOCX, and refresh the Vietnam reports.
+1. Run `python scripts/run_vietnam_pdd.py` to fetch the workbook, regenerate the Soc Son mapping artifacts, draft the run, review it, publish the Word review package, and refresh the Vietnam reports.
+2. Open `reports/review-packages/soc-son-waste-to-power-plant-project/latest.docx` for the latest local review draft, or inspect the run-specific package under `reports/review-packages/soc-son-waste-to-power-plant-project/<run-id>/`.
 
 ## Equivalent CLI Steps
 
 1. Run `pdd-agent fetch-workbook` to refresh the cached workbook under `data/source_inputs/spreadsheets/`.
 2. Run `pdd-agent map-spreadsheet --candidate soc-son` to regenerate the workbook profile, row snapshot, project YAML, assumptions YAML, and source profile report.
 3. Run `pdd-agent draft --input configs/projects/vietnam_socson_from_sheet.yaml --provider noop` to draft and review the current project input.
-4. Run `pdd-agent export --run-id <run-id>` to produce the Word draft for review.
+4. Run `pdd-agent export --run-id <run-id>` to produce the internal DOCX artifact, then publish it into `reports/review-packages/` if you need a reviewer-facing package outside the one-command workflow.
 
 ## When the Spreadsheet Changes
 

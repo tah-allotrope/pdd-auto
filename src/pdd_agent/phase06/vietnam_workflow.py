@@ -11,6 +11,7 @@ import yaml
 
 from pdd_agent.agent.section_orchestrator import SectionOrchestrator
 from pdd_agent.export.docx_export import export_run_to_docx
+from pdd_agent.export.review_package import publish_review_package
 from pdd_agent.llm.provider import get_provider_registry
 from pdd_agent.phase06.assumptions import load_assumption_register
 from pdd_agent.phase06.spreadsheet_mapper import (
@@ -25,6 +26,7 @@ from schemas.project_input import ProjectInput
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_GAP_ANALYSIS_PATH = REPO_ROOT / "reports" / "vietnam-pdd-gap-analysis.md"
+DEFAULT_REVIEW_PACKAGE_DIR = REPO_ROOT / "reports" / "review-packages"
 DEFAULT_RUNBOOK_PATH = REPO_ROOT / "reports" / "vietnam-pdd-runbook.md"
 DEFAULT_VALIDATION_REPORT_PATH = REPO_ROOT / "reports" / "vietnam-pdd-validation.md"
 
@@ -42,6 +44,8 @@ class VietnamWorkflowArtifacts:
     review_state_path: Path
     assumption_burden_path: Path
     docx_path: Path
+    review_package_manifest_path: Path
+    latest_docx_path: Path
     validation_report_path: Path
     gap_analysis_path: Path
     runbook_path: Path
@@ -53,6 +57,7 @@ def run_vietnam_pdd_workflow(
     candidate_key: str = "soc-son",
     provider_name: str = "noop",
     gap_analysis_path: Path | str = DEFAULT_GAP_ANALYSIS_PATH,
+    review_package_dir: Path | str = DEFAULT_REVIEW_PACKAGE_DIR,
     runbook_path: Path | str = DEFAULT_RUNBOOK_PATH,
     validation_report_path: Path | str = DEFAULT_VALIDATION_REPORT_PATH,
 ) -> VietnamWorkflowArtifacts:
@@ -77,7 +82,7 @@ def run_vietnam_pdd_workflow(
     review_summary = orchestrator.run_review()
     review_state_path = Path(review_summary["review_state_path"])
     assumption_burden_path = Path(review_summary["assumption_burden_path"])
-    docx_path = export_run_to_docx(run_id=orchestrator.run_id)
+    internal_docx_path = export_run_to_docx(run_id=orchestrator.run_id)
 
     run_data = draft_run.to_dict()
     review_state_data = ReviewStateStore.load(orchestrator.run_id).to_dict()
@@ -87,7 +92,7 @@ def run_vietnam_pdd_workflow(
         review_summary=review_summary,
         review_state_data=review_state_data,
         spreadsheet_artifacts=spreadsheet_artifacts,
-        docx_path=docx_path,
+        docx_path=internal_docx_path,
         output_path=validation_report_path,
     )
     gap_analysis_path = write_gap_analysis_report(
@@ -97,6 +102,25 @@ def run_vietnam_pdd_workflow(
         output_path=gap_analysis_path,
     )
     runbook_path = write_vietnam_runbook(output_path=runbook_path)
+    review_package = publish_review_package(
+        run_id=orchestrator.run_id,
+        project_name=project_input.project.project_name,
+        docx_path=internal_docx_path,
+        validation_report_path=validation_report_path,
+        gap_analysis_path=gap_analysis_path,
+        assumption_burden_path=assumption_burden_path,
+        assumptions_yaml_path=spreadsheet_artifacts.assumptions_yaml_path,
+        project_yaml_path=spreadsheet_artifacts.project_yaml_path,
+        output_root=review_package_dir,
+    )
+    validation_report_path = write_validation_report(
+        run_data=run_data,
+        review_summary=review_summary,
+        review_state_data=review_state_data,
+        spreadsheet_artifacts=spreadsheet_artifacts,
+        docx_path=review_package.docx_path,
+        output_path=validation_report_path,
+    )
 
     return VietnamWorkflowArtifacts(
         workbook_path=spreadsheet_artifacts.workbook_path,
@@ -109,7 +133,9 @@ def run_vietnam_pdd_workflow(
         draft_run_path=draft_run_path,
         review_state_path=review_state_path,
         assumption_burden_path=assumption_burden_path,
-        docx_path=docx_path,
+        docx_path=review_package.docx_path,
+        review_package_manifest_path=review_package.manifest_path,
+        latest_docx_path=review_package.latest_docx_path,
         validation_report_path=validation_report_path,
         gap_analysis_path=gap_analysis_path,
         runbook_path=runbook_path,
@@ -184,6 +210,8 @@ def write_validation_report(
     lines.append(
         "- The DOCX export, review-state JSON, and assumption burden report were all generated from the same run to keep the review package deterministic."
     )
+    if not Path(docx_path).exists():
+        raise FileNotFoundError(f"Published DOCX draft not found at `{docx_path}`")
 
     output_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return output_path
@@ -310,14 +338,15 @@ def write_vietnam_runbook(output_path: Path | str = DEFAULT_RUNBOOK_PATH) -> Pat
         "",
         "## Primary One-Command Path",
         "",
-        "1. Run `python scripts/run_vietnam_pdd.py` to fetch the workbook, regenerate the Soc Son mapping artifacts, draft the run, review it, export DOCX, and refresh the Vietnam reports.",
+        "1. Run `python scripts/run_vietnam_pdd.py` to fetch the workbook, regenerate the Soc Son mapping artifacts, draft the run, review it, publish the Word review package, and refresh the Vietnam reports.",
+        "2. Open `reports/review-packages/soc-son-waste-to-power-plant-project/latest.docx` for the latest local review draft, or inspect the run-specific package under `reports/review-packages/soc-son-waste-to-power-plant-project/<run-id>/`.",
         "",
         "## Equivalent CLI Steps",
         "",
         "1. Run `pdd-agent fetch-workbook` to refresh the cached workbook under `data/source_inputs/spreadsheets/`.",
         "2. Run `pdd-agent map-spreadsheet --candidate soc-son` to regenerate the workbook profile, row snapshot, project YAML, assumptions YAML, and source profile report.",
         "3. Run `pdd-agent draft --input configs/projects/vietnam_socson_from_sheet.yaml --provider noop` to draft and review the current project input.",
-        "4. Run `pdd-agent export --run-id <run-id>` to produce the Word draft for review.",
+        "4. Run `pdd-agent export --run-id <run-id>` to produce the internal DOCX artifact, then publish it into `reports/review-packages/` if you need a reviewer-facing package outside the one-command workflow.",
         "",
         "## When the Spreadsheet Changes",
         "",
