@@ -197,6 +197,15 @@ The benchmark workflow will:
 4. Write `reports/demo-scorecard.md` and `reports/section-diff.md`
 5. Export DOCX when `python-docx` is installed locally
 
+The current benchmark path is still a workflow benchmark, not a client-demo package. With provider `noop`, it intentionally produces placeholder-heavy text and should not be used as the client-facing sample.
+
+## Artifact Contracts
+
+- `reports/review-packages/` is the internal review artifact area. It is expected to contain placeholder section bodies, review notes, assumption-heavy content, and reviewer-issue appendices when the workflow runs with provider `noop`.
+- `reports/demo-packages/` is the reserved client-demo artifact area. The intended contract is a readable synthetic sample with a strong cover disclosure, aligned numbers, and summary-level synthetic assumptions only.
+- `pdd-agent run-vietnam-pdd` remains the reviewer-facing workflow. It should keep publishing review packages under `reports/review-packages/` and must not silently change into the future client-demo workflow.
+- Phase 01 documentation for the split lives in `reports/demo-artifact-contract.md`.
+
 ## Key Files
 
 ```
@@ -221,6 +230,7 @@ src/pdd_agent/
 
 - `python-docx` is declared in `pyproject.toml`, but local environments still need it installed before DOCX export works at runtime; the exporter now fails with a clear install message instead of skipping silently
 - No real LLM provider wired — benchmark runs currently measure workflow quality using the zero-cost `NoopProvider`
+- A true client-demo package path under `reports/demo-packages/` is planned but not implemented yet; the current review and benchmark outputs remain review-oriented rather than client-safe
 - The first benchmark is a workflow proof on one Soc Son-like case; a second project is still needed before claiming broader WTE coverage
 - The Soc Son spreadsheet mapper intentionally blocks review-sensitive quantitative splits, coordinates, and safeguards fields when they rely on synthetic assumptions
 

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Phase Report :: Demo Artifact Contract</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #111831;
+      --panel-2: #172140;
+      --text: #edf2ff;
+      --muted: #a8b4d8;
+      --line: #2a3a6b;
+      --accent: #72e6c8;
+      --accent-2: #89a7ff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(180deg, #08101d 0%, var(--bg) 100%);
+      color: var(--text);
+      line-height: 1.55;
+    }
+    main {
+      width: min(1100px, calc(100vw - 24px));
+      margin: 0 auto;
+      padding: 24px 0 40px;
+    }
+    .hero, .section {
+      background: rgba(17, 24, 49, 0.94);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 22px;
+      margin-bottom: 18px;
+    }
+    .hero h1, .section h2 { margin: 0 0 12px; }
+    .eyebrow {
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 0.78rem;
+      margin: 0 0 10px;
+    }
+    .meta, .summary-grid {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+    .card {
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px;
+    }
+    .label {
+      color: var(--muted);
+      text-transform: uppercase;
+      font-size: 0.76rem;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+    code {
+      font-family: Consolas, monospace;
+      color: var(--accent);
+    }
+    ul, ol { margin: 0; padding-left: 20px; }
+    li { margin-bottom: 8px; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+    }
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th { color: var(--accent-2); }
+    .empty {
+      border: 1px dashed var(--line);
+      border-radius: 14px;
+      padding: 18px;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .flow {
+      white-space: pre-wrap;
+      font-family: Consolas, monospace;
+      color: #dfe7ff;
+    }
+    @media print {
+      body { background: #fff; color: #111; }
+      .hero, .section, .card, .empty { background: #fff; color: #111; }
+      code { color: #0b5; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero" id="phase-header">
+      <p class="eyebrow">Phase Report / Personal Technical Artifact</p>
+      <h1>Demo Artifact Contract</h1>
+      <p>Phase 01 established why the current Soc Son DOCX reads like gibberish in a client setting and documented a separate contract for future synthetic client-demo packages.</p>
+      <div class="meta">
+        <div class="card"><div class="label">Project</div><div>PDD Agent</div></div>
+        <div class="card"><div class="label">Repository</div><div>pdd-auto</div></div>
+        <div class="card"><div class="label">Date</div><div>2026-05-01</div></div>
+      </div>
+    </section>
+
+    <section class="section" id="input-output-summary">
+      <h2>Input -&gt; Output Summary</h2>
+      <div class="summary-grid">
+        <div class="card">
+          <div class="label">Inputs</div>
+          <ul>
+            <li>Phase 01 tasks from <code>plans/2026-05-01-soc-son-client-demo-output-plan.md</code></li>
+            <li>Current workflow surfaces in <code>src/pdd_agent/llm/provider.py</code> and <code>src/pdd_agent/phase06/vietnam_workflow.py</code></li>
+            <li>Current benchmark evidence in <code>reports/demo-scorecard.md</code></li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="label">Outputs</div>
+          <ul>
+            <li>Explicit demo-vs-review artifact contract in <code>reports/demo-artifact-contract.md</code></li>
+            <li>Updated <code>README.md</code> guidance separating <code>reports/review-packages/</code> from future <code>reports/demo-packages/</code></li>
+            <li>Plan and session tracker updated to mark Phase 01 complete</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="logic-flow">
+      <h2>Logic Flow</h2>
+      <div class="card flow">flowchart LR
+    A[Inspect latest Soc Son review package context] --> B[Trace workflow from run_vietnam_pdd_workflow]
+    B --> C[Confirm NoopProvider emits PLACEHOLDER bodies]
+    C --> D[Confirm review package exports same saved run]
+    D --> E[Define separate client-demo contract]
+    E --> F[Document canonical reports/demo-packages path]
+    F --> G[Update README and plan state]</div>
+    </section>
+
+    <section class="section" id="math-algorithm-used">
+      <h2>Math / Algorithm Used</h2>
+      <div class="card">
+        <p>No new algorithmic behavior was implemented in Phase 01.</p>
+        <p>The phase used deterministic trace reasoning instead:</p>
+        <ol>
+          <li>Identify the active provider for the latest Soc Son review workflow.</li>
+          <li>Verify whether that provider emits narrative text or placeholder text.</li>
+          <li>Verify whether the export layer transforms or simply republishes the saved draft.</li>
+          <li>Translate the findings into an explicit artifact contract split.</li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="section" id="tools-formulas-methods">
+      <h2>Tools / Formulas / Methods</h2>
+      <div class="card">
+        <table>
+          <thead>
+            <tr><th>Tool / Method</th><th>Use In This Phase</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>Read</code></td><td>Examined the current workflow, provider behavior, scorecard, and existing repo docs.</td></tr>
+            <tr><td><code>apply_patch</code></td><td>Added the contract note, updated the README, updated the plan, and generated this HTML report.</td></tr>
+            <tr><td>Contract-first analysis</td><td>Separated the internal review audience from the future client-demo audience before making later code changes.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section" id="results-visualizations">
+      <h2>Results &amp; Visualizations</h2>
+      <div class="card">
+        <table>
+          <thead>
+            <tr><th>Finding</th><th>Evidence</th><th>Outcome</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Current Soc Son DOCX is not formatter corruption</td><td><code>NoopProvider.draft_section()</code> emits <code>[PLACEHOLDER ...]</code> text by design.</td><td>Root cause confirmed.</td></tr>
+            <tr><td>Vietnam workflow is reviewer-facing</td><td><code>run_vietnam_pdd_workflow()</code> drafts, saves, reviews, then publishes a review package.</td><td>Behavior should remain unchanged.</td></tr>
+            <tr><td>Benchmark path is also not client-safe yet</td><td><code>reports/demo-scorecard.md</code> reports <code>36</code> placeholder sections and <code>36</code> low-confidence sections.</td><td>Separate demo package contract required.</td></tr>
+            <tr><td>Canonical future demo output path defined</td><td><code>reports/demo-packages/&lt;project-slug&gt;/&lt;run-id&gt;/</code> plus <code>latest.docx</code>.</td><td>Later phases now have a concrete target.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section" id="limitations-second-best-alternative">
+      <h2>Limitations / Second-Best Alternative</h2>
+      <div class="card">
+        <ul>
+          <li>Phase 01 intentionally does not improve generated prose, quantification alignment, or export layout.</li>
+          <li>The second-best alternative would have been to hide some noisy appendices in the exporter immediately, but that would not solve the underlying placeholder-heavy run JSON.</li>
+          <li>The current spreadsheet-derived Soc Son path still carries review-gated synthetic assumptions and remains unsuitable for client-facing delivery without later phase work.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section" id="errors-warnings-flags-encountered">
+      <h2>Errors / Warnings / Flags Encountered</h2>
+      <div class="card">
+        <ul>
+          <li><code>AGENTS.md</code> and <code>lessons.md</code> were not present at the repo root; I continued with the workspace instructions already loaded into context.</li>
+          <li>The plan file was untracked in git; it was treated as part of the requested work and updated in place.</li>
+          <li>An unrelated untracked <code>.claude/</code> directory exists in the worktree and was left untouched.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section" id="open-questions-next-phase-seeds">
+      <h2>Open Questions / Next Phase Seeds</h2>
+      <div class="card">
+        <ul>
+          <li>Phase 02 should decide how to keep the demo package tied to the spreadsheet-derived Soc Son mapping while still removing review-gated missing-data behavior from the client-demo path.</li>
+          <li>Phase 02 should define the synthetic fact source of truth for narrative and quantitative fields so later export cleanup does not drift from the numbers.</li>
+          <li>Phase 03 should introduce a deterministic demo authoring path that guarantees zero <code>[PLACEHOLDER</code> markers in the exported main body.</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

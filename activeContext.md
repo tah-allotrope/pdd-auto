@@ -1,3 +1,19 @@
+## Soc Son Client Demo Output Upgrade - Phase 01
+
+- [x] Trace the current Soc Son DOCX root cause from `run_vietnam_pdd_workflow()` to `DraftRun.save()` and confirm why the latest review package reads like gibberish in a client setting.
+- [x] Define the client-demo acceptance contract, canonical `reports/demo-packages/` publication path, and default telemetry policy for demo artifacts.
+- [x] Update repo documentation so `reports/review-packages/` is clearly internal-review output and `reports/demo-packages/` is clearly reserved for synthetic client-demo output.
+- [x] Generate a Phase 01 report artifact via the report skill flow.
+- [x] Commit and push the requested Phase 01 changes.
+
+## Review / Results - Phase 01
+
+- Confirmed the noisy Soc Son DOCX is expected from the current workflow, not an export bug: `src/pdd_agent/phase06/vietnam_workflow.py` drafts with provider `noop`, saves that run JSON, and then exports the same placeholder-heavy draft into `reports/review-packages/`.
+- Confirmed the direct text source of the placeholders in `src/pdd_agent/llm/provider.py`: `NoopProvider.draft_section()` intentionally emits `[PLACEHOLDER ...]` bodies and `REVIEW REQUIRED` issues for human-in-the-loop review mode.
+- Confirmed the current demo benchmark is also not client-safe yet: `reports/demo-scorecard.md` records `36` placeholder sections and `36` low-confidence sections for the benchmark path.
+- Added a dedicated contract note at `reports/demo-artifact-contract.md` that defines the Phase 01 root-cause trace, demo acceptance rules, `reports/demo-packages/<project-slug>/<run-id>/` publication target, and summary-only telemetry policy for future client-demo exports.
+- Updated `README.md` so the review-package workflow remains explicitly internal and review-gated while the client-demo package path is documented as a separate synthetic artifact contract to be implemented in later phases.
+
 ## PDD Review Word Delivery Gap Closure
 
 - [x] Update the active context to track PHASE-01 and PHASE-02 implementation from `plans/2026-04-29-pdd-review-word-delivery-plan.md`.
