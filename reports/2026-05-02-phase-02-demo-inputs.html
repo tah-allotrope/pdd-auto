@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Phase Report :: phase-02-demo-inputs</title>
+  <meta name="color-scheme" content="dark">
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    const run = async () => {
+      mermaid.initialize({ startOnLoad: false, theme: 'dark', securityLevel: 'loose' });
+      await mermaid.run({ nodes: document.querySelectorAll('.mermaid') });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => run().catch(console.error), { once: true });
+    } else {
+      run().catch(console.error);
+    }
+  </script>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --panel: #111827;
+      --panel-2: #0f172a;
+      --line: #24324a;
+      --text: #e5eefc;
+      --muted: #9fb0ca;
+      --accent: #67e8f9;
+      --accent-2: #86efac;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Segoe UI, Arial, sans-serif;
+      background: linear-gradient(180deg, #08101b, var(--bg));
+      color: var(--text);
+      line-height: 1.55;
+    }
+    main {
+      width: min(1100px, calc(100vw - 24px));
+      margin: 0 auto;
+      padding: 24px 0 40px;
+    }
+    section {
+      background: rgba(17, 24, 39, 0.94);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 22px;
+      margin-bottom: 18px;
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    .kicker {
+      color: var(--accent-2);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 0.78rem;
+      margin-bottom: 10px;
+    }
+    .meta, .grid {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+    .card {
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px;
+    }
+    .label {
+      color: var(--muted);
+      text-transform: uppercase;
+      font-size: 0.76rem;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+    code { color: var(--accent); }
+    ul { margin: 0; padding-left: 18px; }
+    li { margin-bottom: 8px; }
+    .empty {
+      border: 1px dashed var(--line);
+      border-radius: 14px;
+      padding: 18px;
+      color: var(--muted);
+    }
+    .mermaid { overflow-x: auto; }
+    @media print {
+      body { background: white; color: black; }
+      section { break-inside: avoid; border-color: #ccc; background: white; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section>
+      <div class="kicker">Phase Report / Personal Technical Artifact</div>
+      <h1>phase-02-demo-inputs</h1>
+      <p>Phase 2 established a deterministic synthetic input surface for the future Soc Son client-demo path by adding a demo assumptions companion, introducing <code>demo_curated</code> provenance, and removing spreadsheet-style review gates from the demo fixture.</p>
+      <div class="meta">
+        <div class="card"><div class="label">Project</div><div>Soc Son Client Demo Output Upgrade</div></div>
+        <div class="card"><div class="label">Repository</div><div>pdd-auto</div></div>
+        <div class="card"><div class="label">Date</div><div>2026-05-02</div></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Input -&gt; Output Summary</h2>
+      <div class="grid">
+        <div class="card">
+          <div class="label">Inputs</div>
+          <ul>
+            <li><code>plans/2026-05-01-soc-son-client-demo-output-plan.md</code> Phase 02 scope</li>
+            <li><code>src/pdd_agent/phase05/benchmark.py</code> demo config generator</li>
+            <li><code>tests/test_phase05_demo.py</code> demo workflow coverage</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="label">Outputs</div>
+          <ul>
+            <li><code>configs/projects/demo_socson_like.assumptions.yaml</code></li>
+            <li><code>demo_curated</code> provenance routing in <code>src/pdd_agent/phase06/assumptions.py</code></li>
+            <li>Passing targeted verification with regenerated demo fixture</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Logic Flow</h2>
+      <div class="mermaid">flowchart LR
+        A[Plan Phase 2 requirements] --> B[Add failing tests for demo assumptions companion]
+        B --> C[Implement assumptions companion in create_demo_project_input]
+        C --> D[Introduce demo_curated provenance routing]
+        D --> E[Regenerate demo fixture locally]
+        E --> F[Run targeted pytest verification]
+      </div>
+    </section>
+
+    <section>
+      <h2>Math / Algorithm Used</h2>
+      <ul>
+        <li>No new drafting algorithm was introduced in Phase 2.</li>
+        <li>The main deterministic check was quantitative alignment between the demo config and the assumptions companion for baseline, project, net, and crediting-period totals.</li>
+        <li>The crediting-period total remained the existing fixture value: annual net reductions multiplied by crediting years.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Tools / Formulas / Methods</h2>
+      <ul>
+        <li>Test-first workflow in <code>tests/test_phase05_demo.py</code></li>
+        <li>Deterministic YAML generation via <code>create_demo_project_input()</code></li>
+        <li>Assumption routing via <code>resolve_assumptions_path()</code> and <code>load_assumption_register()</code></li>
+        <li>Provenance classification extended from <code>synthetic_assumption</code>/<code>demo_default</code> to include <code>demo_curated</code></li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Results &amp; Visualizations</h2>
+      <div class="empty">
+        <strong>No chart needed.</strong>
+        <p>Phase 2 produced structural input-surface improvements rather than meaningful trend data. The key result is qualitative but verified: the demo fixture now has a structured assumptions companion with zero <code>blocked_review_paths</code>.</p>
+        <ul>
+          <li>New file generated: <code>configs/projects/demo_socson_like.assumptions.yaml</code></li>
+          <li>Targeted test result: <code>pytest tests/test_phase05_demo.py</code> passed</li>
+          <li>Demo fixture regenerated locally after implementation</li>
+        </ul>
+      </div>
+    </section>
+
+    <section>
+      <h2>Limitations / Second-Best Alternative</h2>
+      <ul>
+        <li>Phase 2 does not yet make the DOCX client-safe. The body text is still placeholder-heavy until Phase 3 changes generation and export behavior.</li>
+        <li>The demo fixture is now coherent and non-blocking, but it is still synthetic and must not be treated as verified project evidence.</li>
+        <li>Second-best alternative rejected: keep using spreadsheet-derived assumptions for the demo path and suppress warnings later. That would preserve the wrong semantics and keep dragging review-gated gaps into client-demo work.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Errors / Warnings / Flags Encountered</h2>
+      <ul>
+        <li>Initial failing tests showed that <code>create_demo_project_input()</code> did not write any assumptions companion.</li>
+        <li>Running the benchmark-style test path refreshed <code>reports/assumption-burden.md</code> as a local side effect; that artifact is unrelated to Phase 2 scope and should stay out of the commit.</li>
+        <li>Git worktree still contains an unrelated untracked <code>.claude/</code> directory that was not modified.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Open Questions / Next Phase Seeds</h2>
+      <ul>
+        <li>Phase 3 should use the new <code>demo_curated</code> surface to generate readable synthetic prose without emitting <code>[PLACEHOLDER]</code> or <code>REVIEW REQUIRED</code> in the main body.</li>
+        <li>Phase 3 also needs a demo-specific export contract so the assumptions appendix stays concise and the reviewer-issues appendix is omitted from client-demo output.</li>
+        <li>Once Phase 3 exists, the workflow should publish into <code>reports/demo-packages/</code> instead of stopping at config-level readiness.</li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>

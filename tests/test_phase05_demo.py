@@ -122,6 +122,46 @@ def test_create_demo_project_input_contains_expected_structure(tmp_path: Path):
     assert data["quantification"]["crediting_period_total_tco2e"] > 0
 
 
+def test_create_demo_project_input_writes_assumptions_companion(tmp_path: Path):
+    output_path = tmp_path / "demo_socson_like.yaml"
+    created = create_demo_project_input(output_path)
+    assumptions_path = created.with_name("demo_socson_like.assumptions.yaml")
+
+    assert assumptions_path.exists()
+
+    assumptions = yaml.safe_load(assumptions_path.read_text(encoding="utf-8"))
+
+    assert assumptions["candidate_key"] == "soc-son-demo"
+    assert assumptions["guardrails"]["blocked_review_paths"] == []
+    by_path = {entry["field_path"]: entry for entry in assumptions["assumptions"]}
+    assert by_path["project.project_name"]["source_type"] == "demo_curated"
+    assert by_path["quantification.baseline_emissions_tco2e_per_year"]["source_type"] == "demo_curated"
+    assert by_path["monitoring.parameters_monitored"]["source_type"] == "demo_curated"
+
+
+def test_create_demo_project_input_keeps_quantification_consistent_with_assumptions(tmp_path: Path):
+    output_path = tmp_path / "demo_socson_like.yaml"
+    created = create_demo_project_input(output_path)
+    assumptions_path = created.with_name("demo_socson_like.assumptions.yaml")
+
+    data = yaml.safe_load(created.read_text(encoding="utf-8"))
+    assumptions = yaml.safe_load(assumptions_path.read_text(encoding="utf-8"))
+    by_path = {entry["field_path"]: entry for entry in assumptions["assumptions"]}
+
+    assert data["quantification"]["baseline_emissions_tco2e_per_year"] == by_path[
+        "quantification.baseline_emissions_tco2e_per_year"
+    ]["value"]
+    assert data["quantification"]["project_emissions_tco2e_per_year"] == by_path[
+        "quantification.project_emissions_tco2e_per_year"
+    ]["value"]
+    assert data["quantification"]["net_emissions_tco2e_per_year"] == by_path[
+        "quantification.net_emissions_tco2e_per_year"
+    ]["value"]
+    assert data["quantification"]["crediting_period_total_tco2e"] == by_path[
+        "quantification.crediting_period_total_tco2e"
+    ]["value"]
+
+
 def test_load_draft_run_round_trips_saved_json(tmp_path: Path):
     run_path = _make_run(tmp_path, run_id="roundtrip-run")
 

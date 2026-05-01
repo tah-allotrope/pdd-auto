@@ -136,6 +136,7 @@ pdd-agent upload --run-id <run-id>
 ## Phase-05 Deliverables
 
 - `configs/projects/demo_socson_like.yaml` — reproducible Soc Son-like input for benchmark runs
+- `configs/projects/demo_socson_like.assumptions.yaml` — deterministic demo assumptions companion with `demo_curated` provenance and no review-gated gaps
 - `scripts/run_demo.py` — one-command benchmark runner
 - `reports/demo-scorecard.md` — benchmark scorecard with review-burden and grounding metrics
 - `reports/section-diff.md` — per-section comparison notes against the Soc Son reference
@@ -192,10 +193,11 @@ pdd-agent benchmark --input configs/projects/demo_socson_like.yaml
 The benchmark workflow will:
 
 1. Create or reuse the Soc Son-like demo config
-2. Run the draft and review pipeline end-to-end
-3. Compare the saved run against the normalized Soc Son reference
-4. Write `reports/demo-scorecard.md` and `reports/section-diff.md`
-5. Export DOCX when `python-docx` is installed locally
+2. Write `configs/projects/demo_socson_like.assumptions.yaml` with deterministic `demo_curated` provenance for the synthetic demo fixture
+3. Run the draft and review pipeline end-to-end
+4. Compare the saved run against the normalized Soc Son reference
+5. Write `reports/demo-scorecard.md` and `reports/section-diff.md`
+6. Export DOCX when `python-docx` is installed locally
 
 The current benchmark path is still a workflow benchmark, not a client-demo package. With provider `noop`, it intentionally produces placeholder-heavy text and should not be used as the client-facing sample.
 
@@ -203,6 +205,7 @@ The current benchmark path is still a workflow benchmark, not a client-demo pack
 
 - `reports/review-packages/` is the internal review artifact area. It is expected to contain placeholder section bodies, review notes, assumption-heavy content, and reviewer-issue appendices when the workflow runs with provider `noop`.
 - `reports/demo-packages/` is the reserved client-demo artifact area. The intended contract is a readable synthetic sample with a strong cover disclosure, aligned numbers, and summary-level synthetic assumptions only.
+- `configs/projects/demo_socson_like.assumptions.yaml` is the current synthetic input surface for the future client-demo path. Its entries use `demo_curated` provenance and intentionally avoid `blocked_review_paths` so later phases can build client-safe prose without inheriting spreadsheet review gates.
 - `pdd-agent run-vietnam-pdd` remains the reviewer-facing workflow. It should keep publishing review packages under `reports/review-packages/` and must not silently change into the future client-demo workflow.
 - Phase 01 documentation for the split lives in `reports/demo-artifact-contract.md`.
 
@@ -230,7 +233,7 @@ src/pdd_agent/
 
 - `python-docx` is declared in `pyproject.toml`, but local environments still need it installed before DOCX export works at runtime; the exporter now fails with a clear install message instead of skipping silently
 - No real LLM provider wired — benchmark runs currently measure workflow quality using the zero-cost `NoopProvider`
-- A true client-demo package path under `reports/demo-packages/` is planned but not implemented yet; the current review and benchmark outputs remain review-oriented rather than client-safe
+- A true client-demo package path under `reports/demo-packages/` is still planned but not implemented yet; however, the demo fixture now has a dedicated assumptions companion so later phases can build client-safe prose without relying on spreadsheet review-gate metadata
 - The first benchmark is a workflow proof on one Soc Son-like case; a second project is still needed before claiming broader WTE coverage
 - The Soc Son spreadsheet mapper intentionally blocks review-sensitive quantitative splits, coordinates, and safeguards fields when they rely on synthetic assumptions
 

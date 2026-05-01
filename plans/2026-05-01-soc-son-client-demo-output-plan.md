@@ -1,7 +1,7 @@
 ---
 +title: "Soc Son Client Demo Output Upgrade"
 +date: "2026-05-01"
-+status: "phase-01-complete"
++status: "phase-02-complete"
 +request: "review word or pdf soc son output from implementation of the last plan and understand why it contain so much gibberish, evoke plan skill for multiphase so next sample word output will contain synthetic info suffice for a demo with client"
 +plan_type: "multi-phase"
 +research_inputs:
@@ -78,11 +78,11 @@
 +Create a coherent Soc Son-like synthetic input set that is rich enough to draft all sections without falling back to review-gated missing-data placeholders.
 
 +**Tasks**
-+- [ ] TASK-02-01: Add failing tests that prove the demo input covers all sections needed for a readable sample and does not carry the spreadsheet mapper's blocked-review gaps into the demo path.
-+- [ ] TASK-02-02: Extend `create_demo_project_input()` or add a dedicated `configs/projects/demo_socson_like.assumptions.yaml` so the demo path has structured provenance for synthetic facts instead of relying on the Vietnam spreadsheet's missing-data assumption register.
-+- [ ] TASK-02-03: Fill the demo dataset with coherent synthetic facts for proponent identity, ownership, consultation, EIA, monitoring, project location, and methodology applicability so Section 1, 2, 3, 4, and 5 all have usable narrative inputs.
-+- [ ] TASK-02-04: Decide whether to introduce a distinct provenance/source type such as `demo_curated` so demo-safe synthetic facts are not conflated with unresolved review-gated assumptions.
-+- [ ] TASK-02-05: Ensure all quantitative fields used in Sections `1.10`, `3.4`, `4.1`, `4.2`, `4.4`, and `5.2` are internally consistent and deterministic from the same synthetic dataset.
++- [x] TASK-02-01: Add failing tests that prove the demo input covers all sections needed for a readable sample and does not carry the spreadsheet mapper's blocked-review gaps into the demo path.
++- [x] TASK-02-02: Extend `create_demo_project_input()` or add a dedicated `configs/projects/demo_socson_like.assumptions.yaml` so the demo path has structured provenance for synthetic facts instead of relying on the Vietnam spreadsheet's missing-data assumption register.
++- [x] TASK-02-03: Fill the demo dataset with coherent synthetic facts for proponent identity, ownership, consultation, EIA, monitoring, project location, and methodology applicability so Section 1, 2, 3, 4, and 5 all have usable narrative inputs.
++- [x] TASK-02-04: Decide whether to introduce a distinct provenance/source type such as `demo_curated` so demo-safe synthetic facts are not conflated with unresolved review-gated assumptions.
++- [x] TASK-02-05: Ensure all quantitative fields used in Sections `1.10`, `3.4`, `4.1`, `4.2`, `4.4`, and `5.2` are internally consistent and deterministic from the same synthetic dataset.
 
 +**Files / Surfaces**
 +- `src/pdd_agent/phase05/benchmark.py` - Current `create_demo_project_input()` surface and likely home of richer demo-input generation.
@@ -95,9 +95,9 @@
 +- PHASE-01 demo artifact contract and path decision.
 
 +**Exit Criteria**
-+- [ ] The demo path has one coherent ProjectInput plus assumptions/provenance surface that can support every required section.
-+- [ ] Quantitative fields are internally consistent and do not require spreadsheet-review gate warnings to remain visible in the main body.
-+- [ ] The demo dataset can be regenerated deterministically in the workspace.
++- [x] The demo path has one coherent ProjectInput plus assumptions/provenance surface that can support every required section.
++- [x] Quantitative fields are internally consistent and do not require spreadsheet-review gate warnings to remain visible in the main body.
++- [x] The demo dataset can be regenerated deterministically in the workspace.
 
 +**Phase Risks**
 +- **RISK-02-01:** Reusing the spreadsheet-derived Soc Son mapping too directly will keep dragging review-gated missing-data logic into the demo output; mitigate by treating the demo dataset as a curated synthetic fixture rather than a thin spreadsheet veneer.

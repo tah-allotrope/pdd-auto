@@ -1,3 +1,23 @@
+## Soc Son Client Demo Output Upgrade - Phase 02
+
+- [x] Update the active context to track Phase 02 implementation from `plans/2026-05-01-soc-son-client-demo-output-plan.md`.
+- [x] Add failing tests for a spreadsheet-backed demo input + assumptions companion that avoid review-gated gaps and stay quantitatively consistent.
+- [x] Implement Phase 02 by generating a deterministic Soc Son demo assumptions companion alongside the existing demo config and classifying demo-safe synthetic facts distinctly from review-gated spreadsheet assumptions.
+- [x] Verify the Phase 02 demo input contract with targeted tests and a fresh local demo-config write.
+- [x] Generate a Phase 02 report artifact via the report skill flow.
+- [ ] Commit and push the requested Phase 02 changes.
+
+## Review / Results - Phase 02
+
+- Added failing coverage in `tests/test_phase05_demo.py` to prove the demo path writes a structured assumptions companion and keeps quantification values aligned between the demo config and its assumptions register.
+- Updated `src/pdd_agent/phase05/benchmark.py` so `create_demo_project_input()` now writes `configs/projects/demo_socson_like.assumptions.yaml` next to the existing demo config.
+- Introduced `demo_curated` provenance for the demo fixture and populated a deterministic assumptions register covering project identity, location, safeguards, monitoring, and key quantitative fields without any `blocked_review_paths`.
+- Updated `src/pdd_agent/phase06/assumptions.py` so later phases treat `demo_curated` entries as synthetic/demo-backed inputs for provenance routing without conflating them with the spreadsheet mapper's review-gated assumptions.
+- Updated `README.md` so the demo workflow and artifact-contract sections document the new demo assumptions companion and its role in the future client-demo path.
+- Targeted verification passed: `pytest tests/test_phase05_demo.py`.
+- Fresh local demo fixture write passed: `create_demo_project_input()` refreshed `configs/projects/demo_socson_like.yaml` and created `configs/projects/demo_socson_like.assumptions.yaml` with `candidate_key: soc-son-demo` and no blocked-review paths.
+- Added the Phase 02 HTML report artifact at `reports/2026-05-02-phase-02-demo-inputs.html`.
+
 ## Soc Son Client Demo Output Upgrade - Phase 01
 
 - [x] Trace the current Soc Son DOCX root cause from `run_vietnam_pdd_workflow()` to `DraftRun.save()` and confirm why the latest review package reads like gibberish in a client setting.

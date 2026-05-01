@@ -147,7 +147,229 @@ def create_demo_project_input(output_path: Path | None = None) -> Path:
     }
 
     output_path.write_text(yaml.safe_dump(payload, sort_keys=False), encoding="utf-8")
+    assumptions_path = output_path.with_name(f"{output_path.stem}.assumptions.yaml")
+    assumptions_path.write_text(
+        yaml.safe_dump(_build_demo_assumption_register(payload), sort_keys=False),
+        encoding="utf-8",
+    )
     return output_path
+
+
+def _build_demo_assumption_register(project_payload: dict[str, Any]) -> dict[str, Any]:
+    quantification = project_payload["quantification"]
+    return {
+        "candidate_key": "soc-son-demo",
+        "source_snapshot": {
+            "source_type": "curated_demo_fixture",
+            "project_input": "configs/projects/demo_socson_like.yaml",
+        },
+        "assumptions": [
+            _demo_entry(
+                "project.project_name",
+                project_payload["project"]["project_name"],
+                "Curated Soc Son-like synthetic project name for client-demo output.",
+            ),
+            _demo_entry(
+                "project.project_id_vcs",
+                project_payload["project"]["project_id_vcs"],
+                "Demo fixture intentionally omits a live registry identifier.",
+                confidence="medium",
+            ),
+            _demo_entry(
+                "project.proponent_name",
+                project_payload["project"]["proponent_name"],
+                "Curated synthetic project company for the demo fixture.",
+            ),
+            _demo_entry(
+                "project.proponent_contact_email",
+                project_payload["project"]["proponent_contact_email"],
+                "Synthetic contact endpoint reserved for demo use only.",
+            ),
+            _demo_entry(
+                "project.other_entities",
+                project_payload["project"]["other_entities"],
+                "Curated synthetic partner list for the demo fixture.",
+            ),
+            _demo_entry(
+                "project.ownership",
+                project_payload["project"]["ownership"],
+                "Curated ownership statement aligned to the demo-only project narrative.",
+            ),
+            _demo_entry(
+                "location.country",
+                project_payload["location"]["country"],
+                "Curated location used for the Soc Son-like demo fixture.",
+            ),
+            _demo_entry(
+                "location.region",
+                project_payload["location"]["region"],
+                "Curated region used consistently across the demo fixture.",
+            ),
+            _demo_entry(
+                "location.city",
+                project_payload["location"]["city"],
+                "Curated city used consistently across the demo fixture.",
+            ),
+            _demo_entry(
+                "location.latitude",
+                project_payload["location"]["latitude"],
+                "Curated decimal latitude for the synthetic demo site.",
+            ),
+            _demo_entry(
+                "location.longitude",
+                project_payload["location"]["longitude"],
+                "Curated decimal longitude for the synthetic demo site.",
+            ),
+            _demo_entry(
+                "location.landfill_latitude",
+                project_payload["location"]["landfill_latitude"],
+                "Curated baseline landfill latitude for the synthetic demo site.",
+            ),
+            _demo_entry(
+                "location.landfill_longitude",
+                project_payload["location"]["landfill_longitude"],
+                "Curated baseline landfill longitude for the synthetic demo site.",
+            ),
+            _demo_entry(
+                "dates.start_date",
+                project_payload["dates"]["start_date"],
+                "Curated start date for the synthetic demo schedule.",
+            ),
+            _demo_entry(
+                "dates.crediting_period_start",
+                project_payload["dates"]["crediting_period_start"],
+                "Curated crediting period start for the synthetic demo schedule.",
+            ),
+            _demo_entry(
+                "dates.crediting_period_years",
+                project_payload["dates"]["crediting_period_years"],
+                "Curated crediting period length for the demo fixture.",
+            ),
+            _demo_entry(
+                "technology.methodology_ids",
+                project_payload["technology"]["methodology_ids"],
+                "Curated methodology selection for the Soc Son-like demo fixture.",
+            ),
+            _demo_entry(
+                "technology.annual_waste_throughput",
+                project_payload["technology"]["annual_waste_throughput"],
+                "Curated annual throughput aligned to the demo technical narrative.",
+            ),
+            _demo_entry(
+                "technology.installed_capacity_mw",
+                project_payload["technology"]["installed_capacity_mw"],
+                "Curated installed capacity aligned to the demo technical narrative.",
+            ),
+            _demo_entry(
+                "technology.energy_generation_mwh_year",
+                project_payload["technology"]["energy_generation_mwh_year"],
+                "Curated annual generation aligned to the demo technical narrative.",
+            ),
+            _demo_entry(
+                "technology.tip_fee_usd_per_tonne",
+                project_payload["technology"]["tip_fee_usd_per_tonne"],
+                "Curated commercial placeholder used consistently for the demo fixture.",
+            ),
+            _demo_entry(
+                "quantification.baseline_emissions_tco2e_per_year",
+                quantification["baseline_emissions_tco2e_per_year"],
+                "Curated deterministic baseline emissions input for the demo fixture.",
+            ),
+            _demo_entry(
+                "quantification.project_emissions_tco2e_per_year",
+                quantification["project_emissions_tco2e_per_year"],
+                "Curated deterministic project emissions input for the demo fixture.",
+            ),
+            _demo_entry(
+                "quantification.leakage_tco2e_per_year",
+                quantification["leakage_tco2e_per_year"],
+                "Curated deterministic leakage input for the demo fixture.",
+            ),
+            _demo_entry(
+                "quantification.net_emissions_tco2e_per_year",
+                quantification["net_emissions_tco2e_per_year"],
+                "Curated deterministic net reductions input for the demo fixture.",
+            ),
+            _demo_entry(
+                "quantification.grid_emission_factor",
+                quantification["grid_emission_factor"],
+                "Curated grid factor placeholder for the synthetic demo fixture.",
+            ),
+            _demo_entry(
+                "quantification.grid_emission_factor_source",
+                quantification["grid_emission_factor_source"],
+                "Curated source label used consistently across the synthetic demo fixture.",
+            ),
+            _demo_entry(
+                "quantification.crediting_period_total_tco2e",
+                quantification["crediting_period_total_tco2e"],
+                "Derived deterministically from the demo net annual reductions and crediting years.",
+            ),
+            _demo_entry(
+                "monitoring.parameters_monitored",
+                project_payload["monitoring"]["parameters_monitored"],
+                "Curated monitoring parameter set for the synthetic demo fixture.",
+            ),
+            _demo_entry(
+                "monitoring.data_management",
+                project_payload["monitoring"]["data_management"],
+                "Curated data-management narrative for the synthetic demo fixture.",
+            ),
+            _demo_entry(
+                "safeguards.no_net_harm_statement",
+                project_payload["safeguards"]["no_net_harm_statement"],
+                "Curated no-net-harm statement for the synthetic demo fixture.",
+            ),
+            _demo_entry(
+                "safeguards.stakeholder_consultation_completed",
+                project_payload["safeguards"]["stakeholder_consultation_completed"],
+                "Curated stakeholder consultation status for the synthetic demo fixture.",
+            ),
+            _demo_entry(
+                "safeguards.stakeholder_consultation_date",
+                project_payload["safeguards"]["stakeholder_consultation_date"],
+                "Curated stakeholder consultation date for the synthetic demo fixture.",
+            ),
+            _demo_entry(
+                "safeguards.environmental_impact_assessment",
+                project_payload["safeguards"]["environmental_impact_assessment"],
+                "Curated environmental review status for the synthetic demo fixture.",
+            ),
+            _demo_entry(
+                "safeguards.eia_reference",
+                project_payload["safeguards"]["eia_reference"],
+                "Curated EIA reference label for the synthetic demo fixture.",
+            ),
+            _demo_entry(
+                "compliance_and_ownership.credit_ownership_statement",
+                project_payload["compliance_and_ownership"]["credit_ownership_statement"],
+                "Curated ownership statement for the synthetic demo fixture.",
+            ),
+        ],
+        "guardrails": {
+            "blocked_review_paths": [],
+            "blocked_review_items": [],
+            "notes": [
+                "This assumptions file supports the synthetic client-demo path and intentionally avoids review-gated missing-data placeholders.",
+                "All values remain synthetic demo inputs and must not be treated as verified project evidence.",
+            ],
+        },
+    }
+
+
+def _demo_entry(
+    field_path: str,
+    value: Any,
+    rationale: str,
+    confidence: str = "high",
+) -> dict[str, Any]:
+    return {
+        "field_path": field_path,
+        "value": value,
+        "source_type": "demo_curated",
+        "rationale": rationale,
+        "confidence": confidence,
+    }
 
 
 def load_draft_run(run_path: Path | str) -> DraftRun:

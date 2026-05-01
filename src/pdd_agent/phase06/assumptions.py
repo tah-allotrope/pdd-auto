@@ -155,7 +155,7 @@ def synthetic_entries(entries: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return [
         entry
         for entry in entries
-        if entry.get("source_type") in {"synthetic_assumption", "demo_default"}
+        if entry.get("source_type") in {"synthetic_assumption", "demo_default", "demo_curated"}
     ]
 
 
