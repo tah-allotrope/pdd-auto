@@ -187,7 +187,7 @@ python scripts/run_demo.py
 
 # Equivalent CLI workflow
 pdd-agent demo-config
-pdd-agent benchmark --input configs/projects/demo_socson_like.yaml
+pdd-agent benchmark --input configs/projects/demo_socson_like.yaml --demo-output-dir reports/demo-packages
 ```
 
 The benchmark workflow will:
@@ -197,9 +197,10 @@ The benchmark workflow will:
 3. Run the draft and review pipeline end-to-end
 4. Compare the saved run against the normalized Soc Son reference
 5. Write `reports/demo-scorecard.md` and `reports/section-diff.md`
-6. Export DOCX when `python-docx` is installed locally
+6. Export a demo DOCX with provider `demo` when `python-docx` is installed locally
+7. Publish `reports/demo-packages/<project-slug>/<run-id>/` and refresh `latest.docx` when `--demo-output-dir` is provided
 
-The current benchmark path is still a workflow benchmark, not a client-demo package. With provider `noop`, it intentionally produces placeholder-heavy text and should not be used as the client-facing sample.
+`python scripts/run_demo.py` now runs the deterministic demo provider and publishes the client-demo package under `reports/demo-packages/`. The equivalent CLI path is `pdd-agent benchmark --provider demo --demo-output-dir reports/demo-packages`.
 
 ## Artifact Contracts
 

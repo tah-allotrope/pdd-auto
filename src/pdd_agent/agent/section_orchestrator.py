@@ -17,6 +17,7 @@ import yaml
 from pdd_agent.domain.methodology_rules import get_methodology_rules
 from pdd_agent.llm.provider import (
     BaseProvider,
+    DemoProvider,
     DraftRun,
     DraftSection,
     NoopProvider,
@@ -70,8 +71,12 @@ class SectionOrchestrator:
         self._run = DraftRun(
             run_id=self._run_id,
             project_name=project_input.project.project_name if project_input else "unknown",
+            provider=getattr(self._provider, "name", "noop"),
         )
         self._drafted: dict[str, DraftSection] = {}
+
+    def _is_demo_run(self) -> bool:
+        return getattr(self._provider, "name", "") == "demo"
 
     def _assumption_register(self) -> dict[str, Any] | None:
         register = self._run.assumption_register
@@ -282,6 +287,13 @@ class SectionOrchestrator:
             if draft.confidence == "HIGH":
                 draft.confidence = "MEDIUM"
 
+        if self._is_demo_run():
+            draft.confidence = "HIGH"
+            draft.issues = [
+                issue for issue in draft.issues if not issue.startswith("REVIEW REQUIRED:")
+            ]
+            return self._store_draft(key, draft)
+
         if blocked_synthetic and sensitivity in ("HIGH", "CRITICAL"):
             draft.confidence = "LOW" if sensitivity == "HIGH" else "UNSUPPORTED"
             paths = ", ".join(item["field_path"] for item in blocked_synthetic)
@@ -293,6 +305,9 @@ class SectionOrchestrator:
                 f"REVIEW REQUIRED: {section_id}{'.' + sub_section_id if sub_section_id else ''} uses synthetic or demo defaults and must stay review-gated."
             )
 
+        return self._store_draft(key, draft)
+
+    def _store_draft(self, key: str, draft: DraftSection) -> DraftSection:
         self._drafted[key] = draft
         self._run.add(draft)
         return draft
@@ -377,6 +392,14 @@ class SectionOrchestrator:
                     state_store.sections[key].reviewer_notes.append(
                         f"Assumption burden: {len(draft.synthetic_uses)} synthetic/demo-backed input(s)."
                     )
+
+                if self._is_demo_run():
+                    state_store.sections[key].state = ReviewState.READY_FOR_HUMAN_EDIT
+                    state_store.sections[key].reviewer_notes = [
+                        note
+                        for note in state_store.sections[key].reviewer_notes
+                        if not note.startswith("Synthetic review gate:")
+                    ]
 
         state_store.save()
 

@@ -50,13 +50,14 @@ def export_run_to_docx(
     assumption_register = run_data.get("assumption_register") or {}
     blocked_items = assumption_register.get("guardrails", {}).get("blocked_review_items", [])
     blocked_paths = {item.get("field_path", ""): item.get("reason", "") for item in blocked_items}
+    is_demo = run_data.get("provider") == "demo"
 
     doc = Document()
     _set_base_styles(doc)
 
     resolved_project_name = project_name or run_data.get("project_name", "Unknown Project")
     _add_title_page(doc, resolved_project_name, run_id)
-    _add_disclaimer(doc)
+    _add_disclaimer(doc, is_demo=is_demo)
     _add_cover_metadata(doc, run_data)
 
     for sec_def in schema.get("sections", []):
@@ -79,13 +80,13 @@ def export_run_to_docx(
             if text:
                 for paragraph_text in _split_paragraphs(text):
                     paragraph = doc.add_paragraph(paragraph_text)
-                    if section.get("confidence") in {"LOW", "UNSUPPORTED"}:
+                    if not is_demo and section.get("confidence") in {"LOW", "UNSUPPORTED"}:
                         _highlight_paragraph(paragraph, "FFF2CC")
             else:
                 doc.add_paragraph("[No content drafted yet]").style = "Intense Quote"
 
             issues = section.get("issues", [])
-            if issues:
+            if issues and not is_demo:
                 issue_intro = doc.add_paragraph()
                 issue_intro.add_run("Review notes:").bold = True
                 for issue in issues:
@@ -93,8 +94,9 @@ def export_run_to_docx(
                     run = bullet.add_run(issue)
                     run.font.color.rgb = _docx_attr("docx.shared", "RGBColor")(0xB4, 0x23, 0x18)
 
-    _add_assumption_appendix(doc, assumption_register, sections, blocked_paths)
-    _add_reviewer_issues_appendix(doc, run_data, sections, blocked_paths)
+    _add_assumption_appendix(doc, assumption_register, sections, blocked_paths, is_demo=is_demo)
+    if not is_demo:
+        _add_reviewer_issues_appendix(doc, run_data, sections, blocked_paths)
     _add_page_numbers(doc)
 
     final_output = Path(output_path) if output_path else _DRAFT_RUNS_DIR / f"{run_id}.docx"
@@ -144,13 +146,16 @@ def _add_title_page(doc: Any, project_name: str, run_id: str) -> None:
     doc.add_page_break()
 
 
-def _add_disclaimer(doc: Any) -> None:
+def _add_disclaimer(doc: Any, is_demo: bool = False) -> None:
     RGBColor = _docx_attr("docx.shared", "RGBColor")
     paragraph = doc.add_paragraph()
-    run = paragraph.add_run(
-        "Internal draft for review; contains synthetic assumptions for missing project data. "
-        "Do not treat this document as a final audited Verra filing."
+    message = (
+        "This document is a synthetic client-demo sample. "
+        "It is intended for demonstration only and must not be treated as verified project evidence or a final audited Verra filing."
+        if is_demo
+        else "Internal draft for review; contains synthetic assumptions for missing project data. Do not treat this document as a final audited Verra filing."
     )
+    run = paragraph.add_run(message)
     run.bold = True
     run.font.color.rgb = RGBColor(0x9C, 0x00, 0x06)
     _highlight_paragraph(paragraph, "FCE4D6")
@@ -216,9 +221,10 @@ def _add_assumption_appendix(
     assumption_register: dict[str, Any],
     sections: list[dict[str, Any]],
     blocked_paths: dict[str, str],
+    is_demo: bool = False,
 ) -> None:
     doc.add_page_break()
-    doc.add_heading("Appendix A - Assumption Register", level=1)
+    doc.add_heading("Appendix A - Assumption Summary" if is_demo else "Appendix A - Assumption Register", level=1)
 
     assumptions = assumption_register.get("assumptions", []) if assumption_register else []
     if not assumptions:
@@ -226,9 +232,9 @@ def _add_assumption_appendix(
         return
 
     usage_map = _build_usage_map(sections)
-    table = doc.add_table(rows=1, cols=6)
+    table = doc.add_table(rows=1, cols=4 if is_demo else 6)
     table.style = "Light Grid Accent 1"
-    headers = ["Field", "Source Type", "Confidence", "Value", "Affects", "Review Gate"]
+    headers = ["Field", "Source Type", "Confidence", "Value"] if is_demo else ["Field", "Source Type", "Confidence", "Value", "Affects", "Review Gate"]
     for index, header in enumerate(headers):
         table.rows[0].cells[index].text = header
         table.rows[0].cells[index].paragraphs[0].runs[0].bold = True
@@ -240,8 +246,9 @@ def _add_assumption_appendix(
         cells[1].text = str(item.get("source_type", ""))
         cells[2].text = str(item.get("confidence", ""))
         cells[3].text = _truncate_value(item.get("value"))
-        cells[4].text = ", ".join(usage_map.get(field_path, [])) or "-"
-        cells[5].text = blocked_paths.get(field_path, "-")
+        if not is_demo:
+            cells[4].text = ", ".join(usage_map.get(field_path, [])) or "-"
+            cells[5].text = blocked_paths.get(field_path, "-")
 
     notes = assumption_register.get("guardrails", {}).get("notes", [])
     if notes:

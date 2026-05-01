@@ -20,6 +20,15 @@ class ReviewPackagePaths:
     manifest_path: Path
 
 
+@dataclass(frozen=True)
+class DemoPackagePaths:
+    project_slug: str
+    package_dir: Path
+    docx_path: Path
+    latest_docx_path: Path
+    manifest_path: Path
+
+
 def publish_review_package(
     run_id: str,
     project_name: str,
@@ -112,3 +121,59 @@ def publish_docx_run_for_review(
         output_root=output_root,
     )
     return package.docx_path
+
+
+def publish_demo_package(
+    run_id: str,
+    project_name: str,
+    docx_path: Path | str,
+    assumptions_yaml_path: Path | str,
+    project_yaml_path: Path | str,
+    scorecard_path: Path | str,
+    section_diff_path: Path | str,
+    output_root: Path | str,
+) -> DemoPackagePaths:
+    """Copy client-demo artifacts into a stable demo package."""
+    source_docx = Path(docx_path)
+    if not source_docx.exists():
+        raise FileNotFoundError(f"DOCX demo artifact not found at `{source_docx}`")
+
+    root = Path(output_root)
+    project_slug = _slugify(project_name)
+    package_dir = root / project_slug / run_id
+    package_dir.mkdir(parents=True, exist_ok=True)
+
+    published_docx_path = package_dir / f"{run_id}.docx"
+    shutil.copy2(source_docx, published_docx_path)
+
+    published_assumptions_yaml_path = _copy_if_exists(assumptions_yaml_path, package_dir)
+    published_project_yaml_path = _copy_if_exists(project_yaml_path, package_dir)
+    published_scorecard_path = _copy_if_exists(scorecard_path, package_dir)
+    published_section_diff_path = _copy_if_exists(section_diff_path, package_dir)
+
+    manifest = {
+        "run_id": run_id,
+        "project_name": project_name,
+        "project_slug": project_slug,
+        "published_docx": str(published_docx_path),
+        "source_docx": str(source_docx),
+        "assumptions_yaml": str(published_assumptions_yaml_path or Path(assumptions_yaml_path)),
+        "project_yaml": str(published_project_yaml_path or Path(project_yaml_path)),
+        "demo_scorecard": str(published_scorecard_path or Path(scorecard_path)),
+        "section_diff": str(published_section_diff_path or Path(section_diff_path)),
+    }
+    manifest_path = package_dir / "manifest.json"
+    manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+
+    latest_dir = root / project_slug
+    latest_dir.mkdir(parents=True, exist_ok=True)
+    latest_docx_path = latest_dir / "latest.docx"
+    shutil.copy2(published_docx_path, latest_docx_path)
+
+    return DemoPackagePaths(
+        project_slug=project_slug,
+        package_dir=package_dir,
+        docx_path=published_docx_path,
+        latest_docx_path=latest_docx_path,
+        manifest_path=manifest_path,
+    )

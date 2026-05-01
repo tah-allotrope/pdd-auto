@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Phase Report :: phase-03-demo-output</title>
+  <meta name="color-scheme" content="dark">
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    const run = async () => {
+      mermaid.initialize({ startOnLoad: false, theme: 'dark', securityLevel: 'loose' });
+      await mermaid.run({ nodes: document.querySelectorAll('.mermaid') });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => run().catch(console.error), { once: true });
+    } else {
+      run().catch(console.error);
+    }
+  </script>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --panel: #111827;
+      --panel-2: #0f172a;
+      --line: #24324a;
+      --text: #e5eefc;
+      --muted: #9fb0ca;
+      --accent: #67e8f9;
+      --accent-2: #f9a8d4;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Segoe UI, Arial, sans-serif;
+      background: linear-gradient(180deg, #08101b, var(--bg));
+      color: var(--text);
+      line-height: 1.55;
+    }
+    main {
+      width: min(1100px, calc(100vw - 24px));
+      margin: 0 auto;
+      padding: 24px 0 40px;
+    }
+    section {
+      background: rgba(17, 24, 39, 0.94);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 22px;
+      margin-bottom: 18px;
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    .kicker {
+      color: var(--accent-2);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 0.78rem;
+      margin-bottom: 10px;
+    }
+    .meta, .grid {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+    .card {
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px;
+    }
+    .label {
+      color: var(--muted);
+      text-transform: uppercase;
+      font-size: 0.76rem;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+    code { color: var(--accent); }
+    ul { margin: 0; padding-left: 18px; }
+    li { margin-bottom: 8px; }
+    .empty {
+      border: 1px dashed var(--line);
+      border-radius: 14px;
+      padding: 18px;
+      color: var(--muted);
+    }
+    .mermaid { overflow-x: auto; }
+    @media print {
+      body { background: white; color: black; }
+      section { break-inside: avoid; border-color: #ccc; background: white; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section>
+      <div class="kicker">Phase Report / Personal Technical Artifact</div>
+      <h1>phase-03-demo-output</h1>
+      <p>Phase 3 converted the Soc Son client-demo path from a placeholder-heavy internal workflow into a deterministic synthetic sample flow with readable prose, demo-safe DOCX export behavior, and published artifacts under <code>reports/demo-packages/</code>.</p>
+      <div class="meta">
+        <div class="card"><div class="label">Project</div><div>Soc Son Client Demo Output Upgrade</div></div>
+        <div class="card"><div class="label">Repository</div><div>pdd-auto</div></div>
+        <div class="card"><div class="label">Date</div><div>2026-05-02</div></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Input -&gt; Output Summary</h2>
+      <div class="grid">
+        <div class="card">
+          <div class="label">Inputs</div>
+          <ul>
+            <li><code>plans/2026-05-01-soc-son-client-demo-output-plan.md</code> Phase 03 scope</li>
+            <li><code>src/pdd_agent/llm/provider.py</code> provider abstraction</li>
+            <li><code>src/pdd_agent/export/docx_export.py</code> export contract</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="label">Outputs</div>
+          <ul>
+            <li>Deterministic <code>DemoProvider</code> for readable synthetic section prose</li>
+            <li>Demo-aware DOCX export with disclosure plus concise assumptions appendix</li>
+            <li>Published client-demo package under <code>reports/demo-packages/</code> with <code>latest.docx</code></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Logic Flow</h2>
+      <div class="mermaid">flowchart LR
+        A[Add failing Phase 3 tests] --> B[Implement DemoProvider templates]
+        B --> C[Stamp DraftRun with active provider]
+        C --> D[Suppress reviewer noise for demo runs]
+        D --> E[Publish reports/demo-packages demo artifact]
+        E --> F[Verify with pytest and fresh local run]
+      </div>
+    </section>
+
+    <section>
+      <h2>Math / Algorithm Used</h2>
+      <ul>
+        <li>The demo path stays deterministic by rendering prose from structured <code>ProjectInput</code> facts and the Phase 02 assumptions register instead of free-form generation.</li>
+        <li>Quantitative consistency still flows from the shared demo fixture values for waste throughput, electricity generation, baseline emissions, project emissions, leakage, and net reductions.</li>
+        <li>The benchmark comparison logic was reused unchanged; Phase 3 focused on better authored content and cleaner publication behavior rather than a new scoring method.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Tools / Formulas / Methods</h2>
+      <ul>
+        <li>Test-first changes in <code>tests/test_phase05_demo.py</code>, <code>tests/test_docx_export.py</code>, and <code>tests/test_phase06_cli.py</code></li>
+        <li>Deterministic provider registration in <code>src/pdd_agent/llm/provider.py</code></li>
+        <li>Audience-aware orchestration in <code>src/pdd_agent/agent/section_orchestrator.py</code></li>
+        <li>Artifact publication via <code>publish_demo_package()</code> in <code>src/pdd_agent/export/review_package.py</code></li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Results &amp; Visualizations</h2>
+      <div class="empty">
+        <strong>Key verified outputs.</strong>
+        <ul>
+          <li>Targeted verification passed: <code>pytest tests/test_phase05_demo.py tests/test_docx_export.py tests/test_phase06_cli.py</code></li>
+          <li>Fresh local run published <code>reports/demo-packages/soc-son-like-waste-to-power-demonstration-project/run-20260501172928-45b866/run-20260501172928-45b866.docx</code></li>
+          <li>Stable alias refreshed at <code>reports/demo-packages/soc-son-like-waste-to-power-demonstration-project/latest.docx</code></li>
+          <li>The demo DOCX main body no longer contains <code>[PLACEHOLDER</code> or <code>REVIEW REQUIRED</code> markers</li>
+        </ul>
+      </div>
+    </section>
+
+    <section>
+      <h2>Limitations / Second-Best Alternative</h2>
+      <ul>
+        <li>The benchmark comparison still measures the draft against a normalized Soc Son reference; it is not a claim that the synthetic sample is ready for external validation.</li>
+        <li>PDF publication is still optional and not implemented in Phase 3 because no local converter contract was added yet.</li>
+        <li>Second-best alternative rejected: keep provider <code>noop</code> and strip placeholders only at export time. That would hide the wrong root cause and leave the saved run JSON inconsistent with the exported demo package.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Errors / Warnings / Flags Encountered</h2>
+      <ul>
+        <li>Initial implementation saved benchmark runs with provider <code>noop</code> even when the demo provider was active; fixing <code>DraftRun(provider=...)</code> in the orchestrator resolved the remaining failing test.</li>
+        <li>The benchmark CLI initially had no benchmark-specific <code>--provider</code> surface, so the documented CLI path would still have defaulted to <code>noop</code>. Phase 3 now defaults benchmark runs to <code>demo</code>.</li>
+        <li>Unrelated worktree churn remains in <code>reports/assumption-burden.md</code> and untracked <code>.claude/</code>; both should stay out of the scoped commit.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Open Questions / Next Phase Seeds</h2>
+      <ul>
+        <li>Phase 4 should refresh the demo package end to end again and add a manual readability gate against the actual generated DOCX.</li>
+        <li>If a stable local DOCX-to-PDF converter becomes available, the demo package contract can grow to include <code>latest.pdf</code> alongside <code>latest.docx</code>.</li>
+        <li>The next quality step after readability is broader coverage: a second WTE-style project would test whether the demo provider templates generalize beyond Soc Son.</li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>

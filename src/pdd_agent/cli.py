@@ -131,6 +131,15 @@ def _build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Skip DOCX export during benchmark",
     )
+    benchmark_parser.add_argument(
+        "--provider",
+        default="demo",
+        help="LLM provider name for benchmark drafting (default: demo)",
+    )
+    benchmark_parser.add_argument(
+        "--demo-output-dir",
+        help="Optional client-demo publication root for benchmark DOCX packages",
+    )
 
     workbook_fetch_parser = sub.add_parser(
         "fetch-workbook", help="Download the Vietnam WTE spreadsheet into the local cache"
@@ -393,13 +402,17 @@ def _run_benchmark(args, log) -> None:
         reference_norm_path=Path(args.reference) if args.reference else None,
         reports_dir=Path(args.reports_dir),
         existing_run_path=Path(args.existing_run) if args.existing_run else None,
+        provider_name=args.provider,
         export_docx=not args.no_export,
+        demo_output_dir=Path(args.demo_output_dir) if args.demo_output_dir else None,
     )
     log.info(
         "benchmark_complete",
         run_id=artifacts.run_id,
         scorecard=str(artifacts.demo_scorecard),
         diff=str(artifacts.section_diff),
+        demo_package_manifest=str(artifacts.demo_package_manifest) if artifacts.demo_package_manifest else None,
+        demo_latest_docx=str(artifacts.demo_latest_docx) if artifacts.demo_latest_docx else None,
         runtime_seconds=artifacts.runtime_seconds,
         matched_sections=artifacts.comparison_summary.get("matched_sections"),
     )

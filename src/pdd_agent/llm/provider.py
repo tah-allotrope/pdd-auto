@@ -113,6 +113,36 @@ class NoopProvider(BaseProvider):
         pass
 
 
+class DemoProvider(BaseProvider):
+    """Deterministic provider for readable synthetic client-demo prose."""
+
+    name: str = "demo"
+
+    def draft_section(
+        self,
+        section_id: str,
+        sub_section_id: str,
+        prompt: str,
+        provenance: list[str],
+        max_chars: int = 4000,
+    ) -> DraftSection:
+        section_key = sub_section_id or section_id
+        text = _demo_section_text(section_key)
+        return DraftSection(
+            section_id=section_id,
+            sub_section_id=sub_section_id,
+            text=text[:max_chars],
+            confidence="HIGH",
+            provenance=provenance,
+            issues=[],
+            provider=self.name,
+            output_references=[{"type": "section_body", "description": "deterministic demo output"}],
+        )
+
+    def close(self) -> None:
+        pass
+
+
 @dataclass
 class ModelConfig:
     """Configuration for a model provider."""
@@ -157,6 +187,7 @@ def get_provider_registry() -> ProviderRegistry:
     if _registry is None:
         _registry = ProviderRegistry()
         _registry.register("noop", NoopProvider())
+        _registry.register("demo", DemoProvider())
     return _registry
 
 
@@ -165,6 +196,8 @@ def configure_provider(config: ModelConfig) -> None:
     registry = get_provider_registry()
     if config.provider_name == "noop":
         registry.register("noop", NoopProvider())
+    elif config.provider_name == "demo":
+        registry.register("demo", DemoProvider())
     elif config.provider_name == "openai":
         from pdd_agent.llm.openai_provider import OpenAIProvider
 
@@ -175,6 +208,23 @@ def configure_provider(config: ModelConfig) -> None:
         registry.register("ollama", OllamaProvider(config))
     else:
         logger.warning("unknown_provider", name=config.provider_name)
+
+
+def _demo_section_text(section_key: str) -> str:
+    defaults = {
+        "1.1": "Soc Son-like Waste-to-Power Demonstration Project is a synthetic client-demo case for a municipal solid waste facility in Soc Son, Hanoi, Vietnam. The sample project diverts waste from landfill disposal, recovers energy through incineration with power export, and illustrates a Verra-style drafting workflow using deterministic demo inputs.",
+        "1.10": "The synthetic demo project is modeled at 9.0 MW installed capacity, 182,500 tonnes of annual waste throughput, and 54,000 MWh of annual electricity generation. Using the curated demo assumptions register, the draft carries 75,000 tCO2e per year of net emission reductions across a 10-year crediting period.",
+        "3.4": "In this synthetic demo baseline, the municipal waste stream would otherwise continue to be disposed of at landfill sites serving the Soc Son area. The demo assumes landfill disposal as the baseline management practice and uses deterministic baseline, project, and leakage values so the narrative remains aligned with the quantification sections.",
+        "3.5": "This synthetic demo presents additionality as a client-readable narrative rather than a validator-ready claim. The sample assumes the project requires dedicated waste-to-energy investment, specialized operating capability, and municipal coordination that would not be represented by the baseline landfill pathway alone.",
+        "4.1": "Baseline emissions in the synthetic demo are set at 98,000 tCO2e per year. This value is carried consistently across the assumptions companion and the quantification narrative so the client-demo artifact remains internally aligned.",
+        "4.2": "Project emissions in the synthetic demo are set at 21,000 tCO2e per year, representing the modeled emissions associated with facility operation and energy recovery. The value is deterministic and used consistently throughout the sample.",
+        "4.4": "Net greenhouse gas emission reductions in the synthetic demo are 75,000 tCO2e per year after accounting for 98,000 tCO2e of baseline emissions, 21,000 tCO2e of project emissions, and 2,000 tCO2e of leakage. Across the 10-year crediting period, the synthetic sample totals 750,000 tCO2e.",
+        "5.2": "The synthetic demo monitoring plan tracks waste throughput through a calibrated weighbridge and net electricity export through a revenue-grade meter. Monthly review and digital record retention are assumed for the sample so the monitoring narrative stays coherent with the curated assumptions register.",
+    }
+    return defaults.get(
+        section_key,
+        f"Section {section_key} for the Soc Son-like client demo is drafted as readable synthetic prose using the curated demo assumptions register. This text is intentionally concise, internally consistent with the demo inputs, and suitable for client-facing illustration rather than audit use.",
+    )
 
 
 @dataclass

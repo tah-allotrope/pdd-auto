@@ -12,6 +12,7 @@ from pdd_agent.phase05.benchmark import (
     BenchmarkArtifacts,
     compare_run_to_reference,
     create_demo_project_input,
+    publish_demo_package,
     generate_demo_reports,
     load_draft_run,
     run_demo_benchmark,
@@ -246,3 +247,47 @@ def test_run_demo_benchmark_can_draft_and_review_without_existing_run(tmp_path: 
     assert artifacts.run_json.exists()
     assert artifacts.demo_scorecard.exists()
     assert artifacts.section_diff.exists()
+
+
+def test_run_demo_benchmark_with_demo_provider_emits_non_placeholder_sections(tmp_path: Path):
+    config_path = create_demo_project_input(tmp_path / "demo_input.yaml")
+    reference_path = _make_reference_norm(tmp_path)
+
+    artifacts = run_demo_benchmark(
+        project_input_path=config_path,
+        reference_norm_path=reference_path,
+        reports_dir=tmp_path / "reports",
+        provider_name="demo",
+        export_docx=False,
+    )
+
+    run = load_draft_run(artifacts.run_json)
+    by_key = {f"{section.section_id}.{section.sub_section_id}": section for section in run.sections}
+
+    assert "[PLACEHOLDER" not in by_key["1.1.1"].text
+    assert "REVIEW REQUIRED" not in by_key["1.1.1"].text
+    assert "Soc Son-like Waste-to-Power Demonstration Project" in by_key["1.1.1"].text
+    assert run.provider == "demo"
+
+
+def test_publish_demo_package_creates_run_archive_and_latest_alias(tmp_path: Path):
+    source_docx = tmp_path / "data" / "runs" / "run-123.docx"
+    source_docx.parent.mkdir(parents=True, exist_ok=True)
+    source_docx.write_bytes(b"demo-docx")
+
+    package = publish_demo_package(
+        run_id="run-123",
+        project_name="Soc Son Demo Project",
+        docx_path=source_docx,
+        assumptions_yaml_path=tmp_path / "configs" / "demo.assumptions.yaml",
+        project_yaml_path=tmp_path / "configs" / "demo.yaml",
+        scorecard_path=tmp_path / "reports" / "demo-scorecard.md",
+        section_diff_path=tmp_path / "reports" / "section-diff.md",
+        output_root=tmp_path / "reports" / "demo-packages",
+    )
+
+    assert package.docx_path == tmp_path / "reports" / "demo-packages" / "soc-son-demo-project" / "run-123" / "run-123.docx"
+    assert package.latest_docx_path == tmp_path / "reports" / "demo-packages" / "soc-son-demo-project" / "latest.docx"
+    assert package.manifest_path.exists()
+    assert package.docx_path.read_bytes() == b"demo-docx"
+    assert package.latest_docx_path.read_bytes() == b"demo-docx"

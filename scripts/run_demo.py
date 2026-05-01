@@ -14,12 +14,20 @@ from pdd_agent.phase05.benchmark import create_demo_project_input, run_demo_benc
 
 def main() -> int:
     config_path = create_demo_project_input(Path("configs/projects/demo_socson_like.yaml"))
-    artifacts = run_demo_benchmark(project_input_path=config_path)
+    artifacts = run_demo_benchmark(
+        project_input_path=config_path,
+        provider_name="demo",
+        demo_output_dir=Path("reports/demo-packages"),
+    )
     print(f"Run ID: {artifacts.run_id}")
     print(f"Scorecard: {artifacts.demo_scorecard}")
     print(f"Section diff: {artifacts.section_diff}")
     if artifacts.export_docx:
         print(f"DOCX: {artifacts.export_docx}")
+    if artifacts.demo_package_manifest:
+        print(f"Demo manifest: {artifacts.demo_package_manifest}")
+    if artifacts.demo_latest_docx:
+        print(f"Latest demo DOCX: {artifacts.demo_latest_docx}")
     return 0
 
 

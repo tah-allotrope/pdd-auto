@@ -169,3 +169,74 @@ def test_run_vietnam_pdd_command_passes_upload_flags(tmp_path: Path):
 
     assert exit_code == 0
     mock_workflow.assert_called_once()
+
+
+def test_benchmark_command_supports_demo_package_output(tmp_path: Path):
+    with patch(
+        "sys.argv",
+        [
+            "pdd-agent",
+            "benchmark",
+            "--input",
+            str(tmp_path / "demo_input.yaml"),
+            "--reports-dir",
+            str(tmp_path / "reports"),
+            "--demo-output-dir",
+            str(tmp_path / "demo-packages"),
+        ],
+    ):
+        with patch("pdd_agent.cli.run_demo_benchmark") as mock_benchmark:
+            mock_benchmark.return_value = type(
+                "Artifacts",
+                (),
+                {
+                    "run_id": "demo-run",
+                    "run_json": tmp_path / "data/runs/demo-run.json",
+                    "demo_scorecard": tmp_path / "reports/demo-scorecard.md",
+                    "section_diff": tmp_path / "reports/section-diff.md",
+                    "export_docx": tmp_path / "reports/demo-packages/project/latest.docx",
+                    "demo_package_manifest": tmp_path / "reports/demo-packages/project/run-1/manifest.json",
+                    "demo_latest_docx": tmp_path / "reports/demo-packages/project/latest.docx",
+                    "comparison_summary": {"matched_sections": 36},
+                    "runtime_seconds": 1.2,
+                },
+            )()
+            exit_code = main()
+
+    assert exit_code == 0
+    mock_benchmark.assert_called_once()
+
+
+def test_benchmark_command_defaults_to_demo_provider(tmp_path: Path):
+    with patch(
+        "sys.argv",
+        [
+            "pdd-agent",
+            "benchmark",
+            "--input",
+            str(tmp_path / "demo_input.yaml"),
+            "--reports-dir",
+            str(tmp_path / "reports"),
+        ],
+    ):
+        with patch("pdd_agent.cli.run_demo_benchmark") as mock_benchmark:
+            mock_benchmark.return_value = type(
+                "Artifacts",
+                (),
+                {
+                    "run_id": "demo-run",
+                    "run_json": tmp_path / "data/runs/demo-run.json",
+                    "demo_scorecard": tmp_path / "reports/demo-scorecard.md",
+                    "section_diff": tmp_path / "reports/section-diff.md",
+                    "export_docx": tmp_path / "reports/demo-run.docx",
+                    "demo_package_manifest": None,
+                    "demo_latest_docx": None,
+                    "comparison_summary": {"matched_sections": 36},
+                    "runtime_seconds": 1.2,
+                },
+            )()
+            exit_code = main()
+
+    assert exit_code == 0
+    mock_benchmark.assert_called_once()
+    assert mock_benchmark.call_args.kwargs["provider_name"] == "demo"

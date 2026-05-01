@@ -154,6 +154,32 @@ def test_export_run_to_docx_includes_disclaimer_and_appendices(tmp_path: Path, m
     assert "quantification.baseline_emissions_tco2e_per_year" in xml
 
 
+def test_export_run_to_docx_demo_mode_suppresses_reviewer_noise(tmp_path: Path, monkeypatch):
+    if importlib.util.find_spec("docx") is None:
+        pytest.skip("python-docx not installed in test environment")
+
+    run_path = _write_run(tmp_path, run_id="demo-docx-run")
+    payload = json.loads(run_path.read_text(encoding="utf-8"))
+    payload["provider"] = "demo"
+    payload["assumption_register"]["assumptions"][0]["source_type"] = "demo_curated"
+    payload["assumption_register"]["guardrails"]["blocked_review_items"] = []
+    payload["sections"][0]["text"] = "This synthetic client-demo summary describes the Soc Son-like project in readable prose."
+    payload["sections"][0]["issues"] = ["ASSUMPTION DISCLOSURE: demo fixture only."]
+    payload["sections"][0]["synthetic_uses"][0]["source_type"] = "demo_curated"
+    payload["sections"][0]["synthetic_uses"][0]["blocked_review"] = False
+    run_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+    monkeypatch.setattr("pdd_agent.export.docx_export._DRAFT_RUNS_DIR", run_path.parent)
+
+    output = export_run_to_docx("demo-docx-run", output_path=tmp_path / "demo.docx")
+    xml = _read_docx_xml(output)
+
+    assert "synthetic client-demo sample" in xml
+    assert "Appendix A - Assumption Summary" in xml
+    assert "Appendix B - Reviewer Issues" not in xml
+    assert "Review notes:" not in xml
+
+
 def test_export_run_to_docx_raises_clear_error_when_run_missing(tmp_path: Path, monkeypatch):
     monkeypatch.setattr("pdd_agent.export.docx_export._DRAFT_RUNS_DIR", tmp_path / "runs")
 

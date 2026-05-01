@@ -1,3 +1,24 @@
+## Soc Son Client Demo Output Upgrade - Phase 03
+
+- [x] Update the active context to track Phase 03 implementation from `plans/2026-05-01-soc-son-client-demo-output-plan.md`.
+- [x] Add failing tests for deterministic demo prose, demo-aware DOCX export, and publication to `reports/demo-packages/`.
+- [x] Implement a demo drafting path that replaces noop placeholders with readable synthetic prose while preserving structured provenance.
+- [x] Implement demo-aware DOCX export and demo package publication with clear path surfacing.
+- [x] Verify the Phase 03 contract with targeted tests and a fresh local demo package run.
+- [x] Generate a Phase 03 report artifact via the report skill flow.
+- [ ] Commit and push the requested Phase 03 changes.
+
+## Review / Results - Phase 03
+
+- Added failing coverage in `tests/test_phase05_demo.py`, `tests/test_docx_export.py`, and `tests/test_phase06_cli.py` to lock the Phase 03 contract around readable demo prose, demo-aware DOCX export, benchmark CLI provider defaults, and publication into `reports/demo-packages/`.
+- Added a deterministic `DemoProvider` in `src/pdd_agent/llm/provider.py` and updated `src/pdd_agent/agent/section_orchestrator.py` so demo runs save `provider="demo"`, emit structured synthetic prose, keep provenance, and suppress reviewer-noise escalation that is appropriate only for the internal `noop` review path.
+- Updated `src/pdd_agent/export/docx_export.py` so demo exports keep a strong synthetic disclosure, suppress reviewer notes in the main body, rename the appendix to `Appendix A - Assumption Summary`, and omit the reviewer-issues appendix for demo runs.
+- Added `publish_demo_package()` to `src/pdd_agent/export/review_package.py`, extended `src/pdd_agent/phase05/benchmark.py` so benchmark runs can publish immutable demo packages plus `latest.docx`, and updated `scripts/run_demo.py` to generate the client-demo package in one command.
+- Updated `src/pdd_agent/cli.py` so `pdd-agent benchmark` now defaults to `--provider demo`, accepts `--demo-output-dir`, and surfaces the published demo package paths directly in logs.
+- Targeted verification passed: `pytest tests/test_phase05_demo.py tests/test_docx_export.py tests/test_phase06_cli.py`.
+- Fresh local demo package run passed with `provider_name='demo'`: `run_demo_benchmark()` published `reports/demo-packages/soc-son-like-waste-to-power-demonstration-project/run-20260501172928-45b866/run-20260501172928-45b866.docx`, `manifest.json`, and refreshed `reports/demo-packages/soc-son-like-waste-to-power-demonstration-project/latest.docx`.
+- Added the Phase 03 HTML report artifact at `reports/2026-05-02-phase-03-demo-output.html`.
+
 ## Soc Son Client Demo Output Upgrade - Phase 02
 
 - [x] Update the active context to track Phase 02 implementation from `plans/2026-05-01-soc-son-client-demo-output-plan.md`.
@@ -5,7 +26,7 @@
 - [x] Implement Phase 02 by generating a deterministic Soc Son demo assumptions companion alongside the existing demo config and classifying demo-safe synthetic facts distinctly from review-gated spreadsheet assumptions.
 - [x] Verify the Phase 02 demo input contract with targeted tests and a fresh local demo-config write.
 - [x] Generate a Phase 02 report artifact via the report skill flow.
-- [ ] Commit and push the requested Phase 02 changes.
+- [x] Commit and push the requested Phase 02 changes.
 
 ## Review / Results - Phase 02
 

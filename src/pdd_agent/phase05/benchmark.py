@@ -18,6 +18,7 @@ import yaml
 
 from pdd_agent.agent.section_orchestrator import SectionOrchestrator
 from pdd_agent.export.docx_export import export_run_to_docx
+from pdd_agent.export.review_package import DemoPackagePaths, publish_demo_package
 from pdd_agent.llm.provider import DraftRun, DraftSection, get_provider_registry
 from pdd_agent.phase06.assumptions import load_assumption_register, resolve_assumptions_path
 from pdd_agent.parse.section_parser import parse_document
@@ -41,6 +42,8 @@ class BenchmarkArtifacts:
     export_docx: Path | None
     comparison_summary: dict[str, Any]
     runtime_seconds: float
+    demo_package_manifest: Path | None = None
+    demo_latest_docx: Path | None = None
 
 
 def create_demo_project_input(output_path: Path | None = None) -> Path:
@@ -513,6 +516,7 @@ def run_demo_benchmark(
     existing_run_path: Path | str | None = None,
     provider_name: str = "noop",
     export_docx: bool = True,
+    demo_output_dir: Path | str | None = None,
 ) -> BenchmarkArtifacts:
     """Run or reuse the full Phase 05 benchmark workflow."""
     start = time.perf_counter()
@@ -552,6 +556,21 @@ def run_demo_benchmark(
         export_path=docx_path,
     )
     artifacts.run_json = run_json_path
+    if demo_output_dir and docx_path:
+        assumptions_path = resolve_assumptions_path(project_input_path)
+        package = publish_demo_package(
+            run_id=run.run_id,
+            project_name=run.project_name,
+            docx_path=docx_path,
+            assumptions_yaml_path=assumptions_path or Path(""),
+            project_yaml_path=project_input_path,
+            scorecard_path=artifacts.demo_scorecard,
+            section_diff_path=artifacts.section_diff,
+            output_root=Path(demo_output_dir),
+        )
+        artifacts.export_docx = package.docx_path
+        artifacts.demo_package_manifest = package.manifest_path
+        artifacts.demo_latest_docx = package.latest_docx_path
     return artifacts
 
 

@@ -107,12 +107,12 @@
 +Replace placeholder-heavy body text with readable synthetic prose while keeping the artifact clearly marked as a demo.
 
 +**Tasks**
-+- [ ] TASK-03-01: Add failing tests for a demo drafting mode that produces readable section prose and guarantees zero `[PLACEHOLDER` markers in the exported main body.
-+- [ ] TASK-03-02: Introduce a deterministic demo authoring path, likely a `DemoProvider` or equivalent section renderer, that uses `ProjectInput`, schema guidance, and structured synthetic facts to produce section text instead of placeholder text.
-+- [ ] TASK-03-03: Update `SectionOrchestrator` so the demo path can preserve fact provenance and synthetic disclosures without automatically converting every synthetic field into `REVIEW REQUIRED` body text.
-+- [ ] TASK-03-04: Update `export_run_to_docx()` so demo exports keep a strong cover disclosure but replace the full reviewer-issues appendix with a concise assumptions summary that is appropriate for a client-facing sample.
-+- [ ] TASK-03-05: Extend `run_demo_benchmark()` and `scripts/run_demo.py`, or add a nearby dedicated script/flag, so the demo workflow can publish `reports/demo-packages/<project-slug>/<run-id>/` plus `latest.docx` and optionally `latest.pdf` when a local converter exists.
-+- [ ] TASK-03-06: Surface the demo artifact path clearly in `src/pdd_agent/cli.py` so operators do not need to inspect `data/runs/` or internal review-package directories.
++- [x] TASK-03-01: Add failing tests for a demo drafting mode that produces readable section prose and guarantees zero `[PLACEHOLDER` markers in the exported main body.
++- [x] TASK-03-02: Introduce a deterministic demo authoring path, likely a `DemoProvider` or equivalent section renderer, that uses `ProjectInput`, schema guidance, and structured synthetic facts to produce section text instead of placeholder text.
++- [x] TASK-03-03: Update `SectionOrchestrator` so the demo path can preserve fact provenance and synthetic disclosures without automatically converting every synthetic field into `REVIEW REQUIRED` body text.
++- [x] TASK-03-04: Update `export_run_to_docx()` so demo exports keep a strong cover disclosure but replace the full reviewer-issues appendix with a concise assumptions summary that is appropriate for a client-facing sample.
++- [x] TASK-03-05: Extend `run_demo_benchmark()` and `scripts/run_demo.py`, or add a nearby dedicated script/flag, so the demo workflow can publish `reports/demo-packages/<project-slug>/<run-id>/` plus `latest.docx` and optionally `latest.pdf` when a local converter exists.
++- [x] TASK-03-06: Surface the demo artifact path clearly in `src/pdd_agent/cli.py` so operators do not need to inspect `data/runs/` or internal review-package directories.
 
 +**Files / Surfaces**
 +- `src/pdd_agent/llm/provider.py` - Likely home for a deterministic `demo` provider registration path.
@@ -128,9 +128,9 @@
 +- PHASE-02 curated synthetic demo inputs.
 
 +**Exit Criteria**
-+- [ ] The demo run JSON and exported DOCX contain readable synthetic section text instead of noop placeholders.
-+- [ ] The main body of the demo DOCX contains no `[PLACEHOLDER` or `REVIEW REQUIRED` markers.
-+- [ ] The exported demo artifact still discloses its synthetic/demo status clearly without overwhelming the document with internal review telemetry.
++- [x] The demo run JSON and exported DOCX contain readable synthetic section text instead of noop placeholders.
++- [x] The main body of the demo DOCX contains no `[PLACEHOLDER` or `REVIEW REQUIRED` markers.
++- [x] The exported demo artifact still discloses its synthetic/demo status clearly without overwhelming the document with internal review telemetry.
 +
 +**Phase Risks**
 +- **RISK-03-01:** Hiding too much review context could make the sample look deceptively final; mitigate by keeping an explicit cover-page disclosure and a concise appendix of synthetic assumptions.
