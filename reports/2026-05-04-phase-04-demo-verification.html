@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Phase Report :: Phase 04 — Demo Verification & Fresh Client Artifact</title>
+  <meta name="color-scheme" content="dark">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+
+    async function initMermaid() {
+      const blocks = document.querySelectorAll('.mermaid');
+      if (!blocks.length) {
+        return;
+      }
+
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: 'dark',
+        securityLevel: 'loose',
+        themeVariables: {
+          primaryColor: '#111111',
+          primaryTextColor: '#e8f6ff',
+          primaryBorderColor: '#00f5ff',
+          lineColor: '#39ff14',
+          secondaryColor: '#121a1a',
+          tertiaryColor: '#111111',
+          background: '#0d0d0d',
+          mainBkg: '#0d0d0d',
+          nodeBorder: '#00f5ff',
+          clusterBkg: '#111111',
+          clusterBorder: '#39ff14',
+          edgeLabelBackground: '#0d0d0d'
+        }
+      });
+
+      await mermaid.run({ nodes: blocks });
+    }
+
+    const run = () => initMermaid().catch((error) => console.error('Mermaid render failed', error));
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', run, { once: true });
+    } else {
+      run();
+    }
+  </script>
+  <style>
+    :root {
+      --bg: #0d0d0d;
+      --bg-soft: #111111;
+      --panel: rgba(13, 13, 13, 0.88);
+      --panel-strong: rgba(19, 19, 19, 0.96);
+      --line: rgba(0, 245, 255, 0.26);
+      --line-strong: rgba(57, 255, 20, 0.38);
+      --text: #e9f6ff;
+      --muted: #8ea3ad;
+      --accent-blue: #00f5ff;
+      --accent-green: #39ff14;
+      --glow-blue: 0 0 18px rgba(0, 245, 255, 0.42);
+      --glow-green: 0 0 18px rgba(57, 255, 20, 0.28);
+      --shadow: 0 14px 40px rgba(0, 0, 0, 0.32);
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+      --narrative-font: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      --technical-font: "Cascadia Code", "Fira Code", Consolas, "Liberation Mono", monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      position: relative;
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at top left, rgba(0, 245, 255, 0.12), transparent 28%),
+        radial-gradient(circle at 85% 12%, rgba(57, 255, 20, 0.08), transparent 24%),
+        linear-gradient(180deg, #050505 0%, #0d0d0d 36%, #090909 100%);
+      color: var(--text);
+      font-family: var(--narrative-font);
+      line-height: 1.6;
+      letter-spacing: 0.01em;
+    }
+
+    body::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
+      background-size: 32px 32px;
+      opacity: 0.16;
+    }
+
+    a {
+      color: var(--accent-blue);
+    }
+
+    code,
+    pre,
+    .technical,
+    .meta-chip,
+    .section-kicker,
+    .pill,
+    .metric-label,
+    .metric-value,
+    .repo-tag,
+    .mermaid {
+      font-family: var(--technical-font);
+    }
+
+    .page-shell {
+      width: min(1180px, calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 32px 0 72px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero {
+      position: relative;
+      padding: 28px;
+      margin-bottom: 24px;
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      background:
+        linear-gradient(145deg, rgba(0, 245, 255, 0.08), transparent 28%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0)),
+        var(--panel-strong);
+      box-shadow: var(--shadow), inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto -10% -55% 42%;
+      height: 280px;
+      background: radial-gradient(circle, rgba(0, 245, 255, 0.18), transparent 64%);
+      filter: blur(12px);
+      pointer-events: none;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(260px, 0.85fr);
+      gap: 22px;
+      align-items: end;
+    }
+
+    .section-kicker {
+      margin: 0 0 12px;
+      color: var(--accent-green);
+      font-size: 0.76rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      text-shadow: var(--glow-green);
+    }
+
+    .phase-title {
+      margin: 0;
+      max-width: 12ch;
+      font-size: clamp(2.5rem, 5vw, 4.7rem);
+      line-height: 0.94;
+      letter-spacing: -0.05em;
+      color: #f5feff;
+      text-transform: uppercase;
+      text-wrap: balance;
+      text-shadow: 0 0 24px rgba(0, 245, 255, 0.2);
+    }
+
+    .hero-summary {
+      margin: 18px 0 0;
+      max-width: 60ch;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .hero-meta {
+      display: grid;
+      gap: 12px;
+    }
+
+    .meta-card {
+      padding: 16px 18px;
+      border: 1px solid rgba(57, 255, 20, 0.2);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.025);
+      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.24);
+    }
+
+    .meta-label {
+      margin-bottom: 6px;
+      color: var(--muted);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+    }
+
+    .meta-chip {
+      color: var(--accent-blue);
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      text-shadow: var(--glow-blue);
+      word-break: break-word;
+    }
+
+    .repo-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+      padding: 8px 12px;
+      border: 1px solid rgba(0, 245, 255, 0.24);
+      border-radius: 999px;
+      background: rgba(0, 245, 255, 0.08);
+      color: var(--accent-blue);
+      font-size: 0.82rem;
+      letter-spacing: 0.04em;
+    }
+
+    .section {
+      position: relative;
+      margin-top: 22px;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .section::before {
+      content: "";
+      position: absolute;
+      left: 24px;
+      right: 24px;
+      top: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0, 245, 255, 0.9), rgba(57, 255, 20, 0.9), transparent);
+      transform: translateY(-1px);
+    }
+
+    .section-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 12px 18px;
+      align-items: end;
+      margin-bottom: 18px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .section-title {
+      margin: 0;
+      font-size: clamp(1.2rem, 2vw, 1.7rem);
+      line-height: 1.1;
+      color: #f0feff;
+    }
+
+    .section-index {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--accent-green);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      text-shadow: var(--glow-green);
+    }
+
+    .section-index::after {
+      content: "";
+      width: 44px;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(57, 255, 20, 0.9), transparent);
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .column-card,
+    .diagram-frame,
+    .technical-frame,
+    .viz-frame,
+    .question-frame,
+    .empty-state {
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-md);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01)),
+        rgba(7, 7, 7, 0.82);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.012);
+    }
+
+    .column-card {
+      padding: 18px;
+      min-height: 200px;
+    }
+
+    .column-label {
+      margin: 0 0 12px;
+      color: var(--accent-blue);
+      font-size: 0.83rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      text-shadow: var(--glow-blue);
+    }
+
+    .splitter {
+      width: 100%;
+      height: 1px;
+      margin: 8px 0 16px;
+      background: linear-gradient(90deg, rgba(0, 245, 255, 0.4), transparent);
+    }
+
+    .diagram-frame,
+    .chart-frame,
+    .technical-frame,
+    .viz-frame,
+    .question-frame {
+      padding: 18px;
+    }
+
+    .diagram-frame {
+      overflow-x: auto;
+      overflow-y: auto;
+      overscroll-behavior-x: contain;
+      overscroll-behavior-y: contain;
+      max-height: min(70vh, 720px);
+    }
+
+    .mermaid {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      color: var(--text);
+    }
+
+    .mermaid svg {
+      display: block;
+      width: auto !important;
+      min-width: 100%;
+      max-width: none !important;
+      height: auto !important;
+    }
+
+    .diagram-frame.compact-diagram {
+      padding: 12px;
+      max-height: min(62vh, 560px);
+    }
+
+    .diagram-frame.compact-diagram .mermaid {
+      min-width: 900px;
+    }
+
+    .chart-frame,
+    .viz-frame {
+      overflow: hidden;
+    }
+
+    .technical-frame {
+      color: #d6f6ff;
+    }
+
+    .technical-frame table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .technical-frame th,
+    .technical-frame td {
+      padding: 12px 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      vertical-align: top;
+    }
+
+    .technical-frame th {
+      color: var(--accent-green);
+      font-size: 0.76rem;
+      text-align: left;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .chart-frame canvas,
+    .technical-frame > canvas,
+    .viz-frame canvas,
+    canvas.report-chart {
+      display: block;
+      width: 100% !important;
+      max-width: 100%;
+      height: 280px !important;
+      min-height: 280px;
+      max-height: 280px;
+    }
+
+    .empty-state {
+      padding: 22px;
+      text-align: center;
+    }
+
+    .empty-state strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--accent-blue);
+      font-size: 0.9rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-shadow: var(--glow-blue);
+    }
+
+    .metric-strip {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .metric {
+      padding: 14px 16px;
+      border: 1px solid rgba(0, 245, 255, 0.18);
+      border-radius: var(--radius-sm);
+      background: rgba(0, 245, 255, 0.04);
+    }
+
+    .metric-label {
+      color: var(--muted);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+    }
+
+    .metric-value {
+      margin-top: 8px;
+      color: var(--accent-green);
+      font-size: 1.2rem;
+      font-weight: 700;
+      text-shadow: var(--glow-green);
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 11px;
+      border: 1px solid rgba(57, 255, 20, 0.22);
+      border-radius: 999px;
+      background: rgba(57, 255, 20, 0.06);
+      color: #d9ffd0;
+      font-size: 0.8rem;
+    }
+
+    .question-frame ul,
+    .technical-frame ul,
+    .column-card ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .question-frame li,
+    .technical-frame li,
+    .column-card li {
+      margin-bottom: 8px;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      text-align: right;
+      color: rgba(142, 163, 173, 0.72);
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 900px) {
+      .hero-grid,
+      .summary-grid,
+      .metric-strip {
+        grid-template-columns: 1fr;
+      }
+
+      .phase-title {
+        max-width: none;
+      }
+
+    }
+
+    @media (max-width: 640px) {
+      .page-shell {
+        width: min(100vw - 20px, 1180px);
+        padding-top: 16px;
+        padding-bottom: 42px;
+      }
+
+      .hero,
+      .section {
+        padding: 18px;
+        border-radius: 20px;
+      }
+
+      .section::before {
+        left: 18px;
+        right: 18px;
+      }
+
+      .phase-title {
+        font-size: clamp(2rem, 12vw, 3rem);
+      }
+
+    }
+  </style>
+</head>
+<body>
+  <main class="page-shell">
+    <section class="hero" id="phase-header">
+      <div class="hero-grid">
+        <div>
+          <p class="section-kicker">Phase Report / Personal Technical Artifact</p>
+          <h1 class="phase-title">Phase 04 — Demo Verification & Fresh Client Artifact</h1>
+          <p class="hero-summary">
+            A compact artifact of work completed, decisions made, and follow-on paths worth exploring.
+          </p>
+          <div class="pill-row" aria-label="report metadata">
+            <span class="pill">project :: Soc Son Client Demo Output Upgrade</span>
+            <span class="pill">date :: 2026-05-04</span>
+          </div>
+          <div class="repo-tag">repo :: pdd-auto</div>
+        </div>
+
+        <div class="hero-meta">
+          <div class="meta-card">
+            <div class="meta-label">Project</div>
+            <div class="meta-chip">Soc Son Client Demo Output Upgrade</div>
+          </div>
+          <div class="meta-card">
+            <div class="meta-label">Repository</div>
+            <div class="meta-chip">pdd-auto</div>
+          </div>
+          <div class="meta-card">
+            <div class="meta-label">Date</div>
+            <div class="meta-chip">2026-05-04</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section narrative" id="input-output-summary">
+      <div class="section-header">
+        <div>
+          <div class="section-index">01 / Input -> Output</div>
+          <h2 class="section-title">Input -> Output Summary</h2>
+        </div>
+      </div>
+      <div class="summary-grid">
+        <div class="summary-grid">
+  <div class="column-card">
+    <div class="column-label">Inputs</div>
+    <ul style="margin:0;padding-left:18px;color:#d6f6ff;line-height:1.8">
+      <li><code>configs/projects/demo_socson_like.yaml</code> &mdash; curated synthetic demo ProjectInput</li>
+      <li><code>configs/projects/demo_socson_like.assumptions.yaml</code> &mdash; deterministic demo_curated assumption register</li>
+      <li><code>template/VCS_Soc Son_Project-Description.pdf</code> &mdash; normalized Soc Son reference</li>
+      <li>Tests: <code>test_phase05_demo.py</code>, <code>test_docx_export.py</code>, <code>test_phase06_cli.py</code></li>
+    </ul>
+  </div>
+  <div class="column-card">
+    <div class="column-label">Outputs</div>
+    <ul style="margin:0;padding-left:18px;color:#d6f6ff;line-height:1.8">
+      <li><code>reports/demo-packages/soc-son-like-waste-to-power-demonstration-project/run-20260504104319-5e2a70/</code></li>
+      <li>36 sections, 0 placeholders, 0 low-confidence</li>
+      <li>Average grounding score: 0.7</li>
+      <li>DOCX with strong synthetic disclosure, clean appendix</li>
+      <li>25 passing tests across 3 test files</li>
+    </ul>
+  </div>
+</div>
+      </div>
+    </section>
+
+    <section class="section" id="logic-flow">
+      <div class="section-header">
+        <div>
+          <div class="section-index">02 / Logic Flow</div>
+          <h2 class="section-title">Logic Flow</h2>
+        </div>
+      </div>
+      <div class="diagram-frame technical">
+        <div class="mermaid"><div class="diagram-frame compact-diagram">
+  <pre class="mermaid">
+flowchart LR
+    A[Demo Config + Assumptions] --> B[DemoProvider]
+    B --> C[DraftRun JSON]
+    C --> D[export_run_to_docx<br/>demo-aware export]
+    D --> E[publish_demo_package]
+    E --> F[reports/demo-packages/]
+    C --> G[compare_run_to_reference]
+    G --> H[Scorecard + Section Diff]
+    H --> I[Verify: 0 placeholders,<br/>quant consistency,<br/>full package]</pre>
+</div></div>
+      </div>
+    </section>
+
+    <section class="section narrative" id="math-algorithm-used">
+      <div class="section-header">
+        <div>
+          <div class="section-index">03 / Math / Algorithm Used</div>
+          <h2 class="section-title">Math / Algorithm Used</h2>
+        </div>
+      </div>
+      <div class="technical-frame">
+        <div class="technical-frame">
+  <h4>Quantification Arithmetic Validation</h4>
+  <pre style="color:#39ff14;background:rgba(0,0,0,0.5);padding:14px;border-radius:10px;overflow-x:auto">
+Net GHG Emission Reductions = Baseline Emissions - Project Emissions - Leakage
+
+  75,000 tCO2e/yr = 98,000 - 21,000 - 2,000
+
+Crediting Period Total = Net Annual Reductions x Crediting Period Years
+
+  750,000 tCO2e = 75,000 x 10
+
+Grounding Score = overlap(ref_tokens, draft_tokens) / len(ref_tokens) + provenance_bonus + confidence_bonus</pre>
+  <h4 style="margin-top:18px">Test Validation Matrix</h4>
+  <table>
+    <tr><th>Test</th><th>Asserts</th><th>Status</th></tr>
+    <tr><td><code>all_sections_no_placeholders</code></td><td>Every section has no [PLACEHOLDER and no REVIEW REQUIRED</td><td style="color:#39ff14">PASS</td></tr>
+    <tr><td><code>quantification_arithmetic_consistent</code></td><td>net = baseline - project - leakage, total = net * years</td><td style="color:#39ff14">PASS</td></tr>
+    <tr><td><code>demo_package_end_to_end</code></td><td>run_json, scorecard, diff, docx, manifest, latest all exist and valid</td><td style="color:#39ff14">PASS</td></tr>
+    <tr><td><code>demo_export_suppresses_reviewer_noise</code></td><td>Disclosure present, no Appendix B, no Review notes</td><td style="color:#39ff14">PASS</td></tr>
+  </table>
+</div>
+      </div>
+    </section>
+
+    <section class="section" id="tools-formulas-methods">
+      <div class="section-header">
+        <div>
+          <div class="section-index">04 / Tools / Formulas / Methods</div>
+          <h2 class="section-title">Tools / Formulas / Methods</h2>
+        </div>
+      </div>
+      <div class="technical-frame technical">
+        <div class="summary-grid">
+  <div class="column-card">
+    <div class="column-label">Tools</div>
+    <ul style="margin:0;padding-left:18px;color:#d6f6ff;line-height:1.8">
+      <li><code>pytest</code> &mdash; regression test suite</li>
+      <li><code>python-docx</code> &mdash; DOCX export</li>
+      <li><code>pdd-agent cli</code> &mdash; demo benchmark runner</li>
+      <li><code>scripts/run_demo.py</code> &mdash; one-command runner</li>
+    </ul>
+  </div>
+  <div class="column-card">
+    <div class="column-label">Methods</div>
+    <ul style="margin:0;padding-left:18px;color:#d6f6ff;line-height:1.8">
+      <li>Deterministic <code>DemoProvider</code> prose generation</li>
+      <li>Section-level provenance tracking</li>
+      <li><code>DemoPackagePaths</code> immutable publication</li>
+      <li>DOCX XML content verification</li>
+    </ul>
+  </div>
+</div>
+      </div>
+    </section>
+
+    <section class="section" id="results-visualizations">
+      <div class="section-header">
+        <div>
+          <div class="section-index">05 / Results &amp; Visualizations</div>
+          <h2 class="section-title">Results &amp; Visualizations</h2>
+        </div>
+      </div>
+      <div class="viz-frame">
+        <div class="viz-frame" style="padding:18px">
+  <h4 style="color:#00f5ff;margin:0 0 14px">Demo Benchmark Metrics</h4>
+  <div style="height:220px">
+    <canvas id="phase04Chart"></canvas>
+  </div>
+  <script>
+    if (window.Chart) {
+      const ctx = document.getElementById('phase04Chart').getContext('2d');
+      new Chart(ctx, {
+        type: 'radar',
+        data: {
+          labels: ['Total Sections', 'Matched Reference', 'Supported w/ Provenance', 'Placeholder Sections', 'Low Confidence', 'High Confidence'],
+          datasets: [{
+            label: 'Demo Provider Benchmark',
+            data: [36, 36, 36, 0, 0, 36],
+            borderColor: '#00f5ff',
+            backgroundColor: 'rgba(0, 245, 255, 0.12)',
+            pointBackgroundColor: '#39ff14',
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: false,
+          scales: {
+            r: {
+              beginAtZero: true,
+              grid: { color: 'rgba(255,255,255,0.06)' },
+              ticks: { color: '#8ea3ad', backdropColor: 'transparent' },
+              pointLabels: { color: '#e9f6ff', font: { size: 11 } }
+            }
+          },
+          plugins: {
+            legend: { labels: { color: '#e9f6ff' } }
+          }
+        }
+      });
+    }
+  </script>
+</div>
+      </div>
+    </section>
+
+    <section class="section narrative" id="limitations-second-best-alternative">
+      <div class="section-header">
+        <div>
+          <div class="section-index">06 / Limitations / Second-Best Alternative</div>
+          <h2 class="section-title">Limitations / Second-Best Alternative</h2>
+        </div>
+      </div>
+      <div class="question-frame">
+        <div class="technical-frame">
+  <ul style="line-height:1.8">
+    <li><strong>Demo prose is deterministic, not generative.</strong> The <code>DemoProvider</code> maps section keys to hard-coded template text, so the output is the same every run. This is acceptable for client demos but not for real PDD drafting.</li>
+    <li><strong>PDF conversion skipped.</strong> No local DOCX-to-PDF converter was available. DOCX remains the guaranteed artifact surface per CON-003.</li>
+    <li><strong>Single-project validation.</strong> The Soc Son-like fixture is the only validated demo dataset. A second WTE project would strengthen confidence in the demo workflow.</li>
+    <li><strong>Manual inspection limited to automated checks.</strong> DOCX XML verification confirmed no placeholders, proper appendix, and correct numbers, but a human should still open the file before a real client demo.</li>
+  </ul>
+  <h4 style="margin-top:16px">Second-Best Alternative</h4>
+  <p>Instead of a separate <code>DemoProvider</code>, we could have wired the <code>NoopProvider</code> to emit shorter placeholder text and restyled the export to hide the review gates. That approach was rejected because the run JSON itself would remain placeholder-heavy, making the DOCX fragile to re-export and harder to debug.</p>
+</div>
+      </div>
+    </section>
+
+    <section class="section narrative" id="errors-warnings-flags-encountered">
+      <div class="section-header">
+        <div>
+          <div class="section-index">07 / Errors / Warnings / Flags</div>
+          <h2 class="section-title">Errors / Warnings / Flags Encountered</h2>
+        </div>
+      </div>
+      <div class="question-frame technical">
+        <div class="technical-frame">
+  <ul style="line-height:1.8">
+    <li><span style="color:#39ff14">None</span> &mdash; The Phase 04 test suite passed 25/25 on first run.</li>
+    <li><span style="color:#ffd700">Note:</span> PowerShell does not support <code>&&</code> chaining; used <code>workdir</code> parameter for CLI commands instead.</li>
+    <li><span style="color:#ffd700">Note:</span> DOCX verification required writing a temporary Python script because PowerShell escaping prevented inline <code>-c</code> with quotes.</li>
+  </ul>
+</div>
+      </div>
+    </section>
+
+    <section class="section narrative" id="open-questions-next-phase-seeds">
+      <div class="section-header">
+        <div>
+          <div class="section-index">08 / Open Questions / Next Phase Seeds</div>
+          <h2 class="section-title">Open Questions / Next Phase Seeds</h2>
+        </div>
+      </div>
+      <div class="question-frame">
+        <div class="question-frame">
+  <ul style="line-height:1.8">
+    <li><strong>Should the demo workflow wire a real LLM next?</strong> The demo provider is deterministic; the next useful step could be replacing it with <code>OpenAIProvider</code> or <code>OllamaProvider</code> for generative output.</li>
+    <li><strong>Should demo packages get a PDF variant?</strong> The plan marks PDF as optional (CON-003), but a client-ready PDF is a common request. Worth adding when a stable conversion pipeline exists.</li>
+    <li><strong>Should the demo path include Drive upload?</strong> The review path already supports <code>--upload-review-docx</code>. A <code>--upload-demo-docx</code> flag could be added for demos that need a shareable Drive link.</li>
+  </ul>
+</div>
+      </div>
+      <div class="footer-note">artifact generated for reflection, not presentation theater</div>
+    </section>
+  </main>
+  <script>
+    (function() {
+      const chartCanvases = document.querySelectorAll('canvas');
+      chartCanvases.forEach((canvas) => {
+        canvas.classList.add('report-chart');
+        const parent = canvas.parentElement;
+        if (parent && parent.classList.contains('technical-frame') && !parent.classList.contains('chart-frame')) {
+          parent.classList.add('chart-frame');
+        }
+      });
+    })();
+
+    if (window.Chart) {
+      Chart.defaults.devicePixelRatio = 1;
+      Chart.defaults.animation = false;
+      Chart.defaults.resizeDelay = 150;
+      Chart.defaults.normalized = true;
+      Chart.defaults.maintainAspectRatio = false;
+      Chart.defaults.responsive = true;
+      window.__REPORT_CHART_DEFAULTS__ = {
+        animation: false,
+        resizeDelay: 150,
+        normalized: true,
+        maintainAspectRatio: false,
+        responsive: true
+      };
+    }
+  </script>
+</body>
+</html>

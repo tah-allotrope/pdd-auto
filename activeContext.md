@@ -1,3 +1,25 @@
+## Soc Son Client Demo Output Upgrade - Phase 04 (Verification & Fresh Client Demo Artifact)
+
+- [x] TASK-04-01: Add regression tests covering zero-placeholder demo output (all sections), aligned quantification numbers, demo-package publication, and CLI/script surfacing of the published path.
+- [x] TASK-04-02: Run the refreshed demo workflow end to end and publish a fresh DOCX under `reports/demo-packages/`.
+- [x] TASK-04-03: PDF conversion skipped (no local converter available — DOCX remains the guaranteed surface per CON-003).
+- [x] TASK-04-04: Refresh README examples and Known Gaps so the repo points users to the client-demo package rather than the old "not implemented yet" note.
+- [x] TASK-04-05: Manually inspect the generated artifact — confirmed no placeholders, strong disclosure, aligned numbers, and clean appendix.
+- [x] Generate Phase 04 report artifact via the report skill flow.
+- [x] Commit and push the requested Phase 04 changes.
+
+## Review / Results - Phase 04
+
+- Added three new regression tests in `tests/test_phase05_demo.py`:
+  - `test_run_demo_benchmark_with_demo_provider_all_sections_no_placeholders` — validates ALL 36 sections contain no `[PLACEHOLDER` markers and no `REVIEW REQUIRED` issues.
+  - `test_demo_provider_quantification_arithmetic_is_consistent` — validates net = baseline - project - leakage and crediting_total = net * years.
+  - `test_run_demo_benchmark_with_demo_package_publishes_end_to_end` — validates run JSON, scorecard, diff, DOCX, manifest, and latest alias all exist with zero placeholders and zero low-confidence sections.
+- All 25 tests pass: `pytest tests/test_phase05_demo.py tests/test_docx_export.py tests/test_phase06_cli.py` (6.31s).
+- Fresh demo workflow run published: `reports/demo-packages/soc-son-like-waste-to-power-demonstration-project/run-20260504104319-5e2a70/` with 36 sections, 0 placeholders, 36/36 matched reference, average grounding 0.7.
+- DOCX verification: zero `[PLACEHOLDER` markers, strong cover disclosure, `Appendix A - Assumption Summary` present, `Appendix B - Reviewer Issues` absent, key numbers (98,000 / 21,000 / 2,000 / 75,000 / 750,000 / 9.0 MW / 182,500) all present.
+- README updated: status line, demo workflow section, Known Gaps for demo-packages and provider description.
+- Added the Phase 04 HTML report artifact at `reports/2026-05-04-phase-04-demo-verification.html`.
+
 ## Soc Son Client Demo Output Upgrade - Phase 03
 
 - [x] Update the active context to track Phase 03 implementation from `plans/2026-05-01-soc-son-client-demo-output-plan.md`.
@@ -6,7 +28,7 @@
 - [x] Implement demo-aware DOCX export and demo package publication with clear path surfacing.
 - [x] Verify the Phase 03 contract with targeted tests and a fresh local demo package run.
 - [x] Generate a Phase 03 report artifact via the report skill flow.
-- [ ] Commit and push the requested Phase 03 changes.
+- [x] Commit and push the requested Phase 03 changes.
 
 ## Review / Results - Phase 03
 

@@ -270,6 +270,96 @@ def test_run_demo_benchmark_with_demo_provider_emits_non_placeholder_sections(tm
     assert run.provider == "demo"
 
 
+def test_run_demo_benchmark_with_demo_provider_all_sections_no_placeholders(tmp_path: Path):
+    config_path = create_demo_project_input(tmp_path / "demo_input.yaml")
+    reference_path = _make_reference_norm(tmp_path)
+
+    artifacts = run_demo_benchmark(
+        project_input_path=config_path,
+        reference_norm_path=reference_path,
+        reports_dir=tmp_path / "reports",
+        provider_name="demo",
+        export_docx=False,
+    )
+
+    run = load_draft_run(artifacts.run_json)
+
+    assert len(run.sections) > 0
+    for section in run.sections:
+        assert "[PLACEHOLDER" not in section.text, (
+            f"Section {section.section_id}.{section.sub_section_id} still contains placeholder text"
+        )
+        for issue in section.issues:
+            assert "REVIEW REQUIRED" not in issue, (
+                f"Section {section.section_id}.{section.sub_section_id} has REVIEW REQUIRED issue: {issue}"
+            )
+    assert run.provider == "demo"
+
+
+def test_demo_provider_quantification_arithmetic_is_consistent(tmp_path: Path):
+    config_path = create_demo_project_input(tmp_path / "demo_input.yaml")
+    reference_path = _make_reference_norm(tmp_path)
+
+    artifacts = run_demo_benchmark(
+        project_input_path=config_path,
+        reference_norm_path=reference_path,
+        reports_dir=tmp_path / "reports",
+        provider_name="demo",
+        export_docx=False,
+    )
+
+    comparison = artifacts.comparison_summary
+    assert comparison["placeholder_sections"] == 0
+    assert comparison["low_confidence_sections"] == 0
+
+    import yaml
+    with open(config_path, encoding="utf-8") as handle:
+        data = yaml.safe_load(handle)
+    q = data["quantification"]
+    baseline = q["baseline_emissions_tco2e_per_year"]
+    project = q["project_emissions_tco2e_per_year"]
+    leakage = q["leakage_tco2e_per_year"]
+    net = q["net_emissions_tco2e_per_year"]
+    crediting_years = q.get("crediting_period_total_tco2e") / net
+
+    assert net == baseline - project - leakage, (
+        f"net ({net}) != baseline ({baseline}) - project ({project}) - leakage ({leakage})"
+    )
+    assert q["crediting_period_total_tco2e"] == net * q.get("crediting_period_years", 10), (
+        "crediting_period_total_tco2e does not match net_emissions * crediting_period_years"
+    )
+
+
+def test_run_demo_benchmark_with_demo_package_publishes_end_to_end(tmp_path: Path):
+    config_path = create_demo_project_input(tmp_path / "demo_input.yaml")
+    reference_path = _make_reference_norm(tmp_path)
+
+    artifacts = run_demo_benchmark(
+        project_input_path=config_path,
+        reference_norm_path=reference_path,
+        reports_dir=tmp_path / "reports",
+        provider_name="demo",
+        export_docx=True,
+        demo_output_dir=tmp_path / "reports" / "demo-packages",
+    )
+
+    assert artifacts.run_json.exists()
+    assert artifacts.demo_scorecard.exists()
+    assert artifacts.section_diff.exists()
+    assert artifacts.export_docx is not None
+    assert artifacts.export_docx.exists()
+    assert artifacts.demo_package_manifest is not None
+    assert artifacts.demo_package_manifest.exists()
+    assert artifacts.demo_latest_docx is not None
+    assert artifacts.demo_latest_docx.exists()
+
+    run = load_draft_run(artifacts.run_json)
+    assert run.provider == "demo"
+    assert all("[PLACEHOLDER" not in s.text for s in run.sections)
+    assert artifacts.comparison_summary["placeholder_sections"] == 0
+    assert artifacts.comparison_summary["low_confidence_sections"] == 0
+
+
 def test_publish_demo_package_creates_run_archive_and_latest_alias(tmp_path: Path):
     source_docx = tmp_path / "data" / "runs" / "run-123.docx"
     source_docx.parent.mkdir(parents=True, exist_ok=True)

@@ -1,6 +1,6 @@
 # PDD Agent — Agentic Low-Cost WTE Carbon-Credit PDD Drafting Tool
 
-**Status:** PHASE-05 complete, with Vietnam PHASE-01 through PHASE-04 now implemented for the Soc Son row.
+**Status:** Soc Son Client Demo Output — PHASE-01 through PHASE-04 complete. `reports/demo-packages/` now ships readable synthetic DOCX packages via `pdd-agent benchmark --provider demo --demo-output-dir reports/demo-packages` or `python scripts/run_demo.py`.
 
 ## What This Tool Does
 
@@ -194,13 +194,24 @@ The benchmark workflow will:
 
 1. Create or reuse the Soc Son-like demo config
 2. Write `configs/projects/demo_socson_like.assumptions.yaml` with deterministic `demo_curated` provenance for the synthetic demo fixture
-3. Run the draft and review pipeline end-to-end
+3. Run the draft and review pipeline end-to-end using the `DemoProvider`
 4. Compare the saved run against the normalized Soc Son reference
 5. Write `reports/demo-scorecard.md` and `reports/section-diff.md`
-6. Export a demo DOCX with provider `demo` when `python-docx` is installed locally
+6. Export a demo DOCX with strong synthetic disclosure and a clean "Appendix A - Assumption Summary"
 7. Publish `reports/demo-packages/<project-slug>/<run-id>/` and refresh `latest.docx` when `--demo-output-dir` is provided
 
-`python scripts/run_demo.py` now runs the deterministic demo provider and publishes the client-demo package under `reports/demo-packages/`. The equivalent CLI path is `pdd-agent benchmark --provider demo --demo-output-dir reports/demo-packages`.
+The resulting DOCX contains readable synthetic prose with zero `[PLACEHOLDER` markers, zero `REVIEW REQUIRED` issues in the body, and aligned quantification numbers across all sections. The cover page carries a bold synthetic disclosure and the appendix lists demo-curated assumptions without reviewer-gated blocked items.
+
+`python scripts/run_demo.py` runs the deterministic demo provider and publishes the client-demo package under `reports/demo-packages/`. The equivalent CLI path is `pdd-agent benchmark --provider demo --demo-output-dir reports/demo-packages`.
+
+### Demo Artifact Paths
+
+After a successful run, the client-demo package lives at:
+- `reports/demo-packages/<project-slug>/<run-id>/<run-id>.docx` — immutable run archive
+- `reports/demo-packages/<project-slug>/<run-id>/manifest.json` — run metadata and artifact inventory
+- `reports/demo-packages/<project-slug>/latest.docx` — stable alias for the latest package
+- `reports/demo-scorecard.md` — benchmark scorecard with coverage and grounding metrics
+- `reports/section-diff.md` — per-section comparison against the Soc Son reference
 
 ## Artifact Contracts
 
@@ -233,8 +244,8 @@ src/pdd_agent/
 ## Known Gaps
 
 - `python-docx` is declared in `pyproject.toml`, but local environments still need it installed before DOCX export works at runtime; the exporter now fails with a clear install message instead of skipping silently
-- No real LLM provider wired — benchmark runs currently measure workflow quality using the zero-cost `NoopProvider`
-- A true client-demo package path under `reports/demo-packages/` is still planned but not implemented yet; however, the demo fixture now has a dedicated assumptions companion so later phases can build client-safe prose without relying on spreadsheet review-gate metadata
+- No real LLM provider wired — benchmark runs use the deterministic `DemoProvider` for client-demo output or the `NoopProvider` for reviewer-facing placeholder draft
+- The `reports/demo-packages/` client-demo path is now implemented — `python scripts/run_demo.py` publishes a readable synthetic DOCX with zero placeholders, aligned quantification, and a strong synthetic disclosure
 - The first benchmark is a workflow proof on one Soc Son-like case; a second project is still needed before claiming broader WTE coverage
 - The Soc Son spreadsheet mapper intentionally blocks review-sensitive quantitative splits, coordinates, and safeguards fields when they rely on synthetic assumptions
 
