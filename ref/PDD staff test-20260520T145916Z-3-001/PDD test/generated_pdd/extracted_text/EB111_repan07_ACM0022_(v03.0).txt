@@ -1,0 +1,4073 @@
+
+
+===== PAGE 1 =====
+CLEAN DEVELOPMENT MECHANISM 
+ 
+ 
+ACM0022 
+  
+Large-scale Consolidated Methodology 
+Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+
+
+===== PAGE 2 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+2/81 
+TABLE OF CONTENTS Page 
+1. INTRODUCTION ........................................................................................................  4 
+2. SCOPE, APPLICABILITY, AND ENTRY INTO FORCE ...........................................  4 
+2.1. Scope .............................................................................................................  4 
+2.2. Applicability ....................................................................................................  4 
+2.3. Entry into force ...............................................................................................  7 
+2.4. Applicability of sectoral scope ........................................................................  7 
+3. NORMATIVE REFERENCES ....................................................................................  7 
+3.1. Selected approach from paragraph 48 of the CDM modalities and 
+procedures .....................................................................................................  9 
+4. DEFINITIONS .............................................................................................................  9 
+5. BASELINE METHODOLOGY ....................................................................................  11 
+5.1. Procedure for the selection of the most plausible baseline scenario and 
+demonstration of additionality ........................................................................  11 
+5.2. Project boundary ............................................................................................  15 
+5.3. Baseline emissions.........................................................................................  17 
+5.3.1. Baseline emissions of methane from the SWDS (BECH4,t,y) .........  18 
+5.3.2. Baseline emissions from organic wastewater (BEWW,t,y) ..............  19 
+5.3.3. Baseline emissions from generation of energy .............................  24 
+5.3.4. Cogeneration of electricity and heat .............................................  25 
+5.3.5. Baseline emissions associated with natural gas use (BENG,y) ......  26 
+5.4. Project emissions ...........................................................................................  26 
+5.4.1. Project emissions from composting or co-composting 
+(PECOMP,y) ......................................................................................  26 
+5.4.2. Project emissions from anaerobic digestion (PEAD,y) ...................  26 
+5.4.3. Project emissions from gasification (PEGAS,y) ...............................  27 
+5.4.4. Project emissions associated with mechanical or thermal 
+production of RDF/SB (PERDF_SB,y) ...............................................  27 
+5.4.5. Project emissions from incineration (PEINC,y) ................................  28 
+5.4.6. Project emissions from electricity use (PEEC,t,y) ............................  29 
+5.4.7. Project emissions from fossil fuel use (PEFC,t,y) ............................  29 
+
+
+===== PAGE 3 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+3/81 
+5.4.8. Project emissions from combustion within the project 
+boundary (PECOM,c,y) ......................................................................  30 
+5.4.9. Project emissions of CO2 from combustion within the project 
+boundary (PECOM_CO2,c,y) ...............................................................  30 
+5.4.10. Project emissions of CH4 and N2O from combustion within 
+the project boundary (PECOM_CH4,N2O,c,y) ........................................  32 
+5.4.11. Emissions from wastewater discharge management 
+(PEww,t,y) ........................................................................................  34 
+5.5. Leakage ..........................................................................................................  35 
+5.5.1. Leakage emissions from composting (LECOMP,y) ..........................  36 
+5.5.2. Leakage emissions from anaerobic digestion (LEAD,y) .................  36 
+5.5.3. Leakage emissions associated with RDF/SB (LERDF_SB,y) ............  36 
+5.5.4. Leakage emissions from disposal of waste by-products from 
+RDF/SB production in a SWDS (LESWDS,WBP_RDF_SB,y) ..................  36 
+5.5.5. Leakage emissions associated with end use of RDF/SB 
+exported outside the project boundary (LEENDUSE,RDF_SB,y) ...........  37 
+5.5.6. Leakage emissions from combusted off-site end use of 
+RDF/SB (LEENDUSE,RDF_SB,y) (End use 2) .......................................  37 
+5.5.7. Leakage emissions from off-site anaerobic decomposition of 
+RDF/SB (End use 3) .....................................................................  38 
+5.6. Emission reductions .......................................................................................  38 
+5.7. Changes required for methodology implementation in 2nd and 3rd 
+crediting periods .............................................................................................  39 
+5.8. Project activity under a programme of activities ............................................  39 
+5.9. Data and parameters not monitored ..............................................................  41 
+6. MONITORING METHODOLOGY ..............................................................................  49 
+6.1. Data and parameters monitored ....................................................................  49 
+APPENDIX 1. TYPICAL BOUNDARY LAYOUTS OF WHAT IS INCLUDED IN 
+THE PROJECT BOUNDARY ...................................................................  60 
+APPENDIX 2. THE MEASUREMENT OF FFCJ,Y BY BALANCE METHOD ..................  63 
+
+
+===== PAGE 4 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+4/81 
+1. Introduction 
+1. The following table describes the key elements of the methodology: 
+Table 1. Methodology key elements 
+Typical projects Project activities involve the installation and operation of 
+new plants for the treatment of fresh waste through any 
+combination of the following processes: 
+• Composting process under aerobic conditions; 
+• Gasification process to produce syngas and its use; 
+• Anaerobic digestion with biogas recovery and flaring 
+and/or its use); 
+• Mechanical/thermal treatment to produce refuse -
+derived fuel (RDF)/stabilized biomass (SB)  and its 
+use; 
+• Incineration of fresh waste to produce thermal/electric 
+energy; 
+• Co-composting/anaerobic digestion of wastewater in 
+combination with solid waste. 
+Type of GHG emissions 
+mitigation action 
+• Greenhouse gas (GHG) emissions avoidance: 
+CH4 emissions due to anaerobic decay of organic waste 
+are avoided by alternative waste treatment processes. 
+• Renewable energy: 
+Fresh waste is used as renewable source of energy.  
+2. Scope, applicability, and entry into force 
+2.1. Scope 
+2. This methodology covers project activities implementing and operating new plants for the 
+treatment of fresh waste, that would otherwise be disposed in a solid waste disposal site 
+(SWDS) 
+2.2. Applicability 
+3. The methodology applies to project activities that i nstall and operate new plants for the 
+treatment of fresh waste through any combination of the following processes: 
+(a) Composting process under aerobic conditions; 
+(b) Anaerobic digestion with biogas recovery and flaring and/or its use; 
+(c) Co-composting of wastewater in combination with solid waste; 
+(d) Anaerobic co-treatment of wastewater in combination with solid waste; 
+
+
+===== PAGE 5 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+5/81 
+(e) Mechanical/thermal treatment process to produce refuse -derived fuel (RDF)  or 
+stabilized biomass (SB) that is produced within the project boundary and its use1
+ ; 
+(f) Gasification process to produce syngas and its use; 
+(g) Incineration of fresh waste for the generation of thermal/electric energy. 
+(h) The following conditions apply to all project activities using this methodology:  
+(i) The project plant only treats fresh waste/wastewater for which emission reductions 
+are claimed, except for cases involving composting, co-composting and anaerobic 
+digestion; 
+(j) Neither the fresh waste nor the products from the project plant are stored on-site 
+under anaerobic conditions; 
+(k) Any wastewater discharge resulting from the project activity  is treated in 
+accordance with applicable regulations; 
+(l) The project activity does not reduce the amount of waste that would be recycled in 
+the absence of the project activity.  This shall be justified and documented in the 
+clean development mechanism project design document (CDM-PDD); 
+(m) When applicable regulations mandate any waste treatment p rocess implemented 
+under the project activity, the rate of compliance with such regulations  for the 
+treatment process is below 50 per cent2; 
+(n) Hazardous wastes/wastewater are not eligible under this methodology. 
+4. The methodology is only applicable if the baseline scenario is: 
+(a) The disposal of the fresh waste in a SWDS with or without a partial LFG capture 
+system (M2 or M3)3; 
+(b) In the case of co -composting or co-treatment of wastewater in an anaerobic 
+digester, the treatment of organic wastewater in either an existing or new anaerobic 
+lagoon or sludge pit without methane recovery (W1 or W4); 
+(c) In the case of electricity generation, the electricity is generated in an existing/new 
+captive fossil fuel fired power-only plant, captive cogeneration plant and/or the grid 
+(P2, P4 or P6); 
+                                                
+1 The methodology is not applicable to project activities using RDF produced outside of the project 
+boundary. 
+2 Supporting evidence may include official studies, reports and certification from municipal authorities.  
+3 Project participants shall demonstrate that sufficient landfill capacity would be available to dispose waste 
+at a SWDS with a comparable annual waste acceptance rate and with the same operating lifetime as 
+the project activity. 
+ 
+
+
+===== PAGE 6 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+6/81 
+(d) In the case of heat generation, the heat is generated in an existing/new fossil fuel 
+fired cogeneration plant, boiler or air heater (H2 or H4).4 
+5. Specific applicability conditions for the different processes are provided in Table 2 below. 
+Table 2. Specific applicability conditions for the different waste treatment processes 
+Waste 
+treatment 
+option 
+under the 
+project 
+activity 
+Applicable types of 
+wastes that may be 
+treated 
+Applicable 
+products and 
+their use 
+Applicable waste 
+by-products 
+Specific 
+applicability 
+conditions  
+Composting 
+or co-
+composing 
+Types of waste as 
+specified in the scope 
+and applicability 
+section of “TOOL13: 
+Project and leakage 
+emissions from 
+composting”; 
+Wastewater; 
+Wastewater discharge 
+Compost: any use 
+applicable 
+Non-biodegradable 
+materials that may 
+have market value 
+(i.e. glass, metals 
+and plastics); 
+Wastewater 
+discharge 
+Any applicability 
+conditions 
+specified in 
+“TOOL13: Project 
+and leakage 
+emissions from 
+composting” 
+Anaerobic 
+digestion 
+Wastewater; 
+Fresh waste 
+Wastewater discharge  
+Biogas may be 
+flared, used to 
+generate 
+electricity or heat, 
+and/or upgraded 
+and distributed in 
+a natural gas 
+distribution grid 
+Non-biodegradable 
+materials that may 
+have market value 
+(i.e. glass, metals 
+and plastics); 
+Wastewater 
+discharge 
+Digestate  
+Any applicability 
+conditions 
+specified in 
+“TOOL14: Project 
+and leakage 
+emissions from 
+anaerobic 
+digesters” 
+Thermal 
+treatment  
+Fresh waste RDF/SB: any use 
+is applicable 
+Non-biodegradable 
+materials that may 
+have market value 
+(i.e. glass, metals 
+and plastics) 
+- 
+Mechanical 
+treatment 
+Fresh waste RDF/SB: any use 
+is applicable 
+Wastewater 
+discharge; 
+Non-biodegradable 
+materials that may 
+have market value 
+(i.e. glass, metals 
+and plastics) 
+- 
+Gasification Fresh waste Syngas may be 
+used to generate 
+electricity and/or 
+heat  
+Gasification by-
+products (e.g. inert 
+materials); 
+Wastewater 
+discharge; 
+Non-biodegradable 
+materials that may 
+have market value 
+(i.e. glass, metals 
+and plastics) 
+- 
+                                                
+4 When heat is generated with a product or by -product from the project activity an d used in the cement 
+industry, project participants should refer to specific methodologies applicable to the cement sector.  
+
+
+===== PAGE 7 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+7/81 
+Waste 
+treatment 
+option 
+under the 
+project 
+activity 
+Applicable types of 
+wastes that may be 
+treated 
+Applicable 
+products and 
+their use 
+Applicable waste 
+by-products 
+Specific 
+applicability 
+conditions  
+Incineration Fresh waste Electricity and/or 
+heat 
+Incineration by-
+product (e.g. inert 
+materials); 
+Wastewater 
+discharge; 
+Non-biodegradable 
+materials that may 
+have market value 
+(i.e. glass, metals 
+and plastics) 
+Incineration 
+technology is 
+rotary kiln, 
+rotating fluidized 
+bed, circulating 
+fluidized bed, 
+hearth or grate 
+type; 
+The fraction of 
+energy generated 
+by auxiliary fossil 
+fuels is not more 
+than 50% of the 
+total energy 
+generated in the 
+incinerator 
+2.3. Entry into force 
+6. The date of entry into force of the methodology is the date of the publication of the EB 111 
+meeting report on 9 September 2021. 
+2.4. Applicability of sectoral scope 
+7. For validation and verification of CDM projects and programme s of activities by a 
+designated operational entity (DoE) using this methodology, sectoral scopes 01 and 13 
+are mandatory. 
+3. Normative references 
+8. This baseline and monitoring methodology is based on the following approved baseline 
+and monitoring methodolog ies and elements of the following proposed new 
+methodologies: 
+(a) “NM0090: Organic waste composting at the Matuail landfill site Dhaka, 
+Bangladesh” whose baseline study, monitoring and verification plan and project 
+design document were prepared by World Wide Recy cling B.V. and Waste 
+Concern; 
+(b) “NM0127: PT Navigat Organic Energy Indonesia Integrated Solid Waste 
+Management (GALFAD) project in Bali, Indonesia” whose baseline study, 
+monitoring and verification plan and project design document were prepared by 
+Mitsubishi Securities Co.; 
+(c) “NM0032: Municipal solid waste treatment cum energy generation project, 
+Lucknow, India” whose baseline study, monitoring and verification plan were 
+
+
+===== PAGE 8 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+8/81 
+prepared by Infrastructure Development Finance Company Limited on behalf of 
+Prototype Carbon Fund; 
+(d) “NM0178: Aerobic thermal treatment of municipal solid waste (MSW) without 
+incineration in Parobé - RS” whose baseline study, monitoring and verification plan 
+and project design document were prepared by ICF Consulting; 
+(e) “NM0174-rev: M SW Incineration Project in Guanzhuang, Tianjin City” whose 
+baseline study, monitoring and verification plan and project design document were 
+prepared by Global Climate Change Institute (GCCI) of Tsinghua University, 
+Energy Systems International and Tianjin Taida Environmental Protection Co. Ltd; 
+(f) “AM0025: “Alternative waste treatment processes”; 
+(g) “AM0039: “Methane emissions reduction from organic wastewater and bioorganic 
+solid waste using co-composting”. 
+9. This methodology also refers to the latest approved ve rsions of the following tools  and 
+guidelines: 
+(a) “TOOL11: Assessment of the validity of the original/current baseline and update of 
+the baseline at the renewal of the crediting period”; 
+(b) “TOOL02: Combined tool to identify the baseline scenario and demonstrate 
+additionality”; 
+(c) “TOOL06: Project emissions from flaring”; 
+(d) “TOOL05: Baseline, project and/or leakage emissions from electricity consumption 
+and monitoring of electricity generation”; 
+(e) “TOOL03: Tool to calculate project or leakage CO 2 emissions from fossil fu el 
+combustion”; 
+(f) “TOOL09: D etermining the baseline efficiency of thermal or electric energy 
+generation systems”. 
+(g) “TOOL04: Emissions from solid waste disposal sites”; 
+(h) “TOOL13: Project and leakage emissions from composting”; 
+(i) “TOOL14: Project and leakage emissions from anaerobic digesters”; 
+(j) “TOOL08: Tool to determine the mass flow of a greenhouse gas in a gaseous 
+stream”; 
+(k) “Guidelines on the consideration of suppressed demand in CDM methodologies”. 
+10. For more information regarding the proposed new methodologies and the tools as well 
+as their consideration by the Executive Board (hereinafter referred to as the Board) of 
+the clean development mechanism (CDM) please refer to 
+<http://cdm.unfccc.int/methodologies/PAmethodologies/index.html>. 
+
+
+===== PAGE 9 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+9/81 
+3.1. Selected approach from paragraph 48 of the CDM modalities and procedures 
+11. “Emissions from a technology that represents an economically attractive course of action, 
+taking into account barriers to investment”; 
+or 
+12. “Existing actual or historical emissions, as applicable”. 
+4. Definitions 
+13. The definitions contained in the Glossary of CDM terms shall apply. 
+14. For the purpose of this methodology the following definitions apply: 
+(a) Anaerobic digester - Equipment that is used to generate biogas from liquid or 
+solid waste through anaerobic digestion. The digester is covered or encapsulated 
+to enable biogas capture for heat and/or electricity generation or feeding bio gas 
+into a natural gas network; 
+(b) Anaerobic digestion - Degradation and stabilization of organic materials by the 
+action of anaerobic bacteria that result in production of methane and carbon 
+dioxide. Typical organic materials that undergo anaerobic digestion are municipal 
+solid waste (MSW), animal manure, wastewater, organic industrial effluent and 
+biosolids from aerobic wastewater treatment plants; 
+(c) Anaerobic lagoon - a treatment system consisting of a deep earthen basin with 
+sufficient volume to permit sedimentation of settleable solids, to digest retained 
+sludge, and to anaerobically reduce some of the soluble organic sub strate. 
+Anaerobic lagoons are not aerated, heated, or mixed and anaerobic conditions 
+prevail except possibly for a shallow surface layer in which excess undigested 
+grease and scum are concentrated; 
+(d) Biogas - Gas generated from anaerobic digestion of organic matter. Typically, the 
+composition of the gas is 50 to 70  per cent CH4 and 30 to 50  per cent CO2, with 
+traces of H2S and NH3 (1 to 5 per cent); 
+(e) By-products - By-products from the waste treatment plant(s) established under 
+the project activity. This includes, for example, aluminium or glass collected from 
+the sorting of waste prior to subsequent treatment; 
+(f) Co-composting - a type of composting where solid wastes and wastewater 
+containing solid biodegradable organic material are composted together; 
+(g) Composting - a process of biodegradation of waste under aerobic (oxygen -rich) 
+conditions. Waste that can be composted must contain solid biodegradable organic 
+material. Composting converts biodegradable organic carbon to mostly carbon 
+dioxide (CO 2) and a resid ue (compost) that can be used as a fertilizer. Other 
+outputs from composting can include,  inter alia, methane (CH 4), nitrous oxide 
+(N2O), and wastewater discharge (in case of co-composting); 
+(h) Digestate - spent contents of an anaerobic digester. Digestate may be liquid, semi-
+solid or solid. Digestate may be further stabilized aerobically (e.g. composted), 
+
+
+===== PAGE 10 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+10/81 
+applied to land, sent to a solid waste disposal site (SWDS), or kept in a storage or 
+evaporation pond; 
+(i) Fresh waste - solid waste that is intended for disposal in a SWDS but has not yet 
+been disposed. This may comprise MSW and excludes  old waste and hazardous 
+waste; 
+(j) Gasification - the process of thermal decomposition of organic compounds at high 
+temperatures, typically more than 800˚C. Gasification conve rts organic 
+compounds, of both biogenic and fossil origin, into combustible gas, e.g. syngas; 
+(k) Hazardous waste - waste generated by industries or hospitals , which. may be 
+hazardous or infectious; 
+(l) Incineration - the controlled combustion of organic compounds of both biogenic 
+and fossil origin with or without heat capture and utilisation. Ideally, all the organic 
+content is converted into CO 2 and H2O. Practically, as combustion is incomplete 
+and as inert matter is also in the combusted waste, ashes a re also an important 
+by-product; 
+(m) Landfill gas (LFG)  - the gas generated by decomposition of waste in a SWDS. 
+LFG is mainly composed of methane, carbon dioxide and small fractions of  
+ammonia and hydrogen sulphide; 
+(n) LFG capture system  - a system to capture LFG. The system may be passive, 
+active or a combination of both active and passive components. Passive systems 
+capture LFG by means of natural pressure, concentration, and density gradients. 
+Active systems use mechanical equipment to cap ture LFG by providing pressure 
+gradients. For the purpose of this methodology, capt ured LFG can be flared or 
+used; 
+(o) Municipal solid waste (MSW)  - a heterogeneous mix of different solid waste 
+types, usually collected by municipalities or other local authorit ies. MSW includes 
+household waste, garden/park waste and commercial/institutional waste; 
+(p) Old waste - solid waste that has been disposed of in a SWDS. Old waste has 
+different characteristics than fresh waste, such as a lower organic matter content, 
+limiting its application to some alternative treatment processes that require waste 
+with a minimum level of organic material (e.g. comp osting and anaerobic 
+digesters); 
+(q) Organic waste - waste that contains degradable organic matter.  
+(r) Refuse-derived fuel (RDF) - a fuel which is derived from the mechanical and/or 
+thermal treatment of waste and which is used in an incineration or co-incineration 
+process. RDF is produced by shredding and dehydrating solid waste with a waste 
+converter technology; 
+(s) Sludge pits - a pit or tank where untreated liquid sludge is pumped and stored for 
+at least one year. Anaerobic bacteria decompose the liquid sludge and decrease 
+the organic matter content, resulting in emissions of CO2, CH4, hydrogen sulphide 
+(H2S) and ammonia. Once the pits are dried out and the sludge is stable, the solids 
+are removed and used, e.g. as fertiliser for non-food crops; 
+
+
+===== PAGE 11 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+11/81 
+(t) Stabilized biomass (SB)  - a fuel which is derived from the mechanical a nd/or 
+thermal treatment of waste and which is used in an incineration or co-incineration 
+process. SB is produced from agricultural waste and is  treated to prevent further 
+degradation in the environment. Examples of SB are: pellets, briq uettes and 
+torrified wood chips; 
+(u) Solid waste - discarded and insoluble material (including gases or liquids in cans 
+or containers); 
+(v) Solid waste disposal site (SWDS)  - designated areas intended as the final 
+storage place for solid waste. Stockpiles are considered a SWDS if: (a ) their 
+volume to surface area ratio is 1.5 or larger; and if (b) a visual inspection by the  
+designated operational entity  (DOE) confirms that the material is exposed to 
+anaerobic conditions (i.e. it has a low porosity and is moist); 
+(w) Stockpile - a pile of solid waste (not buried below ground). Anaerobic conditions 
+are not assured in a stockpile with low volume to surface area ratios (less than 1.5) 
+because the waste may be exposed to higher aeration; 
+(x) Syngas - a gas mixture consisting primarily of carbon monoxide and hydrogen and 
+small amounts of carbon dioxide. It is produced from gasification and may be used 
+as a fuel for energy generation or as an intermediate for the production  of other 
+chemicals; 
+(y) Wastewater discharge - Wastewater that is generated as a by -product from a 
+waste treatment plant established under the project activity.  
+5. Baseline methodology 
+5.1. Procedure for the selection of the most plausible baseline scenario and 
+demonstration of additionality 
+15. Identify the baseline scenario and demonstrate additionality using “ TOOL02: Combined 
+tool to identify the baseline scenario and demonstrate additionality”. 
+16. For the treatment of the fresh waste, the following alternatives or combinations of these 
+alternatives shall, inter alia, be considered: 
+(a) M1: The project activity without being registered as a CDM project activity (i.e. any 
+(combination) of the waste treatment processes listed in Table 2); 
+(b) M2: Disposal of the fresh waste in a SWDS with a partial capture of the LFG and 
+flaring of the captured LFG; 
+(c) M3: Disposal of the fresh waste in a SWDS without a LFG capture system; 
+(d) M4: Part of the fresh fraction of the solid waste is recycled and not disposed in the 
+SWDS; 
+(e) M5: Part of the fresh fraction of the solid waste is treated aerobically and not 
+disposed in the SWDS; 
+(f) M6: Part of the organic fraction of the solid waste is incinerated and not disposed  
+in the SWDS; 
+
+
+===== PAGE 12 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+12/81 
+(g) M7: Part of the organic fraction of the solid waste is gasified and not disposed in 
+the SWDS; 
+(h) M8: Part of the organic fraction of the solid waste is treated in an anaerobic digester 
+and not disposed in the SWDS; 
+(i) M9: Part of the organic fracti on of the solid waste is mechanically or thermally 
+treated to produce RDF/SB and not disposed in the SWDS. 
+17.  For the treatment of the wastewater, the following alternatives or combinations of these 
+alternatives shall, inter alia, be considered: 
+(a) W1: Continuation of current practice of using anaerobic lagoons or sludge pits 
+without methane recovery; 
+(b) W2: Anaerobic lagoons or sludge pits with methane recovery and flaring of the 
+recovered methane; 
+(c) W3: Anaerobic lagoons or sludge pits with methane recovery and utilization of the 
+recovered methane for electricity and/or heat generation; 
+(d) W4: Construction of a new anaerobic lagoon  or sludge pits without methane 
+recovery; 
+(e) W5: Construction of a new anaerobic lagoon or sludge pits with methane recovery 
+and flaring of the recovered methane; 
+(f) W6: Using the wastewater for co -composting (the project activity implemented 
+without being registered as a CDM project activity); 
+(g) W7: Other treatment processes provided in table 6.3, Volume 5, chapter 6 of the 
+IPCC 2006 guidelines for greenhouse gas inventory. 
+18. For electricity generation the following alternatives or combinations of these alternatives, 
+inter alia, shall be considered: 
+(a) P1: Electricity generated as an output of one of the waste treatment processes 
+listed in Table 1, not undertaken as a CDM project activity; 
+(b) P2: Use of an existing or construction of a new on -site or off-site fossil fuel fired 
+cogeneration plant; 
+(c) P3: Existing or new construction of an on -site or off -site renewable based 
+cogeneration plant; 
+(d) P4: Existing or new construction of an on -site or off-site fossil fuel fired electricity 
+plant; 
+(e) P5: Existing or new construction of an on-site or off-site renewable based electricity 
+plant; 
+(f) P6: Electricity generation in existing and/or new grid-connected electricity plants. 
+
+
+===== PAGE 13 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+13/81 
+19. For heat generation, one or a combination of the following alternatives, inter alia, shall be 
+considered: 
+(a) H1: Heat generated as a by-product from one of the processes for waste treatment 
+listed in Table 1, not undertaken as a CDM project activity; 
+(b) H2: Use of (an) existing or construction of (a) new on-site or off-site fossil fuel fired 
+cogeneration plant(s);5 
+(c) H3: Use of (an) existing or construction of (a) new on -site or off -site renewable 
+based cogeneration plant(s);6 
+(d) H4: Use of (an) existin g or construction of (a) new on -site or off -site fossil fuel-
+based boiler(s) or air heater(s); 
+(e) H5: Use of (an) existing or construction of (a) new on -site or off -site renewable 
+energy-based boiler(s) or air heater(s); 
+(f) H6: District heat; 
+(g) H7: Other heat generation technologies (e.g. heat pumps or solar energy). 
+20. Project participants shall demonstrate that the identified baseline fuel used for generation 
+of heat is available in abundance in the host country and there is no supply constraint. In 
+case of supply constraints ( e.g. partial or seasonal supply), project participants shall 
+consider the period when there are availability constraints and  choose the fuel(s) that 
+result in the most conservative estimation of baseline emissions. 
+21. Detailed justifications shall be provided and documented in the CDM-PDD for the selected 
+baseline fuel. As a conservative approach, the lowest carbon -intensive fuel, such as 
+natural gas, may be used throughout all periods of the year. 
+22. For the supply of upgraded biogas to a natural  gas distribution network, the baseline is 
+assumed to be the continued supply with natural gas. 
+23. In applying Sub -step 1b of the tool, mandatory applicable legal and regulatory 
+requirements may include mandatory LFG capture or destruction requirements becaus e 
+of safety issues or local environmental regulations. 7 Other policies could include local 
+policies promoting productive use of LFG, such as those for the production of renewable 
+energy, or those that promote the processing of fresh waste. 
+                                                
+5 Scenarios P2 and H2 are related to the same fossil fuel cogeneration plant. 
+6 Scenarios P3 and H3 are related to the same renewable energy-based cogeneration plant. 
+7 The project participant shall consider relevant clarifications on the treatment of national and/or sectoral 
+policies and regulations in determining a baseline scenario  as per annex 3 to the 22 nd meeting of the 
+Board and any other forthcoming guidance from the Board on this subject.  
+ 
+
+
+===== PAGE 14 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+14/81 
+24. If the products or by-products are used by another CDM project activity and if the project 
+participants of both CDM projects are the same, then the following provision shall be 
+followed: 
+(a) The by -products shall be considered to have market value when assessing 
+additionality of the project activity applying this methodology; 
+(b) The by-products shall be considered to have no value when assessing additionality 
+of the second project activity. 
+25. Project activities implementing greenfield composting facilities for the treatment of MSW 
+are deemed automatically additionalwhen any of conditions below is fulfilled: 
+(a) The host country is a LDC;8 or 
+(b) MSW collection coverage is below 50  per cent  for the applicable geographical 
+region; or 
+(c) MSW collection coverage is 50–80 per cent for the applicable geographical region9 
+and the waste received by the project composting facility does not have formal 
+segregation   of wet and dry waste (i.e. excluding recycling by the informal sector); 
+or 
+(d) No gate/tipping fees are received by the project composting facility or any upstream 
+waste collection or segregation facility which is contractually bound to provide 
+waste to the project composting facility10; or 
+(e) Less than two per cent of the collected MSW of the municipality (or the region from 
+where th e MSW treated by the project activity is sourced) are treated by 
+composting in the year before the PDD is published for global stakeholder 
+consultation. 
+26. For project activities that are deemed automatically additional above, t he baseline 
+scenario is assumed to be the continued disposal of the fresh waste in the nearest SWDS 
+(where the LFG is released or captured and destructed through flaring to comply with 
+regulations or contractual requirements, to address safety and odour concerns, or for other 
+reasons). If condition (d) or (e) applies , it shall also be demonstrated that 80 per cent of 
+the collected MSW of the municipality (or the region from where the MSW treated by the 
+project activity is sourced)11 are treated in SWDS or stockpiles or are dumped in the year 
+before the PDD is published for global stakeholder consultation. 
+                                                
+8 For LDCs, windrow or similar technology may be considered, which (i) applies locally appropriate 
+machinery operable without a strong depen dence on external actors or conditions, (ii) employs trained 
+and skilled waste workers with adequate protection against health risks arising from the handling of the 
+waste stream(s), and (iii) includes a process including an intensive (>55 oC) treatment process and a 
+longer curing phase of the compost product. 
+9 May be certified by a municipal authority or another MSW treatment facility in the municipality.  
+10 May be certified by a municipal authority or another MSW treatment facility in the m unicipality. 
+11 The applicable geographical region may be the host country, the region or the municipality where the 
+project activity is located. 
+ 
+
+
+===== PAGE 15 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+15/81 
+27. The collection coverage of MSW may be estimated as: (1) the quantity of waste collected 
+divided by the total waste generation, or (2) the population covered by waste collection 
+service divided by the total population. The quantity of waste collected may be (1) obtained 
+from the municipal waste authority, (2) based on local statistics, or (3) based on the MSW 
+accepted by all waste processing facilities, including open dump sites. Total waste 
+generation may be calculated using data on population and/o r waste generation per 
+capita. 
+5.2. Project boundary 
+28. The spatial extent of the project boundary is the SWDS where the waste is disposed of in 
+the baseline, 12 anaerobic lagoons or sludge pits treating organic wastewater in the 
+baseline, and the site of the alternative waste treatment process(es). The boundary also 
+includes on -site electricity and/or heat  generation and use, on -site fuel use and the 
+wastewater treatment plant used to treat the wastewater by -products of the alternative 
+waste treatment process(es). The project boundary does not include facilities for waste 
+collection and transport. 
+29. In the cas e that the project provides electricity to a grid, then the spatial extent of the 
+project boundary will also include those plants connected to the energy system to which 
+the plant is connected. If upgraded biogas is fed to a natural gas distribution system, then 
+the natural gas distribution system is also included in the boundary. 
+30. Sample diagrams of the project boundary  for each alternative waste treatment process 
+are included in Appendix 1. 
+31. The GHG emission sources included in or excluded from the project boundary are listed 
+in Table 3. 
+Table 3. Emission sources included in or excluded from the project boundary  
+Source Gas Included Justification/explanation 
+Baseline 
+Emissions from heat 
+generation 
+CO2 Yes Major emission source if heat 
+generation is included in the 
+project activity and displaces 
+more carbon intensive heat 
+generation in the baseline 
+CH4 No Excluded for simplification. This 
+is conservative 
+N2O No Excluded for simplification. This 
+emission source is assumed to 
+be very small 
+Emissions at the SWDS CH4 Yes The major source of emissions 
+in the baseline 
+N2O No N2O emissions are small 
+compared to CH4 emissions 
+from landfills. Exclusion of this 
+gas is conservative 
+                                                
+12 If supressed demand is considered for the baseline identified, SWDS need not be identified or included 
+in the project boundary. 
+
+
+===== PAGE 16 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+16/81 
+Source Gas Included Justification/explanation 
+CO2 No CO2 emissions from the 
+decomposition of fresh waste 
+are not accounted fora 
+Emissions from 
+anaerobic lagoons or 
+sludge pits 
+CO2 No CO2 emissions from biomass 
+source are considered GHG 
+neutral 
+CH4 Yes Methane emission from 
+anaerobic process 
+N2O No Not significant. Excluded for 
+simplification and 
+conservativeness 
+Emissions from 
+electricity generation 
+CO2 Yes/No Major source if electricity 
+generation is included in the 
+project activity and is sent to the 
+grid or displaces fossil fuel fired 
+electricity generation in the 
+baseline  
+CH4 No Excluded for simplification. This 
+is conservative 
+N2O No Excluded for simplification. This 
+is conservative 
+Emissions from use of 
+natural gas 
+CO2 No Excluded for simplification. This 
+is conservative 
+CH4 Yes/No Major emission source if supply 
+of upgraded biogas through a 
+natural gas distribution network 
+is included in the project activity 
+N2O No Excluded for simplification. This 
+is conservative 
+Project activity 
+Emissions from on-site 
+fossil fuel consumption 
+due to the project 
+activity other than for 
+electricity generation 
+CO2 Yes May be an important emission 
+source. Includes heat generation 
+for mechanical/thermal 
+treatment process, start-up of 
+the gasifier, auxiliary fossil fuels 
+needed to be added into 
+incinerator, etc. It does not 
+include transport 
+CH4 No Excluded for simplification. This 
+emission source is assumed to 
+be very small 
+N2O No Excluded for simplification. This 
+emission source is assumed to 
+be very small 
+Emissions from on-site 
+electricity use 
+CO2 Yes May be an important emission 
+source 
+CH4 No Excluded for simplification. This 
+emission source is assumed to 
+be very small 
+
+
+===== PAGE 17 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+17/81 
+Source Gas Included Justification/explanation 
+N2O No Excluded for simplification. This 
+emission source is assumed to 
+be very small 
+Emissions from the 
+waste treatment 
+processes 
+N2O Yes N2O may be emitted from 
+composting, incineration, syngas 
+produced and RDF/SB 
+combustion 
+CO2 Yes CO2 emissions from 
+incineration, gasification or 
+combustion of fossil-based 
+waste shall be included. CO2 
+emissions from the 
+decomposition or combustion of 
+fresh waste are not accounteda  
+CH4 Yes CH4 leakage from the anaerobic 
+digester and incomplete 
+combustion in the flaring 
+process are potential sources of 
+project emissions. CH4 may be 
+emitted from incineration, 
+gasification, composting and 
+RDF/SB combustion 
+Emissions from 
+wastewater treatment 
+CO2 No CO2 emissions from the 
+decomposition of fresh waste 
+are not accounteda 
+CH4 Yes CH4 emissions from anaerobic 
+treatment of wastewater are 
+accounted for. Aerobic treatment 
+of wastewater shall not result in 
+CH4 emissions 
+N2O No Excluded for simplification. This 
+emission source is assumed to 
+be very small 
+(a) CO2 emissions from the combustion or decomposition of biomass (see definition by the 
+Board in annex 8 of the Board’s 20 th meeting report) are not accounted as GHG emissions. 
+Where the combustion or decomposition of biomass under a CDM project activity results in a 
+decrease of carbon pools, such stock changes should be considered in the calculation of 
+emission reductions. This is not the case for waste treatment projects.  
+5.3. Baseline emissions 
+32. Baseline emissions are determined as follows: 
+𝐵𝐸𝑦 = ∑(𝐵𝐸𝐶𝐻4,𝑡,𝑦 + 𝐵𝐸𝑊𝑊,𝑡,𝑦 + 𝐵𝐸𝐸𝑁,𝑡,𝑦 + 𝐵𝐸𝑁𝐺,𝑡,𝑦)× (1
+𝑡
+− 𝑅𝐴𝑇𝐸𝑐𝑜𝑚𝑝𝑙𝑖𝑎𝑛𝑐𝑒,𝑡) 
+Equation (1) 
+
+
+===== PAGE 18 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+18/81 
+Where: 
+𝐵𝐸𝑦 = Baseline emissions in year y (t CO2e) 
+𝐵𝐸𝐶𝐻4,𝑡,𝑦 = Baseline emissions of methane from the SWDS in year y (t CO2e) 
+𝐵𝐸𝑊𝑊,𝑡,𝑦 = Baseline methane emissions from anaerobic treatment of the 
+wastewater in open anaerobic lagoons or of sludge in sludge pits 
+in the absence of the project activity in year y (t CO2e)  
+𝐵𝐸𝐸𝑁,𝑡,𝑦 = Baseline emissions associated with energy generation in year y 
+(t CO2) 
+𝐵𝐸𝑁𝐺,𝑡,𝑦 = Baseline emissions associated with natural gas use in year y 
+(t CO2) 
+𝑅𝐴𝑇𝐸𝑐𝑜𝑚𝑝𝑙𝑖𝑎𝑛𝑐𝑒,𝑡 = Discount factor to account for the rate of compliance of a 
+regulatory requirement that mandates the use of alternative waste 
+treatment process t 13 
+𝑡 = Type of alternative waste treatment process  
+5.3.1. Baseline emissions of methane from the SWDS (BECH4,t,y) 
+33. Baseline methane emissions from the SWDS are determined using “TOOL04: Emissions 
+from solid waste disposal sites”. The following requirements shall be complied with when 
+applying the tool: 
+(a) Wj,x in the tool is the amount of organic fresh waste prevented from disposal in the 
+baseline SWDS due to its tr eatment in any (combination) alternative waste 
+treatment process14; 
+(b) Emission amounts are calculated using Application B in the tool (only fresh waste 
+avoided from disposal after the start of the first crediting period shall be considered; 
+(c) Sampling to determine the fractions of different waste types is necessary (note that 
+for the case that the waste is combusted in the project activity, then the parameter 
+Qj,c,y in this methodology is equivalent to the variable Wj,x in the tool); 
+(d) The tool instructs that fy shall be determined based on historic data or contract or 
+regulation requirements specifying the amount of methane that must be 
+destroyed/used (if available). The following additional instruction applies: 
+(i) If the regulation requirements specify a percentage of the LFG that is 
+required to be flared, the amount shall equal fy.; 
+(ii) If the regulation requirements do not specify the amount or percentage of 
+LFG that should be destroyed but require the installation of a capture system, 
+without requiring the captured LFG to be flared then fy = 0; and 
+                                                
+13 Determined once for each crediting period, based on the most recent data available at the time of 
+submission of the CDM-PDD to the DOE for validation. 
+14 In case a combination of treatment processes is implemented in parallel, W j,x is determined for each 
+process. 
+ 
+
+
+===== PAGE 19 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+19/81 
+(iii) If the requirement do es not specify any amount or percentage of LFG that 
+should be destroyed but require the installation of a system to capture and 
+flare the LFG, then it is assumed fy = 0.2.15 
+5.3.1.1. Suppressed demand scenario 
+34. When applying the tool , a default  MCF of 0.4 16 for baseline emissions may be used to 
+account for the scenario of a suppressed demand as described in the “Guidelines on the 
+consideration of suppressed demand in CDM methodologies” when all the following 
+conditions apply: 
+(a) It can be demonstrated that waste is being dumped in an uncontrolled manner in 
+human settlement  areas under the current practice due to a lack of organized 
+waste collection and disposal system; 
+(b) It can be demonstrated that only the municipal solid waste is being treated under 
+the project activity and wastes from other sources such as agricultural or agro-
+industrial wastes are not being treated under the project activity; 
+(c) It can be demonstrated that entire portion of the waste treated under the project 
+activity would comply with the above two conditions. 
+5.3.2. Baseline emissions from organic wastewater (BEWW,t,y) 
+35. Baseline emissions are determined as the minimum between the amount of methane 
+produced after the implementation of the project activity and the amount of methane 
+calculated using the methane conversion factor method for the estimation of methane 
+emissions from anaerobic lagoons or sludge pits, as follows: 
+𝐵𝐸𝑊𝑊,𝑡,𝑦 = 𝑚𝑖𝑛{𝑄𝐶𝐻4,𝑦; 𝐵𝐸𝐶𝐻4,𝑀𝐶𝐹,𝑦} Equation (2) 
+Where: 
+𝐵𝐸𝑊𝑊,𝑡,𝑦 = Baseline methane emissions from anaerobic treatment of the 
+wastewater17 in open anaerobic lagoons or of sludge in sludge pits 
+in the absence of the project activity in year y (t CO2e) 
+                                                
+15 Project participants may propose and justify an alternative default value as a request for revision to this 
+methodology. 
+16 Shallow landfill (<5m) is a realistic and conservative technology for disposing MSW, and it is also the 
+least cost alternative for providing comparable level of service to alternative waste treatment 
+technologies applicable in the methodology.  The MCF value is chosen from the definition provided in 
+2006 IPCC Guideline applicable to unmanaged shallow land fills that do not have controlled placement 
+of waste (i.e. waste directed to specific deposition areas, a degree of control of scavenging and a degree 
+of control of fires) and do not include any cover material, mechanical compacting and levelling of the 
+waste. The project participants can choose to select and justify a different baseline scenario expected 
+under a suppressed demand scenario. If they choose to do so, the alternatives considered shall include 
+inter alia alternatives M1 through M9 discussed in the procedure for the selection of the most plausible 
+baseline scenario and demonstration of additionality. 
+17 The quantity of wastewater treated in the baseline shall include only fresh wastewater and exclude any 
+wastewater discharge. 
+
+
+===== PAGE 20 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+20/81 
+𝑄𝐶𝐻4,𝑦 = Amount of methane produced from wastewater in year y after the 
+implementation of the project activity (t CO2e) 
+𝐵𝐸𝐶𝐻4,𝑀𝐶𝐹,𝑦 = Baseline methane emissions determined using the Methane 
+Conversion Factor (t CO2e) 
+5.3.2.1. Methane produced (QCH4,y) 
+36. Projects proponent shall use Step 1 “Determination of the quantity of methane produced 
+in the digester (QCH4,y)” of the latest version of  “TOOL14: Project and leakage emissions 
+from anaerobic digesters” to determine the amount of methane produced from wastewater 
+after the implementation of the project activity (QCH4,y). 
+5.3.2.2. Baseline methane emissions determined using the metha ne conversion 
+factor (BECH4,MCF,y) 
+37. BECH4,MCF,y is determined based on the chemical oxygen demand (COD) of the wastewater 
+that would enter the lagoon in the absence of the project activity (CODBL,y), the maximum 
+methane producing capacity ( Bo) and a methane  conversion factor ( MCFBL,y) which 
+expresses the proportion of the wastewater that would decay to methane, as follows: 
+𝐵𝐸𝐶𝐻4,𝑀𝐶𝐹,𝑦 = 𝐺𝑊𝑃𝐶𝐻4 × 𝑀𝐶𝐹𝐵𝐿,𝑦 × 𝐵𝑜 × 𝐶𝑂𝐷𝐵𝐿,𝑦 Equation (3) 
+Where: 
+𝐵𝐸𝐶𝐻4,𝑀𝐶𝐹,𝑦 = Baseline methane emissions determined using the Methane 
+Conversion Factor (t CO2e) 
+𝐺𝑊𝑃𝐶𝐻4 = Global Warming Potential of methane valid for the commitment 
+period (t CO2e/t CH4) 
+𝐵𝑜 = Maximum methane producing capacity, expressing the maximum 
+amount of CH 4 that can be produced from a given quantity of 
+chemical oxygen demand (t CH4/tCOD) 
+𝑀𝐶𝐹𝐵𝐿,𝑦 = Average baseline methane conversion factor (fraction) in year y, 
+representing the fraction of ( CODBL,y x Bo) that would be degraded 
+to CH4 in the absence of the project activity 
+𝐶𝑂𝐷𝐵𝐿,𝑦 = Quantity of chemical oxygen demand that would be treated in 
+anaerobic lagoons or sludge pits in the absence of the project 
+activity in year y (tCOD) 
+5.3.2.2.1. Determination of CODBL,y 
+38. In principle, the baseline chemical oxygen demand (CODBL,y) corresponds to the chemical 
+oxygen demand that is treated under the project activity ( CODPJ,y). But, if there would be 
+effluent from the lagoons or the sludge pit in the baseline, CODBL should be adjusted by 
+an adjustment factor which relates the COD supplied to the lagoon or sludge pit with the 
+COD in the effluent. 
+𝐶𝑂𝐷𝐵𝐿,𝑦 = 𝜌 (1 − 𝐶𝑂𝐷𝑜𝑢𝑡,𝑥
+𝐶𝑂𝐷𝑖𝑛,𝑥
+) × 𝐶𝑂𝐷𝑃𝐽,𝑦 Equation (4) 
+
+
+===== PAGE 21 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+21/81 
+Where: 
+𝐶𝑂𝐷𝐵𝐿,𝑦 = Quantity of chemical oxygen demand that would be treated in 
+anaerobic lagoons or sludge pits in the absence of the project activity 
+in year y (tCOD) 
+𝐶𝑂𝐷𝑃𝐽,𝑦 = Quantity of chemical oxygen demand that is treated in the anaerobic 
+digester or under clearly aerobic conditions in the project activity in 
+year y (tCOD) 
+𝐶𝑂𝐷𝑜𝑢𝑡,𝑥 = COD of the effluent in the period x (tCOD) 
+𝐶𝑂𝐷𝑖𝑛,𝑥 = COD directed to the anaerobic lagoons or sludge pits in the period x 
+(tCOD) 
+𝑥 = Representative historical reference period 
+𝜌 = Discount factor to account for the uncertainty of the use of historical 
+data to determine CODBL,y 
+39. CODPJ,y is determined as follows: 
+𝐶𝑂𝐷𝑃𝐽,𝑦 = ∑ 𝐹𝑃𝐽,𝐴𝐷,𝑚 × 𝐶𝑂𝐷𝐴𝐷,𝑚
+12
+𝑚=1
+ Equation (5) 
+Where: 
+𝐶𝑂𝐷𝑃𝐽,𝑦 = Quantity of chemical oxygen demand that is treated in the anaerobic 
+digester or under clearly aerobic conditions in the project activity in 
+year y (tCOD) 
+𝐹𝑃𝐽,𝐴𝐷,𝑚 = Quantity of wastewater or sludge that is treated in the anaerobic 
+digester or under clearly aerobic conditions in the project activity in 
+month m (m³) 
+𝐶𝑂𝐷𝐴𝐷,𝑚 = Chemical oxygen demand in the wastewater or sludge that is treated 
+in the anaerobic dige ster or under clearly aerobic conditions in the 
+project activity in month m (tCOD/m³) 
+𝑚 = Months of year y of the crediting period 
+5.3.2.2.2. Determination of MCFBL,y 
+40. The quantity of methane generated from COD disposed of in the baseline in open 
+anaerobic lagoons or sludge pits depends mainly on the temperature and the depth of the 
+lagoon or sludge pit. Accordingly, the methane conversion factor is calculated based on a 
+factor fd, expressing the influence of the depth of the lagoon or sludge pit on methane 
+generation, and a factor fT,y expressing the influence of the temperature on the methane 
+generation. In addition, a conservativeness factor of 0.89 is applied to accou nt for the 
+uncertainty associated with this approach. MCFBL,y is calculated as follows: 
+𝑀𝐶𝐹𝐵𝐿,𝑦 = 𝑓𝑑 × 𝑓𝑇,𝑦 × 0.89 Equation (6) 
+
+
+===== PAGE 22 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+22/81 
+Where: 
+𝑀𝐶𝐹𝐵𝐿,𝑦 = Average baseline methane conve rsion factor (fraction) in year y, 
+representing the fraction of ( CODBL,y x Bo) that would be degraded to 
+CH4 in the absence of the project activity 
+𝑓𝑑 = Factor expressing the influence of the depth of the anaerobic lagoon 
+or sludge pit on methane generation 
+𝑓𝑇,𝑦 = Factor expressing the influence of the temperature on the metha ne 
+generation in year y  
+0.89 = Conservativeness factor 
+5.3.2.3. Determination of fd 
+41. fd represents the influence of the average depth of the anaerobic lagoons or sludge pits 
+on methane generation. 
+
+
+
+
+
+
+=
+mDif
+mDmif
+mDif
+f d
+2;7.0
+21;5.0
+1;0
+ Equation (7) 
+Where: 
+𝑓𝑑 = Factor expressing the influence of the depth of the anaerobic lagoon 
+or sludge pit on methane generation 
+𝐷 = Average depth of the anaerobic lagoons or sludge pits used in the 
+baseline scenario (m) 
+5.3.2.4. Determination of fT,y 
+42. The factor fT,y is calculated  based on a monthly stock change model  as follows: 
+𝐶𝑂𝐷𝑎𝑣𝑎𝑖𝑙𝑎𝑏𝑙𝑒,𝑚 = 𝐶𝑂𝐷𝐵𝐿,𝑚 + (1 − 𝑓𝑇,𝑚−1)× 𝐶𝑂𝐷𝑎𝑣𝑎𝑖𝑙𝑎𝑏𝑙𝑒,𝑚−1 Equation (8) 
+with 
+𝐶𝑂𝐷𝐵𝐿,𝑚 = (1 − 𝐶𝑂𝐷𝑜𝑢𝑡,𝑥
+𝐶𝑂𝐷𝑖𝑛,𝑥
+) × 𝐶𝑂𝐷𝑃𝐽,𝑚  Equation (9) 
+and 
+𝐶𝑂𝐷𝑃𝐽,𝑚 = 𝐹𝑃𝐽,𝐴𝐷,𝑚 × 𝐶𝑂𝐷𝐴𝐷,𝑚  Equation (10) 
+Where: 
+𝐶𝑂𝐷𝑎𝑣𝑎𝑖𝑙𝑎𝑏𝑙𝑒,𝑚 = Quantity of chemical oxygen demand available for degradation in 
+the anaerobic lagoon or sludge pit in month m (tCOD) 
+𝐶𝑂𝐷𝐵𝐿,𝑚 = Quantity of chemical oxygen demand that would be treated in 
+anaerobic lagoons or sludge pits in the absence of the project 
+activity in month m (tCOD) 
+
+
+===== PAGE 23 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+23/81 
+𝐶𝑂𝐷𝑃𝐽,𝑚 = Quantity of chemical oxygen demand that is treated in the anaerobic 
+digester or under clearly aerobic conditions in the project activity in 
+month m (tCOD) 
+𝐹𝑃𝐽,𝐴𝐷,𝑚 = Quantity of wastewater or sludge that is treated in the anaerobic 
+digester or under clearly aerobic conditions in the project activity in 
+month m (m³) 
+𝐶𝑂𝐷𝐴𝐷,𝑚  = Chemical oxygen demand in the wastewater or sludge that is 
+treated in the anaerobic digester or under clearly aerobic conditions 
+in the project activity in month m (tCOD/m³) 
+𝑓𝑇,𝑚−1 = Factor expressing the influence of the temperature on the methane 
+generation in month m-1  
+𝑚 = Months of year y of the crediting period 
+𝐶𝑂𝐷𝑜𝑢𝑡,𝑥 = COD of the effluent in the period x (t COD) 
+𝐶𝑂𝐷𝑖𝑛,𝑥 = COD directed to the open lagoons or in sludge pits in the period  x 
+(t COD) 
+𝑥 = Representative historical reference period 
+43. In case of emptying the anaerobic lagoon or sludge pit, the accumulation of organic matter 
+restarts with the next inflow and the COD available from the previous month should be set 
+to zero. 
+44. The monthly factor to account for the influence of the temperature on methane generation 
+is calculated based on the following “van’t Hoff-Arrhenius” approach: 
+𝑓𝑇,𝑚  =  {
+0.104                 𝑖𝑓   𝑇2,𝑚 < 278𝐾
+𝑒
+(𝐸 𝑥 (𝑇2,𝑚−𝑇1)
+𝑅 𝑥 𝑇1 𝑥 𝑇2,𝑚
+)
+    𝑖𝑓  278𝐾 ≤ 𝑇2,𝑚 ≤ 302.5𝐾
+0.95                  𝑖𝑓   𝑇2,𝑚 > 302.5𝐾
+ Equation (11) 
+Where: 
+𝑓𝑇,𝑚 = Factor expressing the influence of the temperature on the methane 
+generation in month m  
+𝐸 = Activation energy constant (15,175 cal/mol) 
+𝑇2,𝑚 = Average temperature at the project site in month m (K) 
+𝑇1 = 303.15 K (273.15 K + 30 K) 
+𝑅 = Ideal gas constant (1.986 cal/K mol) 
+𝑚 = Months of year y of the crediting period 
+45. The annual value fT,y is calculated as follows: 
+
+
+=
+=
+
+= 12
+1m
+BL,m
+12
+1m
+mavailable,T,m
+T,y
+COD
+CODf
+f
+ Equation (12) 
+
+
+===== PAGE 24 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+24/81 
+Where: 
+𝑓𝑇,𝑦 = Factor expressing the influence of the temperature on the methane 
+generation in year y 
+𝑓𝑇,𝑚 = Factor expressing the influence of the temperature on the methane 
+generation in month m 
+𝐶𝑂𝐷𝑎𝑣𝑎𝑖𝑙𝑎𝑏𝑙𝑒,𝑚 = Quantity of chemical oxygen demand avai lable for degradation in 
+the anearobic lagoon or sludge pit in month m (tCOD) 
+𝐶𝑂𝐷𝐵𝐿,𝑚 = Quantity of chemical oxygen demand that would be treated in 
+anaerobic lagoons or sludge pits in the absence of the project 
+activity in month m (tCOD) 
+𝑚 = Months of year y of the crediting period 
+5.3.3. Baseline emissions from generation of energy 
+46. This procedure is distinguished depending on whether the baseline is the separate 
+generation of electricity and heat or the combined generation of heat and electricity b y 
+cogeneration. 
+5.3.3.1. Separate generation of electricity and heat 
+𝐵𝐸𝐸𝑁,𝑦 = 𝐵𝐸𝐸𝐶,𝑦 + 𝐵𝐸𝐻𝐺,𝑦 Equation (13) 
+Where: 
+𝐵𝐸𝐸𝑁,𝑦 = Baseline emissions associated with energy generation in year y 
+(t CO2) 
+𝐵𝐸𝐸𝐶,𝑦 = Baseline emissions associated with electricity generation in year y 
+(t CO2) 
+𝐵𝐸𝐻𝐺,𝑦 = Baseline emissions associated with heat generation in year y 
+(t CO2) 
+5.3.3.1.1. Baseline emissions from separate generation of electricity (BEEC,y) 
+47. The baseline emissions associated with electricity generation in year y (BEEC,y) shall be 
+calculated using  “ TOOL05: Baseline, project and/or leakage emissions from electricity 
+consumption and monitoring of electricity generation”. When applying the tool: 
+(a) The electricity sources  k in the tool correspond to the sources of electricity 
+generated identified in the selection of the most plausible baseline scenario; and 
+(b) ECBL,k,y in the tool is eq uivalent to the net amount of electricity generated by the 
+alternative waste treatment process t and exported to the grid or displacing fossil 
+fuel fired captive energy plant in year y (EGt,y). 
+5.3.3.2. Baseline emissions associated with separate generation of heat (BEHG,y) 
+48. If the facility where heat generated by the project activity is used is a cement plant, then 
+project participants may not account for baseline emissions associated with heat 
+generation under this methodology. 
+
+
+===== PAGE 25 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+25/81 
+49. For use of heat in other facilities where the baseline heat generation was a fossil fuel fired 
+boiler or air heater, and if the facilities are included in the project boundary, the baseline 
+emissions associated with heat generation in year y (BEHG,y) are determined based on the 
+heat generation in the project activity, as follows: 
+𝐵𝐸𝐻𝐺,𝑦 = 𝐻𝐺𝑃𝐽,𝑦 × 𝐸𝐹𝐶𝑂2,𝐵𝐿,𝐻𝐺
+𝜂𝐻𝐺,𝐵𝐿
+ Equation (14) 
+Where: 
+𝐵𝐸𝐻𝐺,𝑦 = Baseline emissions associated with heat generation in year y (t CO2) 
+𝜂𝐻𝐺,𝐵𝐿 = Efficiency of the boiler or air heater used for heat generation in the 
+baseline (ratio) 
+𝐻𝐺𝑃𝐽,𝑦 = Quantity of heat supplied by the project activity displacing baseline 
+heat generation by a fossil fuel boiler or air heater in year y (TJ) 
+𝐸𝐹𝐶𝑂2,𝐵𝐿,𝐻𝐺 = CO2 emission factor of the fossil fuel type used for heat generation 
+by the boiler or air heater in the baseline (t CO2/TJ) 
+50. To estimate the baseline energy efficiency of the boiler or air heater in the baseline (HG,BL) 
+project participants shall apply  “TOOL09: Determining the baseline efficiency of thermal 
+or electric energy generation systems”. 
+5.3.4. Cogeneration of electricity and heat 
+51. Baseline emissions from  electricity and heat cogeneration are calculated by multiplying 
+electricity generation ( EGt,y) and the quantity of heat supplied ( HGPJ,y) with the CO 2 
+emission factor of the fuel used by the cogeneration plant, as follows: 
+𝐵𝐸𝐸𝑁,𝑦 = (𝐸𝐺𝑡,𝑦 × 3.6)× 10−3 + 𝐻𝐺𝑃𝐽,𝑦
+𝜂𝑐𝑜𝑔𝑒𝑛
+× 𝐸𝐹𝐶𝑂2,𝐵𝐿,𝐶𝐺 Equation (15) 
+Where: 
+𝐵𝐸𝐸𝑁,𝑦 = Baseline emissions associated with energy generation in year y 
+(t CO2) 
+𝐸𝐹𝐶𝑂2,𝐵𝐿,𝐶𝐺 = CO2 emission factor of the fossil fuel type used for energy generation 
+by the cogeneration plant in the baseline (t CO2/TJ) 
+𝐻𝐺𝑃𝐽,𝑦 = Quantity of heat supplied by the project activity displacing baseline 
+heat generation by a fossil fuel cogeneration plant in year y (TJ) 
+𝐸𝐺𝑡,𝑦 = Electricity generated by the alt ernative waste treatment process t 
+and exported to the grid or displacing fossil fuel fired power -only 
+and/or cogeneration captive energy generation in year y (MWh) 
+𝜂𝑐𝑜𝑔𝑒𝑛 = Efficiency of the cogeneration plant that would have been used in 
+the absence of the project activity (ratio) 
+
+
+===== PAGE 26 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+26/81 
+5.3.5. Baseline emissions associated with natural gas use (BENG,y) 
+52. BENG,y is estimated as follows: 
+𝐵𝐸𝑁𝐺,𝑦 = 𝐵𝐼𝑂𝐺𝐴𝑆𝑁𝐺,𝑦 × 𝑁𝐶𝑉𝐵𝐼𝑂𝐺𝐴𝑆,𝑁𝐺,𝑦 × 𝐸𝐹𝐶𝑂2,𝑁𝐺,𝑦 Equation (16) 
+Where: 
+𝐵𝐸𝑁𝐺,𝑦 = Baseline emissions associated with natural gas use in year y (t CO2) 
+𝐵𝐼𝑂𝐺𝐴𝑆𝑁𝐺,𝑦 = Quantity upgraded biogas sent to the natural gas network due to the 
+project activity in year y (Nm3) 
+𝑁𝐶𝑉𝐵𝐼𝑂𝐺𝐴𝑆,𝑁𝐺,𝑦 = Net calorific value of the upgraded biogas sent to the natural gas 
+network due to the project activity in year y (TJ/Nm3) 
+𝐸𝐹𝐶𝑂2,𝑁𝐺,𝑦 = Average CO 2 emission factor of natural gas in the natural gas 
+network in year y (t CO2/TJ) 
+53. EFCO2,NG,y is determined using the relevant provisions in  “TOOL03: Tool to calculate 
+project or leakage CO2 emissions from fossil fuel combustion”. 
+5.4. Project emissions 
+54. The project emissions in year y are calculated for each alternative waste treatment 
+process implemented in the project activity as follows: 
+𝑃𝐸𝑦 = 𝑃𝐸𝐶𝑂𝑀𝑃,𝑦 + 𝑃𝐸𝐴𝐷,𝑦 + 𝑃𝐸𝐺𝐴𝑆,𝑦 + 𝑃𝐸𝑅𝐷𝐹_𝑆𝐵,𝑦 + 𝑃𝐸𝐼𝑁𝐶,𝑦 Equation (17) 
+Where: 
+𝑃𝐸𝑦 = Project emissions in year y (t CO2e) 
+𝑃𝐸𝐶𝑂𝑀𝑃,𝑦 = Project emissions from composting or co -composting in year y 
+(t CO2e) 
+𝑃𝐸𝐴𝐷,𝑦 = Project emissions from anaerobic digestion and biogas combustion 
+in year y (t CO2e) 
+𝑃𝐸𝐺𝐴𝑆,𝑦 = Project emissions from gasification in year y (t CO2e) 
+𝑃𝐸𝑅𝐷𝐹_𝑆𝐵,𝑦 = Project emissions associated with RDF/SB in year y (t CO2e) 
+𝑃𝐸𝐼𝑁𝐶,𝑦 = Project emissions from incineration in year y (t CO2e) 
+5.4.1. Project emissions from composting or co-composting (PECOMP,y) 
+55. Project emissions associated with composting or co-composting (PECOMP,y) are calculated 
+according to  “TOOL13: Project and leakage emissions from composting”. 
+5.4.2. Project emissions from anaerobic digestion (PEAD,y) 
+56. PEAD,y is calculated according to  “TOOL14: Project and leakage emissions from anaerobic 
+digesters”. When estimating the parameters PEEC,y and PEFC,y in the tool, the sources of 
+electricity and fossil fuel consumption shall include processing, upgrading and 
+compressing the biogas into the natural gas network (if this is part of the project activity). 
+
+
+===== PAGE 27 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+27/81 
+5.4.3. Project emissions from gasification (PEGAS,y) 
+57. Project emissions from gasification include carbon dioxide emissions as well as small 
+amounts of methane and nitrous oxide emissions associated with the combustion, if fossil 
+carbon is used in the gasification process (PECOM,GAS,y). Project emissions from gasification 
+shall also account for electricity consumption, fossil fuel consumption and wastewater 
+treatment (if associated with the gasification treatment process). Project emissions are 
+therefore determined as follows: 
+𝑃𝐸𝐺𝐴𝑆,𝑦 = 𝑃𝐸𝐶𝑂𝑀,𝐺𝐴𝑆,𝑦 + 𝑃𝐸𝐸𝐶,𝐺𝐴𝑆,𝑦 + 𝑃𝐸𝐹𝐶,𝐺𝐴𝑆,𝑦 + 𝑃𝐸𝑤𝑤,𝐺𝐴𝑆,𝑦 Equation (18) 
+Where: 
+𝑃𝐸𝐺𝐴𝑆,𝑦 = Project emissions from gasification in year y (t CO2e) 
+𝑃𝐸𝐶𝑂𝑀,𝐺𝐴𝑆,𝑦 = Project emissions from combustion associated with gasification in 
+year y (t CO2) 
+𝑃𝐸𝐸𝐶,𝐺𝐴𝑆,𝑦 = Project emissions from electricity consumption associated with 
+gasification in year y (t CO2e) 
+𝑃𝐸𝐹𝐶,𝐺𝐴𝑆,𝑦 = Project emissions from fossil fuel c onsumption associated with 
+gasification in year y (t CO2e) 
+𝑃𝐸𝑤𝑤,𝐺𝐴𝑆,𝑦 = Project emissions from the wastewater treatment associated with 
+gasification in year y (t CH4) 
+58. PECOM,GAS.y is determined according to the procedure “Project emissions from combustion 
+within the project boundary” , where PECOM,GAS,y=PECOM,c,y and the combustor  c is the 
+gasifier or the syngas burner. 
+59. PEEC,GAS,y is determined according to the procedure “ Project emissions from electricity 
+use”, where PEEC,GAS,y=PEEC,t,y and the alternative waste treatment process t is 
+gasification. 
+60. PEFC,GAS,y is determined according to the procedure “ Project emissions from fossil fuel 
+use”, where PEFC,GAS,y=PEFC,t,y and the alternative waste treatment process  t is 
+gasification. 
+61. PEww,GAS,y is determined according to the procedure “ Project emissions from wastewater 
+treatment”, where PEww,GAS.y=PEww,t,y and the alternative waste treatment process  t is 
+gasification. 
+5.4.4. Project emissions associated with mechanical or thermal production of RDF/SB 
+(PERDF_SB,y) 
+62. Project emissions associated with RDF/SB comprise both the emissions from the 
+mechanical/thermal production process (e.g. electricity, fossil fuel consumption and 
+
+
+===== PAGE 28 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+28/81 
+wastewater treatment, if relevant) as well as the combustion of RDF/SB (if this is part of 
+the project activity18). . Project emissions are determined as follows: 
+𝑃𝐸𝑅𝐷𝐹_𝑆𝐵,𝑦 = 𝑃𝐸𝐶𝑂𝑀,𝑅𝐷𝐹_𝑆𝐵,𝑦 + 𝑃𝐸𝐸𝐶,𝑅𝐷𝐹_𝑆𝐵,𝑦 + 𝑃𝐸𝐹𝐶,𝑅𝐷𝐹_𝑆𝐵,𝑦
++ 𝑃𝐸𝑤𝑤,𝑅𝐷𝐹_𝑆𝐵,𝑦 
+Equation (19) 
+Where: 
+𝑃𝐸𝑅𝐷𝐹_𝑆𝐵,𝑦 = Project emissions associated with RDF/SB in year y (t CO2e) 
+𝑃𝐸𝐶𝑂𝑀,𝑅𝐷𝐹_𝑆𝐵,𝑦 = Project emissions from combustion of fossil waste associated with 
+combustion of RDF/SB within the project boundary in year y (t CO2)  
+𝑃𝐸𝐸𝐶,𝑅𝐷𝐹_𝑆𝐵,𝑦 = Project emissions from electricity consumption associated with 
+RDF/SB (production and on-site combustion) in year y (t CO2e) 
+𝑃𝐸𝐹𝐶,𝑅𝐷𝐹_𝑆𝐵,𝑦 = Project emissions from fossil fuel consumption associated with 
+RDF/SB (production and on-site combustion) in year y (t CO2e) 
+𝑃𝐸𝑤𝑤,𝑅𝐷𝐹_𝑆𝐵,𝑦 = Project emissions from the wastewater treatment  associated with 
+RDF/SB (production and on-site combustion) in year y (t CH4)  
+63. PEEC,RDF_SB,y is determined according to the procedure “Project emissions from electricity 
+use”, where PEEC,RDF_SB,y=PEEC,t,y and the alt ernative waste treatment process  t is 
+production of RDF/SB. The electricity generated onsite from combustion of fossil waste 
+and RDF/SB may be excluded. 
+64. PECOM,RDF_SB,y is determined according to the procedure “ Project emissions from 
+combustion within the project boundary” , where PERDF_SB,COM,y=PECOM,t,y and the 
+combustor c is the RDF/SB combustor. 
+65. PEFC,RDF_SB,y is determined according to the procedure “Project emissions from fossil fuel 
+use”, where PEFC,RDF_SB,y=PEFC,t,y and the alt ernative waste treatment process  t is the 
+production of RDF/SB. 
+66. PEww,RDF_SB,y is determined according to the procedure “Project emissions from wastewater 
+treatment”, where PEww,RDF_SB,y=PEww,t,y and the alt ernative waste treatment process  t is 
+the production of RDF/SB. 
+5.4.5. Project emissions from incineration (PEINC,y) 
+67. Project emissions from incineration include emissions from combustion within the project 
+boundary (PECOM,INC,y). If associated with the incineration process, then project emissions 
+shall also ac count for electricity consumption, fossil fuel consumption and wastewater 
+treatment (if associated with the incineration process). Project emissions are therefore 
+determined as follows: 
+𝑃𝐸𝐼𝑁𝐶,𝑦 = 𝑃𝐸𝐶𝑂𝑀,𝐼𝑁𝐶,𝑦 + 𝑃𝐸𝐸𝐶,𝐼𝑁𝐶,𝑦 + 𝑃𝐸𝐹𝐶,𝐼𝑁𝐶,𝑦 + 𝑃𝐸𝑤𝑤,𝐼𝑁𝐶,𝑦 Equation (20) 
+                                                
+18 For any amount of RDF/SB disposed of in a SWDS or which is not used in year y, leakage effects shall 
+be considered in accordance with section 5.5 below (Leakage emissions). 
+
+
+===== PAGE 29 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+29/81 
+Where: 
+𝑃𝐸𝐼𝑁𝐶,𝑦 = Project emissions from incineration in year y (t CO2e) 
+𝑃𝐸𝐶𝑂𝑀,𝐼𝑁𝐶,𝑦 = Project emissions from combustion within the project boundary of 
+fossil waste associated with incineration in year y (t CO2) 
+𝑃𝐸𝐸𝐶,𝐼𝑁𝐶,𝑦 = Project emissions from electricity consumption associated with 
+incineration year y (t CO2e) 
+𝑃𝐸𝐹𝐶,𝐼𝑁𝐶,𝑦 = Project emissions from fossil fuel consumption associated with 
+incineration in year y (t CO2e ) 
+𝑃𝐸𝑤𝑤,𝐼𝑁𝐶,𝑦 = Project emissions from the wastewater treatment associated with 
+incineration in year y (t CH4)  
+68. PEEC,INC,y is determined according to the procedure “ Project emissions from electricity 
+use”, where PEEC,INC,y=PEEC,t,y and the alternative waste treatment process  t is 
+incineration. The electricity generated by onsite incineration may be excluded. 
+69. PECOM,INC,y is determined according to the procedure “Project emissions from combustion 
+within the project boundary” , where PEINC,COM,y=PECOM,t,y and the combustor  c is the 
+incinerator. 
+70. PEFC,INC,y is determined according to the procedure “Project emissions from fossil fuel use”, 
+where PEFC,INC,y=PEFC,t,y and the alternative waste treatment process  t is incineration. 
+71. PEww,INC,y is determined according to the procedure “ Project emissions from wastewater 
+treatment”, where PEww,INC,y=PEww,t,y and the alt ernative waste treatment process  t is 
+incineration. 
+5.4.6. Project emissions from electricity use (PEEC,t,y) 
+72. The project emissions from electricity consumption due to waste treatment process t 
+implemented under the project activity ( PEEC,t,y) shall be calculated  using  “ TOOL05: 
+Baseline, project and/or leakage emissions from electricity consumption and monitoring of 
+electricity generation”. When applying the tool: 
+(a) Project emissions shall be calculated for the sources of electricity consumed due 
+to the alternative waste treatment process t, excluding consumption of electricity 
+that was generated by the project activity (ECt,y); 
+(b) If the project activity consists of more than one alternative waste treatment process, 
+then project participants may choose to monitor elec tricity consumption for the 
+entire site and then allocate this consumption to one of the different alternative 
+waste treatment processes (e.g. apportionment based on sub-metering data is not 
+required). 
+5.4.7. Project emissions from fossil fuel use (PEFC,t,y) 
+73. The project emissions from fossil fuel combustion associated with waste treatment 
+process t implemented under the project activity ( PEFC,t,y) shall be calculated using  
+“TOOL03: Tool to calculate project or leakage CO2 emissions from fossil fuel combustion”. 
+When applying the tool: 
+(a) Processes j in the tool correspond to the sources of fossil fuel consumption due to 
+the alternative waste treatment process, other than for electricity generation. 
+
+
+===== PAGE 30 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+30/81 
+Consumption sources shall include, as relevant, fossil fuels used for starting the 
+gasifier, auxiliary f ossil fuels for operating the incinerator, heat generation for 
+mechanical/thermal treatment process and on -site fossil fuel combustion during 
+co-firing with waste. Fossil fuels used as part of the on -site processing or 
+management of feedstocks and by-products shall also be included; 
+(b) If the project activity consists of more than one alternative waste treatment process, 
+then project participants may choose to monitor fossil fuel consumption for the 
+entire site and then allocate consumption to one of the diffe rent alternative waste 
+treatment processes. 
+5.4.8. Project emissions from combustion within the project boundary (PECOM,c,y) 
+74. This procedure estimates emissions from gasifiers, incinerators, RDF/SB combustors and 
+syngas burners (PECOM,c,y). The procedure is not relevant for flares or biogas combustors. 
+Emissions consist of carbon dioxide, and small amounts of methane and nitrous oxide, as 
+follows: 
+𝑃𝐸𝐶𝑂𝑀,𝐶,𝑦 = 𝑃𝐸𝐶𝑂𝑀,𝐶𝑂2,𝑐,𝑦 + 𝑃𝐸𝐶𝑂𝑀,𝐶𝐻4,𝑁2𝑂,𝑐,𝑦 Equation (21) 
+Where: 
+𝑃𝐸𝐶𝑂𝑀,𝐶,𝑦 = Project emissions from combustion within the project boundary 
+associated with combustor c in year y (t CO2e) 
+𝑃𝐸𝐶𝑂𝑀,𝐶𝑂2,𝑐,𝑦 = Project emissions of CO 2 from combustion within the project 
+boundary associated with combustor c in year y (t CO2) 
+𝑃𝐸𝐶𝑂𝑀,𝐶𝐻4,𝑁2𝑂,𝑐,𝑦 = Project emissions of CH 4 and N 2O from combustion within the 
+project boundary associated with combustor c in year y (t CO2) 
+𝑐 = Combustor used in the project activity: gasifier or syngas burner, 
+incinerator or RDF/SB combustor 
+5.4.9. Project emissions of CO 2 from combustion within the project boundary 
+(PECOM_CO2,c,y) 
+75. Carbon dioxide project emissions associated with on -site combustion (PECOM_CO2,c,y) are 
+calculated based either on the fossil carbon content of the fresh waste or RDF/SB 
+combusted, or on the fossil carbon content of the stack gas. The biogenic carbon content 
+is not considered.19 
+76. Project participants may select fr om three options to calculate PECOM_CO2,c,y. Option 1 
+requires sorting the fresh waste into components of waste type j and then determining the 
+fossil-based carbon content of each waste type  j. Option 2 determines the fossil -based 
+carbon content of the unsorted fresh waste or RDF/SB (noting that Option 1, sorting into 
+waste fractions, is not applicable if only RDF/SB is combusted). Option 3 measures directly 
+the fossil-based carbon content of the stack gas. 
+                                                
+19 CO2 emissions from the combustion or decomposition of biomass (see definition by the Board in annex 8 
+of the Board’s 20th meeting report) are n ot accounted as GHG emissions. Where the combustion or 
+decomposition of biomass under a CDM project activity results in a decrease of carbon pools, such 
+stock changes should be considered in the calculation of emission reductions. This is not the case for 
+waste treatment projects. 
+
+
+===== PAGE 31 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+31/81 
+77. For gasifiers producing syngas for on -site utilisa tion, the fossil carbon content is 
+determined and accounted for once, either evaluating the waste composition at the 
+gasifier’s inlet (Options 1, 2), or the stack gas at the syngas’ stack (Option 3). All the 
+syngas has to be combusted. 
+5.4.9.1. Option 1: Waste sorted into waste type fractions 
+𝑃𝐸𝐶𝑂𝑀,𝐶𝑂2,𝑐,𝑦 = 𝐸𝐹𝐹𝐶𝑂𝑀,𝑐,𝑦 × 44
+12 × ∑ 𝑄𝑗,𝑐,𝑦 × 𝐹𝐶𝐶𝑗,𝑦 × 𝐹𝐹𝐶𝑗,𝑦
+𝑗
+ Equation (22) 
+Where: 
+𝑃𝐸𝐶𝑂𝑀,𝐶𝑂2,𝑐,𝑦 = Project emissions of CO 2 from combustion within the project 
+boundary associated with combustor c in year y (t CO2) 
+𝑄𝑗,𝑐,𝑦 = Quantity of fresh waste type j fed into combustor c the in year y (t) 
+𝐹𝐶𝐶𝑗,𝑦 = Fraction of total carbon content in waste type j in year y (t C/t) 
+𝐹𝐹𝐶𝑗,𝑦 = Fraction of fossil carbon in total carbon content of waste type  j in 
+year y (weight fraction) 
+𝐸𝐹𝐹𝐶𝑂𝑀,𝑐,𝑦 = Combustion efficiency of combustor c in year y (fraction) 
+44
+12 = Conversion factor (t CO2/t C) 
+𝑐 = Combustor used in the project activity: gasifier, incinerator or 
+RDF/SB combustor 
+𝑗 = Waste type 
+78. Project participants may select to either directly monitor the amount of waste type  j fed 
+into the combustor c in year y (Qj,c,y) or calculate this parameter based on monitoring the 
+total waste fed to the combustor and sampling the waste to determine the fraction of waste 
+type j as per the following equation: 
+z
+p
+QQ
+z
+1n
+n,j,y
+waste,c,yj,c,y
+
+==
+ Equation (23) 
+Where: 
+𝑄𝑗,𝑐,𝑦 = Quantity of waste type j fed into combustor c in year y (t) 
+𝑄𝑤𝑎𝑠𝑡𝑒,𝑐,𝑦 = Quantity of fresh waste or RDF/SB fed into combustor c in year y (t) 
+𝑃𝑛,𝑗,𝑦 = Fraction of waste type  j in the sample n collected during the year y 
+(weight fraction) 
+𝑧 = Number of samples collected during the year y  
+𝑛 = Samples collected in year y 
+𝑗 = Waste type 
+
+
+===== PAGE 32 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+32/81 
+5.4.9.2. Option 2: Based on unsorted waste 
+𝑃𝐸𝐶𝑂𝑀,𝐶𝑂2,𝑐,𝑦 = 44
+12 × 𝐹𝐹𝐶𝑂𝑀,𝑐,𝑦 × 𝑄𝑤𝑎𝑠𝑡𝑒,𝑐,𝑦 × 𝐹𝐹𝐶𝑤𝑎𝑠𝑡𝑒,𝑐,𝑦 Equation (24) 
+Where: 
+𝑃𝐸𝐶𝑂𝑀,𝐶𝑂2,𝑐,𝑦 = Project emissions of CO 2 from combustion within the project 
+boundary associated with combustor c in year y (t CO2) 
+𝑄𝑤𝑎𝑠𝑡𝑒,𝑐,𝑦 = Quantity of fresh waste or RDF/SB fed into combustor c in year y (t) 
+𝐹𝐹𝐶𝑤𝑎𝑠𝑡𝑒,𝑐,𝑦 = Fraction of fossil -based carbon in waste or RDF/SB fed into 
+combustor c in year y (t C/t) 
+𝐹𝐹𝐶𝑂𝑀,𝑐,𝑦 = Combustion efficiency of combustor c in year y (fraction) 
+44
+12 = Conversion factor (t CO2/t C) 
+𝑐 = Combustor used in the project activity: gasifier, incinerator or 
+RDF/SB combustor 
+𝑗 = Waste type, including RDF/SB 
+5.4.9.3. Option 3: Based on stack gas measurement 
+𝑃𝐸𝐶𝑂𝑀,𝐶𝑂2,𝑐,𝑦 = 44
+12 × 𝑆𝐺𝑐,𝑦 × 𝐹𝐹𝐶𝑠𝑡𝑎𝑐𝑘,𝑐,𝑦 Equation (25) 
+Where: 
+𝑃𝐸𝐶𝑂𝑀,𝐶𝑂2,𝑐,𝑦 = Project emissions of CO 2 from combustion within the project 
+boundary associated with combustor c in year y (t CO2) 
+𝑆𝐺𝑐,𝑦 = Volume of stack gas from combustor c in year y (Nm3) 
+𝐹𝐹𝐶𝑠𝑡𝑎𝑐𝑘,𝑐,𝑦 = Concentration of fossil -based carbon in the stack gas of the 
+combustor c in year y (t C/Nm3) 
+44
+12 = Conversion factor (t CO2/t C) 
+𝑐 = Combustor used in the project activity: gasifier, syngas burner, 
+incinerator or RDF/SB combustor 
+5.4.10. Project emissions of CH 4 and N 2O from combustion within the project boundary 
+(PECOM_CH4,N2O,c,y) 
+79. Emissions of N2O and CH4 from combustion of RDF/SB are neglected because they are 
+considered very minor. For the case of gasification or incineration, project participants may 
+choose either Option 1 or Option 2 to estimate emissions of N2O and CH4 from combustion 
+within the project boundary. Option 1 calculates the emissions based on monitoring the 
+N2O and CH 4 content in the stack gas. Option 2 calculates the emissions using default 
+emission factors for the amount of N 2O and CH 4 emitted per tonne of fresh waste 
+combusted. 
+
+
+===== PAGE 33 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+33/81 
+5.4.10.1. Option 1: Monitoring the N2O and CH4 content in the stack gas 
+𝑃𝐸𝐶𝑂𝑀_𝐶𝐻4,𝑁2𝑂,𝑐,𝑦
+= 𝑆𝐺𝑐,𝑦
+× (𝐶𝑁2𝑂,𝑆𝐺,𝑐,𝑦 × 𝐺𝑊𝑃𝑁2𝑂 + 𝐶𝐶𝐻4,𝑆𝐺,𝑐,𝑦 × 𝐺𝑊𝑃𝐶𝐻4) 
+Equation (26) 
+Where: 
+𝑃𝐸𝐶𝑂𝑀_𝐶𝐻4,𝑁2𝑂,𝑐,𝑦 = Project emissions of CH 4 and N 2O from combustion within the 
+project boundary of fossil carbon in combustor c in year y (t CO2) 
+𝑆𝐺𝑐,𝑦 = Volume of stack gas from combustor c in year y (Nm3) 
+𝐶𝑁2𝑂,𝑆𝐺,𝑐,𝑦 = Concentration of nitrous oxide in the stack gas from combustor c 
+in year y (t N2O/Nm3) 
+𝐺𝑊𝑃𝑁2𝑂 = Global Warming Potential of nitrous oxide (t CO2e/t N2O) 
+𝐶𝐶𝐻4,𝑆𝐺,𝑐,𝑦 = Concentration of methane in the stack gas from combustor c in 
+year y (t CH4/Nm3) 
+𝐺𝑊𝑃𝐶𝐻4 = Global Warming Potential of methane valid for the commitment 
+period (t CO2e/t CH4) 
+𝑐 = Combustor used in the project activity: gasifier, incinerator 
+5.4.10.2. Option 2: Using default emission factors 
+𝑃𝐸𝐶𝑂𝑀_𝐶𝐻4,𝑁2𝑂,𝑐,𝑦
+= 𝑄𝑤𝑎𝑠𝑡𝑒,𝑐,𝑦
+× (𝐸𝐹𝑁2𝑂,𝑡 × 𝐺𝑊𝑃𝑁2𝑂 + 𝐸𝐹𝐶𝐻4,𝑡 × 𝐺𝑊𝑃𝐶𝐻4) 
+Equation (27) 
+Where: 
+𝑃𝐸𝐶𝑂𝑀_𝐶𝐻4,𝑁2𝑂,𝑐,𝑦 = Project emissions of CH 4 and N 2O from combustion within the 
+project boundary associated with combustor c in year y (t CO2) 
+𝑄𝑤𝑎𝑠𝑡𝑒,𝑐,𝑦 = Quantity of fresh waste or RDF/SB fed into combustor c in 
+year y (t) 
+𝐸𝐹𝑁2𝑂,𝑡 = Emission factor for N 2O associated with waste treatment process 
+t (t N2O/t waste) 
+𝐸𝐹𝐶𝐻4,𝑡 = Emission factor for CH 4 associated with treatment process t 
+(t CH4/t waste) 
+𝐺𝑊𝑃𝑁2𝑂 = Global Warming Potential of nitrous oxide (t CO2e/t N2O) 
+𝐺𝑊𝑃𝐶𝐻4 = Global Warming Potential of methane valid for the commitment 
+period (t CO2e/t CH4) 
+𝑐 = Combustor used in the project activity: gasifier, incinerator  
+𝑡 = Type of alternative waste treatment processes: gasification, 
+incineration 
+
+
+===== PAGE 34 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+34/81 
+5.4.11. Emissions from wastewater discharge management (PEww,t,y) 
+80. If the wastewater discharge generated by the project activity is treated using an aerobic 
+treatment process, such as by co -composting, then project emissions from wastewater 
+treatment are assumed to be zero. 
+81. If the wastewater discharge is treated in an anaerobic digester, then the associated 
+emissions are calculated according to the section above , “Project emissions from 
+anaerobic digestion”. 
+82. If the project activity generates wastewater discharge that is treated anaerobically (through 
+other than in an anaerobic digester that is part of the project activity), stored anaerobically 
+or released without further treatment in accordance with applicable regulations , then 
+project participants shall determine PEww,t,y as follows: 
+  
+(a) For cases without flaring/combustion of the methane generated by the wastewater 
+discharge: 
+𝑃𝐸𝑤𝑤,𝑡,𝑦 =  𝑄𝑤𝑤,𝑦 × 𝑃𝐶𝑂𝐷,𝑦 × 𝐵0 × 𝑀𝐶𝐹𝑤𝑤 × 𝐺𝑊𝑃𝐶𝐻4 Equation (28) 
+(b) For cases with partial  flaring/combustion of the methane generated by the 
+wastewater discharge: 
+𝑃𝐸𝑤𝑤,𝑡,𝑦 =  𝑄𝑤𝑤,𝑦 × 𝑃𝐶𝑂𝐷,𝑦 × 𝐵0 × 𝑀𝐶𝐹𝑤𝑤 × 𝐺𝑊𝑃𝐶𝐻4
++ (𝑃𝐸𝑓𝑙𝑎𝑟𝑒,𝑤𝑤,𝑦
+𝐺𝑊𝑃𝐶𝐻4
+− 𝐹𝐶𝐻4,𝑓𝑙𝑎𝑟𝑒,𝑦) Equation (29) 
+(c) For cases with complete  flaring/combustion of the methane generated by the 
+wastewater discharge: 
+𝑃𝐸𝑤𝑤,𝑡,𝑦 = 𝑃𝐸𝑓𝑙𝑎𝑟𝑒,𝑤𝑤,𝑦
+𝐺𝑊𝑃𝐶𝐻4
+ Equation (30) 
+Where: 
+𝑃𝐸𝑤𝑤,𝑡,𝑦 = Project emissions of methane from wastewater discharge associated with 
+alternative waste treatment process t in year y (t CO2e) 
+𝑄𝑤𝑤,𝑦 = Amount of wastewater discharge  generated by the project activity and 
+treated anaerobically or released untreated from the project activity in 
+year y (m3) 
+𝑃𝐶𝑂𝐷,𝑦 = COD of the wastewater discharge generated by the project activity in 
+year y (tCOD/m3) 
+𝐵𝑂 = Maximum methane producing capacity, expressing the maximum amount 
+of CH 4 that can be produced from a given quantity of chemical oxygen 
+demand (t CH4/tCOD) 
+𝑀𝐶𝐹𝑤𝑤 = Methane conversion factor (fraction)  
+𝐺𝑊𝑃𝐶𝐻4 = Global Warming Potential of methane valid for the commitment period 
+(t CO2e/t CH4) 
+
+
+===== PAGE 35 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+35/81 
+𝑃𝐸𝑓𝑙𝑎𝑟𝑒,𝑤𝑤,𝑦 = Emissions from flaring associated with wastewater discharge treatment in 
+year y (t CO2e) 
+𝐹𝐶𝐻4,𝑓𝑙𝑎𝑟𝑒,𝑦 = Amount of methane in the wastewater discharge treatment emissions 
+which is sent to the flare/combustor in year y (t CH4) 
+83.  “TOOL06: Project emissions from flaring” shall be used to estimate the resulting methane 
+emissions from flaring ( PEflare,ww,y is estimated as parameter PEflare,y in the tool) . If the 
+methane is combusted in an incinerator, rather than flared, then for the case that project 
+participants have selected Option 1 to use monitored data to determine “Project emissions 
+of CH4 and N2O from combustion within the project boundary” these emissions are already 
+accounted for. If Option 2 to use default values was selected instead, then assume a 90 
+per cent  destruction efficiency of the methane contained in the gas, with PEflare,ww,y = 
+PEcom,ww,y and emissions calculated as follows: 
+𝑃𝐸𝑐𝑜𝑚,𝑤𝑤,𝑦 = 𝐹𝐶𝐻4,𝑓𝑙𝑎𝑟𝑒,𝑦 × 0.1 Equation (31) 
+Where: 
+𝑃𝐸𝑐𝑜𝑚,𝑤𝑤,𝑦 = Emissions from combustion of methane generated from wastewater 
+treatment in year y (t CO2e) 
+𝐹𝐶𝐻4,𝑓𝑙𝑎𝑟𝑒,𝑦 = Amount of methane in the wastewater treatment gas that is sent to 
+the flare/combustor in year y (t CO2e) 
+84. FCH4,flare,y is determined using  “TOOL08: Tool to determine the mass flow of a greenhouse 
+gas in a gaseous stream”, applying these requirements: 
+(a) The gaseous stream the tool shall be applied to is the wastewater treatment 
+emissions delivery pipeline to the flare(s); 
+(b) CH4 is the greenhouse gases for which the mass flow shall be determined; 
+(c) The flow of the gaseous stream shall be measured on continuous basis; 
+(d) The simplification offered for calculating the molecular mass of the gaseous stream 
+is valid (equations (3) or (17) in the tool); and 
+(e) The mass flow shall be calculated for an hourly time interval t (as per the tool) and 
+then summed for the year y (t CH4). 
+85. If the wastewat er treated is sourced from more than one alternative waste treatment 
+process implemented on-site, then the emissions may be estimated for the entire site and 
+then allocated to any of the treatment processes. 
+5.5. Leakage 
+86. Leakage emissions are associated with co mposting/co-composting, anaerobic digestion 
+and the use of RDF/SB that is exported outside the project boundary. For the case that 
+waste by-products of the alternative waste treatment process are: 
+(a) Used for soil application, these emissions shall be neglected; 
+
+
+===== PAGE 36 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+36/81 
+(b) Composted or co -composted, then these shall be treated as fresh waste with 
+emissions estimated according to the procedure project emissions from 
+composting (PECOMP,y). 
+87. Leakage emissions are determined as follows: 
+𝐿𝐸𝑦 = 𝐿𝐸𝐶𝑂𝑀𝑃,𝑦 + 𝐿𝐸𝐴𝐷,𝑦 + 𝐿𝐸𝑅𝐷𝐹_𝑆𝐵,𝑦 Equation (32) 
+Where: 
+𝐿𝐸𝑦 = Leakage emissions in the year y (t CO2e) 
+𝐿𝐸𝐶𝑂𝑀𝑃,𝑦 = Leakage emissions from composting or co -composting in year y 
+(t CO2e) 
+𝐿𝐸𝐴𝐷,𝑦 = Leakage emissions from anaerobic digester in year y (t CO2e) 
+𝐿𝐸𝑅𝐷𝐹_𝑆𝐵,𝑦 = Leakage emissions associated with RDF/SB in year y (t CO2e) 
+5.5.1. Leakage emissions from composting (LECOMP,y) 
+88. Leakage emissions associated with composting ( LECOMP,y) are calculated according to  
+“TOOL13: Project and leakage emissions from composting”. 
+5.5.2. Leakage emissions from anaerobic digestion (LEAD,y) 
+89. Leakage emissions associated with anaerobic digestion of waste ( LEAD,y) are calculated 
+according to  “TOOL14: Project and leakage emissions from anaerobic digesters”. 
+5.5.3. Leakage emissions associated with RDF/SB (LERDF_SB,y) 
+90. Leakage emissions associated with RDF/SB are accounted for the organic waste by -
+products of the treatment process (not by -products from the RDF/SB combustor) , which 
+may be composted or disposed of in a SWDS, and the end-use of RDF/SB that is exported 
+off-site, as follows: 
+𝐿𝐸𝑅𝐷𝐹_𝑆𝐵,𝑦 = 𝐿𝐸𝐸𝑁𝐷𝑈𝑆𝐸_𝑅𝐷𝐹_𝑆𝐵,𝑦 + 𝐿𝐸𝑆𝑊𝐷𝑆,𝑊𝐵𝑃_𝑅𝐷𝐹_𝑆𝐵,𝑦 Equation (33) 
+Where: 
+𝐿𝐸𝑅𝐷𝐹_𝑆𝐵,𝑦 = Leakage emissions associated with RDF/SB in year y (t CO2e) 
+𝐿𝐸𝑆𝑊𝐷𝑆,𝑊𝐵𝑃_𝑅𝐷𝐹_𝑆𝐵,𝑦 = Leakage emissions associated with disposing of waste by -
+products associated with RDF/SB production in a SWDS in 
+year y (t CO2e) 
+𝐿𝐸𝐸𝑁𝐷𝑈𝑆𝐸_𝑅𝐷𝐹_𝑆𝐵,𝑦 = Leakage emissions associated with the end -use of RDF/SB 
+exported outside the project boundary in year y (t CO2e) 
+5.5.4. Leakage emissions from disposal of waste by-products from RDF/SB production in 
+a SWDS (LESWDS,WBP_RDF_SB,y) 
+91. LESWDS,WBP_RDF_SB,y is determined using  “ TOOL04: Emissions from solid waste disposal 
+sites”. In the tool, x begins with the start of the CDM project activity and extends to the end 
+
+
+===== PAGE 37 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+37/81 
+of year y (e.g. emissions are calculated using Application B in the tool and waste disposed 
+from the start of the first crediting period shall be considered). 
+92. Wj,x in the tool is the amount of organic waste contained in the waste by-products from the 
+production of RDF/SB in year y (e.g. it does not include waste by -products that are 
+composted instead of b eing disposed to a SWDS in the project activity or  waste by -
+products from the combustion of RDF/SB). 
+5.5.5. Leakage emissions associated with end use of RDF/SB exported outside the project 
+boundary (LEENDUSE,RDF_SB,y) 
+93. The potential leakage emissions associated with the use of the RDF/SB that is exported 
+outside the project boundary are that it may be combusted or decompose anaerobically. 
+Emissions are therefore calculated allowing for the situation that RDF/SB exported in 
+year y may have three different end uses u, as follows: 
+(a) End use 1: documented evidence is provided that the RDF/SB exported off-site is 
+used as raw material in fertilizer, ceramic manufacture or as a fuel that is 
+combusted in a CDM project activity. In this case, no leakage emissions are 
+estimated; 
+(b) End use 2: documented evidence is provided that the RDF/SB exported off-site is 
+combusted or used as a raw material in furniture: In this case, the RDF/SB is 
+considered to be combusted and LEENDUSE,RDF_SB,y shall be calculated, according to 
+procedure below; 
+(c) End use 3: no documented evidence is provided that the off -site end use of 
+RDF/SB is either combustion, furniture manufacture, fertilizer or ceramic 
+production. In this case, the RDF/SB may  decay anaerobically or be combusted. 
+Therefore, it is conserv atively assumed that the RDF/SB decays anaerobically 
+according to the procedure below. 
+5.5.6. Leakage emissions from combusted off -site end use of RDF/SB ( LEENDUSE,RDF_SB,y) 
+(End use 2) 
+94. This procedure estimates emissions associated with combustion of RDF/SB outside the 
+project boundary, where the combustor is outside the control of the project participants. 
+Carbon dioxide emissions (LEENDUSE,RDF_SB,y) are calculated as follows: 
+𝐿𝐸𝐸𝑁𝐷𝑈𝑆𝐸_𝑅𝐷𝐹_𝑆𝐵,𝑦 = 𝑄𝑅𝐷𝐹_𝑆𝐵,𝐶𝑂𝑀,𝑦 × 𝑁𝐶𝑉𝑅𝐷𝐹_𝑆𝐵,𝑦 × 𝐸𝐹𝐶𝑂2_𝑅𝐷𝐹_𝑆𝐵,𝑦 Equation (34) 
+Where: 
+𝐿𝐸𝐸𝑁𝐷𝑈𝑆𝐸_𝑅𝐷𝐹_𝑆𝐵,𝑦 = Leakage emissions of CO2 from off-site combustion of RDF/SB in 
+year y (t CO2) 
+𝑄𝑅𝐷𝐹_𝑆𝐵,𝐶𝑂𝑀,𝑦 = Quantity of RDF/SB exported off -site with potential to be 
+combusted in year y (t) 
+𝐸𝐹𝐶𝑂2_𝑅𝐷𝐹_𝑆𝐵,𝑦 = CO2 emissions factor for RDF/SB in year y (t CO2/GJ) 
+𝑁𝐶𝑉𝑅𝐷𝐹_𝑆𝐵,𝑦 = Net calorific value of RDF/SB in year y (GJ/t) 
+
+
+===== PAGE 38 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+38/81 
+5.5.7. Leakage emissions from off-site anaerobic decomposition of RDF/SB (End use 3) 
+95. Leakage e missions from anaerobic decay of RDF/SB are  accounted by adjusting the 
+quantity of organic waste used to produce  RDF/SB (WRDF_SB,j,x) in the calculation of 
+baseline emissions from solid waste disposal sites, as follows: 
+𝑊𝑅𝐷𝐹_𝑆𝐵,𝑗,𝑥,𝑎𝑑𝑗 = 𝑄𝑒𝑥𝑝𝑜𝑟𝑡,𝑅𝐷𝐹_𝑆𝐵,𝑦
+𝑄𝑅𝐷𝐹_𝑆𝐵,𝑦
+× 𝑊𝑅𝐷𝐹_𝑆𝐵,𝑗,𝑥 Equation (35) 
+Where: 
+𝑊𝑅𝐷𝐹_𝑆𝐵,𝑗,𝑥,𝑎𝑑𝑗 = Amount of solid waste type  j prevented from disposal in the SWDS 
+by using the waste to produce RDF/SB in the year x, adjusted by the 
+proportion of RDF/SB that is disposed of in a SWDS (t) 
+𝑊𝑅𝐷𝐹_𝑆𝐵,𝑗,𝑥 = Amount of solid waste type  j prevented from disposal in the SWDS 
+by using the waste to produce RDF/SB in the year x (t) 
+𝑄𝑒𝑥𝑝𝑜𝑟𝑡,𝑅𝐷𝐹_𝑆𝐵,𝑦 = Amount of RDF/SB exported offsite with potential to decay 
+anaerobically in year y (t) 
+𝑄𝑅𝐷𝐹_𝑆𝐵,𝑦 = Amount of RDF/SB produced by the project activity in year y (t) 
+5.6. Emission reductions 
+96. To calculate the emission reductions the project participant shal l apply the following 
+equation: 
+𝐸𝑅𝑦 = 𝐵𝐸𝑦 − 𝑃𝐸𝑦 − 𝐿𝐸𝑦 Equation (36) 
+Where: 
+𝐸𝑅𝑦 = Emissions reductions in year y (t CO2e) 
+𝐵𝐸𝑦 = Baseline emissions in year y (t CO2e) 
+𝑃𝐸𝑦 = Project emissions in the year y (t CO2e) 
+𝐿𝐸𝑦 = Leakage emissions in year y (t CO2e) 
+97. If the sum of PEy and LEy is smaller than 1 per cent of BEy in the first full operation year of 
+a crediting period, the project participants may choose to assume a fixed percentage of 
+1 per cent for the sum of PEy and LEy for the remaining years of the crediting period. 
+98. In the case that overall negative emission reductions arise in a year, CERs are not issued 
+to project participants for the year concerned and in subsequent years, until emission 
+reductions from subsequent years have compensated the quantity of negative emission 
+reductions from the year concerned. (F or example: if negative emission reductions of 
+30 t CO2e occur in the year y and positive emission reductions of 100 t CO2e occur in the 
+year y+1, 0 CERs are issued for year y and only 70 CERs are issued for the year y+1.) 
+
+
+===== PAGE 39 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+39/81 
+5.7. Changes required for methodology implementation in 2 nd and 3rd crediting 
+periods 
+99. The required changes shall be assessed using the tool for “Assessment of the validity of 
+the current/original baseline and update of the baseline at the renewal of the crediting 
+period”. 
+5.8. Project activity under a programme of activities 
+100. In addition to the requirements set out in the latest approved version of the “Standard for 
+demonstration of additionality, development of eligibility criteria and application of multiple 
+methodologies for programme of activitie s”, the following shall be applied for the use of 
+this methodology in a project activity under a programme of activities (PoAs). 
+101. The PoA may consist of one or several types of CPAs. CPAs are regarded to be of the 
+same type if they are similar with regard t o the demonstration of additionality, emission 
+reduction calculations and monitoring. The CME shall describe in the CDM -PoA-DD for 
+each type of CPAs separately: 
+(a) Eligibility criteria for CPA inclusion used for each type of CPAs; 
+(b) In case of combinations of t reatment processes in one CPA, the eligibility criteria 
+shall be defined for each treatment option, separately; 
+(c) Emission reduction calculations for each type of CPAs; 
+(d) Monitoring provisions for each type of CPAs. 
+102. The coordinating/managing entity ( CME) shall describe transparently and justify in the 
+CDM-PoA-DD which CPAs are regarded to be of the same type. CPAs are not regarded 
+to be of the same type if one of the following conditions is different: 
+(a) The baseline scenario with regard to any of the following aspects: 
+(i) The disposal of organic waste in a SWDS without an LFG capture system; 
+(ii) The disposal of organic waste in a SWDS with a partial LFG capture system; 
+(iii) In case of co-composting, the treatment of organic wastewater in: 
+a. Existing anaerobic lagoon; 
+b. New to be built anaerobic lagoon; 
+c. New sludge pit; 
+d. Existing sludge pit; 
+(b) The project activity with regard to a treatment process used as well as any of the 
+following aspects of the treatment process: 
+(i) Composting: 
+a. Closed composting; 
+b. Open composting (wind rows); 
+
+
+===== PAGE 40 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+40/81 
+(ii) Co-composting: 
+a. Closed composting; 
+b. Open composting (wind rows); 
+(iii) Thermal treatment: 
+a. Generation of electricity; 
+b. Generation of heat; 
+c. Combination of heat and electricity generation; 
+d. Any other use; 
+(iv) Mechanical treatment: 
+a. Generation of electricity; 
+b. Generation of heat; 
+c. Combination of heat and electricity generation; 
+d. Any other use; 
+(v) Gasification: 
+a. Generation of electricity; 
+b. Generation of heat; 
+c. Combination of heat and electricity generation; 
+d. Any other use; 
+(vi) Incineration: 
+a. Generation of electricity; 
+b. Generation of heat; 
+c. Combination of heat and electricity generation; 
+d. Any other use; 
+(vii) Combination of any treatment processes or use of the product/by -product 
+(e.g. heat or electricity from biogas) for within a treatmen t process listed 
+above; 
+(c) The legal and regulatory framework. 
+103. When defining eligibility criteria for CPA inclusion for a distinct type of CPAs, the CME 
+shall consider relevant technical and economic parameters, such as: 
+(a) Type of solid waste disposal site: 
+(i) New solid waste disposal site; 
+
+
+===== PAGE 41 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+41/81 
+(ii) Existing solid waste disposal site; 
+(b) Ranges of capacity of the treatment plant or unit; 
+(c) Composition of the waste (e.g. mixed or single type of waste); 
+(d) Ranges of costs (capital investment, operating and maintenance costs, etc.); 
+(e) Ranges of revenues (income from electricity, heat or biogas sale, subsidies/fiscal 
+incentives, official development assistance (ODA)). 
+104. When Option (ii) in the latest approved version of the “Standard for demonstration of 
+additionality, development of eligib ility criteria and application of multiple methodologies 
+for programmes of activities” is applied, that is related to defining technical and economic 
+criteria as ranges of values for each input parameter required for the inclusion of the CPA 
+in the PoA-DD, the eligibility criteria related to the costs and revenues parameters shall 
+be updated every two years in order to correctly reflect the technical and market 
+circumstances of a CPA implementation. 
+5.9. Data and parameters not monitored 
+105. As applicable, all the provisions regarding data and parameters not monitored as 
+contained in the tools referred to in this methodology shall be followed. 
+Data / Parameter table 1.  
+Data / Parameter: RATECOMPLIANCE,t 
+Data unit: Fraction 
+Description: Rate of compliance with a regulatory requirement to implement 
+the alternative waste treatment t implemented in the project 
+activity 
+Source of data: Official studies, reports and certification from municipal 
+authorities 
+Any comment: Calculated based on the number of instances of compliance 
+identified at the time of the investment decision  and updated 
+once for every subsequent crediting period 
+Data / Parameter table 2.  
+Data / Parameter: FFCj 
+Data unit: % 
+Description: Fraction of fossil carbon in total carbon content of waste type j 
+Source of data: Table 2.4, chapter 2, volume 5 of IPCC 2006 guidelines 
+
+
+===== PAGE 42 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+42/81 
+Value to be applied: For MSW the following values for the different waste types j may 
+be applied: 
+Table 4: Default values for FFCj,y 
+Waste type j  
+Paper/cardboard 5 
+Textiles 50 
+Food waste  - 
+Wood  - 
+Garden and Park waste  0 
+Nappies  10 
+Rubber and Leather  20 
+Plastics  100 
+Metal* NA 
+Glass* NA 
+Other, inert waste  100 
+ 
+Metal and glass contain some carbon of fossil origin. 
+Combustion of significant amounts of glass or metal is not 
+common. 
+If a waste type is not comparable to a type listed in Table 4, or 
+can not clearly be described as a combinati on of types in this 
+table above, or if the project participants wish to measure  FFCj, 
+then project participants shall measure FFCj,y using the 
+following standards, or similar national or international 
+standards: 
+ASTM D6866: “Standard Test Methods for Determining the 
+Biobased Content of Solid, Liquid, and Gaseous Samples Using 
+Radiocarbon Analysis”; 
+ASTM D7459: “Standard Practice for Collection of Integrated 
+Samples for the Speciation of Biomass (Biogenic) and Foss il 
+Carbon Dioxide Emitted from Stationary Emissions Sources”. 
+The frequency of measurement shall be as a minimum four 
+times in year y with the mean value valid for year y 
+The project participates also have the option to apply the 
+balance method (Appendix 2) to measure FFCj,y 
+Any comment: Data and parameters to be monitored in respect of the balance 
+method are shown in the Appendix 2 additionally 
+Data / Parameter table 2.  
+Data / Parameter: FCCj 
+Data unit: % 
+Description: Fraction of total carbon content in waste type j  
+Source of data: Table 2.4, chapter 2, volume 5 of IPCC 2006 guidelines 
+
+
+===== PAGE 43 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+43/81 
+Value to be applied: For MSW the following values for the different waste types j may 
+be applied: 
+Table 5: Default values for FCCj,y 
+Waste type j  
+Paper/cardboard 50 
+Textiles 50 
+Food waste 50 
+Wood 54 
+Garden and Park waste 55 
+Nappies 90 
+Rubber and Leather 67 
+Plastics 85 
+Metal* NA 
+Glass* NA 
+Other, inert waste 5 
+ 
+*Metal and glass contain some carbon of fossil origin. 
+Combustion of significant amounts of glass or metal is not 
+common 
+The project participates also have the option to apply the 
+balance method (Appendix 2) to measure FCCj,y 
+Any comment: Data and parameters to be monitored in respect of the balance 
+method are shown in the Appendix 2 additionally 
+Data / Parameter table 3.  
+Data / Parameter: GWPCH4 
+Data unit: t CO2e/t CH4 
+Description: Global Warming Potential of methane valid for the commitment 
+period (t CO2e/t CH4) 
+Source of data: IPCC 
+Value to be applied:  Default value of 25 from IPCC Fourth Assessment Report 
+(AR4). Shall be updated according to any future COP/MOP 
+decisions 
+Any comment: - 
+Data / Parameter table 4..  
+Data / Parameter: GWPN2O 
+Data unit: t CO2e/t N2O 
+Description: Global Warming Potential of N2O 
+Source of data: IPCC 
+Value to be applied:  Default value  of 298  from IPCC Fourth Assessment Report 
+(AR4). Shall be updated according to any future COP/MOP 
+decisions 
+Any comment: - 
+
+
+===== PAGE 44 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+44/81 
+Data / Parameter table 5.  
+Data / Parameter: BO 
+Data unit: t CH4/tCOD 
+Description: Maximum methane producing capacity, expressing the 
+maximum amount of CH 4 that can be produced from a given 
+quantity of chemical oxygen demand (t CH4/tCOD) 
+Source of data: Section 6.2.3.2, chapter 6, volume 5 of IPCC 2006 guidelines  
+Value to be applied: 0.25 
+Any comment: Applicable to the “Procedure to calculate project emissions from 
+wastewater treatment” 
+Data / Parameter table 6.  
+Data / Parameter: MCFww 
+Data unit: Fraction 
+Description: Methane conversion factor 
+Source of data: The source of data shall be the following, in order of preference: 
+1. Project specific data; 
+2. Country specific data; or 
+3. IPCC default values (table 6.3, chapter 6, volume 5 of IPCC 
+2006 guidelines) 
+Measurement 
+procedures (if any): 
+- 
+Any comment:  
+Data / Parameter table 7.  
+Data / Parameter: EFCH4,t 
+Data unit: t CH4/t waste (wet basis) 
+Description: Emission factor for CH4 associated with waste treatment process 
+t  
+Source of data: Table 5.3, chapter 5, volume 5 of IPCC 2006 guidelines 
+
+
+===== PAGE 45 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+45/81 
+Measurement 
+procedures (if any): 
+If country-specific data is available, then this shall be applied and 
+the method used to derive the value as well as the data sources 
+need to be documented in the CDM -PDD. If country -specific 
+data are not available, then apply the default values listed in 
+Table 6. For continuous incineration of industrial waste, apply 
+the CH4 emission factors provided in Volume 2, Chapter 2, 
+Stationary Combustion of IPCC 2006 Guidelines. 
+Table 6. CH4 emission factors for combustion 
+Waste 
+type 
+Type of 
+incineration/technology 
+CH4 emission 
+factors  
+(t CH4 / t waste) wet basis 
+MSW  
+Continuous 
+incineration  
+stoker  1.21x 0.2x10-6  
+fluidised 
+bed   ~0  
+Semi-
+continuous 
+incineration  
+stoker  1.21x 6x10-6  
+fluidised 
+bed  1.21x 188x10-6  
+Batch type 
+incineration  
+stoker  1.21x 60x10-6  
+fluidised 
+bed  1.21x 237x10-6  
+Sludge (semi-continuous or batch type 
+incineration) 1.21x 9 700x10-6 
+Waste oil (semi-continuous or batch 
+type incineration) 1.21x 560x10-6 
+ 
+A conservativeness factor of 1.21 has been applied to account 
+for the uncertainty of the IPCC default values 
+Any comment: Applicable to Option 2 of procedure to estimate PECOM,c,y 
+Data / Parameter table 8.  
+Data / Parameter: EFN2O,t 
+Data unit: t N2O/t waste (wet basis) 
+Description: Emission factor for N2O associated with treatment process t 
+Source of data: Table 5.6, chapter 5, volume 5 of IPCC 2006 guidelines  
+
+
+===== PAGE 46 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+46/81 
+Measurement 
+procedures (if any): 
+If country-specific data is available, then this shall be applied, 
+and the method used to derive the value as well as the data 
+sources need to be documented in the CDM -PDD. If country -
+specific data are not available, then apply the default values 
+listed in Table 7. 
+Table 7. N2O emission factors for combustion 
+Type of waste  
+Technology / 
+Management 
+practice  
+Emission factor 
+(t N 2O/t waste 
+wet basis)  
+MSW  
+Continuous and semi -
+continuous 
+incinerators  
+1.21x 50x10-3 
+MSW  Batch-type 
+incinerators  1.21x 60x10-3 
+Industrial waste  All types of 
+incineration  1.21x 100x10-3 
+Sludge (except 
+sewage sludge)  
+All types of 
+incineration  1.21x 450x10-3 
+Sewage sludge  Incineration  1.21x 900x10-3 
+ 
+A conservativeness factor of 1.21 has been applied to account 
+for the uncertainty of the IPCC default values 
+Any comment: Applicable to Option 2, of procedure to estimate PECOM,c,y 
+Data / Parameter table 9.  
+Data / Parameter: EFCO2,BL,HG 
+Data unit: t CO2/TJ 
+Description: CO2 emission factor of the fossil fuel type used for heat 
+generation by the boiler or air heater in the baseline 
+Source of data: The source of data shall be the following, in order of preference: 
+project specific data, country specific data or IPCC default 
+values. As per guidance from the Board, IPCC default values 
+shall be used only when country or project specific data are not 
+available or difficult to obtain 
+Measurement 
+procedures (if any): 
+- 
+Any comment: - 
+Data / Parameter table 10.  
+Data / Parameter: ηcogen 
+Data unit: ratio 
+Description: Efficiency of the cogeneration plant that would have been used 
+in the absence of the project activity 
+
+
+===== PAGE 47 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+47/81 
+Source of data: Project participants can choose one of the following approaches: 
+Highest of the measured efficiencies of similar plants; 
+Highest of the efficiency values provided by two or more 
+manufacturers for similar plants; or 
+Maximum efficiency of 90 per cent, based on net calorific values 
+Measurement 
+procedures (if any): 
+- 
+Any comment: - 
+Data / Parameter table 11.  
+Data / Parameter: EFCO2,BL,CG 
+Data unit: t CO2/MJ 
+Description: Emission factor of baseline fossil fuel used in the cogeneration 
+plant, as identified in the baseline scenario identification 
+Source of data: The source of data shall be the following, in order of preference: 
+project specific data, country specific data or IPCC default 
+values. As pe r guidance from the Board, IPCC default values 
+shall be used only when country or project specific data are not 
+available or difficult to obtain 
+Measurement 
+procedures (if any): 
+- 
+Any comment: - 
+Data / Parameter table 12.  
+Data / Parameter: CODout,x 
+CODin,x 
+Data unit: tCOD 
+Description: COD of the effluent in the period x. 
+COD directed to the anaerobic lagoons or sludge pits in the 
+period x (tCOD) 
+Source of data: For existing plants: 
+If there is no effluent: CODout,x = 0; 
+If there is effluent: 
+One year of historical data should be used, or 
+If one year data is not available then x represents a 
+measurement campaign of at least 10 days to the COD inflow 
+(CODin,x) and COD outflow (CODout,x) from the lagoon or sludge 
+pit. 
+For Greenfield projects: 
+Use the design COD inflow for COD in and the design effluent 
+COD flow for COD out corresponding to the design features of 
+the lagoon system identified in the procedure for the selection of 
+the baseline scenario 
+
+
+===== PAGE 48 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+48/81 
+Measurement 
+procedures (if any): 
+For the measurement campaign of at least 10 days: 
+The measurements should be undertaken during a period that is 
+representative for the typical operation conditions of the plant 
+and ambient conditions of the site (temperature) 
+Any comment: - 
+Data / Parameter table 13.  
+Data / Parameter: x 
+Data unit: Time 
+Description: Representative historical reference period 
+Source of data: For existing plants: 
+x should represent one year of historical data; 
+If one-year data is not available then x represents a 
+measurement campaign of at least 10 days. 
+For Greenfield projects this parameter is not relevant 
+Measurement 
+procedures (if any): 
+- 
+Any comment: - 
+Data / Parameter table 14.  
+Data / Parameter:  
+Data unit: - 
+Description: Discount factor to account for the uncertainty of the use of 
+historical data to determine CODBL,y 
+Source of data: For existing plants: 
+1. If one year of historical data is available =1; 
+2. If a measurement campaign of at least 10 days is available 
+=0.89. 
+For Greenfield projects: =1 
+Measurement 
+procedures (if any): 
+The value of 0.89 for the case where there is no one year 
+historical data is to account for the uncertainty range (of 30  per 
+cent to 50 per cent) associated with this approach as compared 
+to one-year historical data 
+Any comment: - 
+Data / Parameter table 15.  
+Data / Parameter: BO 
+Data unit: t CH4/tCOD 
+Description: Maximum methane producing capacity, expressing the 
+maximum amount of CH 4 that can be produced from a given 
+quantity of chemical oxygen demand (COD) 
+Source of data: 2006 IPCC Guidelines 
+
+
+===== PAGE 49 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+49/81 
+Measurement 
+procedures (if any): 
+No measurement procedures. The default IPCC value for Bo is 
+0.25 kg CH4/kg COD shall be used. Unless the methodology is 
+used for wastewater containing materials not akin to simple 
+sugars, a CH 4 emissions factor different from 0.21  t CH4/tCOD 
+has to be applied 
+Any comment: Taking into account the uncertainty of this estimate, project 
+participants should use a  value of 0.21 kg CH 4/kg COD as a 
+conservative assumption for Bo 
+Data / Parameter table 16.  
+Data / Parameter: D 
+Data unit: M 
+Description: Average depth of the lagoons or sludge pits 
+Source of data: For existing plants: conduct measurements. 
+For project activities implemented in Greenfield facilities: As per 
+the baseline lagoon design as identified in Step 1 of the section 
+“Procedure for the identification of the most plausible baseline 
+scenario Identification of alternative scenarios” 
+Measurement 
+procedures (if any): 
+Determine the average depths of the whole lagoon/sludge pit 
+under normal operating conditions 
+Any comment: - 
+6. Monitoring methodology 
+106. The monitoring procedures are described in the tables be low. As applicable, all the 
+monitoring provisions contained in the tools referred to in this methodology shall be 
+followed. 
+107. Describe and specify in the CDM -PDD all monitoring procedures, including the type of 
+measurement instrumentation used, the responsib ilities for monitoring and QA/QC 
+procedures that will be applied.  Where the methodology provides different options (e.g. 
+use of default values or on -site measurements), specify which option will be used. All 
+meters and instruments should be calibrated regularly as per industry practices. 
+6.1. Data and parameters monitored 
+Data / Parameter table 17.  
+Data / Parameter: NCVBIOGAS,NG,y 
+Data unit: TJ/Nm3 
+Description: Net calorific value of the upgraded biogas sent to the natural 
+gas network due to the project activity in year y 
+Source of data: Project participants 
+Measurement 
+procedures (if any): 
+Measured directly using an online Heating Value Meter from the 
+gas stream. The measurement must be in volume basis and 
+adjusted to reference conditions 
+Monitoring frequency: Continuous 
+QA/QC procedures: Calibration shall be according to manufacturer’s specifications 
+
+
+===== PAGE 50 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+50/81 
+Any comment: Applicable to baseline emissions procedure (D) 
+Data / Parameter table 18.  
+Data / Parameter: BIOGASNG,y 
+Data unit: Nm3/yr 
+Description: Quantity upgraded biogas sent to the natural gas network due 
+to the project activity in year y (Nm3) 
+Source of data: Project participants 
+Measurement 
+procedures (if any): 
+Measured by a flow meter and adjusted to reference conditions. 
+Data to be aggregated monthly and yearly 
+Monitoring frequency: Continuous (average value in a time interval not greater than 
+an hour shall be used in the calculations of emission reductions) 
+QA/QC procedures: Flow meters shall be subject to a regular maintenance and 
+testing regime to ensure accuracy. Calibration shall be 
+according to manufacturer’s specifications 
+Any comment: Applicable to procedure (D) 
+Data / Parameter table 19.  
+Data / Parameter: EFFCOM,c,y 
+Data unit: Fraction 
+Description: Combustion efficiency of combustor c in year y 
+Source of data: The source of data shall be the following, in order of preference: 
+1. Project specific data; 
+2. Country specific data; or 
+3. IPCC default values 
+Measurement 
+procedures (if any): 
+- 
+Monitoring frequency: Annually 
+QA/QC procedures: - 
+Any comment: As per guidance from the Board, IPCC default values shall be 
+used only when country or project specific data are not 
+available or difficult to obtain 
+Data / Parameter table 20.  
+Data / Parameter: SGc,y 
+Data unit: m3/yr 
+Description: Volume of stack gas from combustor c in year y  
+Source of data: Project participants 
+
+
+===== PAGE 51 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+51/81 
+Measurement 
+procedures (if any): 
+The stack gas flow rate is either directly measured or calculated 
+from other variables where direct monitoring is not feasible. 
+Where there are multiple stacks of the same type, then it is 
+sufficient to monitor one stack of each type.  For the case that 
+biogas is combusted, then the stack gas volume flow rate may 
+be estimated by summing the inlet biogas and air flow rates and 
+adjusting for stack temperature. Direct measurement of the air 
+inlet flow rate shall be made using a flow meter 
+Monitoring frequency: Continuous or periodic (at least quarterly) 
+QA/QC procedures: Maintenance and calibration of equipment will be carried out 
+according to internationally recognised procedures. Where 
+laboratory work is outsourced, one which follows rigorous 
+standards shall be selected 
+Any comment: - 
+Data / Parameter table 21.  
+Data / Parameter: CN2O,SG,c,y 
+Data unit: t N2O/Nm3 
+Description: Concentration of N2O in stack gas from combustor c in year y  
+Source of data: Project participants 
+Measurement 
+procedures (if any): 
+- 
+Monitoring frequency: At least every three months 
+QA/QC procedures: Maintenance and calibration of equipment will be carried out 
+according to internationally recognised procedures. Where 
+laboratory work is outsourced, one which follows rigorous 
+standards shall be selected 
+Any comment: More frequent sampling is encouraged 
+Data / Parameter table 22.  
+Data / Parameter: CCH4,SG,c,y 
+Data unit: t CH4/Nm3 
+Description: Concentration of CH4 in stack gas from combustor c in year y 
+Source of data: Project participants 
+Measurement 
+procedures (if any): 
+- 
+Monitoring frequency: At least every three months 
+QA/QC procedures: Maintenance and calibration of equipment will be carried out 
+according to internationally recognised procedures. Where 
+laboratory work is outsourced, one which follows rigorous 
+standards shall be selected 
+Any comment: More frequent sampling is encouraged 
+
+
+===== PAGE 52 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+52/81 
+Data / Parameter table 23.  
+Data / Parameter: Qwaste,c,y 
+Data unit: T 
+Description: Quantity of fresh waste or RDF/SB fed into combustor c in 
+year y 
+Source of data: Project participants 
+Measurement 
+procedures (if any): 
+Measured with calibrated scales or load cells 
+Monitoring frequency: Continuously, aggregated at least annually 
+QA/QC procedures: - 
+Any comment: Parameter required for procedure to calculate project 
+emissions from combustion within the project boundary 
+Data / Parameter table 24.  
+Data / Parameter: pn,j,y 
+Data unit: Weight fraction 
+Description: Fraction of waste type  j in the sample n collected during the 
+year y 
+Source of data: Sample measurements by project participants 
+Measurement 
+procedures (if any): 
+- 
+Monitoring frequency: A minimum of three samples shall be undertaken every three 
+months with the mean value valid for year y 
+QA/QC procedures: - 
+Any comment: - 
+Data / Parameter table 25.  
+Data / Parameter: zy 
+Data unit: - 
+Description: Number of samples collected during the year y 
+Source of data: Project participants 
+Measurement 
+procedures (if any): 
+- 
+Monitoring frequency: Continuously, aggregated annually 
+QA/QC procedures: - 
+Any comment: - 
+Data / Parameter table 26.  
+Data / Parameter: ECt,y 
+Data unit: MWh 
+Description: Electricity consumption of electricity generated in an on -site 
+fossil fuel fired power plant or from the grid as a result of the 
+alternative waste treatment process t in year y 
+
+
+===== PAGE 53 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+53/81 
+Source of data: Electricity meter 
+Measurement 
+procedures (if any): 
+Sources of consumption shall include the operation of the 
+alternative waste treatment process, on -site processing or 
+management of the feedstock or products associated with the 
+treatment process and on -site combustion activity. Electricity 
+consumption shall be monitored for all activities included in the 
+project boundary, associated with the treatment process, as 
+illustrated in Appendix 1 
+Monitoring frequency: Continuous 
+QA/QC procedures: Electricity meter will be subject to regular (in accordance with 
+stipulation of the meter supplier) maintenance and testing to 
+ensure accuracy. The readings will be double checked against 
+invoices when available 
+Any comment: This pa rameter is required for calculating project emissions 
+from electricity consumption due to waste treatment under the 
+project activity process t (PEEC,t,y) using the “TOOL05: Baseline, 
+project and/or leakage emissions from electricity consumption 
+and monitoring of electricity generation” 
+ECt,y excludes consumption of any electricity generated by the 
+project activity. In case of consumption of electricity generated 
+by the project by RDF/SB combustion or incineration, then 
+emissions associated with combu stion of fossil carbon content 
+of the waste are accounted for in the procedure “ Project 
+emissions from combustion”, and do not need to be accounted 
+for again in the procedure “ Project emissions from electricity 
+use” 
+Data / Parameter table 27.  
+Data / Parameter: EGt,y 
+Data unit: MWh 
+Description: Electricity generated by the alternative waste treatment process 
+t and exported to the grid or displacing fossil fuel fired power -
+only and/or cogeneration captive energy generation in year y 
+Source of data: Electricity meter 
+Measurement 
+procedures (if any): 
+- 
+Monitoring frequency: Continuous 
+QA/QC procedures: Electricity meter will be subject to regular (in accordance with 
+stipulation of the meter supplier) maintenance and testing to 
+ensure accuracy 
+Any comment: - 
+Data / Parameter table 28.  
+Data / Parameter: EGINC,y 
+Data unit: GJ 
+Description: Amount of electricity generated by incineration during the year y 
+Source of data: Electricity meter 
+
+
+===== PAGE 54 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+54/81 
+Measurement 
+procedures (if any): 
+Electricity generation needs to be converted to thermal energy 
+(1 MWh = 3.6 GJ) 
+Monitoring frequency: Continuous, aggregate annually 
+QA/QC procedures: - 
+Any comment: This parameter will be used to assess that the fraction of energy 
+generated by fossil fuel is no more than 50 per cent of the total 
+energy generated in the incinerator 
+Data / Parameter table 29.  
+Data / Parameter: HGPJ,y 
+Data unit: TJ 
+Description: Quantity of heat supplied by the project activity displacing 
+baseline heat generation by a fossil fuel boiler or air heater in 
+year y (TJ) 
+Source of data: Steam meter  
+Measurement 
+procedures (if any): 
+In case of steam meter: the enthalpy of steam and fee d water 
+will be determined at measured temperature and pressure and 
+the enthalpy difference will be multiplied with quantity measured 
+by steam meter. 
+In case of hot air: the temperature, pressure and mass flow rate 
+will be measured 
+Monitoring frequency: Monthly, aggregated yearly 
+QA/QC procedures: In case of monitoring of steam, it will be calibrated for pressure 
+and temperature of steam at regular intervals. The meter shall 
+be subject to regular maintenance and testing to ensure 
+accuracy 
+Any comment: The dedicated quantity of thermal energy generated for heat 
+supply or cogeneration by the project activity if included 
+Data / Parameter table 30.  
+Data / Parameter: HGINC,y 
+Data unit: GJ 
+Description: Quantity of thermal energy generated by incineration in year y 
+Source of data: Steam meter  
+Measurement 
+procedures (if any): 
+In case of steam meter: the enthalpy of steam and feed water 
+will be determined at measured temperature and pressure and 
+the enthalpy difference will be multiplied with quantity measured 
+by steam meter. 
+In case of hot air: the temperature, pressure and mass flow rate 
+will be measured 
+Monitoring frequency: Annually 
+QA/QC procedures: In case of monitoring of ste am, it will be calibrated for pressure 
+and temperature of steam at regular intervals. The meter shall 
+be subject to regular maintenance and testing to ensure 
+accuracy 
+
+
+===== PAGE 55 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+55/81 
+Any comment: This parameter will be used to assess that the fraction of energy 
+generated by fossil fuel is no more than 50 per cent of the total 
+energy generated in the incinerator 
+Data / Parameter table 31.  
+Data / Parameter: QRDF_SB,COM,y 
+Data unit: T 
+Description: Quantity of RDF/SB exported off -site with potential to be 
+combusted in year y 
+Source of data: Project site 
+Measurement 
+procedures (if any): 
+Sale invoices of the RDF/SB should be kept at the project site. 
+They shall contain customer contact details, physical location of 
+delivery, type, amount (in tons) and purpose of RDF/SB (use as 
+fuel or as material in furniture, etc.). A list of customers and 
+delivered SD amount shall be kept at the project site 
+Monitoring frequency: Weekly 
+QA/QC procedures: - 
+Any comment: See procedure to calculate leakage emissions associated with 
+RDF/SB for further information 
+Data / Parameter table 32.  
+Data / Parameter: Temperature of the thermal treatment process 
+Data unit: degrees Celsius 
+Description: The thermal treatment process (dehydration) occurs under 
+controlled conditions (up to 300 degrees Celsius) 
+Source of data: Project site 
+Measurement 
+procedures (if any): 
+- 
+Monitoring frequency: - 
+QA/QC procedures: - 
+Any comment: - 
+Data / Parameter table 33.  
+Data / Parameter: Qexport,RDF_SB,y 
+Data unit: T 
+Description: Quantity of RDF/SB exported outside the project boundary that 
+is considered to decay anaerobically in year y 
+Source of data: Project participants 
+Measurement 
+procedures (if any): 
+Weighbridge. All RDF/SB for which documented evidence is not 
+available that it is combusted, or used for fertilizer of furniture 
+manufacture 
+Monitoring frequency: Annually 
+QA/QC procedures: Weighbridge will be subject to periodic calibration (in accordance 
+with stipulation of the weighbridge supplier) 
+
+
+===== PAGE 56 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+56/81 
+Any comment: - 
+Data / Parameter table 34.  
+Data / Parameter: QRDF_SB,y 
+Data unit: T 
+Description: Quantity of RDF/SB produced in year y 
+Source of data: Project participants 
+Measurement 
+procedures (if any): 
+Weighbridge 
+Monitoring frequency: Annually 
+QA/QC procedures: Weighbridge will be subject to periodic calibration (in accordance 
+with stipulation of the weighbridge supplier) 
+Any comment: - 
+Data / Parameter table 35.  
+Data / Parameter: Qww,y 
+Data unit: m3 
+Description: Amount of wastewater discharge generated by the project 
+activity and treated anaerobically or released untreated from the 
+project activity in year y  
+Source of data: Measured value by flow meter 
+Measurement 
+procedures (if any): 
+- 
+Monitoring frequency: Monthly, aggregated annually 
+QA/QC procedures: The monitoring instruments will be subject to regular 
+maintenance and testing to ensure accuracy 
+Any comment: If the wastewater is treated aerobically, emissions are assumed 
+to be zero, and hence this parameter does not need to be 
+monitored 
+Data / Parameter table 36.  
+Data / Parameter: PCOD,y 
+Data unit: tCOD/m3 
+Description: COD of the wastewater discharge generated by the project 
+activity in year y 
+Source of data: Measured value by purity meter or COD meter 
+Measurement 
+procedures (if any): 
+- 
+Monitoring frequency: Monthly and averaged annually 
+QA/QC procedures: The monitoring instruments will be subject to regular 
+maintenance and testing to ensure accuracy 
+Any comment: If the wastewater discharge is treated aerobically, emissions are 
+assumed to be zero, and hence this parameter does not need to 
+be monitored 
+
+
+===== PAGE 57 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+57/81 
+Data / Parameter table 37.  
+Data / Parameter: EGINC,FF,y 
+Data unit: GJ 
+Description: Energy generated by auxiliary fossil fuel added in the incinerator 
+Source of data: Project site  
+Measurement 
+procedures (if any): 
+This parameter will be estimated multiplying the amount of 
+auxiliary fossil fuel added in the incinerator to the net calorific 
+value of this auxiliary fossil fuel 
+Monitoring frequency: Annually  
+QA/QC procedures: - 
+Any comment: This parameter will be used to assess that the fraction of energy 
+generated by fossil fuel is no more than 50 per cent of the total 
+energy generated in the incinerator. EGINC,FF,y < 0.50 x (HGINC,y 
++ EGINC,y)  
+Data / Parameter table 38.  
+Data / Parameter: EFCO2,RDF_SB,y 
+Data unit: t CO2/GJ 
+Description: Weighted average CO2 emission factor for RDF/SB in year y 
+Source of data: EFCO2,RDF_SB,y is zero for biomass residues, otherwise determine 
+from one of the following sources: 
+ 
+Data source Conditions for using 
+the data source 
+(a) Measurements by the project 
+participants 
+This is the preferred 
+data source 
+(b) IPCC default values at the 
+upper/lower limit 20  of the 
+uncertainty at a 95  per cent  
+confidence interval as 
+provided in table 1.4 of 
+Chapter 1 of Vol. 2 (Energy) of 
+the 2006 IPCC Guidelines on 
+National GHG Inventories 
+If (a) is not available 
+ 
+Measurement 
+procedures (if any): 
+For (a): Measurements shall be undertaken in line with national 
+or international fuel standards 
+                                                
+20 To be conservative, choose the upper limit where project emissions are calculated and the lower limit 
+where baseline emissions are calculated. 
+
+
+===== PAGE 58 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+58/81 
+Monitoring frequency: For (a): the CO 2 emission factor shall be obtained for each 
+shipment of RDF/SB exported from the project site for which 
+there is documented evidence that it will be combusted, from 
+which weighted average annual values shall be calculated. 
+For (b): any future revision of the IPCC Guidelines shall be taken 
+into account 
+QA/QC procedures: - 
+Any comment: This parameter is required for the procedure to calculate 
+leakage emissions for the combustion of RDF/SB outside the 
+project boundary 
+Data / Parameter table 39.  
+Data / Parameter: NCVRDF_SB,y 
+Data unit: GJ/mass or volume units 
+Description: Weighted average net calorific value of RDF/SB in year y 
+Source of data: Measurements by the project participants 
+Measurement 
+procedures (if any): 
+Measurement is not required for RDF/SB produced wholly from 
+biomass residues, otherwise measurements shall be 
+undertaken in line with national or international fuel standards 
+Monitoring frequency: The NCV shall be obtained for each sh ipment of RDF/SB 
+exported from the project site for which there is documented 
+evidence that it will be combusted, from which weighted average 
+annual values shall be calculated 
+QA/QC procedures: - 
+Any comment: This parameter is required for the procedure to calculate 
+leakage emissions for the combustion of RDF/SB outside the 
+project boundary 
+Data / Parameter table 40.  
+Data / Parameter: FPJ,AD,m 
+Data unit: m³ 
+Description: Quantity of wastewater or sludge that is treated in the anaerobic 
+digester or under clearly aerobic conditions in the project activity 
+in month m (m³) 
+Source of data: Measured 
+Measurement 
+procedures (if any): 
+- 
+Monitoring frequency: Parameter monitored continuously but aggregated monthly and 
+annually for calculations 
+QA/QC procedures: - 
+Any comment: In case of Scenario 1, if the solid materials are also treated in 
+the baseline and project scenario, the FPJ,dig,m does not account 
+the amount of solid mat erials treated or separated from the 
+wastewater stream in the anaerobic digester, if applicable 
+
+
+===== PAGE 59 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+59/81 
+Data / Parameter table 41.  
+Data / Parameter: CODAD,m 
+Data unit: t COD/m³ 
+Description: Chemical oxygen demand in the wastewater or sludge that is 
+treated in the anaerobic digester or under clearly aerobic 
+conditions in the project activity in month m 
+Source of data: Measurements 
+Measurement 
+procedures (if any): 
+Measure the COD according to  national or international 
+standards. 
+If COD is measured more than once per month, the average 
+value of the measurements should be used 
+Monitoring frequency: Regularly, calculate average monthly and annual values 
+QA/QC procedures: - 
+Any comment: In case of Scenario 1, if the solid materials are also treated in 
+the baseline and project scenario, the wCOD,dig,m is not calculated 
+for the solid materials treated or separated from the wastewater 
+stream in the anaerobic digester, if applicable 
+Data / Parameter table 42.  
+Data / Parameter: T2,m 
+Data unit: K 
+Description: Average temperature at the project site in month m 
+Source of data: Measurement in the project site, or national or regional weather 
+statistics 
+Measurement 
+procedures (if any): 
+In case that project participants decide to measure temperature 
+in the project site: 
+The temperature sensor must be housed in a ventilated 
+radiation shield to protect the sensor from thermal radiation 
+Monitoring frequency: Continuously, aggregated in monthly average values  
+QA/QC procedures: In case that project participants decide to measure temperature 
+in the project site: 
+Uncertainty of the measurements provided by temperature 
+sensor supplier should be discounted from the readings 
+Any comment: - 
+
+
+===== PAGE 60 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+60/81 
+Appendix 1. Typical boundary layouts of what is included in 
+the project boundary 
+Figure 1. Composting 
+ 
+Figure 2. Co-composting 
+ 
+Composting
+Project Boundary
+Presort
+Composting 
+Process
+Refining
+Sort Facility
+Atmosphere
+Energy
+Compost 
+Distribution
+SWDS
+CO2
+Recycling
+CH4
+N2O
+Fresh 
+waste
+Residue
+Residue
+Secondary 
+Materials
+Compost
+Co-composting
+Sort 
+Facility
+Energy
+Composting 
+Process
+Secondary 
+Materials
+Project Boundary
+Refining
+Atmosphere
+Compost 
+DistributionSWDS
+CO2
+Recycling
+CH4
+N2O
+Residue
+Compost
+Fresh 
+wastewater
+Fresh 
+waste
+WWTP
+Run-off 
+wastewater
+
+
+===== PAGE 61 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+61/81 
+Figure 3. Anaerobic digestion with biogas collection and flaring and/or its use 
+ 
+Figure 4. Mechanical/thermal treatment process to produce refuse -derived fuel 
+(RDF)/stabilized biomass (SB) on-site power generation 
+ 
+Energy
+Presort
+Anaerobic 
+digester
+Gas 
+Engine  
+Generator
+Project Boundary
+SWDS / Compost
+ElectricityBiogas
+Anaerobic Digestion with biogas collection and flaring and/or its use
+Recyclin
+g SWDS
+Biogas upgrading 
+and distribution
+Biogas flaring
+Fresh 
+waste
+Secondary 
+Materials
+Sorting 
+Residue
+CH4
+Atmosphere
+CO2 N2O
+WWTP
+Fresh 
+wastewa
+ter
+Grid or 
+other use
+digestate
+Run-off 
+wastewater
+Mechanical/thermal treatment process to produce refuse-derived fuel 
+(RDF)/stabilized biomass (SB) and on-site power generation
+Project Boundary
+Energy
+Fresh waste (not 
+hospital or industrial 
+waste)
+SWDS
+RDF/SB
+Residual 
+Waste
+Atmosphere
+CO2 N2O
+CH4
+Electricity
+Recyclin
+g
+Secondary 
+Materials
+Sort Facility
+Sorting 
+Residue
+Thermal or 
+mechanical 
+treatment
+RDF/SB combustion 
+with power 
+generation
+WWTP
+Any use
+Any use or 
+management
+Combustion 
+by-product
+
+
+===== PAGE 62 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+62/81 
+Figure 5. Gasification 
+ 
+Figure 6. Incineration 
+ 
+ 
+Incineration
+Energy
+Combustion chamber / boiler
+Gas 
+treatmen
+t
+Turbo 
+Generator 
+Electricity 
+and/or 
+heat
+Fresh 
+waste
+Project Boundary
+Atmosphere
+N2OCO2
+CH4
+Bottom ash
+Any use or management
+Fly ash
+WWTP
+
+
+===== PAGE 63 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+63 of 81 
+Appendix 2. The measurement of FFCj,y by balance method 
+1. Balance method in the conventional waste combustion using ambient air 
+1. The balance method is based on five mass balances and one energy balance (see below)1 
+and the standard data on the chemical composition of biogenic and fossil organic matter. 
+In particular, the result of each balance, which describes a certain waste characteristic 
+(e.g. content of organic carbon, heating value, ash content …) is attuned to physical or 
+chemical waste characteristics derived from routinely measure d operating data at the 
+waste incineration plant (‘WtE plant’). 
+(a) Mass balance - the mass fractions ( mI, mB, mF, mW) are the four unknowns of a 
+nonlinear set of six equations, which represent the mass fraction of each material 
+group as shown in Figure 1 belo w. The four indices are I: inert (inorganic); B: 
+biogenic; F: fossil, W: water. Inert materials include all incombustible solid residues 
+like glass, stones, ashes or other inorganic matter from biowastes and plastics (e.g. 
+kaolin in paper). Biogenic and fo ssil organic material groups refer only to the 
+moisture- and ash-free organic matter; 
+𝑚𝐼 + 𝑚𝐵 + 𝑚𝐹 + 𝑚𝑤 = 1  Equation (1) 
+Figure 1. Split-up of waste fractions into the four material groups mI, mB, mF and mW  
+ 
+(b) Ash balance - the mass fraction of the inert (inorganic) material (the ash content 
+of the waste awaste) corresponds approximately to the quotient of the measured 
+mass flow of solid residues ∑Msolidresidues and the waste input Mwaste of the plant; 
+                                                
+1 Johann Fellner, Oliver  Cencic, and Helmut Rechberger. “A new method to determine the ratio of 
+electricity production from fossil and biogenic sources in waste-to-energy plants.” Environ. Sic. Technol 
+41(2007): 2579-2586. 
+Inert materials
+(stones, glass, …)PlasticsBiowaste
+Im
+Bm
+Fm
+Wm
+
+
+
+===== PAGE 64 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+64 of 81 
+𝑚𝐼 = 𝑎𝑤𝑎𝑠𝑡𝑒 = ∑𝑀𝑠𝑜𝑙𝑖𝑑𝑟𝑒𝑠𝑖𝑑𝑢𝑒𝑠
+𝑀𝑤𝑎𝑠𝑡𝑒
+ Equation (2) 
+Where: 
+𝑀𝑤𝑎𝑠𝑡𝑒 = Mass of waste feed into the WtE plant within a defined period hour h [tons] 
+∑ 𝑀𝑠𝑜𝑙𝑖𝑑𝑟𝑒𝑠𝑖𝑑𝑢𝑒𝑠 = Solid residues (dry substance) of the WtE  plant within a defined period 
+hour h [tons] 
+𝑎𝑤𝑎𝑠𝑡𝑒 = Average ash content of the waste feed within a defined period [tons 
+ash/tons waste] 
+(c) Carbon balance - the average content of carbon CCwaste of the waste feed derived 
+from the operating data of the plant (i.e. volume flow of flue gas Vflue gas, the CO 2 
+concentration in the flue gas CCO2,fg, and in the combustion air CCO2,air, and the mass 
+flow of the waste input Mwaste as well as the mass flow of auxiliary fuels FCi,h and 
+their respective carbon contents CFCi,h), equals the product of the organic mass 
+fractions (biomass mB and fossil matter mF) and their carbon contents (CCB and CCF), 
+see equation (3) below . The mass flow of carbon connected to emissions of CO 
+and hydrocarbons is neglected. The elaborate term
+air
+airair
+fgfg
+CO
+COO
+COO
+CCC
+CC
+,2
+,2,2
+,2,2
+100
+100
+−−
+−−
+− is 
+required to consider the atmospheric content of CO2 in the combustion air; 
+(𝑚𝐵 × 𝐶𝐶𝐵 + 𝑚𝐹 × 𝐶𝐶𝐹)× 103 = 𝐶𝐶𝑤𝑎𝑠𝑡𝑒
+=
+[𝑉𝑓𝑙𝑢𝑒𝑔𝑎𝑠 × (𝐶𝐶𝑂2𝑓𝑔 −
+100 − 𝐶𝑂2𝑓𝑔 − 𝐶𝐶𝑂2𝑓𝑔
+100 − 𝐶𝑂2𝑎𝑖𝑟 − 𝐶𝐶𝑂2𝑎𝑖𝑟
+× 𝐶𝐶𝑂2𝑎𝑖𝑟) × 𝑀𝑐
+100 × 𝑉𝑚
+] − 𝐹𝐶𝑖,ℎ × 𝐶𝐹𝐶𝑖,ℎ
+𝑀𝑤𝑎𝑠𝑡𝑒
+ 
+Equation (3) 
+Where: 
+𝐶𝐶𝐵 = Concentration of carbon of the combustible fraction of the biogenic 
+matter [kg/kgash and moisture-free] 
+𝐶𝐶𝐹 = Concentration of carbon  of the combustible  fraction of the fossil 
+matter [kg/kgash and moisture-free] 
+𝐶𝐶𝑤𝑎𝑠𝑡𝑒 = Average carbon content of the waste feed  within a defined period  
+hour h [kg/kg]] 
+𝑉𝑓𝑙𝑢𝑒𝑔𝑎𝑠 = Flue gas volume of the WtE  plant within a  defined period  hour h 
+[Nm3] 
+𝐶𝑂2𝑓𝑔, 𝐶𝐶𝑂2𝑓𝑔 = Average O2 and CO2 content in the flue gas of the WtE plant within 
+a defined period hour h [vol %] 
+𝐶𝑂2𝑎𝑖𝑟, 𝐶𝐶𝑂2𝑎𝑖𝑟 = Average O2 and CO2 content of combustion  air of the WtE plant 
+within a defined period [vol %] 
+𝑀𝑐 = Molecular weight of carbon (12.0107g/mol) 
+𝑉𝑚 = Molar volume of ideal gas under standard temperature and pressure 
+(22.414Ndm3/mol) 
+𝐹𝐶𝑖,ℎ = The quantity of auxiliary fuel i (e.g. fuel oil or natural gas, if exists) 
+combusted during hour h [tons/h] 
+
+
+===== PAGE 65 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+65 of 81 
+𝐶𝐹𝐶𝑖,ℎ = Carbon contents of the auxiliary fuel i (g C/kg auxiliary fuel, referring 
+to the default values provided in Table 1.3 in Volume 2 of IPCC 
+2006) 
+(d) Energy balance - The low calorific value of the waste HVwaste that is determined 
+by using the elementary content of C, H, O, N, S, and Cl corresponds to the calorific 
+value derived from operating data (steam production S, the net enthalpy of steam 
+cycle Δh, the mass flow of the waste input Mwaste, the mass flow of auxiliary fuels 
+FCi,h and their respective calorific value HVFCi,h, and the energy efficiency of the 
+boiler η) of the plant; 
+𝑚𝐵 × (34.8 ×  𝐶𝐶𝐵 + 93.9 × 𝐶𝐻𝐵 − 10.8 × 𝐶𝑂𝐵 + 6.3 × 𝐶𝑁𝐵 + 10.5 × 𝐶𝑆𝐵)
++ 𝑚𝐹
+× (34.8 × 𝐶𝐶𝐹 + 93.9 × (𝐶𝐻𝐹 − 𝐶𝐶𝐼𝐹
+𝑀𝐶𝐼
+) − 10.8 × 𝐶𝑂𝐹
++ 6.3 × 𝐶𝑁𝐹 + 10.5 × 𝐶𝑆𝐹) + 𝑚𝑊 × (−2.45) = 𝐻𝑉𝑤𝑎𝑠𝑡𝑒
+=
+𝑆 × ∆ℎ − 𝐹𝐶𝑖,ℎ × 𝐻𝑉𝐹𝐶𝑖,ℎ
+𝑀𝑤𝑎𝑠𝑡𝑒 × η  
+Equation (4) 
+Where: 
+𝐶𝐻𝐵, 𝐶𝑂𝐵, 𝐶𝑁𝐵, 𝐶𝑆𝐵 = Concentration of hydrogen, oxygen, nitrogen and sulphur of the 
+combustible fraction of the biogenic matter [kg/kg ash and moisture -
+free] 
+𝐶𝐻𝐹, 𝐶𝑂𝐹, 𝐶𝑁𝐹, 𝐶𝑆𝐹, 𝐶𝑆𝐼𝐹 = Concentration of hydrogen, oxygen, nitrogen, sulphur and chlorine of 
+the combustible fraction of the fossil organic matter [kg/kg ash - and 
+moisture-free] 
+𝐻𝑉𝑤𝑎𝑠𝑡𝑒 = Average lower calorific value of the waste feed within a defined period 
+hour h [MJ/kg] 
+𝐻𝑉𝐹𝐶𝑖,ℎ = Lower calorific value of the auxiliary fuel [MJ/ton auxiliary fuel, referring 
+to the default values provided in Table 1.2, Volume 2 of IPCC 2006] 
+S = Steam production of the WtE plant within a defined period hour h [kg] 
+∆ℎ = Net enthalpy of steam cycle of the WtE plant [MJ/kg] 
+η = Energy efficiency of the steam boiler of the WtE plant [-] 
+(e) O2 consumption - the combustion of the organic matter consumes oxygen. The 
+information about the chemical composition of the fuel (in particular the 
+concentration of carbon CC, hydrogen CH, oxygen CO, nitrogen CN, sulphur CS, and 
+chlorine CCl of the biogenic [B] and the fo ssil [F] material) allows quantification of 
+the consumption of oxygen O2,consum in the combustion air. This amount has to 
+match with the oxygen depletion observable in the flue gas using operating data 
+about the volume flow of flue gas Vflue gas, the O2 and CO2 concentration in the flue 
+gas (CO2,fg, CCO2,fg) and in the combustion air (CO2,air, CCO2,air), and the mass flow of 
+the waste input Mwaste, as well as the mass flow of auxiliary fuels FCi,h and their 
+respective carbon and hydrogen contents CFCi,h and HFCi,h. The term 
+
+
+===== PAGE 66 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+66 of 81 
+airair
+fgfg
+COO
+COO
+CC
+CC
+,2,2
+,2,2
+100
+100
+−−
+−−
+is derived from the difference in volume between the flue gas and 
+the combustion air; 
+𝑚𝐵 × (𝐶𝐶𝐵
+𝑀𝐶
++ 𝐶𝐻𝐵
+4 × 𝑀𝐻
+− 𝐶𝑂𝐵
+2 × 𝑀𝑂
++ 𝐶𝑁𝐵
+2 × 𝑀𝑁
++ 𝐶𝑆𝐵
+𝑀𝑆
+) × 103
++ 𝑚𝐹 × ( 𝐶𝐶𝐹
+𝑀𝐶
++
+𝐶𝐻𝐹 − 𝐶𝐶𝐼𝐹
+𝑀𝐶𝐼
+4 × 𝑀𝐻
+− 𝐶𝑂𝐹
+2 × 𝑀𝑂
++ 𝐶𝑁𝐹
+2 × 𝑀𝑁
++ 𝐶𝑆𝐹
+𝑀𝑆
+) × 103
+= 𝑂2,𝑐𝑜𝑛𝑠𝑢𝑚=
+𝑉𝑓𝑙𝑢𝑒𝑔𝑎𝑠 × (𝐶𝑂2,𝑎𝑖𝑟 −
+100 − 𝐶𝑂2𝑓𝑔 − 𝐶𝐶𝑂2𝑓𝑔
+100 − 𝐶𝑂2𝑎𝑖𝑟 − 𝐶𝐶𝑂2𝑎𝑖𝑟
+× 𝐶𝑂2𝑓𝑔) × 1
+100 × 𝑉𝑚
+𝑀𝑤𝑎𝑠𝑡𝑒
+−
+𝐹𝐶𝑖,ℎ × (𝐶𝐹𝐶,𝑖,ℎ
+𝑀𝐶
++ 𝐻𝐹𝐶,𝑖,ℎ
+4 × 𝑀𝐻
+)
+𝑀𝑤𝑎𝑠𝑡𝑒
+ 
+Equation (5) 
+ 
+Where: 
+𝑀𝐻 = Molecular weight of hydrogen (1.00794 g/mol) 
+𝑀𝑂 = Molecular weight of oxygen (15.9994 g/mol) 
+𝑀𝑁 = Molecular weight of nitrogen (14.0067 g/mol) 
+𝑀𝑆 = Molecular weight of sulfur (32.065 g/mol) 
+𝑀𝐶𝐼 = Molecular weight of chlorine (35.4527g/mol) 
+𝐶𝐹𝐶,𝑖,ℎ = Carbon contents of the auxiliary fuel i (g C/kg auxiliary fuel, referring to the 
+default values provided in Table 1.2, Volume 2 of IPCC 2006) 
+𝐻𝐹𝐶,𝑖,ℎ = Hydrogen contents of the auxiliary fuel i (g H/kg auxiliary fuel, referring to 
+the default values provided in Table 8.2 in Applied Thermodynamics2) 
+𝑂2,𝑐𝑜𝑛𝑠𝑢𝑚 = Average O 2 consumption during the combustion of the waste within  a 
+defined period [moles O2/kg of waste] 
+(f) Difference between O 2 consumption and CO 2 production - during the 
+combustion of solid fuel O2 is consumed and CO2 is simultaneously produced. Due 
+to the difference in the chemical composition of biogenic and fossil organic matter 
+(in particular concerning the ratio of hydrogen and oxygen content) both materials 
+show strong distinction in their behaviour regarding O 2 consumption and CO 2 
+production. The difference between O 2 consumption and CO 2 production dO2-CO2 
+can be assessed using information about the chemical comp osition of the fuel 
+(concentration of hydrogen CH, oxygen CO, nitrogen CN, sulfur CS, and chlorine CCl 
+of the biogenic [B] and the fossil [F] material). This result is equated to the flue gas 
+data obtained at the plant; 
+                                                
+2 Onkar Singh. Applied Thermodynamics (2003): 279-280, available in Google book. ISBN: 81-224-1496-
+6. 
+
+
+===== PAGE 67 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+67 of 81 
+𝑚𝐵 × ( 𝐶𝐻𝐵
+4 × 𝑀𝐻
+− 𝐶𝑂𝐵
+2 × 𝑀𝑂
++ 𝐶𝑁𝐵
+2 × 𝑀𝑁
++ 𝐶𝑆𝐵
+𝑀𝑆
+) × 103
++ 𝑚𝐹 × (
+𝐶𝐻𝐹 − 𝐶𝐶𝐼𝐹
+𝑀𝐶𝐼
+4 × 𝑀𝐻
+− 𝐶𝑂𝐹
+2 × 𝑀𝑂
++ 𝐶𝑁𝐹
+2 × 𝑀𝑁
++ 𝐶𝑆𝐹
+𝑀𝑆
+) × 103
+= 𝑑𝑜2−𝐶𝑂2
+= 𝑉𝑓𝑙𝑢𝑒𝑔𝑎𝑠
+𝑀𝑤𝑎𝑠𝑡𝑒
+× [(𝐶𝑂2,𝑎𝑖𝑟 + 𝐶𝐶𝑂2,𝑎𝑖𝑟)× (
+100 − 𝐶𝑂2𝑓𝑔 − 𝐶𝐶𝑂2𝑓𝑔
+100 − 𝐶𝑂2𝑎𝑖𝑟 − 𝐶𝐶𝑂2𝑎𝑖𝑟
+)
+− (𝐶𝑂2,𝑓𝑔 + 𝐶𝐶𝑂2,𝑓𝑔)] × 1
+100 × 𝑉𝑚
+−
+𝐹𝐶𝑖,ℎ × 𝐻𝐹𝐶,𝑖,ℎ
+4 × 𝑀𝐻
+𝑀𝑤𝑎𝑠𝑡𝑒
+ 
+Equation (6) 
+Where: 
+𝑑𝑜2−𝐶𝑂2 = Average difference between O2 consumption and CO2 production during 
+the combustion of the waste within a defined period hour h [moles O2-
+CO2/kg of waste] 
+2. By solving the set of above equations3 (applying non-linear data reconciliation and utilizing 
+operating data obtained from the incineration plant as well as data about the chemical 
+composition of moisture-and-ash free biogenic and fossil organic matter – see for example 
+Table 1) the unknowns mI, mB, mF, mW are determined. The Fraction of fossil carbon in 
+total content of waste Fraction type  j (FFCj), shall subsequently be calculated by 
+converting the carbon balance above into the following equation: 
+𝐹𝐹𝐶𝑗 = 𝑚𝐹 × 𝐶𝐶𝐹
+𝑚𝐵 × 𝐶𝐶𝐵 + 𝑚𝐹 × 𝐶𝐶𝐹
+  Equation (7) 
+3. In addition, this method allows determining the Fraction of total carbon content in waste 
+type j (FCCj) by applying the carbon balance above: 
+𝐹𝐶𝐶𝑗 = (𝑚𝐵 × 𝐶𝐶𝐵 + 𝑚𝐹 × 𝐶𝐶𝐹)× 103 = 𝐶𝐶𝑤𝑎𝑠𝑡𝑒
+=
+𝑉𝑓𝑙𝑢𝑒𝑔𝑎𝑠 × (𝐶𝐶𝑂2,𝑓𝑔 −
+100 − 𝐶𝑂2𝑓𝑔 − 𝐶𝐶𝑂2𝑓𝑔
+100 − 𝐶𝑂2𝑎𝑖𝑟 − 𝐶𝐶𝑂2𝑎𝑖𝑟
+× 𝐶𝐶𝑂2𝑎𝑖𝑟) × 𝑀𝐶
+100 × 𝑉𝑚
+− 𝐹𝐶𝑖,ℎ × 𝐶𝐹𝐶𝑖,ℎ
+𝑀𝑤𝑎𝑠𝑡𝑒
+  
+Equation (8) 
+                                                
+3 When a software following the balance method is applied in the calculation, the project participate(s) 
+have to demonstrate the applicability and the reliability of the software to DOE.  
+
+
+===== PAGE 68 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+68 of 81 
+2. Balance method in the oxygen-enriched combustion 
+4. Above equations are applied to the conventional combustion process fed with the ambient 
+air. In equation (3), (5) & (6), the O2 and CO2 content of the combustion air (CO2,comb,air 
+and CCO2,comb,air) equal to those of the ambient air (CO 2,air and CCO2,air). However, 
+when the oxygen -enriched combustion air is fed into the combustion process, the 
+composition of the combustion air with oxygen enrichment at WtE plant is not known a 
+priori. Although volumetric flow measurements of the underfire and overfire air are usually 
+accomplished, and the information about the volume of the ‘oxygen’ gas and its O2 content 
+is available, these data do not allow a direct determination of the O 2 balance of the plant 
+because of the unknown amount of leak air entering the system (Figure 2). 
+Figure 2.  Air flows through a WtE plant (schematic illustration) 
+ 
+5. Thus, it is necessary to balance the inert gases nitrogen and argon (N can be considered 
+as almost inert within the system) and to use the outcomes of this balance for calculation 
+the amount of combustion air and its O2 and CO2 content, respectively. 
+(a) Balance for nitrogen gas and argon  - Equation (9) is established with the 
+volumetric flow of ‘oxygen’ gas V’oxygen’gas, of ambient air Vambient air, and flue gas Vflue 
+gas, and the contents of O 2 and CO 2 in the respective gas flows ( CO2,’oxgeny’gas, 
+CO2,amb,air, CCO2,amb,air, CO2,fg, CCO2,fg). The N input through the waste can be 
+neglected considering the nitrogen content of t he waste, which is less than 
+10 gN/kg waste.4 
+                                                
+4 David H.E. Liu and Béla G. Lipták, Hazardous Waste and Solid  (1999): 171, Table 8.1.4. Available in 
+Google book. ISBN 1-56670-512-6. 
+ambient air
+“oxygen” gas
+flue gas
+waste
+underfire air
+overfire air
+leak air
+flue gasV
+" oxygen" gasV
+ambient airV
+ambient air
+“oxygen” gas
+flue gas
+waste
+underfire air
+overfire air
+leak air
+flue gasV
+" oxygen" gasV
+ambient airV
+
+
+===== PAGE 69 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+69 of 81 
+𝑉′𝑜𝑥𝑦𝑔𝑒𝑛′𝑔𝑎𝑠 × (100 − 𝐶𝑂2,′𝑜𝑥𝑦𝑔𝑒𝑛′𝑔𝑎𝑠)
+100
++ 𝑉𝑎𝑚𝑏𝑖𝑒𝑛𝑡𝑎𝑖𝑟
+× (100 − 𝐶𝑂2,𝑎𝑚𝑏,𝑎𝑖𝑟 − 𝐶𝐶𝑂2,𝑎𝑚𝑏,𝑎𝑖𝑟)
+100
+ 𝑉𝑓𝑙𝑢𝑒𝑔𝑎𝑠
+× (100 − 𝐶𝑂2,𝑓𝑔 − 𝐶𝐶𝑂2,𝑓𝑔)
+100  
+Equation (9) 
+Where: 
+𝐶𝑂2,𝑎𝑚𝑏,𝑎𝑖𝑟 = Default O2 concentration of ambient air [Vol-% dry basis] 
+𝐶𝐶𝑂2,𝑎𝑚𝑏,𝑎𝑖𝑟 = Default CO2 concentration of ambient air [Vol-% dry basis] 
+𝑉𝑎𝑚𝑏𝑖𝑒𝑛𝑡𝑎𝑖𝑟 = The volume of ambient air during hour h [Nm3/h on a dry basis] 
+𝐶𝑂2,′𝑜𝑥𝑦𝑔𝑒𝑛′𝑔𝑎𝑠 = Average O 2 concentration of the ‘oxygen’ enriched gas of the WtE plant 
+during hour h [Vol-% dry basis] 
+𝑉′𝑜𝑥𝑦𝑔𝑒𝑛′𝑔𝑎𝑠 = The volume of ‘oxygen’ enriched gas during hour h[Nm3/h on a dry basis] 
+6. Since Vambient air is the only unknown in equation (9), it can be calculated by  converting 
+equation (9) into the equation as follows: 
+𝑉𝑎𝑚𝑏𝑖𝑒𝑛𝑡𝑎𝑖𝑟
+  
+100 × (𝑉𝑓𝑙𝑢𝑒𝑔𝑎𝑠 × (100 − 𝐶𝑂2,𝑓𝑔 − 𝐶𝐶𝑂2,𝑓𝑔)
+100 ) − 𝑉′𝑜𝑥𝑦𝑔𝑒𝑛′𝑔𝑎𝑠 × (100 − 𝐶𝑂2,′𝑜𝑥𝑦𝑔𝑒𝑛′𝑔𝑎𝑠
+100 )
+100 − 𝐶𝑂2,𝑎𝑖𝑟 − 𝐶𝐶𝑂2,𝑎𝑖𝑟
+ 
+Equation (10) 
+7. Together with the monitored parameter of V’oxygen’ gas, the average oxygen content of 
+the total ‘combustion’ air CO2,comb,air, including underfire, overfire and leak air, can  
+further be determined as follows: 
+𝐶𝑂2,𝑐𝑜𝑚𝑏,𝑎𝑖𝑟 = (𝑉𝑎𝑚𝑏𝑖𝑒𝑛𝑡𝑎𝑖𝑟− 𝐶𝑂2,𝑎𝑚𝑏,𝑎𝑖𝑟 + 𝑉′𝑜𝑥𝑦𝑔𝑒𝑛′𝑔𝑎𝑠 × 𝐶𝑂2,′𝑜𝑥𝑦𝑔𝑒𝑛′𝑔𝑎𝑠)
+𝑉𝑎𝑚𝑏𝑖𝑒𝑛𝑡𝑎𝑖𝑟+ 𝑉′𝑜𝑥𝑦𝑔𝑒𝑛′𝑔𝑎𝑠
+ Equation (11) 
+Where: 
+𝐶𝑂2,𝑐𝑜𝑚𝑏,𝑎𝑖𝑟 = O2 concentration of the total ‘combustion’ air, including und erfire, overfire 
+and leak air, of the WtE plant during hour h [Vol-% dry basis] 
+8. Considering that the decrease in CO 2 content of the ambient air CCO2,amb,air during the 
+oxygen enrichment process (e.g. air separation by vacuum pressure swing adsorption) is 
+
+
+===== PAGE 70 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+70 of 81 
+alike to that for nitrogen gas, the CO 2 content of the ‘oxygen’ gas CCO2,’oxygen’gas shall be 
+determined as follows: 
+𝐶𝐶𝑂2,′𝑜𝑥𝑦𝑔𝑒𝑛′𝑔𝑎𝑠
+
+(100 − 𝐶𝑂2,′𝑜𝑥𝑦𝑔𝑒𝑛′𝑔𝑎𝑠)
+(100 − 𝐶𝐶𝑂2,𝑎𝑚𝑏,𝑎𝑖𝑟−𝐶𝑂2,𝑎𝑚𝑏,𝑎𝑖𝑟)× 𝐶𝐶𝑂2,𝑎𝑚𝑏,𝑎𝑖𝑟
+ Equation (12) 
+Where: 
+𝐶𝐶𝑂2,′𝑜𝑥𝑦𝑔𝑒𝑛′𝑔𝑎𝑠 = CO2 concentration of the ‘oxygen’ enriched gas used in the WtE plant 
+during hour h [Vol-% dry basis] 
+9. With the same principle of equation (11), the CO2 content of the combustion air CCO2,comb,air 
+can be approximated as follows: 
+𝐶𝐶𝑂2,𝑐𝑜𝑚𝑏,𝑎𝑖𝑟
+
+(𝑉𝑎𝑚𝑏𝑖𝑒𝑛𝑡𝑎𝑖𝑟× 𝐶𝐶𝑂2,𝑎𝑚𝑏,𝑎𝑖𝑟 + 𝑉′𝑜𝑥𝑦𝑔𝑒𝑛′𝑔𝑎𝑠 × 𝐶𝐶𝑂2,′𝑜𝑥𝑦𝑔𝑒𝑛′𝑔𝑎𝑠)
+𝑉𝑎𝑚𝑏𝑖𝑒𝑛𝑡𝑎𝑖𝑟+ 𝑉′𝑜𝑥𝑦𝑔𝑒𝑛′𝑔𝑎𝑠
+ Equation (13) 
+10. When the WtE plant installs oxygen enriched combustion,  CO2,comb,air (calculated by 
+equation (11)) and CCO2,comb,air (calculated by equation (13)) shall replace CO2,air and CCO2,air 
+in equation (3), in equation (5) and in equation (6), respectively. 
+Table 1.  Chemical composition of moisture-and-ash-free biogenic and fossil organic matter 
+Content of Unit 
+Biogenic matter Fossil organic matter 
+Symbol mean Standard-deviation Symbol mean Standard-deviation 
+C 
+kg/kg 
+moisture 
+and ash 
+free 
+matter 
+CCB 0.483 0.004 CCF 0.777 0.016 
+H CHB 0.065 0.001 CHF 0.112 0.006 
+O COB 0.443 0.007 COF 0.061 0.013 
+N CNB 0.007 0.002 CNF 0.014 0.005 
+S CSB 0.001 0.0004 CSF 0.003 0.001 
+Cl CClB - - CClF 0.032 0.012 
+3. Measurement of the chemical composition of moisture-and-ash free biogenic 
+and fossil organic matter 
+11. The project proponent shall obtain the country -special value following the steps given 
+underneath. Laboratory for conducting the test shall be national or internally approved. 
+12. Step 1. Sampling of waste 
+(a) The waste shall be sampled following the Standard Guide for General Planning of 
+Waste Sampling (ASTM D4687 -14). The project participates are also allowed to 
+choose other applicable international or national standards. 
+
+
+===== PAGE 71 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+71 of 81 
+13. Step 2. Sorting of waste: 
+(a) The waste shall be sorted into pure biogenic and fossil organic matter (only waste 
+materials which can definitely be recognized as fossil or biogenic matter should be 
+sorted out), as well as inorganic (inert) matter (e.g., glass, metals) and organic 
+matter (not recognizable as biogenic or fossil matter). 
+14. Step 3. Analysis of waste: 
+(a) The samples of sorted biogenic and fossil material as well as mixed samples (not 
+recognizable as biogenic or fossil matter) shall be conditioned separately for 
+elementary analyses and the measurement of ash content. In particular the grain 
+size of the samples and their mas s has to be reduced. The “final” grain size 
+depends on the sample size for the elementary analysis (usually a final grain size 
+for the analysis samples of 0.5 mm is recommended); 
+(b) The “pure” biogenic and fossil samples as well as the mixed (not recognizable ) 
+waste samples shall be dried at 105 °C to a constant weight; 
+(c) In case that the mass of the mixed sample is less than 20  per cent of the sum of 
+sorted biogenic and fossil samples, only step s 3(e), 3(f) , and 3 (g) need to be 
+continued. The figure underneath presents the steps when the mass of the mixed 
+sample is less than 20 per cent; 
+
+
+===== PAGE 72 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+72 of 81 
+Figure 3.  Steps when the mass of the mixed sample is less than 20 per cent 
+ 
+(d) In case that the mass of the mixed sample is more than 20 per cent of the sum of 
+sorted biogenic and fossil samples, steps 3(e), 3(f), 3(g), 3(h), 3(i), 3(j), 3(k), 3(l) 
+and 3(m) need to be continued. The figure underneath presents the steps for the 
+mixed sample (waste material not clearly recognizable) when the mass of the 
+mixed sample is more than 20 per cent; 
+
+
+
+===== PAGE 73 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+73 of 81 
+Figure 4. Steps for the mixed sample 
+ 
+(e) Part of the sample material is used to determine the ash content a nd loss on 
+ignition (at 550 °C); 
+(f) The elementary composition (C, H, N, S, O and Cl) of the dry biogenic and fossil 
+waste samples and the composition (C, H, N, S, O and Cl) of their ignition residue 
+shall be determined, respectively; 
+(g) The elementary composition (C, H, N, S, O and Cl) of moisture and ash free 
+biogenic and fossil organic matter shall be calculated using information determined 
+in step 3(e) and 3(f). (see Table 2 – step A below). These data, which correspond 
+to the parameter of Table 1, can only be considered as representative on condition 
+that step 3(c) is fulfilled; 
+(h) Determination of the elementary composition (C, H, N, S, O and Cl) of the dry 
+mixed (not recognizable) waste samples and the composition (C, H, N, S, O and 
+Cl) of their ignition residue, respectively; 
+(i) Application of the selective dissolution method to the dry mixed (not recognizable) 
+waste samples in order to determin e the fraction of fossil and biogenic matter in 
+the dry mixed (not recognizable) waste samples; 
+
+
+
+===== PAGE 74 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+74 of 81 
+(j) Determination of the elementary composition (C, H, N, S, O and Cl) of the residues 
+of selective dissolution (generated during step 3(i)) and also of the ignition loss of 
+the selective dissolution residue; 
+(k) Calculation of elementary composition of moisture and ash-free biogenic and fossil 
+organic matter present in the dry mixed (not recognizable) waste samples (see 
+Table 2 – step B, C & D); 
+(l) Combination of results of step 3 (k) and step 3 (g) in order to determine 
+representative values for the content of C, H, N, S, O and Cl in moisture and ash-
+free biomass present in waste (Data of Table 1) (see Table 2 – step E). 
+15. The total amount of C, H, O, S and N for mois ture and ash free biogenic matter and the 
+total amount of C, H, O, S, N and Cl for moisture and ash free fossil matter shall be within 
+the range of 950 to 1050 g/kg moisture and ash free bioge nic/fossil matter. Otherwise, 
+measurements are to be repeated. The respective chemical content shall be corrected by 
+multiplying the value of  each element by  1/(cCb+cHb +cNb + cSb + cOb)  in case of 
+biogenic matter and 1/(cCf+cHf +cNf + cSf + cOf+cClf) in case of fossil matter. 
+16. If C-content of moisture and ash free fossil matter determined by the project proponent is 
+10 per cent lower than the figures given in Table 1,5 data for fossil matter composition of 
+Table 1 shall be used. 
+17. If C-content of moisture and ash free biogenic matter determined by PP´s own tests is 
+10 per cent higher than the figures given in Table 1, data for biogenic matter composition 
+of Table 1 shall be used. 
+Table 2. Calculation steps of C, H, N, S, O of moisture-and-ash-free biogenic and fossil organic 
+matter 
+Step A: Calculation of C, H, N, S, O of moisture-and-ash-free matter for the sorted biogenic and 
+fossil matter cCb1, cHb1, cNb1, … & cCf1, cHf1, cNf1, … 
+ 
+cCb1 =TCb1 - 
+TCab1×ab1 
+ 
+cHb1 =THb1 - 
+THab1×ab1 
+TCb1 = total carbon content of dry biogenic sample (sorted biomass), 
+TCab1 = total carbon content of ash derived from dry biogenic sample 
+(sorted biomass), 
+ab1 = ash content of dry biogenic sample (sorted biomass); 
+TCb1 = total hydrogen content of dry biogenic sample (sorted biomass), 
+TCab1 = total hydrogen content of ash derived from dry biogenic sample 
+(sorted biomass), 
+ab1 = ash content of dry biogenic sample (sorted biomass); 
+ 
+cCf1 =TCf1 - 
+TCaf1×af1 
+TCf1 = total carbon content of dry fossil sample (sorted fossil material), 
+TCaf1 = total carbon content of ash derived from dry fossil sample (sorted 
+fossil material), 
+af1 = ash content of dry fossil sample (sorted fossil material); 
+In case that the dry mass of non-recognizable material is less than 20% of the sorted dry biomass 
+and fossil matter, values for the parameter cCb1, cH b1, cN b1, … & cC f1, cH f1, cN f1, … can be 
+considered as representative for C, H, N, S, O, Cl of moisture -and-ash-free matter of biogenic 
+and fossil matter present in the waste (data of Table 1). 
+                                                
+5 Table 1 provides the reference values of the chemical composition of moisture -and-ash free biogenic 
+and fossil organic matter that are representative in European countries. 
+
+
+===== PAGE 75 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+75 of 81 
+In case that the dry mass of non-recognizable material is more than 20% of the sorted dry biomass 
+and fossil matter, further calculation steps are required to derive representative values for C, H, 
+N, S, O, Cl of moisture -and-ash-free matter of biogenic and fossil matter present in the waste 
+(data of Table 1). 
+Step B: Calculation of C, H, N, S, O of moisture -and-ash-free matter present in mixed ( non-
+recognizable) waste material samples cCm, cHm, cNm, … & cCm, cHm, cNm, … 
+ 
+cCm=TCm - 
+TCam×am 
+TCm = total carbon content of mixed (non-recognizable) sample, 
+TCam = total carbon content of ash derived from mixed ( non-
+recognizable) sample, 
+am = ash content of mixed (non-recognizable) sample; 
+Step C: Determination of C, H, N, S, O of moisture -and-ash-free fossil matter present in mixed 
+(non-recognizable) waste material samples cCf2, cHf2, cNf2, … 
+ 
+cCf2=TCf2 - 
+TCaf2×af2 
+TCm = total carbon content of residue from selective dissolution of mixed 
+(non-recognizable) waste material samples, 
+TCam = total carbon content of residue from selective dissolution of mixed 
+(non-recognizable) waste material samples, 
+am = ash content of residue from selective dissolution of mixed ( non-
+recognizable) waste material samples 
+Step D: Calculation of C, H, N, S, O of moisture-and-ash-free biogenic matter present in mixed 
+(non-recognizable) waste material samples cCb2, cHb2, cNb2, … 
+ 
+cCb2=(cCm - cCf2×mf2) / (1 - 
+mf2) 
+cHb2=(cHm - cHf2×mf2) / (1 - 
+mf2) 
+mf2 = mass fraction of fossil matter (referred to moisture-and-
+ash-free matter) in the mixed (non-recognizable) waste material 
+samples (determined applying the selective dissolution 
+method) 
+Step E: Calculation of representative values for C, H, N, S, O of moisture-and-ash-free biogenic 
+matter present in the waste (combining data for sorted biogenic and fossil matter cCb1, 
+cHb1, cNb1, … & cC f1, cHf1, cNf1, … – data of step A AND data for biogenic and fossil 
+matter contained in mixed (non-recognizable) waste material samples cCb2, cHb2, cNb2, 
+…cCf2, cHf2, cNf2, … – data of step C and D) 
+ 
+cCb=cCb1×Mb1×(1-ab1)+ cCb2×Mm×(1-mf2) × (1-am) / (Mb1×(1-ab1) + Mm×(1-mf2) × (1-am) ) 
+cHb=cHb1×Mb1× (1-ab1)+ cHb2×Mm× (1-mf2) × (1-am) / (Mb1*(1-ab1)+ Mm× (1-mf2) × (1-am) ) 
+… 
+cCf=cCf1×Mf1*(1-af1)+ cCf2×Mm×mf2× (1-am) / (Mf1× (1-af1)+ Mm×mf2× (1-am) ) 
+cHf=cHf1×Mf1× (1-af1)+ cHf2×Mm*mf2× (1-am) / (Mf1× (1-af1)+ Mm×mf2× (1-am) ) 
+.. 
+ Mb1 = dry mass of biogenic sample (sorted biomass), 
+Mf1 = dry mass of fossil sample (sorted fossil material) 
+Mm = dry mass of not recognizable (mixed) material 
+cCb = carbon content of moisture -and-ash-free biogenic matter present in the 
+waste 
+cHb = hydrogen content of moisture-and-ash-free biogenic matter present in the 
+waste 
+…. 
+cCf = carbon content of moisture-and-ash-free fossil matter present in the waste 
+cHf = hydrogen content of moisture -and-ash-free fossil matter present in the 
+waste 
+…. 
+cCb, cHb, cNb, cCf, cHf, cNf represent the representative values for Table 1. 
+
+
+===== PAGE 76 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+76 of 81 
+4. Data and parameters monitored  for the b alance method in conventional 
+combustion and oxygen-enriched combustion 
+Data / Parameter table 1.  
+Data / Parameter: Mwaste 
+Data unit: tons/h 
+Description: Mass of waste feed into the WtE plant within a defined period hour h 
+Source of data: Project participants 
+Measurement 
+procedures (if any): 
+Measured with calibrated scales or load cells 
+Monitoring frequency: Hourly 
+QA/QC procedures: The instrument shall be subject to a regular maintenance and testing 
+regime to ensure accuracy. Calibration shall be according to 
+manufacturer’s specifications. 
+The data shall be collected accumulatively at least half working day. In 
+order to obtain reliable and realistic monitoring data, it is recommended 
+to take the data for three days 
+Any comment: - 
+Data / Parameter table 2.  
+Data / Parameter: FCi,h 
+Data unit: tons/h 
+Description: The quantity of auxiliary fuel i (e.g. fuel oil or natural gas, if exists) 
+combusted during hour h 
+Source of data: Onsite measurement by project participants 
+Measurement 
+procedures (if any): 
+(a) Use either mass or volume meters. In cases where fuel is 
+supplied from small daily tanks, rulers can be used to determine 
+mass or volume of the fuel consumed, with the following 
+conditions: The ruler gauge must be part of the daily tank and 
+calibrated at least once a year and have a book of control for 
+recording the measurements (on a daily basis or per shift); 
+(b) Accessories such as transducers, sonar and piezoelectronic 
+devices are accepted if they are properly calibrated with the 
+ruler gauge and receiving a reasonable maintenance; 
+(c) In case of daily tanks with pre -heaters for heavy oil, the 
+calibration will be made with the system at typical operational 
+conditions. 
+The data shall be collected accumulatively at least half working day. In 
+order to obtain reliable and realistic monitoring data, it is recommended 
+to take the data for three days 
+Monitoring frequency: Continuously 
+QA/QC procedures: - 
+Any comment: The parameter isn’t used for the calculation of the project emission. It 
+is used to calculate the mass flow of carbon in the combustion process 
+during hour h 
+
+
+===== PAGE 77 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+77 of 81 
+Data / Parameter table 3.  
+Data / Parameter: ∑Msolid residues 
+Data unit: tons/h 
+Description: Solid residues (dry substance) of the WtE plant within a defined period 
+Source of data: Project participants 
+Measurement 
+procedures (if any): 
+Measured with calibrated scales or load cells 
+Monitoring frequency: Daily 
+QA/QC procedures: The instrument shall be subject to a regular maintenance and testing 
+regime to ensure accuracy. Calibration shall be according to 
+manufacturer’s specifications. 
+The data shall be collected accumulatively at least half working day. In 
+order to obtain reliable and realistic monitoring data, it is recommended 
+to take the data for three days 
+Any comment: Data about the generation of solid residues (slag and ashes) at waste 
+incineration plants may be  not available at an hourly or daily basis . 
+Weekly or even monthly data could be used to determine the average 
+ratio between the generation of solid residues (slag & ashes) and the 
+mass of waste incinerated. These ratios could be subsequently used 
+to assess the hourly generation of slag (∑Mslag) and ash ( ∑Mash) by 
+simply multiplying the ratio with the quantity of waste incinerated during 
+hour h 
+Data / Parameter table 4.  
+Data / Parameter: Vflue gas 
+Data unit: Nm3/h on a dry basis 
+Description: Flue gas volume of the WtE plant within a defined period hour h 
+Source of data: Project participants 
+Measurement 
+procedures (if any): 
+The stack gas flow rate is either directly measured or calculated from 
+other variables where direct monitoring is not feasible. Where there are 
+multiple stacks of the same type, then it is sufficient to monitor one 
+stack of each type. Direct measurement of the air inlet flow rate shall 
+be made using a flow meter 
+Monitoring frequency: At minimum averaged hourly 
+QA/QC procedures: The meters shall be subject to a regular maintenance and testing 
+regime to ensure accuracy. Calibration shall be according to 
+manufacturer’s specifications. 
+The data shall be collected accumulatively at least half working day. In 
+order to obtain reliable and realistic monitoring data, it is recommended 
+to take the data for three days 
+Any comment: - 
+Data / Parameter table 5.  
+Data / Parameter: CO2,fg 
+Data unit: Vol-% dry basis 
+Description: Average O2 concentration in the flue gas of the WtE plant during hour h 
+
+
+===== PAGE 78 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+78 of 81 
+Source of data: Project participants 
+Measurement 
+procedures (if any): 
+Measured by the gas analyzer 
+Monitoring frequency: At minimum averaged hourly 
+QA/QC procedures: The analyzers shall be subject to a regular maintenance and testing 
+regime to ensure accuracy. Calibration shall be according to 
+manufacturer’s specifications. 
+The data shall be collected accumulatively at least half working day. In 
+order to obtain reliable and realistic monitoring data, it is recommended 
+to take the data for three days. 
+It shall be measured in the dry flue gas. It is also required to calibrate 
+the measurement device throughout the experiment with high quality 
+calibration gas of similar composition as expected in the flue gas (e.g. 
+calibration gas with O 2 concentration of 7 -8 Vol % and CO 2 
+concentration of 11-12 Vol-%. A gas analyzer with a reproducibili ty of 
+0.5% or lower is required 
+Any comment: - 
+Data / Parameter table 6.  
+Data / Parameter: CCO2,fg 
+Data unit: Vol-% dry basis 
+Description: Average CO 2 concentration in the flue gas of the WtE plant during 
+hour h 
+Source of data: Project participants 
+Measurement 
+procedures (if any): 
+Measured by the gas analyzer 
+Monitoring frequency: At minimum averaged hourly 
+QA/QC procedures: The analyzers shall be subject to a regular maintenance and testing 
+regime to ensure accuracy. Calibration shall be according to 
+manufacturer’s specifications. 
+The data shall be collected accumulatively at least half working day. In 
+order to obtain reliable and realistic monitoring data, it is recommended 
+to take the data for three days. 
+It shall be measured in the dry flue gas. It is also required to calibrate 
+the measurement device throughout the experiment with high quality 
+calibration gas of similar composition as expected in the flue gas (e.g. 
+calibration gas with O 2 concentration of 7 -8 Vol % and CO 2 
+concentration of 11-12 Vol-%. A gas analyzer with a reproducibili ty of 
+0.5% or lower is required 
+Any comment: - 
+Data / Parameter table 7.  
+Data / Parameter: CO2,’oxygen’ gas 
+Data unit: Vol-% dry basis 
+Description: Average O2 concentration of the ‘oxygen’ enriched gas of the WtE plant 
+during hour h 
+
+
+===== PAGE 79 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+79 of 81 
+Source of data: Project participants 
+Measurement 
+procedures (if any): 
+Measured by the gas analyzer 
+Monitoring frequency: At minimum averaged hourly 
+QA/QC procedures: The analyzers shall be subject to a regular maintenance and testing 
+regime to ensure accuracy. Calibration shall be according to 
+manufacturer’s specifications. 
+The data shall be collected accumulatively at least half working day. In 
+order to obtain reliable and realistic monitoring data, it is recommended 
+to take the data for three days. 
+It shall be measured in the dry flue gas. It is also required to calibrate 
+the measurement device throughout the experiment with high quality 
+calibration gas of similar composition as expected in the flue gas (e.g. 
+calibration gas with O 2 concentration of 7 -8 Vol % and CO 2 
+concentration of 11-12 Vol-%. A gas analyzer with a reproducibility of 
+0.5% or lower is required 
+Any comment: Only required if oxygen enriched combustion air is utilised 
+Data / Parameter table 8.  
+Data / Parameter: V’oxygen’gas 
+Data unit: Nm3/h on a dry basis 
+Description: The volume of ‘oxygen’ enriched gas during hour h 
+Source of data: Project participants 
+Measurement 
+procedures (if any): 
+Measured by the gas analyzer 
+Monitoring frequency: At minimum averaged hourly 
+QA/QC procedures: The analyzers shall be subject to a regular maintenance and testing 
+regime to ensure accuracy. Calibration shall be according to 
+manufacturer’s specifications. 
+The data shall be collected accumulatively at least half working day. In 
+order to obtain reliable and realistic monitoring data, it is recommended 
+to take the data for three days. 
+It shall be measured in the dry flue gas. It is also required to calibrate 
+the measurement device throughout the experiment with high quality 
+calibration gas of similar composition as expected in the flue gas (e.g. 
+calibration gas with O 2 concentration of 7 -8 Vol % and CO 2 
+concentration of 11-12 Vol-%. A gas analyzer with a reproducibility of 
+0.5% or lower is required 
+Any comment: Only required if oxygen enriched combustion air is utilised 
+Data / Parameter table 9.  
+Data / Parameter: S 
+Data unit: kg/h 
+Description: Steam production of the WtE plant within a defined period hour h 
+Source of data: The data shall be monitored and gained by the project participants 
+
+
+===== PAGE 80 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+80 of 81 
+Measurement 
+procedures (if any): 
+Measured by the steam meter 
+Monitoring frequency: Hourly 
+QA/QC procedures: The instrument shall be subject to a regular maintenance and testing 
+regime to ensure accuracy. Calibration shall be according to 
+manufacturer’s specifications. 
+The data shall be collected accumulatively at least half working day. In 
+order to obtain reliable and realistic monitoring data, it is recommended 
+to take the data for three days 
+Any comment: - 
+Data / Parameter table 10.  
+Data / Parameter: ∆h 
+Data unit: MJ/kg 
+Description: Net enthalpy of steam cycle of the WtE plant 
+Source of data: Project participants 
+Measurement 
+procedures (if any): 
+It is calculated with three parameters: Tsteam, Tfeed water and Psteam. They 
+will be measured by temperature meter and pressure meter 
+Monitoring frequency: Averaged hourly 
+QA/QC procedures: The instruments shall be subject to a regular maintenance and testing 
+regime to ensure accuracy. Calibration shall be according to 
+manufacturer’s specifications. 
+The data shall be collected accumulatively at least half working day. In 
+order to obtain reliable and realistic monitoring data, it is recommended 
+to take the data for three days 
+Any comment: - 
+Data / Parameter table 11.  
+Data / Parameter: η 
+Data unit: - 
+Description: Energy efficiency of the steam boiler of the WtE plant(s) 
+Source of data: Project participants 
+Measurement 
+procedures (if any): 
+The source of data shall be the following, in order of preference: 
+1. Project specific data; 
+2. Country specific data; or 
+3. IPCC default values 
+Monitoring frequency: Annually 
+QA/QC procedures: - 
+Any comment: - 
+- - - - - 
+
+
+===== PAGE 81 =====
+ACM0022   
+Large-scale Consolidated Methodology: Alternative waste treatment processes 
+Version 03.0 
+Sectoral scope(s): 01 and 13 
+81 of 81 
+Document information 
+Version Date Description 
+ 
+03.0  9 September 2021 EB 111, Annex 7 
+Revision to address inconsistencies and ambiguities identified in 
+the methodology. 
+02.0  28 November 2014 EB 81, Annex 13 
+Revision to: 
+• Introduce standardized approaches for the demonstration of 
+additionality; 
+• Introduce the balance method for determining fossil fraction of 
+wastes; 
+• Improve the provision for the use of this methodology in a 
+project activity under a PoA. 
+01.0.0 13 September 2012 EB 69, Annex 11 
+Initial adoption. 
+Decision Class: Regulatory 
+Document Type: Standard 
+Business Function: Methodology 
+Keywords: biogas recovery, greenfield, renewable energy generation, solid waste, water 
+ 

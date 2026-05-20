@@ -1,0 +1,530 @@
+Template: D:\Allotrope\PDD\VCS templates\VCS-Project-Description-Template-v4.4-FINAL2.docx
+Paragraphs: 320 Tables: 36 Sections: 5
+
+P 0001 [Template Title] VCS Project Description Template
+P 0002 [Normal] This template is for the design of projects using the VCS Program.
+P 0003 [Intra-section header] Instructions for completing the project description
+P 0004 [Normal] FILE NAME: Use the following format for the file name of the completed document:
+P 0005 [List Paragraph] For projects requesting pipeline listing: VCS PD DRAFT ProjectID DDMMMYYYY
+P 0006 [List Paragraph] For projects requesting registration approval: VCS PD ProjectID DDMMMYYYY
+P 0007 [Normal] ‘DDMMMYYYY’ should be the original date of issue as reported on the title page. If revised documents are submitted, add ‘track’ to the end of the file name and update DDMMMYYYY to the most recent date of issue.
+P 0008 [Normal] FILE TYPE: Submit the document as a non-editable PDF.
+P 0009 [Normal] TITLE PAGE FORMATTING: This document may feature the project title and project proponent’s or preparers’ logo using size 24, regular (non-italic) Century Gothic font. Fill in and complete each row of the table using size 10.5, black, regular (non-italic) Arial or Franklin Gothic Book font.
+P 0010 [Normal] GENERAL FORMATTING: Complete all sections using size 10.5, black, regular (non-italic) Arial or Franklin Gothic Book font.
+P 0011 [Normal] GENERAL INSTRUCTIONS: Specific instructions for completing each section of the project description template are located under the section headings in this template. Instructions relate back to the rules and requirements set out in the VCS Standard and accompanying VCS Program documents. The preparer will need to refer to these documents to complete the template.
+P 0012 [Normal] Note: The instructions in this template are to serve as a guide and do not necessarily represent an exhaustive list of the information the preparer must provide under each section of the template.
+P 0013 [Normal] Where a section is not applicable, explain why the section is not applicable (i.e., do not delete the section from the final document and do not only write “not applicable”).
+P 0014 [Normal] Delete all instructions, including this introductory text, from the final document.
+P 0019 [Template Title] Project TITLE
+P 0020 [Normal] Logo (optional)
+TABLE 00 (8x2)
+  R0: C0=Project title || C1=Name of the project
+  R1: C0=Project ID || C1=Verra Project ID
+  R2: C0=Crediting period || C1=DD-Month-YYYY to DD-Month-YYYY
+  R3: C0=Original date of issue || C1=For pipeline listing, DD-Month-YYYY is the date of submission For registration, DD-Month-YYYY is the date the project description was completed following the completion of the audit
+  R4: C0=Most recent date of issue || C1=DD-Month-YYYY is the date on which the document was most recently submitted
+  R5: C0=Version || C1=Version number of this document
+  R6: C0=VCS Standard Version || C1=Version number of the VCS Standard used by the project
+  R7: C0=Prepared by || C1=Individual and organization that prepared this document
+
+P 0023 [TOC] Contents
+P 0024 [toc 1] 1 Project Details 5
+P 0025 [toc 2] 1.1 Summary Description of the Project 5
+P 0026 [toc 2] 1.2 Audit History 5
+P 0027 [toc 2] 1.3 Sectoral Scope and Project Type 5
+P 0028 [toc 2] 1.4 Project Eligibility 6
+P 0029 [toc 2] 1.5 Project Design 6
+P 0030 [toc 2] 1.6 Project Proponent 7
+P 0031 [toc 2] 1.7 Other Entities Involved in the Project 7
+P 0032 [toc 2] 1.8 Ownership 7
+P 0033 [toc 2] 1.9 Project Start Date 8
+P 0034 [toc 2] 1.10 Project Crediting Period 8
+P 0035 [toc 2] 1.11 Project Scale and Estimated GHG Emission Reductions or Removals 8
+P 0036 [toc 2] 1.12 Description of the Project Activity 9
+P 0037 [toc 2] 1.13 Project Location 9
+P 0038 [toc 2] 1.14 Conditions Prior to Project Initiation 9
+P 0039 [toc 2] 1.15 Compliance with Laws, Statutes and Other Regulatory Frameworks 10
+P 0040 [toc 2] 1.16 Double Counting and Participation under Other GHG Programs 10
+P 0041 [toc 2] 1.17 Double Claiming, Other Forms of Credit, and Scope 3 Emissions 11
+P 0042 [toc 2] 1.18 Sustainable Development Contributions 12
+P 0043 [toc 2] 1.19 Additional Information Relevant to the Project 12
+P 0044 [toc 1] 2 Safeguards and Stakeholder engagement 13
+P 0045 [toc 2] 2.1 Stakeholder Engagement and Consultation 13
+P 0046 [toc 2] 2.2 Risks to Stakeholders and the Environment 15
+P 0047 [toc 2] 2.3 Respect for Human Rights and Equity 16
+P 0048 [toc 2] 2.4 Ecosystem Health 18
+P 0049 [toc 1] 3 Application of Methodology 20
+P 0050 [toc 2] 3.1 Title and Reference of Methodology 21
+P 0051 [toc 2] 3.2 Applicability of Methodology 21
+P 0052 [toc 2] 3.3 Project Boundary 21
+P 0053 [toc 2] 3.4 Baseline Scenario 22
+P 0054 [toc 2] 3.5 Additionality 22
+P 0055 [toc 2] 3.6 Methodology Deviations 23
+P 0056 [toc 1] 4 Quantification of Estimated GHG Emission Reductions and Removals 24
+P 0057 [toc 2] 4.1 Baseline Emissions 24
+P 0058 [toc 2] 4.2 Project Emissions 24
+P 0059 [toc 2] 4.3 Leakage Emissions 24
+P 0060 [toc 2] 4.4 Estimated GHG Emission Reductions and Carbon Dioxide Removals 25
+P 0061 [toc 1] 5 Monitoring 26
+P 0062 [toc 2] 5.1 Data and Parameters Available at Validation 26
+P 0063 [toc 2] 5.2 Data and Parameters Monitored 27
+P 0064 [toc 2] 5.3 Monitoring Plan 28
+P 0065 [toc 1] Appendix 1: Commercially sensitive information 30
+P 0066 [toc 1] Appendix X: <TITLE OF APPENDIX> 31
+P 0069 [Heading 1] Project Details
+P 0070 [Heading 2] Summary Description of the Project
+P 0071 [Normal] Provide a summary description of the project to enable an understanding of the nature of the project and its implementation, including the following (no more than one page):
+P 0072 [Bullets] A summary description of the technologies/measures to be implemented by the project.
+P 0073 [Bullets] The location of the project.
+P 0074 [Bullets] An explanation of how the project is expected to generate GHG emission reductions or carbon dioxide removals.
+P 0075 [Bullets] A brief description of the scenario existing prior to the implementation of the project.
+P 0076 [Bullets] An estimate of annual average and total reductions and removals.
+P 0077 [Heading 2] Audit History
+P 0078 [Bullets] For projects undergoing crediting period renewal, include the audit history of the project using the table below. For the project validation, state the validation date in the Period column. This table should include all monitoring periods, including the period of this report.
+TABLE 01 (3x5)
+  R0: C0=Audit type || C1=Period || C2=Program || C3=Validation/verification body name || C4=Number of years
+  R1: C0=Validation/ verification || C1=(DD-Month-YYYY-- DD-Month-YYYY) || C2=VCS || C3=Validation/verification body name || C4=One year
+  R2: C0= || C1=… || C2= || C3= || C4=
+
+P 0081 [Heading 2] Sectoral Scope and Project Type
+P 0082 [Instruction] Complete the table below with information relevant for non-AFOLU projects:
+TABLE 02 (2x2)
+  R0: C0=Sectoral scope || C1=
+  R1: C0=Project activity type || C1=
+
+P 0084 [Instruction] Complete the table below with information relevant for AFOLU projects:
+TABLE 03 (3x2)
+  R0: C0=Sectoral scope || C1=
+  R1: C0=AFOLU project category || C1=
+  R2: C0=Project activity type || C1=
+
+P 0086 [Heading 2] Project Eligibility
+P 0087 [Heading 3] General eligibility
+P 0088 [Instruction] For all projects, describe and justify how the project is eligible to participate in the VCS Program. The response should:
+P 0089 [Instruction] Justify that the project activity is included under the scope of the VCS Program and not excluded under Table 2.1 of the VCS Standard.
+P 0090 [Instruction] Provide information to demonstrate that the project meets requirements related to the pipeline listing deadline, the opening meeting with the validation/verification body, and the validation deadline.
+P 0091 [Instruction] Demonstrate that the applied methodology is eligible under the VCS Program. Where applying a methodology with scale and/or capacity limits, demonstrate that the project is not a fragmented part of a larger project or activity that would otherwise exceed such limits. If applicable, demonstrate that no single cluster of project activity instances exceeds the capacity limit.
+P 0092 [Instruction] Include any other relevant eligibility information.
+P 0093 [Heading 3] AFOLU project eligibility
+P 0094 [Instruction] For AFOLU projects, describe and justify how the project is eligible to participate in the VCS Program. The response should:
+P 0095 [Instruction] Justify and demonstrate that all selected AFOLU project categories are appropriate and that all related category requirements are met.
+P 0096 [Instruction] Provide evidence that native ecosystems have not been converted, cleared, drained, or degraded to generate GHG credits in Section 2.4.3 below.
+P 0097 [Instruction] For ARR, ALM, WRC, or ACoGS project areas, provide evidence that clearing or conversion did not take place within 10 years of the project start date in Section 2.4.3 below.
+P 0098 [Heading 3] Transfer project eligibility
+P 0099 [Instruction] For transfer projects and CPAs seeking registration, justify how eligibility conditions have been met. The response should justify how the criteria in Appendix 2 and Section 3.23 (Double Counting and Participation under Other GHG Programs) of the VCS Standard have been met.
+P 0100 [Heading 2] Project Design
+P 0101 [Normal] Indicate if the project has been designed as:
+P 0102 [Instruction] Single location or installation
+P 0103 [Instruction] Multiple locations or project activity instances (but not a grouped project)
+P 0104 [Instruction] Grouped project
+P 0105 [Heading 3] Grouped project design
+P 0106 [Instruction] For grouped projects, provide additional information relevant to the design of the grouped project, including any eligibility criteria that new project instances must meet upon their inclusion, subsequent to the initial validation of the project.
+P 0107 [Heading 2] Project Proponent
+P 0108 [Instruction] Provide contact information for the project proponent(s). Copy and paste the table as needed.
+TABLE 04 (6x2)
+  R0: C0=Organization name || C1=
+  R1: C0=Contact person || C1=
+  R2: C0=Title || C1=
+  R3: C0=Address || C1=
+  R4: C0=Telephone || C1=
+  R5: C0=Email || C1=The email address domain must match that of the organization.
+
+P 0110 [Heading 2] Other Entities Involved in the Project
+P 0111 [Instruction] Provide contact information and roles/responsibilities for any other entities involved in the development of the project. Copy and paste the table as needed.
+TABLE 05 (7x2)
+  R0: C0=Organization name || C1=
+  R1: C0=Role in the project || C1=
+  R2: C0=Contact person || C1=
+  R3: C0=Title || C1=
+  R4: C0=Address || C1=
+  R5: C0=Telephone || C1=
+  R6: C0=Email || C1=The email address domain must match that of the organization.
+
+P 0113 [Heading 2] Ownership
+P 0114 [Instruction] Provide evidence of project ownership, in conformance with the VCS Program requirements on project ownership.
+P 0115 [Heading 2] Project Start Date
+TABLE 06 (2x2)
+  R0: C0=Project start date || C1=DD-Month-YYYY
+  R1: C0=Justification || C1=Justify how the project start date conforms with the VCS Program requirements
+
+P 0117 [Heading 2] Project Crediting Period
+TABLE 07 (2x2)
+  R0: C0=Crediting period || C1=Seven years, twice renewable Ten years, fixed Other (state the selected crediting period and justify how it conforms with the VCS Program requirements)
+  R1: C0=Start and end date of first or fixed crediting period || C1=DD-Month-YYYY to DD-Month-YYYY
+
+P 0120 [Heading 2] Project Scale and Estimated GHG Emission Reductions or Removals
+P 0121 [Instruction] Indicate the estimated annual GHG emission reductions/removals (ERRs) of the project:
+P 0122 [Instruction] < 300,000 tCO2e/year (project)
+P 0123 [Normal] ≥ 300,000 tCO2e/year (large project)
+P 0124 [Table Header] Complete the table below for the first (if renewable) or fixed crediting period:
+TABLE 08 (8x2)
+  R0: C0=Calendar year of crediting period || C1=Estimated GHG emission reductions or removals (tCO2e)
+  R1: C0=DD-Month-YYYY to 31-December-YYYY || C1=
+  R2: C0=01-January-YYYY to 31-December-YYYY || C1=
+  R3: C0=01-January-YYYY to DD-Month-YYYY || C1=
+  R4: C0=… || C1=
+  R5: C0=Total estimated ERRs during the first or fixed crediting period || C1=
+  R6: C0=Total number of years || C1=
+  R7: C0=Average annual ERRs || C1=
+
+P 0126 [Heading 2] Description of the Project Activity
+P 0127 [Instruction] Describe the project activity or activities (including the technologies or measures employed) and how it/they will achieve the GHG emission reductions or carbon dioxide removals. Describe the implementation schedule of project activity or activities.
+P 0128 [Instruction] For non-AFOLU projects:
+P 0129 [Bullets] Include a list and the arrangement of the main manufacturing/production technologies, systems and equipment involved. Include in the description information about the age and average lifetime of the equipment based on manufacturer’s specifications and industry standards, and existing and forecast installed capacities, load factors and efficiencies.
+P 0130 [Bullets] Include the types and levels of services (normally in terms of mass or energy flows) provided by the systems and equipment that are being modified and/or installed and their relation, if any, to other manufacturing/production equipment and systems outside the project boundary. Clearly explain how the same types and levels of services provided by the project would have been provided in the baseline scenario.
+P 0131 [Bullets] Where appropriate, provide a list of facilities, systems, and equipment in operation under the existing scenario prior to the implementation of the project.
+P 0132 [Instruction] For AFOLU projects:
+P 0133 [Bullets] For all measures listed, include information on any conservation, management or planting activities, including a description of how the various organizations, communities and other entities are involved.
+P 0134 [Bullets] In the description of the project activity, state if the project is located within a jurisdiction covered by a jurisdictional REDD+ program.
+P 0135 [Heading 2] Project Location
+P 0136 [Instruction] Indicate the project location and geographic boundaries (if applicable) including a set of geodetic coordinates.
+P 0137 [Instruction] For AFOLU projects, GCS projects, grouped projects, or projects with multiple project activity instances, a separate KML file is required.
+P 0138 [Heading 2] Conditions Prior to Project Initiation
+P 0139 [Instruction] Describe the conditions existing prior to project initiation and demonstrate that the project has not been implemented to generate GHG emissions for the purpose of their subsequent reduction, removal, or destruction.
+P 0140 [Instruction] Where the baseline scenario is the same as the conditions existing prior to the project initiation, there is no need to repeat the description of the scenarios; state that this is the case and refer the reader to Section 3.4 (Baseline Scenario).
+P 0141 [Instruction] AFOLU projects must also provide the following information:
+P 0142 [Instruction] Ecosystem type: Provide a brief (1–2 sentence) description of the ecosystem type.
+P 0143 [Instruction] Current and historical land-use: Provide a brief (2–4 sentence) description of the current and historical land use of the project area.
+P 0144 [Instruction] Present and prior environmental conditions of the project area: Provide information on the climate, hydrology, topography, relevant historic conditions, soils, vegetation, and ecosystems of the project area.
+P 0145 [Heading 2] Compliance with Laws, Statutes and Other Regulatory Frameworks
+P 0146 [Instruction] Identify and demonstrate compliance of the project with all and any relevant local, regional and national laws, statutes and regulatory frameworks.
+P 0147 [Heading 2] Double Counting and Participation under Other GHG Programs
+P 0148 [Heading 3] No Double Issuance
+P 0149 [Instruction] Is the project receiving or seeking credit for reductions and removals from a project activity under another GHG program?
+P 0150 [Normal] Yes No
+P 0151 [Instruction] If yes, provide required evidence of no double issuance as outlined by the VCS Standard.
+P 0152 [Heading 3] Registration in Other GHG Programs
+P 0153 [Instruction] Has the project registered under any other GHG programs?
+P 0154 [Normal] Yes No
+P 0155 [Instruction] If yes, provide the registration number and the date of project inactivity under the other GHG program.
+P 0156 [Instruction] Is the project active under the other program?
+P 0157 [Normal] Yes No
+P 0158 [Instruction] Project proponents, or their authorized representative, must attest that the project is no longer active in the other GHG program in the Registration Representation.
+P 0159 [Heading 3] Projects Rejected by Other GHG Programs
+P 0160 [Instruction] Has the project been rejected by any other GHG programs?
+P 0162 [Normal] Yes No
+P 0163 [Instruction] If yes, provide the program name(s), reason(s) and date for the rejection, justification of eligibility under the VCS Program, and any other relevant information.
+P 0164 [Heading 2] Double Claiming, Other Forms of Credit, and Scope 3 Emissions
+P 0165 [Heading 3] No Double Claiming with Emissions Trading Programs or Binding Emission Limits
+P 0166 [Instruction] Are project reductions and removals or project activities also included in an emissions trading program or binding emission limit? See the VCS Program Definitions for definitions of emissions trading program and binding emission limit.
+P 0167 [Instruction] Yes No
+P 0168 [Instruction] If yes, provide all required evidence of no double claiming as outlined by the VCS Standard.
+P 0169 [Heading 3] No Double Claiming with Other Forms of Environmental Credit
+P 0170 [Instruction] Has the project activity sought, received, or is planning to receive credit from another GHG-related environmental credit system? See the VCS Program Definitions for definition of GHG-related environmental credit system.
+P 0172 [Instruction] Yes No
+P 0173 [Instruction] If yes, provide all required evidence of no double claiming as outlined by the VCS Standard.
+P 0174 [Heading 3] Supply Chain (Scope 3) Emissions
+P 0175 [Instruction] Do the project activities specified in Section 1.12 affect the emissions footprint of any product(s) (goods or services) that are part of a supply chain?
+P 0176 [Instruction] ☐ Yes No
+P 0177 [Instruction] If yes:
+P 0178 [Instruction] Is the project proponent(s) or authorized representative a buyer or seller of the product(s) (goods or services) that are part of a supply chain?
+P 0179 [Instruction] Yes No
+P 0180 [Instruction] If yes:
+P 0181 [Instruction] Has the project proponent(s) or authorized representative posted a public statement on their website saying, “Carbon credits may be issued through Verified Carbon Standard project [project ID] for the greenhouse gas emission reductions or removals associated with [project proponent or authorized representative organization name(s)] [name of product(s) whose emissions footprint is changed by the project activities].”
+P 0182 [Instruction] Yes No
+P 0183 [Instruction] If yes to all:
+P 0184 [Instruction] Provide evidence of the public statement. Evidence must be provided in this section or in an appendix.
+P 0185 [Heading 2] Sustainable Development Contributions
+P 0186 [Normal] Provide a brief description that includes the following (no more than 500 words):
+P 0187 [Normal] A summary description of project activities that result in sustainable development (SD) contributions (i.e., technologies/measures implemented, activity location).
+P 0188 [Normal] An explanation of how project activities will result in expected SD contributions.
+P 0189 [Normal] A description of how the project contributes to achieving any nationally stated sustainable development priorities, including any provisions for monitoring and reporting these.
+P 0190 [Heading 2] Additional Information Relevant to the Project
+P 0191 [Heading 3] Leakage Management
+P 0192 [Instruction] Where applicable, describe the leakage management plan and implementation of leakage and risk mitigation measures.
+P 0193 [Heading 3] Commercially Sensitive Information
+P 0194 [Instruction] Indicate whether any commercially sensitive information has been excluded from the public version of the project description using Appendix 1, and briefly describe the items to which such information pertains. Provide justification for why the information is commercially sensitive and confirm that it is not otherwise publicly available.
+P 0195 [Instruction] Note - Information related to the determination of the baseline scenario, demonstration of additionality, and estimation and monitoring of GHG emission reductions and removals (including operational and capital expenditures) cannot be considered to be commercially sensitive and must be provided in the public versions of the project documents.
+P 0196 [Heading 3] Further Information
+P 0197 [Instruction] Include any additional relevant legislative, technical, economic, sectoral, social, environmental, geographic, site-specific and/or temporal information that may have a bearing on the eligibility of the project, the GHG emission reductions or carbon dioxide removals, or the quantification of the project’s reductions or removals.
+P 0198 [Heading 1] Safeguards and Stakeholder engagement
+P 0199 [Heading 2] Stakeholder Engagement and Consultation
+P 0200 [Heading 3] Stakeholder Identification
+P 0201 [Normal] Use the table below to describe the stakeholder identification process. Where the rows do not apply, provide justification in the cell in the table below.
+TABLE 09 (6x2)
+  R0: C0=Stakeholder Identification || C1=Describe the process(es) used to identify stakeholders likely impacted by the project. List the stakeholders identified.
+  R1: C0=Legal or customary tenure/access rights || C1=Describe any legal or customary tenure/access rights to territories and resources, including collective and conflicting rights, held by stakeholders, Indigenous People (IPs), local communities (LCs), and customary rights holders.
+  R2: C0=Stakeholder diversity and changes over time || C1=Describe the social, economic, and cultural diversity within stakeholder groups, the differences and interactions between the stakeholder groups, and any changes in the make-up of each group over time.
+  R3: C0=Expected changes in well-being || C1=Describe the expected changes in well-being and other stakeholder characteristics relative to the baseline scenario, including changes to ecosystem services identified as important to stakeholders;
+  R4: C0=Location of stakeholders || C1=Describe the location of stakeholders, IPs, LCs, and customary rights holders, and areas outside the project area that are predicted to be impacted by the project.
+  R5: C0=Location of resources || C1=Describe the location of territories and resources which stakeholders own or to which they have customary access.
+
+P 0204 [Heading 3] Stakeholder Consultation and Ongoing Communication
+P 0205 [Instruction] Use the table below to describe the process for and the outcomes from the stakeholder consultation conducted prior to project initiation.
+TABLE 10 (5x2)
+  R0: C0=Date of stakeholder consultation || C1=DD-Month-YYYY
+  R1: C0=Stakeholder engagement process || C1=Describe the process to engage stakeholders in a culturally appropriate manner (e.g., dates of announcements or meetings, language and gender sensitivity). Describe the process or methods used to document the outcomes.
+  R2: C0=Consultation outcome || C1=Summarize the discussion around consent to project design and implementation, risks, costs and benefits of the project, all relevant laws and regulations covering workers’ rights in the host country, the discussion of FPIC and the VCS validation and verification process.
+  R3: C0=Ongoing communication || C1=Describe the mechanisms for ongoing communication with stakeholders.
+  R4: C0=Stakeholder input || C1=Describe how due account was taken of all input received during the consultation. Include details on any updates to the project design or justify why updates were not necessary or appropriate.
+
+P 0207 [Heading 3] Free Prior and Informed Consent
+P 0208 [Normal] Use the table below to describe the outcome of the FPIC process as part of the stakeholder consultation process.
+TABLE 11 (2x2)
+  R0: C0=Obtaining consent || C1=Describe and demonstrate how consent to implement the project activities was obtained from those concerned, including IPs, LCs, and customary rights holders, and a transparent agreement was reached. Describe any ongoing or unresolved conflicts and demonstrate that the project does not exacerbate nor influence the outcomes of unresolved conflicts.
+  R1: C0=Outcome of FPIC || C1=Describe the outcome of the FPIC process, the transparent agreement, and the information disclosed prior to establishing a transparent agreement with those concerned, IPs, LCs, and customary rights holders. Provide assurance that the project has not encroached on land, relocated people without consent, and forced physical or economic displacement.
+
+P 0210 [Heading 3] Grievance Redress Procedure
+P 0211 [Normal] Use the table below to describe the grievance redress procedures developed to resolve any conflicts which may arise between the project proponent and stakeholders.
+TABLE 12 (2x2)
+  R0: C0=Development process || C1=Describe the process used to develop the grievance redress procedure including processes for receiving, hearing, responding and attempting to resolve grievances within a reasonable time period, taking into account culturally appropriate conflict resolution methods.
+  R1: C0=Grievance redress procedure || C1=Describe the grievance redress procedures developed with stakeholders.
+
+P 0213 [Heading 3] Public Comments
+P 0214 [Instruction] Summarize any public comments submitted during the public comment period and any comments received after the public comment period. Demonstrate how due account was taken of all comments received. Include details on when the comments were received, and any updates to the project design or demonstrate the insignificance or irrelevance of comments.
+TABLE 13 (3x2)
+  R0: C0=Comments received || C1=Actions taken
+  R1: C0=Summary of comment received || C1=Provide a summary of actions taken and any project design updates or justify why updates were not necessary or appropriate.
+  R2: C0=… || C1=….
+
+P 0216 [Heading 2] Risks to Stakeholders and the Environment
+P 0217 [Heading 3] Management Experience
+P 0218 [Instruction] Demonstrate that management teams have expertise or experience in implementing similar project activities and engaging communities. Where relevant experience is lacking, demonstrate how the project proponent has partnered with other organizations to support the project or have a recruitment strategy to fill the identified gaps.
+P 0219 [Heading 3] Risk Assessment
+P 0220 [Instruction] Use the table below to describe the risk assessment and outcome of the potential risks to stakeholders and the environment. Describe the commensurate mitigation or preventative measure(s) in place to prevent or mitigate the risk. Where no risk is identified, write “No risk identified” in the first column, and provide justification in the second column. Add rows as needed.
+TABLE 14 (7x3)
+  R0: C0= || C1=Risks identified || C2=Mitigation or preventative measure(s) taken
+  R1: C0=Natural and human-induced risks to stakeholders’ wellbeing || C1= || C2=
+  R2: C0=Risks to stakeholder participation || C1= || C2=
+  R3: C0=Working conditions || C1= || C2=
+  R4: C0=Safety of women and girls || C1= || C2=
+  R5: C0=Safety of minority and marginalized groups, including children || C1= || C2=
+  R6: C0=Pollutants (air, noise, discharges to water, generation of waste, and release of hazardous materials and chemical pesticides and fertilizers) || C1= || C2=
+
+P 0223 [Heading 2] Respect for Human Rights and Equity
+P 0224 [Heading 3] Labor and Work
+P 0225 [Instruction] Use the table below to identify and summarize the risks for rights related to labor and work. Describe the commensurate mitigation or preventative measure(s) in place to prevent or mitigate the risk. Where no risk is identified, write “No risk identified” in the first column, and provide justification in the second column. Add rows as needed.
+TABLE 15 (8x3)
+  R0: C0= || C1=Risks identified || C2=Mitigation or preventative measure(s) taken
+  R1: C0=Discrimination || C1= || C2=
+  R2: C0=Sexual harassment || C1= || C2=
+  R3: C0=Equal pay for equal work || C1= || C2=
+  R4: C0=Gender equity in labor and work || C1= || C2=
+  R5: C0=Forced labor || C1= || C2=
+  R6: C0=Child labor || C1= || C2=
+  R7: C0=Human trafficking || C1= || C2=
+
+P 0228 [Heading 3] Human Rights
+P 0229 [Instruction] Use the table below to identify and summarize any risks related to recognizing, respecting, and promoting the protection of the rights of IPs, LCs, and customary rights holders in line with applicable international human rights law, and the United Nations Declaration on the Rights of Indigenous Peoples and ILO Convention 169 on Indigenous and Tribal Peoples. Describe the commensurate mitigation or preventative measure(s) in place to prevent or mitigate the risk. Where no risk is identified, write “No risk identified” in the first column, and provide justification in the second column. Add rows as needed.
+TABLE 16 (2x2)
+  R0: C0=Risks identified || C1=Mitigation or preventative measure(s) taken
+  R1: C0= || C1=
+
+P 0232 [Heading 3] Indigenous Peoples and Cultural Heritage
+P 0233 [Instruction] Use the table below to identify and summarize any risks related to recognizing, respecting, and promoting the protection of the rights of IPs, LCs, and customary rights holders, and to preserving and protecting cultural heritage as part of project activities. Describe the commensurate mitigation or preventative measure(s) in place to prevent or mitigate the risk. Where no risk is identified, write “No risk identified” in the first column, and provide justification in the second column. Add rows as needed.
+TABLE 17 (2x2)
+  R0: C0=Risks identified || C1=Mitigation(s) or preventative measure taken
+  R1: C0= || C1=
+
+P 0236 [Heading 3] Property Rights
+P 0237 [Instruction] Use the table below to identify and summarize any risks related to protecting and preserving the property rights of IPs, LCs, and customary rights holders, and to protecting legal or customary tenure/access rights to territories, property, and resources, including collective and/or conflicting rights, held by stakeholders. Describe the commensurate mitigation or preventative measure(s) in place to prevent or mitigate the risk. Where no risk is identified, write “No risk identified” in the first column, and provide justification in the second column. Add rows as needed.
+TABLE 18 (2x2)
+  R0: C0=Risks identified || C1=Mitigation or preventative measure(s) taken
+  R1: C0= || C1=
+
+P 0240 [Heading 3] Benefit Sharing
+P 0241 [Normal] Where the project impacts property rights as described in Section 2.4.4 above, use the table below to describe the project’s benefit sharing agreement.
+TABLE 19 (3x2)
+  R0: C0=Process used to design the benefit sharing plan || C1=Describe the process used to develop the benefit-sharing agreement with the affected stakeholder groups.
+  R1: C0=Summary of the benefit sharing plan || C1=Describe the benefit-sharing agreement. Where affected stakeholder groups wish to keep elements of the plan private, provide the full arrangement as a commercially sensitive document. The project proponent shall demonstrate that the community wishes to keep this information private.
+  R2: C0=Approval and dissemination of benefit sharing plan || C1=Demonstrate that the benefit- sharing agreement was agreed up on by the affected stakeholder groups, and that the agreement was shared in a culturally appropriate manner. Demonstrate that the agreement is readily accessible should stakeholders wish to review the agreement.
+
+P 0243 [Heading 2] Ecosystem Health
+P 0244 [Instruction] Use the table below to identify and summarize any risks related to impacts on biodiversity and ecosystems, soil degradation and soil erosion, and water consumption and stress. Describe the commensurate mitigation or preventative measure(s) in place to prevent or mitigate the risk. Where no risk is identified, write "No risk identified” in the first column, and provide justification in the second column. Add rows as needed.
+TABLE 20 (5x3)
+  R0: C0= || C1=Risks identified || C2=Mitigation or preventative measure(s) taken
+  R1: C0=Impacts on biodiversity and ecosystems || C1= || C2=
+  R2: C0=Soil degradation and soil erosion || C1= || C2=
+  R3: C0=Water consumption and stress || C1= || C2=
+  R4: C0= || C1= || C2=
+
+P 0246 [Heading 3] Rare, Threatened, and Endangered Species
+P 0247 [Normal] Is the project located in or adjacent to habitats for rare, threatened, or endangered species?
+P 0248 [Normal] Yes No
+P 0249 [Normal] If yes, list such species and habitats in the table below and provide evidence that the project will not adversely impact these areas.
+TABLE 21 (3x2)
+  R0: C0=Species and habitat || C1=Demonstrate that the project will not adversely impact habitats and areas needed for habitat connectivity for rare, threatened, or endangered species.
+  R1: C0=Areas needed for habitat connectivity || C1=Demonstrate that the project will not adversely impact areas needed for habitat connectivity.
+  R2: C0=… || C1=…
+
+P 0251 [Instruction] Use the table below to identify and summarize any risks related to habitats for rare, threatened, and endangered species, and for areas for habitat connectivity. Describe the commensurate mitigation or preventative measure(s) in place to prevent or mitigate the risk. Where no risk is identified, write "No risk identified” in the first column, and provide justification in the second column. Add rows as needed.
+TABLE 22 (3x3)
+  R0: C0= || C1=Risks identified || C2=Mitigation or preventative measure(s) taken
+  R1: C0=Habitats for rare, threatened, and endangered species || C1= || C2=
+  R2: C0=Areas for habitat connectivity || C1= || C2=
+
+P 0253 [Heading 3] Introduction of Species
+P 0254 [Normal] Demonstrate, using the table below, that no invasive species will be used as part of project activities. Categorize each species as native, non-native, and indicate if the species is a monoculture. Where the species is non-native, include an explanation of possible adverse effects of its use and a description of how the project will mitigate such risks. For projects with no planting or species introduction, this section may be indicated as N/A.
+TABLE 23 (4x4)
+  R0: C0=Species introduced || C1=Classification || C2=Justification for use || C3=Adverse effects and mitigation
+  R1: C0= || C1= || C2= || C3=
+  R2: C0= || C1= || C2= || C3=
+  R3: C0= || C1= || C2= || C3=
+
+P 0256 [Normal] Where invasive species exist in the project area, list such species in the table below and describe the commensurate mitigation measure(s) in place to prevent the spread or continued existence of invasive species.
+TABLE 24 (4x2)
+  R0: C0=Existing invasive species || C1=Mitigation measures to prevent the spread or continued existence of invasive species
+  R1: C0= || C1=
+  R2: C0= || C1=
+  R3: C0= || C1=
+
+P 0258 [Instruction] Use the table below to identify and summarize any risks related to invasive species. Describe the commensurate mitigation or preventative measure(s) in place to prevent or mitigate the risk. Where no risk is identified, write "No risk identified” in the first column, and provide justification in the second column. Add rows as needed.
+TABLE 25 (2x3)
+  R0: C0= || C1=Risks identified || C2=Mitigation or preventative measure(s) taken
+  R1: C0=Invasive species || C1= || C2=
+
+P 0260 [Heading 3] Ecosystem Conversion
+P 0261 [Normal] ARR, ALM, WRC or ACoGS projects shall provide evidence that the project area was not cleared or drained of existing natural ecosystems, unless such clearing took place at least 10 years prior, or the dominant land cover was invasive.
+P 0262 [Normal] Use the table below to identify and summarize any risks related to ecosystem conversion. Describe the commensurate mitigation or preventative measure(s) in place to prevent or mitigate the risk. Where no risk is identified, write "No risk identified” in the first column, and provide justification in the second column. Add rows as needed.
+TABLE 26 (2x3)
+  R0: C0= || C1=Risks identified || C2=Mitigation or preventative measure(s) taken
+  R1: C0=Ecosystem conversion || C1= || C2=
+
+P 0264 [Heading 1] Application of Methodology
+P 0265 [Heading 2] Title and Reference of Methodology
+P 0266 [Instruction] Provide the title, reference and version number of the following information for the methodology(s), tools, and modules applied to the project (where applicable).
+TABLE 27 (3x4)
+  R0: C0=Type (methodology, tool or module). || C1=Reference ID, if applicable || C2=Title || C3=Version
+  R1: C0=Example: Methodology || C1=Example: VM0007 || C2=Example: VM0007 REDD+ Methodology Framework (REDD+MF), || C3=Example: 6.0
+  R2: C0=... || C1=... || C2=... || C3=...
+
+P 0268 [Heading 2] Applicability of Methodology
+P 0269 [Instruction] Demonstrate and justify how the project activity(s) meets each of the applicability conditions of the methodology(s), tools, and modules applied by the project (where applicable). Address each applicability condition separately.
+TABLE 28 (3x3)
+  R0: C0=Methodology ID || C1=Applicability condition || C2=Justification of compliance
+  R1: C0=Example: VM0007 || C1=First applicability condition for given methodology, tool, or module || C2=Justification that the project complies with this applicability condition
+  R2: C0=... || C1=... || C2=...
+
+P 0271 [Heading 2] Project Boundary
+P 0272 [Instruction] Define the project boundary and identify the relevant GHG sources, sinks and reservoirs for the project and baseline scenarios (including leakage if applicable). Add rows as needed.
+TABLE 29 (17x5)
+  R0: C0=Source || C1=Source || C2=Gas || C3=Included? || C4=Justification/Explanation
+  R1: C0=Baseline || C1=Source 1 || C2=CO2 || C3= || C4=
+  R2: C0=Baseline || C1=Source 1 || C2=CH4 || C3= || C4=
+  R3: C0=Baseline || C1=Source 1 || C2=N2O || C3= || C4=
+  R4: C0=Baseline || C1=Source 1 || C2=Other || C3= || C4=
+  R5: C0=Baseline || C1=Source 2 || C2=CO2 || C3= || C4=
+  R6: C0=Baseline || C1=Source 2 || C2=CH4 || C3= || C4=
+  R7: C0=Baseline || C1=Source 2 || C2=N2O || C3= || C4=
+  R8: C0=Baseline || C1=Source 2 || C2=Other || C3= || C4=
+  R9: C0=Project || C1=Source 1 || C2=CO2 || C3= || C4=
+  R10: C0=Project || C1=Source 1 || C2=CH4 || C3= || C4=
+  R11: C0=Project || C1=Source 1 || C2=N2O || C3= || C4=
+  R12: C0=Project || C1=Source 1 || C2=Other || C3= || C4=
+  R13: C0=Project || C1=Source 2 || C2=CO2 || C3= || C4=
+  R14: C0=Project || C1=Source 2 || C2=CH4 || C3= || C4=
+  R15: C0=Project || C1=Source 2 || C2=N2O || C3= || C4=
+  R16: C0=Project || C1=Source 2 || C2=Other || C3= || C4=
+
+P 0275 [Instruction] Provide a diagram or map of the project boundary, showing clearly the physical locations of the various installations or management activities taking place as part of the project activity based on the description provided in Section 1.12 (Description of the Project Activity) above.
+P 0276 [Instruction] For non-AFOLU projects, include in the diagram the equipment, systems and flows of mass and energy. Include the GHG emission sources identified in the project boundary.
+P 0277 [Instruction] For AFOLU projects, include in the diagram or map the locations of where the various measures are taking place, any reference areas and leakage belts.
+P 0278 [Heading 2] Baseline Scenario
+P 0279 [Instruction] Identify and justify the baseline scenario, in accordance with the procedure set out in the applied methodology and any relevant tools. Where the procedure in the applied methodology involves several steps, describe how each step is applied and clearly document the outcome of each step.
+P 0280 [Instruction] Explain and justify key assumptions, rationale, and methodological choices. Provide all relevant references.
+P 0281 [Heading 2] Additionality
+P 0282 [Instruction] Demonstrate and assess the additionality of the project, in accordance with the applied methodology and any relevant tools, taking into account the following additionality methods:
+P 0283 [Heading 3] Regulatory Surplus
+P 0284 [Bullets] Is the project located in an or Non-Annex 1 country?
+P 0285 [Normal] Annex 1 country Non-Annex 1 country
+P 0286 [Instruction] Are the project activities mandated by any law, statute, or other regulatory framework?
+P 0287 [Instruction] Yes No
+P 0288 [Instruction] If the project is located inside a Non-Annex 1 country and the project activities are mandated by a law, statute, or other regulatory framework, are such laws, statutes, or regulatory frameworks systematically enforced?
+P 0289 [Instruction] Yes No
+P 0290 [Instruction] If no, describe which mandated laws, statutes, or other regulatory frameworks require project activities and provide evidence of systematic non-enforcement to demonstrate regulatory surplus.
+P 0291 [Heading 3] Additionality Methods
+P 0292 [Bullets] Where a project method is applied to demonstrate additionality and the procedure in the applied methodology or tool involves several steps, describe how each step is applied and clearly document the outcome of each step. Indicate clearly the method selected to demonstrate additionality (e.g., investment analysis or barrier analysis in the case of the CDM Tool for the demonstration and assessment of additionality). Where barrier analysis, or equivalent, is used to demonstrate additionality, only include the most relevant barriers. Justify the credibility of the barriers with key facts and/or assumptions and the rationale. Provide all relevant references.
+P 0293 [Bullets] Where a performance method is applied to demonstrate additionality, demonstrate that performance can be achieved to a level at least equivalent to the performance benchmark metric.
+P 0294 [Bullets] Where the methodology applies an activity method for the demonstration of additionality, include a statement that notes that conformance with the positive list is demonstrated in the Applicability of Methodology section above.
+P 0295 [Instruction] Provide sufficient information (including all relevant data and parameters, with sources) so that a reader can reproduce the additionality analysis and obtain the same results.
+P 0296 [Heading 2] Methodology Deviations
+P 0297 [Instruction] Describe and justify any methodology deviations applied, including any previous deviations. Include evidence to demonstrate the following:
+P 0299 [Bullets] The deviation will not negatively impact the conservativeness of the quantification of GHG emission reductions or removals.
+P 0301 [Bullets] The deviation relates only to the criteria and procedures for monitoring or measurement and does not relate to any other part of the methodology.
+P 0302 [Heading 1] Quantification of Estimated GHG Emission Reductions and Removals
+P 0303 [Heading 2] Baseline Emissions
+P 0304 [Instruction] Describe the procedure for quantification of baseline emissions and/or carbon stock changes in accordance with the applied methodology. Baseline emissions may be negative where carbon stock increases (sinks) exceed baseline emissions. Specify the reductions and removals separately where the applied methodology provides procedures and equations to do so. Include all relevant equations here and provide sufficient information to allow the reader to reproduce the calculations. Explain and justify all relevant methodological choices (e.g., with respect to selection of emission factors and default values). Include all calculations in the emission reduction and removal calculation spreadsheet.
+P 0305 [Heading 2] Project Emissions
+P 0306 [Instruction] Describe the procedure for quantification of project emissions and/or carbon stock changes in accordance with the applied methodology. Project emissions may be negative where carbon stock increases (sinks) exceed project emissions. Specify the reductions and removals separately where the applied methodology provides procedures and equations to do so. Include all relevant equations here and provide sufficient information to allow the reader to reproduce the calculations. Explain and justify all relevant methodological choices (e.g., with respect to selection of emission factors and default values). Include all calculations in the emission reduction and removal calculation spreadsheet.
+P 0307 [Heading 2] Leakage Emissions
+P 0308 [Instruction] Describe the procedure for quantification of leakage emissions in accordance with the applied methodology. Specify the reductions and removals separately where the applied methodology provides procedures and equations to do so. Include all relevant equations here and provide sufficient information to allow the reader to reproduce the calculations. Explain and justify all relevant methodological choices (e.g., with respect to selection of emission factors and default values). Include all calculations in the emission reduction and removal calculation spreadsheet.
+P 0309 [Heading 2] Estimated GHG Emission Reductions and Carbon Dioxide Removals
+P 0310 [Instruction] Describe the procedure for the quantification of estimated GHG emission reductions (reductions) and carbon dioxide removals (removals). Include all relevant equations.
+P 0311 [Instruction] For data and parameters monitored, use the estimated data/parameter values provided in Section 5.2 below. Document how each equation is applied in a manner that enables the reader to reproduce the calculations. Provide calculations for all key equations to allow the reader to reproduce the annual calculations for estimated reductions or removals. Specify the reductions and removals separately where the applied methodology provides procedures and equations to do so. Include all of the above in the emission reduction and removal calculation spreadsheet.
+P 0312 [Instruction] Complete the tables below by vintage period (calendar year). Note that the baseline or project emissions subtotals may be negative where sinks exceed emissions. Only specify the estimated VCUs for reductions and removals separately where the applied methodology provides procedures and equations to do so.
+P 0313 [Instruction] For projects that are not required to assess permanence risk, complete the table below for the project crediting period:
+TABLE 30 (5x7)
+  R0: C0=Vintage period || C1=Estimated baseline emissions (tCO2e) || C2=Estimated project emissions (tCO2e) || C3=Estimated leakage emissions (tCO2e) || C4=Estimated reduction VCUs (tCO2e) || C5=Estimated removal VCUs (tCO2e) || C6=Estimated total VCUs (tCO2e)
+  R1: C0=DD-MMM-YYYY to 31-Dec-YYYY || C1=Example: 50,000 || C2=Example: 20,000 || C3=Example: 10,000 || C4=Example: 10,000 || C5=Example: 10,000 || C6=Example: 20,000
+  R2: C0=01-Jan-YYYY to 31-Dec-YYYY || C1= || C2= || C3= || C4= || C5= || C6=
+  R3: C0=01-Jan-YYYY to DD-MMM-YYYY || C1= || C2= || C3= || C4= || C5= || C6=
+  R4: C0=Total || C1= || C2= || C3= || C4= || C5= || C6=
+
+P 0315 [Normal] For projects required to assess permanence risk:
+P 0316 [Normal] i) Provide the requested information using the table below:
+TABLE 31 (6x2)
+  R0: C0=State the non-permanence risk rating (%) || C1=Example: 20%
+  R1: C0=Has the non-permanence risk report been attached as either an appendix or a separate document? || C1=Yes No
+  R2: C0=For ARR and IFM projects with harvesting, state, in tCO2e, the Long-term Average (LTA). || C1=
+  R3: C0=Has the LTA been updated based on monitored data, if applicable? || C1=Yes No If no, provide justification.
+  R4: C0=State, in tCO2e, the expected total GHG benefit to date. || C1=
+  R5: C0=Is the number of GHG credits issued below the LTA? || C1=Yes No If no, provide justification.
+
+P 0319 [Normal] ii) Complete the table below for the project crediting period. Note that the buffer pool allocation is split proportionally between the estimated reductions and removals. (For example, if a project is estimated to achieve 20,000 tCO2e removals and 80,000 tCO2e reductions and has a buffer contribution of 20%, or 20,000, the estimated removal VCUs would be 16,000 and reduction VCUs would be 64,000).
+TABLE 32 (5x8)
+  R0: C0=Vintage period || C1=Estimated baseline emissions (tCO2e) || C2=Estimated project emissions (tCO2e) || C3=Estimated leakage emissions (tCO2e) || C4=Estimated buffer pool allocation (tCO2e) || C5=Estimated reduction VCUs (tCO2e) || C6=Estimated removal VCUs (tCO2e) || C7=Estimated total VCU issuance (tCO2e)
+  R1: C0=DD-MMM-YYYY to 31-Dec-YYYY || C1=Example: 50,000 || C2=Example: 20,000 || C3=Example: 10,000 || C4=Example: 4,000 || C5=Example: 8,000 || C6=Example: 8,000 || C7=Example: 16,000
+  R2: C0=01-Jan-YYYY to 31-Dec-YYYY || C1= || C2= || C3= || C4= || C5= || C6= || C7=
+  R3: C0=01-Jan-YYYY to DD-MMM-YYYY || C1= || C2= || C3= || C4= || C5= || C6= || C7=
+  R4: C0=Total || C1= || C2= || C3= || C4= || C5= || C6= || C7=
+
+P 0322 [Heading 1] Monitoring
+P 0323 [Heading 2] Data and Parameters Available at Validation
+P 0324 [Instruction] Complete the table below for all data and parameters that are determined or available at validation and remain fixed throughout the project crediting period (copy the table as necessary for each data/parameter). The values provided are used to quantify the estimated reductions and removals for the project crediting period in Section 4 above. Data and parameters to be monitored during the operation of the project are included in Section 5.2 (Data and Parameters Monitored) below.
+TABLE 33 (8x2)
+  R0: C0=Data / Parameter || C1=
+  R1: C0=Data unit || C1=Indicate the unit of measure
+  R2: C0=Description || C1=Provide a brief description of the data/parameter
+  R3: C0=Source of data || C1=Indicate the source(s) of data
+  R4: C0=Value applied || C1=Provide the value applied
+  R5: C0=Justification of choice of data or description of measurement methods and procedures applied || C1=Justify the choice of data source, providing references where applicable. Where values are based on measurement, include a description of the measurement methods and procedures applied (e.g., what standards or protocols have been followed), indicate the responsible person/entity that undertook the measurement, the date of the measurement and the measurement results. More detailed information may be provided in an appendix.
+  R6: C0=Purpose of data || C1=Indicate one of the following: Determination of baseline scenario (AFOLU projects only) Calculation of baseline emissions Calculation of project emissions Calculation of leakage
+  R7: C0=Comments || C1=Provide any additional comments
+
+P 0327 [Heading 2] Data and Parameters Monitored
+P 0328 [Instruction] Complete the table below for all data and parameters that will be monitored during the project crediting period (copy the table as necessary for each data/parameter). The values provided are used to quantify the estimated reductions and removals for the project crediting period in Section 4 above.
+TABLE 34 (12x2)
+  R0: C0=Data / Parameter || C1=
+  R1: C0=Data unit || C1=Indicate the unit of measure
+  R2: C0=Description || C1=Provide a brief description of the data/parameter
+  R3: C0=Source of data || C1=Indicate the source(s) of data
+  R4: C0=Description of measurement methods and procedures to be applied || C1=Specify the measurement methods and procedures, any standards or protocols to be followed, and the person/entity responsible for the measurement. Include any relevant information regarding the accuracy of the measurements (e.g., accuracy associated with meter equipment or laboratory tests).
+  R5: C0=Frequency of monitoring/recording || C1=Specify measurement and recording frequency
+  R6: C0=Value applied || C1=Provide an estimated value for the data/parameter
+  R7: C0=Monitoring equipment || C1=Identify equipment used to monitor the data/parameter including type, accuracy class, and serial number of equipment, as appropriate.
+  R8: C0=QA/QC procedures to be applied || C1=Describe the quality assurance and quality control (QA/QC) procedures to be applied, including the calibration procedures where applicable.
+  R9: C0=Purpose of data || C1=Indicate one of the following: Calculation of baseline emissions Calculation of project emissions Calculation of leakage
+  R10: C0=Calculation method || C1=Where relevant, provide the calculation method, including any equations, used to establish the data/parameter.
+  R11: C0=Comments || C1=Provide any additional comments
+
+P 0331 [Heading 2] Monitoring Plan
+P 0332 [Instruction] Describe the process and schedule for obtaining, recording, compiling and analyzing the monitored data and parameters set out in Section 5.2 (Data and Parameters Monitored) above.
+P 0333 [Instruction] Include details on the following:
+P 0334 [Bullets] The methods for measuring, recording, storing, aggregating, collating and reporting on monitored data and parameters. Where relevant, include the procedures for calibrating monitoring equipment.
+P 0335 [Bullets] The organizational structure, responsibilities and competencies of the personnel that will be carrying out monitoring activities.
+P 0336 [Bullets] The procedures for internal auditing and QA/QC.
+P 0337 [Bullets] The procedures for handling non-conformances with the validated monitoring plan.
+P 0338 [Bullets] Any sampling approaches used, including target precision levels, sample sizes, sample site locations, stratification, frequency of measurement and QA/QC procedures.
+P 0339 [Instruction] Where appropriate, include line diagrams to display the GHG data collection and management system.
+P 0341 [Heading 4] Inter
+P 0344 [Heading 1] Appendix 1: Commercially sensitive information
+P 0345 [Template Note] Use the table below to describe the commercially sensitive information included in the project description to be excluded in the public version.
+TABLE 35 (5x3)
+  R0: C0=Section || C1=Information || C2=Justification
+  R1: C0= || C1= || C2=
+  R2: C0= || C1= || C2=
+  R3: C0= || C1= || C2=
+  R4: C0= || C1= || C2=
+
+P 0354 [Heading 1] Appendix X: <TITLE OF APPENDIX>
+P 0355 [Instruction] Use appendices for supporting information. Delete this appendix (title and instructions) where no appendix is required.

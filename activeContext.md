@@ -1,3 +1,17 @@
+## Codex Insights Integration and Inegol Demo Case — Grill Me Answers
+
+- **Q-001:** Inegol intake YAML not available → reverse-engineer from Codex script + corpus PDF (default).
+- **Q-002:** Retrofit new DOCX table structures to Soc Son and Vietnam demos as well (not just Inegol).
+- **Q-003:** Official VCS v4.4 DOCX template FOUND and downloaded from Verra (`VCS-Project-Description-Template-v4.4-FINAL2.docx`, 277 KB). Will use as base document for export; if unavailable at runtime, fall back to scratch generation.
+
+## PHASE-01 — DOCX Export Upgrade with VCS v4.4 Table Structures
+
+- [ ] TASK-01-01: Create `src/pdd_agent/export/table_helpers.py` with OOXML primitives.
+- [ ] TASK-01-02: Implement 11 VCS v4.4 table renderer functions.
+- [ ] TASK-01-03: Refactor `export_run_to_docx()` to dispatch structured tables.
+- [ ] TASK-01-04: Update base styles (Arial, VCS margins) and support template-based export.
+- [ ] TASK-01-05: Write unit tests in `tests/test_docx_export_tables.py`.
+
 ## Soc Son Client Demo Output Upgrade - Phase 04 (Verification & Fresh Client Demo Artifact)
 
 - [x] TASK-04-01: Add regression tests covering zero-placeholder demo output (all sections), aligned quantification numbers, demo-package publication, and CLI/script surfacing of the published path.

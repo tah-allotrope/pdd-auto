@@ -1,0 +1,3364 @@
+
+
+===== PAGE 1 =====
+ 
+ 
+ 
+ 
+VEGA-HEREKO ISTANBUL WASTE TO 
+ENERGY PROJECT  
+Document Prepared by  
+ 
+BIO SOLUTIONS Yenilenebilir Enerji ve Danışmanlık Hizmetleri San. Ve Tic. Ltd. Şti  
+ 
+Project Title  Vega-Hereko Istanbul Waste to Energy Project 
+Version 01 
+Date of Issue  19/10/2022 
+Prepared By  Bio Solutions LLC. 
+Contact Akdeniz Mah. Şehit Fethibey Cad. No:55 İç Kapı No:091 Konak, 35210, 
+Izmir/Turkey 
+Hüseyin DİNÇER, h.dincer@ch4climate.com 
++90 553 862 65 60 
+
+
+
+===== PAGE 2 =====
+ 
+CONTENTS 
+1 PROJECT DETAILS ............................................................................................... 4 
+1.1 Summary Description of the Project ................................ ................................ ............. 4 
+1.2 Sectoral Scope and Project Type ................................ ................................ ................ 5 
+1.3 Project Eligibility ................................ ................................ ................................ ............. 5 
+1.4 Project Design ................................ ................................ ................................ ................ 5 
+1.5 Project Proponent ................................ ................................ ................................ ......... 6 
+1.6 Other Entities Involved in the Project ................................ ................................ ........... 6 
+1.7 Ownership ................................ ................................ ................................ ...................... 6 
+1.8 Project Start Date ................................ ................................ ................................ .......... 7 
+1.9 Project Crediting Period ................................ ................................ ................................  7 
+1.10 Project Scale and Estimated GHG Emission Reductions or Removals .......................  7 
+1.11 Description of the Project Activity ................................ ................................ ................ 8 
+1.12 Project Location ................................ ................................ ................................ ...........11 
+1.13 Conditions Prior to Project Initiation ................................ ................................ ............13 
+1.14 Compliance with Laws, Statutes and Other Regulatory Frameworks ......................14 
+1.15 Participation under Other GHG Programs ................................ ................................ ..14 
+1.16 Other Forms of Credit ................................ ................................ ................................ ...14 
+1.17 Sustainable Development Contributions ................................ ................................ ....14 
+1.18 Additional Information Relevant to the Project ................................ ......................... 16 
+2 SAFEGUARDS .................................................................................................... 16 
+2.1 No Net Harm ................................ ................................ ................................ .................16 
+2.2 Local Stakeholder Consultation ................................ ................................ ..................16 
+2.3 Environmental Impact ................................ ................................ ................................ ..19 
+2.4 Public Comments ................................ ................................ ................................ .........19 
+2.5 AFOLU-Specific Safeguards ................................ ................................ ......................... 19 
+3 APPLICATION OF METHODOLOGY .................................................................. 20 
+3.1 Title and Reference of Methodology ................................ ................................ ..........20 
+3.2 Applicability of Methodology ................................ ................................ ......................20 
+3.3 Project Boundary ................................ ................................ ................................ ..........31 
+3.4 Baseline Scenario ................................ ................................ ................................ .........34 
+
+
+===== PAGE 3 =====
+ 
+3.5 Additionality ................................ ................................ ................................ ..................41 
+3.6 Methodology Deviations ................................ ................................ ............................. 42 
+4 QUANTIFICATION OF GHG EMISSION REDUCTIONS AND REMOVALS .......... 42 
+4.1 Baseline Emissions ................................ ................................ ................................ .........42 
+4.2 Project Emissions ................................ ................................ ................................ ...........50 
+4.3 Leakage ................................ ................................ ................................ ........................ 57 
+4.4 Net GHG Emission Reductions and Removals ................................ ............................ 57 
+5 MONITORING ................................................................................................... 58 
+5.1 Data and Parameters Available at Validation ................................ .......................... 58 
+5.2 Data and Parameters Monitored ................................ ................................ ................67 
+5.3 Monitoring Plan ................................ ................................ ................................ .............78 
+APPENDIX ................................................................................................................... 81 
+
+
+===== PAGE 4 =====
+1 PROJECT DETAILS 
+1.1 Summary Description of the Project 
+In order to develop a municipal solid waste management system that will be environmentally 
+friendly and sustainable, Vega-Hereko Istanbul Waste To Energy Project is being 
+implemented by Vega Hereko Enerji Üretim Sanayi ve Ticaret Anonim Şirketi.  
+The main purpose of the project is to treat MSW with anaerobic digesters and utilize 
+recovered biogas for electricity generation with an installed capacity1 of 6.004 MWe in the 
+first phase. The commissioning was carried out on 03.04.2021 with 6.176 MWm / 6.004 MWe 
+(4*1.544 MWm / 4*1.501MWe) engines. Also, it is planned to reach 18.012 MWe which is 
+license capacity till March 2023. The project activity includes MSW separation, Pre-treatment 
+system, anaerobic digester, RDF Production, composting2 and electricity generation system.   
+The projects lifetime is  16 years and the official license power capacity is  18.012 MWe, 
+according to the EMRA Generation License3. The project has an area of 90,000 square 
+meters with 45,126 square meters building area .  
+Main objective and aim of the project is to take the  separated organic fraction to controlled 
+anaerobic digestion process and recover methane from the organic waste. Residues from 
+the digesters will be sent to separators and then solid residue will be sent to nearest Landfill 
+area and liquid digestate will be fed back to the biomethanization pools before the 
+Composting facility completion date. The methane recovered from digestion is combusted 
+through gas engines and the electricity is fed into the grid. The wastewater is re-used  in the 
+digesters, then will be sent to IS TAC wastewater treatment plant near the project area.   
+The project is located in Karakiraz Village, Şile district city of İstanbul, in Turke y. The project 
+fall into the enforcement of obtaining an Environmental Impact Assessment (EIA),  as it can 
+be seen in EIA Positive Certificate 4 and EIA Report5. 
+For the purpose of a sustainable waste management in which domestic wastes will be 
+evaluated, it is  planned to utilize the Istanbul Site that receives  around 730,000 tons/year, 
+1 Please refer to Commissioning Documents.  
+2 Composting Production is planned to be installed June,2023.  
+3 Please refer to EPDK Generation Licence.  
+4 Please refer to EIA Positive Certificate  
+5 Please refer to EIA Report  
+
+
+===== PAGE 5 =====
+ Project Description: VCS Version 4. 1 
+5 
+corresponding to an average of 2,0006 tons per day of municipal waste coming from districts 
+of Istanbul province daily and to generate renewable electric power from biomethanization 
+of organic solid waste  and the rehabili tation project was approved by the Ministry of 
+Environment and Urbanization in Turkey. 
+Whilst providing sustainable development benefits to the host communities and the host 
+country, the project activity reduces greenhouse gas (GHG) emissions mainly by  
+• preventing GHG emissions, methane in particular, from being emitted directly to the 
+atmosphere from waste at the Istanbul SWDS that would be otherwise left to be 
+decomposed; 
+• replacing the electricity that would have otherwise been generated by the nation al 
+grid which is primarily dependent on fossil -fuel-based resources. 
+The project was commissioned with generation of electricity from April 3rd 2021, which is 
+regarded as the project start date.  
+This project adopts a crediting period of 7 years. The expected average annual emission 
+reductions are 320,042 tCO2eq/y. Accordingly, the project is expected to generate 2,240,299 
+tCO2eq emissions reduction throughout its first crediting period.  
+1.2 Sectoral Scope and Project Type 
+Sectoral Scope 1: Energy industries (renewable - / non-renewable sources) 
+Sectoral Scope 13: Waste handling and  disposal.  
+The project is not a grouped project.  
+1.3 Project Eligibility 
+The project consists on power generation, methane rec overy through controlled anaerobic 
+digestion, RDF Production and Composting, which is eligible under the scope of the Version 
+4.3 of VCS Standard 7. 
+1.4 Project Design 
+The project is not a grouped project.   
+ 
+ 
+6According to the contract between ISTAC and Vega -Hereko, 2,000 tons/day should arrive. This amount may increase in the 
+future.  
+7 https://verra.org/wp -content/uploads/2022/06/VCS -Standard_v4.3.pdf  
+
+
+===== PAGE 6 =====
+ Project Description: VCS Version 4. 1 
+6 
+1.5 Project Proponent 
+Organization name  
+BIO SOLUTIONS Yenilenebilir Enerji ve Danışmanlık Hizmetleri 
+Sanayi ve Ticaret Limited Şirketi (LLC.)  
+Contact person  Adrian CADUFF 
+Title Chairperson 
+Address 
+Akdeniz Mah. Şehit Fethibey Cad. No: 55 İç Kap ı No: 091 Konak, 
+35210, IZMIR/TURKEY 
+Telephone +90 538 338 4626 
+Email  a.caduff@biosolutions.com.tr  
+ 
+Organization name  Vega Hereko Enerji Üretim Sanayi ve Ticaret Anonim Şirketi  
+Contact person  Tuğba Kırer 
+Title Board Member 
+Address Ostim OSB Mah. 1427 Cad. No:1A Yenimahalle / ANKARA 
+Telephone +90 532 405 23 69 
+Email tkirer@vegaturkiye.com 
+ 
+1.6 Other Entities Involved in the Project 
+N/A 
+1.7 Ownership 
+Both the attached approval of Environmental Impact Assessment (EIA) issued by the Ministry 
+of Environment and Urbanization, Directorate General of Environmental Management in 
+Turkey and the attached the Electricity Generation License (EGL) issued by the En ergy 
+Market Regulatory Authority (EMRA) in Turkey on February 11, 2021 established the project 
+ownership, Waste to Energy Plant, to Vega Hereko Enerji Üretim Sanayi ve Ticaret Anonim 
+Şirketi. These official documents are accordingly establishing the proper ty and contractual 
+right both in the plant and equipment that generate GHG emission reductions.  
+ 
+
+
+===== PAGE 7 =====
+Project Description: VCS Version 4. 1 
+7 
+1.8 
+1.9 
+Project Start Date 
+The project start date is 03/04/2021, as the operation start date with generation of electricity 
+commissioning.   
+Project Crediting Period 
+Each crediting period is 7 years. The crediting period will be renewed two times more. 
+Therefore, total length of the crediting period will be 21 years. The first crediting period 
+starts in 03/04/2021 and finishes 02/04/2028. 
+1.10 Project Scale and Estimated GHG Emission Reductions or Removals 
+Project Scale  
+Project 
+Large project √ 
+Table 1. Estimated GHG emission Reductions or removals (tCO2e)  
+Year Estimated GHG emission 
+reductions or removals (tCO 2e) 
+1  146,065 
+2  216,684 
+3  280,145 
+4  330,706 
+5  380,431 
+6  424,016 
+7  462,254 
+Total estimated ERs  2,240,299 
+Total number of crediting years  7 
+Average annual ERs  320,042 
+
+
+===== PAGE 8 =====
+ Project Description: VCS Version 4. 1 
+8 
+1.11 Description of the Project Activity 
+For the purpose of sustainable waste management, it was planned to rehabilitate the Vega-
+Hereko Istanbul Area and with the completion of the rehabilitation project by phases. One 
+project activity is going to be producing high quality RDF from light fraction and the second 
+one is the methane recovery through controlled ana erobic digestion to produce electricity. 
+Third one is going to be composting with the residues from the digesters.  
+The Municipal solid waste (MSW), goes through mechanical sorting to separate most of the 
+organic fraction of the waste. Around 50% of the wa ste which is rich organic waste goes to 
+a Biodigester. Finally, the solid output of the Biogas is going to be sent to composting, then 
+will be outward transported and will not be stored under anaerobic conditions .  
+The gas for the gas engines is delivered together from the biogas plant. This is estimated to 
+be around 730 m³/h for each engine from the biogas plant and the biogas plant a methane 
+level of about 52% - 55% is available due to the high content of added subcutaneous fat to 
+the biogas process. 
+The project capacity is 18.012 MWe. The waste received is around 730,000 tons per year, 
+corresponding to an average of 2,000/t day. The project will collect the wastes regularly and 
+will help to decrease irregular distribution areas in Turkey. Waste amount is expected to rise 
+by 0,4%8 per year in coming years.  
+The mechanical sorting of the waste with 9,000 tons/day capacity is in operation since project 
+start date. There is no distribution of natural gas through pipelines nor trucks to end users.  
+ 
+Figure 1. Flow Process Chart for the Vega-Hereko Istanbul Waste to Energy Project 
+ 
+8 Please refer the feasibility report, page 24.  
+
+
+
+===== PAGE 9 =====
+ Project Description: VCS Version 4. 1 
+9 
+The different units conforming the whole Vega-Hereko Istanbul Waste to Energy projects are 
+presented in the following sections:  
+a) Sorting System:  
+With the system with a daily capacity of 9,000 tons per day, domestic waste coming to 
+the facility is separated to achieve more efficient results.  
+After the separation of 50% of domestic waste per day, high organics are sent to the bio 
+fermenter and low organics are going to be sent to the RDF system.  
+ 
+Figure 2. Sorting System from outside 
+b) Biogas Production Unit: 
+The extracted organic waste is sent to Biogas Production Unit for anaerobic digestion.  
+The below figure illustrates the digester to be used in the biogas production unit;  
+ 
+Figure 3. Flow Chart of Digester 
+c) Flaring Unit: 
+The facility has a flaring unit to prevent the release of the landfill gas in case of any 
+breakdown or failure in the facility or when the facility is out of service. The landfill gas 
+would be flared in such conditions. There are 2 storage balloons with capaci ty of 
+10,000 m3 to ensure that constant volume is maintained.  
+ 
+ 
+
+
+
+===== PAGE 10 =====
+ Project Description: VCS Version 4. 1 
+10 
+d) Gas Cooling and Cleaning Area: 
+In the gas cleaning unit, landfill gas is processed and cleared of particles and moisture 
+inside. The condensates (water) are sent to the water treatment plant o f the ISTAC 
+together with the leakage water.  
+e) Power Generation in Internal Combustion Engines:  
+The gas utilization unit will be fitted with 12 CHP plants (12 x (Jenbacher 1.544 MWm / 
+1.501 MWe)). The gas for the CHP -plants will be received from the biogas plant. The 
+generated power is fed into the Grid and it is further delivered to the consumers through 
+power transmission lines.  
+Since the internal combustion engines require less gas flow rate and are easier to switch 
+on and off when compared to the gas tu rbines, they are more suitable for landfill gas 
+power plants. Mostly all of the landfill gas  - biogas power plants in our country consist of 
+internal combustion engines.  
+• Internal Combustion Gas engines (ICE)  
+Internal combustion engines are the most suitable method for the utilization in landfill 
+gas power plants.  
+The engines installed in the project are Genset JGS 420 GS-B.L characterized by a high-
+power density and efficiency.  
+Table 2. Technical specifications Jenbacher Genset JGS 420 GS -B.L9 
+Technical specifications 
+Electrical output 1501 kW 
+Electrical Efficiency Up to 41.9% 
+Voltage 400V 
+Gas Volume 796 Nm3/h 
+Starter Motor Output 13 kW 
+Fuel Type Flexible 
+ 
+ 
+ 
+9 Please refer the Techinal Specifications of Gas Engine  
+
+
+
+===== PAGE 11 =====
+ Project Description: VCS Version 4. 1 
+11 
+• Technology Units 
+The technology employed will be the improvement of landfill gas collection and flaring 
+through the installation of an active recovery system composed by:  
+Table 3. Machine and Equipment Information  
+Number MACHINE AND EQUIPMENT Capacity 
+(Information about 
+power or more) (Type and Technical Properties) 
+3 Blower   AIRCOO HG-100 
+6 Blower HG-100  
+12 Gas Engine  JENBACHER J420 
+GS-B25 1501 kW 
+ 
+1 Generator (diesel power unit)  GENSET MPM 
+15/400 I KA 10 kVa 
+ 
+1 Generator (diesel power unit)  EMSA E SD EM 
+0290 290 kVA 
+ 
+1 Generator (diesel power unit)  EMSA E SD EM 
+0290 290 kVA 
+ 
+1 Transformer 1400 kVA  
+4 Transformer 1600 kVA  
+13 Transformer 2000 kVA  
+1 Windshifter Filtre MOLDOW 070SBS‐
+316EX 
+ 
+1 Flare 1000 m³/h 1000 °C  
+1 Mechanical separation system  9,000 tons/day  
+1.12 Project Location 
+The project was implemented over an area of roughly 156.600 acres of area in boundary of 
+Vega-Hereko Istanbul Waste to Energy Facility in Karakiraz Village, Istanbul Site, İstanbul 
+Province, Şile District. The coordinates of the project location are longitude of 29°21'57.07"E 
+and latitude of 41°8'32.33"N. 
+Table 4. System Coordinates 
+Point 
+(Geographical-WGS-84)-(Degree, 
+Fraction) 
+Latitude Longitude 
+
+
+===== PAGE 12 =====
+ Project Description: VCS Version 4. 1 
+12 
+1 41.1443273 29.3682056 
+2 41.1431345 29.3697115 
+3 41.1422658 29.3699066 
+4 41.1421241 29.3671612 
+5 41.1420609 29.3667362 
+6 41.141712 29.3657404 
+7 41.1407105 29.3640218 
+8 41.1412084 29.3629611 
+9 41.140775 29.3623558 
+10 41.1422529 29.3605188 
+11 41.143679 29.3624988 
+12 41.1429405 29.3642476 
+13 41.1434161 29.3660877 
+ 
+ 
+Figure 4. Location of the Istanbul Province  
+
+
+
+===== PAGE 13 =====
+ Project Description: VCS Version 4. 1 
+13 
+ 
+Figure 5. Location of the Vega-Hereko Istanbul Project. Source: Google Earth 
+ 
+Figure 6. Photograph of the Vega-Hereko Istanbul WTE Project 
+1.13 Conditions Prior to Project Initiation 
+The scenario existing prior to the start of the implementation of the project activity is:  
+Before the proposed project activity, the facility was only engaged in the production of RDF 
+and the recyclable materials. In addition, the quantity of electricity produced using LFG would 
+have been produced by power plants connected to the grid  in Turkey which is heavily 
+dependent on fossil fuel resources.  The baseline scenario is the same as the scenario 
+existing prior to the start of implementation  of the project activity. 
+
+
+
+===== PAGE 14 =====
+ Project Description: VCS Version 4. 1 
+14 
+1.14 Compliance with Laws, Statutes and Other Regulatory Frameworks 
+The project has obtained the approval of the Electricity Generation License (EGL) issued by 
+the Energy Market Regulatory Authority (EMRA) in Turkey on February 11th, 2 021. All 
+necessary permits were obtained under the current legislation (please refer to EIA 
+documents).   
+The two of main regulatory approvals for such project types to prove that they are in 
+compliance with relevant laws, statues and regulatory frameworks  in Turkey are the 
+Environmental Impact Assessment and the Electricity Generation License whose 
+obtainments are required for projects being in compliance with other relevant legal 
+requirements. Environmental Permit and License application will be made with in the scope 
+of Environmental Permits and Licenses Regulation and Communique on Mechanical Sorting 
+and Biomethanization Facilities and Fermented Product Management .  
+All necessary permits were obtained under the current legislation (please refer to EIA 
+documents). Hence, the project is in compliance with laws, status and other regulatory 
+frameworks.  
+1.15 Participation under Other GHG Programs 
+ Projects Registered (or seeking registration) under Other GHG Program(s) 
+The project has not been registered or is seeki ng registration under any other GHG 
+programs. 
+ Projects Rejected by Other GHG Programs 
+The project has not been rejected by any other GHG programs.  
+1.16 Other Forms of Credit 
+ Emissions Trading Programs and Other Binding Limits 
+The project does not reduce GHG emissions from activities that are included in an emissions 
+trading program or any other mechanism that includes GHG allowance trading. (Please refer 
+to declaration of non-participation under other GHG programs)  
+ Other Forms of Environmental Credit 
+The project has not sought or received another form of GHG -related credit or renewable 
+energy certificates.  
+1.17 Sustainable Development Contributions 
+The Project will contribute to sustainable development in the following ways:   
+
+
+===== PAGE 15 =====
+ Project Description: VCS Version 4. 1 
+15 
+•    Increasing labor demand of skilled labor for the fabrication, installation, operation 
+and maintenance of the methane recovery and electricity generation system and thus, 
+contributing to the sustainable economic growth of the region,   
+•     Generating and dispatching electricity fr om a renewable and sustainable energy 
+source to a grid nowadays reliant on fossil,   
+•     Contributing to the climate change fight by reducing CH 4 emissions.   
+•    Constituting a new, clean and efficient technology model for the disposal and 
+handling of waste  
+•    Improving air quality (i.e. by reducing odor) and therefore having positive effects 
+on the local environment.  
+Nevertheless, it is still possible to note that the project will make positive contributions to at 
+least three Sustainable Development  Goals (SDGs). These are:  
+● SDG Goal 7: Affordable and Clean Energy  
+The proposed Project is a waste to power project that will generate renewable energy by 
+capturing methane from municipal waste and utilizing it to produce thermal and electric 
+energy through gas engine systems. By supplying renewable energy generated at the plant 
+to the national grid, the proposed Project will contribute to increasing the share of renewable 
+energy in the global energy mix and the proportion of the population with prima ry reliance 
+on clean fuels and technology. 
+● SDG Goal 8: Decent Work and Economic Growth  
+The demand for food and electric energy is rapidly increasing in Turkey for various reasons, 
+such as industrialization, urbanization, economic development, and populatio n growth. The 
+country's external dependence on agricultural products has intensified because the 
+increasing demand cannot be met by a decreasing domestic agricultural production capacity 
+which is due to several reasons, such as shrinkage of agricultural la nd, increasing migration 
+to urban spaces from rural areas where agricultural production is densely located, and 
+dramatic increase in the cost of inputs for agricultural production. Therewithal, Turkey, which 
+cannot meet its increasing electricity demand du e to the deprivation of conventional 
+resources used to generate energy, such as coal, oil, and natural gas, has also become 
+foreign-dependent on energy. Through its implementation, the proposed project activity will 
+contribute to reducing Turkey's foreign dependency by generating renewable energy out of 
+municipal wastes. In addition, as an LFG -based renewable energy technology 
+implementation, the proposed project activity will achieve higher levels of economic 
+productivity; hence, increasing the annual grow th rate of real GDP per employed person. 
+Moreover, it will increase the region's employment capacity while decreasing the 
+unemployment rate. 
+ 
+
+
+===== PAGE 16 =====
+ Project Description: VCS Version 4. 1 
+16 
+● SDG Goal 13: Climate Action 
+The proposed project activity will reduce GHG emissions by capturing and utilizing methane, 
+one of the most potent GHGs triggering climate change. It is estimated that the average 
+annual emission reduction that the proposed project will generate is around 320,042 
+tCO2eq. 
+1.18 Additional Information Relevant to the Project  
+Leakage Management 
+There are two possible leakage sources, one is the liquid leakage of the Biodigester that is 
+captured and sent to the water treatment facility of the municipality, and secon d, the CH4 
+emissions that are sent to flare in case of an emergency or an unlikely case of run out of the 
+gas engines.   
+Commercially Sensitive Information  
+No commercially sensitive information has been excluded from the public version of the 
+project description. 
+Further Information 
+N/A 
+2 SAFEGUARDS 
+2.1 No Net Harm 
+As mentioned in section 1.14 COMPLIANCE WITH LAWS, STATUTES AND OTHER 
+REGULATORY FRAMEWORKS the project meets all necessary regulatory requirements 
+such as socialization of the project, solid waste, water pollution, noise control and air quality 
+protection, it is therefore possible to claim that there is no net harm linked to the project by 
+supporting reports. 
+2.2 Local Stakeholder Consultation 
+The project’s local stakeholder consultation meeting took place on May 26 th, 2022.  
+Invitation has been sent to the stakeholders between 5 -6 May 2022 via, newspaper, Email, 
+notice at public place and personal invitations.  
+A few invitation samples are here:   
+
+
+===== PAGE 17 =====
+ Project Description: VCS Version 4. 1 
+17 
+ 
+ 
+ 
+The Agenda which was shared with the local stakeholders before and during the LSC 
+meeting can be seen below: 
+Date of the Meeting: 26.05.2022  
+Time: 14:00 - 15.45 
+Location: Online Webinar, Microsoft Teams 
+Agenda:  
+14:00  14:05 - Opening of the meeting & Introduction  
+14:05  14:20 - Explanation of the project 
+14:20  14:40 - Brief introduction to climate change, sustainable development, carbon 
+offsetting mechanisms and certification processes  
+14:40  15:00 - Q&A Session about the project 
+15:00  15:15 - Discussion of continuous input/grievance mechanism  
+Figure 7. Photographs of Local Stakeholder Meetings Invitation Letters  
+
+
+===== PAGE 18 =====
+ Project Description: VCS Version 4. 1 
+18 
+15:15  15:30 - Sustainable Development Contributions (SDC) explanation  
+15:30  15:45 - Discussion on monitoring SD & Closure of the meeting  
+During the 5th of May, announcements were carried out to reach the identified stakeholders. 
+First of all, invitation letters were posted in the bakery, supermarket, bus stop and restaurant, 
+which are the most frequently visited spots in the Şile region, to  inform the local people. 
+During the hanging of the invitation letters, all citizens found in the stores were informed by 
+the project officer in order to register and participate in the meeting.  
+Minutes of the LSC Meeting 
+The local stakeholder information meeting was held on 26th May 2022 as agreed. At the 
+beginning of the meeting, it was explained in detail to the participants of the online meeting, 
+which was held due to the Covid -19 outbreak, how questions about the project would be 
+collected during the meeting and how they could give feedback.  
+The demographic information of the participants was received during the registration for the 
+online meeting. On the registration page o f the meeting held over Microsoft Teams, non -
+technical information about the project is also summarized and explained.  
+The contact information of the project developer was shared in both electronical and printed 
+invitation letters (newspaper, invitation, a nnouncement, etc.) so that those want to provide 
+feedback could communicate directly. The project personnel stated his corporate e -mail 
+address and phone number during the meeting. Public comment period after project listing 
+was revealed during the LSC meeting. In addition, feedback forms and the business card of 
+the project manager were also given to the mukhtar of the neighborhood to enable 
+stakeholders to provide feedback.  
+Figure 8. Photographs of Local Stakeholder Meeting  
+
+
+===== PAGE 19 =====
+ Project Description: VCS Version 4. 1 
+19 
+ 
+Figure 9. Link for attendees questions  
+Also, considering the questions and feedback of the participants attended the meeting, there 
+is no negative opinion encountered regarding the facility. Taken actions are explained about 
+related questions.  
+2.3 Environmental Impact 
+The environmental matters in Turkey are jurisdiction of the Ministry of Environment and 
+Urbanization. The Law defines among others the general requirements of the Environmental 
+Impact Assessment (EIA) states specific requirements according to the type of project, 
+location, size and other characteristics.  
+However, all permits related to the regulations of the Environmental Law No. 2872 were 
+obtained such as; Solid Waste Control Regulation, which came into force by being published 
+in the Official Gazette dated 14.03.1991 and numbered 20 814, Noise Control Regulation 
+(entered into force by being published in the Official Gazette dated 11.12.1986 and 
+numbered 19308), Water Pollution Control Regulation (entered into force by being published 
+in the Official Gazette dated 04.09.1988 and numbered 19919) and it is necessary to comply 
+with the conditions specified in the Regulation on the Protection of Air Quality, which came 
+into force after being published in the Official Gazette dated 2.11.1986 and numbered 19269. 
+Considering the fact that the project activity already obtained the mandatory regulation, it is 
+therefore possible to claim that there is no net environmental impact linked to the project.   
+2.4 Public Comments 
+After project listing, the VCS/Verra project Vega -Hereko Istanbul Waste to Energy Project 
+will be open for 30 days of public consultation.  
+2.5 AFOLU-Specific Safeguards 
+Since the project is a non -AFOLU project, this section is not required.  
+
+
+
+===== PAGE 20 =====
+ Project Description: VCS Version 4. 1 
+20 
+3 APPLICATION OF METHODOLOGY 
+3.1 Title and Reference of Methodology  
+The approved consolidated methodology applied in the project activity is ACM0022 
+Alternative waste treatment processes (Version 03.0).  
+This methodology also refers to the latest approved version of the following:  
+• TOOL02: “Combined tool to identify the baseline  scenario and demonstrate 
+additionality” (version 07.0);  
+• TOOL04: “Emissions from solid waste disposal sites” (version  08.0);  
+• TOOL05: “Baseline,  project  and/or  leakage  emissions  from  electricity  
+consumption  and  monitoring of electricity generation ” (version  03.0); 
+• TOOL06: “Project emissions from flaring” (version  03.0);  
+• TOOL07: “Tool to calculate the emission factor for an electricity system” (version  
+07.0); 
+• TOOL08: “Tool to determine the mass flow of a greenhouse gas in a gaseous stream” 
+(version 03.0);  
+• TOOL14: “Project and leakage emissions from anaerobic digesters” (version 02.0);  
+3.2 Applicability of Methodology 
+The project satisfies all the applicability criteria o f the methodology ACM0022 (Version 
+03.0), of which the detailed description is listed in the table below. 
+
+
+===== PAGE 21 =====
+ Project Description: VCS Version 4. 1 
+21 
+Table 5. Applicability of ACM0022 
+Application Criteria Applicability 
+The methodology applies to project activities that 
+install and operate new plants for the treatment of 
+fresh waste through any combination of the 
+following processes: 
+(a) Composting process under aerobic 
+conditions; 
+(b) Anaerobic digestion with biogas recovery 
+and flaring and/or its use; 
+(c) Co-composting of wastewate r in 
+combination with solid waste; 
+(d) Anaerobic co-treatment of wastewater in 
+combination with solid waste; 
+(e) Mechanical/thermal treatment process to 
+produce refuse -derived fuel (RDF) or 
+stabilized biomass (SB) that is produced 
+within the project boundary and its use; 
+(f) Gasification process to produce syngas 
+and its use; 
+(g) Incineration of fresh waste for the 
+generation of thermal/electric energy. 
+(h) The following conditions apply to all 
+project activities using this methodology 
+(i) The project plant only treats fresh 
+waste/wastewater for which emission 
+reductions are claimed, except for cases 
+involving composting, co-composting and 
+anaerobic digestion 
+(j) Neither the fresh waste nor the products 
+from the project plant are stored on -site 
+under anaerobic conditions; 
+(k) Any wastewater discharge resulting from 
+the project activity is treated in 
+accordance with applicable regulations; 
+(l) The project activity does not reduce the 
+amount of waste that would be recycled in 
+the absence of the project activity.  This 
+shall be justified and documented in the 
+clean development mechanism project 
+design document (CDM-PDD); 
+(m) When applicable regulations mandate any 
+waste treatment process implemented 
+under the project activity, the rate of 
+compliance with such regulations for the 
+treatment process is below 50 per cent; 
+Applicable. 
+The project utilizes the  composting 
+process, biogas from anaerobic digestion 
+of fresh waste for power generation  and 
+mechanical/thermal treatment process to 
+produce refuse -derived fuel (RDF) . 
+Therefore, the project is applicable to (a), 
+(b) and (e). 
+ 
+For the condition (h): 
+(i) The project is disposing fresh waste in 
+the case of anaerobic digestion.  Only 
+fresh waste for which emission reductions 
+are claimed. 
+(j) The biogas residue produced in the 
+project will be outward transported and 
+will not be  stored under anaerobic  
+conditions. 
+(k) The wastewater produced by the 
+project will be treated aerobically by 
+wastewater treatment plant  nearby 
+belongs ISTAC. 
+(l) Prior to the implementation of the 
+project, the fresh waste was disposed of 
+at nearby landfill with a partial LFG 
+capture system. The project will not 
+reduce the amount of waste that would be 
+recycled in the absence of the project  
+activity. 
+(m) Currently, there are no applicable 
+laws or regulations in Turkey that require 
+anaerobic digestion of fresh waste, and 
+landfill is still the most common disposal  
+method. 
+(n) The fresh waste of the project does 
+not involve hazardous waste. 
+
+
+===== PAGE 22 =====
+ Project Description: VCS Version 4. 1 
+22 
+In addition, the project meets the applicability conditions of the applied tools applied in the 
+PD&MR as follows: 
+Application Criteria Applicability 
+(n) Hazardous wastes/wastewater are not 
+eligible under this methodology. 
+The methodology is only applicable if the baseline 
+scenario is: 
+(a) The disposal of the fresh waste in a 
+SWDS with or without a partial LFG 
+capture system (M2 or M3); 
+(b) In the case of co -composting or co - 
+treatment of wastewater in an anaerobic 
+digester, the treatme nt of organic 
+wastewater in either an existing or new 
+anaerobic lagoon or sludge pit without 
+methane recovery (W1  or W4); 
+(c) In the case of electricity generation, the 
+electricity is generated in an existing/new 
+captive fossil fuel fired power -only plant, 
+captive cogeneration plant and/or the grid 
+(P2, P4 or P6); 
+(d) In the case of heat generation, the heat is 
+generated in an existing/new fossil fuel 
+fired cogeneration plant, boiler or air 
+heater (H2 or H4). 
+Applicable. 
+The project utilizes the biogas from 
+anaerobic digestion of fresh waste for 
+power generation. The fresh waste was 
+disposed at nearby landfill with a partial 
+capture of the LFG and flaring  of the 
+captured LFG (M2); The electricity 
+generated by the project is supplied to grid 
+which is dominated by coal - fired power 
+stations (P6).  Therefore, the project is 
+applicable to (a) and (c).  
+Specific applicability conditions for the different 
+processes are provided in Table 2 of ACM0022 
+(Version 03.0). 
+The project u tilizes the biogas from 
+anaerobic digestion of fresh waste for 
+power generation. Thus, the project is 
+applicable to the waste treatment option 
+“Anaerobic digestion” listed in Table 2 of 
+ACM0022 (version 03.0). 
+ 
+
+
+===== PAGE 23 =====
+ Project Description: VCS Version 4. 1 
+23 
+Table 6. Applicability of applied tools  
+Tool Applicability The Project 
+Project and leakage 
+emissions from 
+anaerobic digesters 
+(version 02.0) 
+The following sources of project 
+emissions are accounted for in this 
+tool: 
+(a) CO2 emissions       from 
+consumption of electricity 
+associated with the operation 
+of the anaerobic digester; 
+(b) CO2 emissions  from 
+consumption of fossil fuels 
+associated with the operation 
+of the anaerobic digester; 
+(c) CH4 emissions from the 
+digester (emissions during 
+maintenance of the digester, 
+physical leaks through the 
+roof and side walls, and 
+release through safety valves 
+due to excess pressure in the 
+digester); and 
+(d) CH4 emissions from flaring of 
+biogas. 
+Applicable. 
+The sources (a), (b), (c) and (d) 
+of project emission are 
+accounted for the project.  
+The following sources of leakage 
+emissions are accounted for in this 
+tool: 
+(a) CH4 and N2O emission from 
+composting of digestate; 
+(b) CH4 emissions from the 
+anaerobic decay of digestate 
+disposed in a SWDS or 
+subjected to anaerobic 
+storage, such as in a 
+stabilization pond. 
+Applicable 
+ 
+The project involve s anaerobic 
+storage of digestate  and plan 
+composting; leakage emissions 
+are going to be calculated when 
+composting is installed. 
+
+
+===== PAGE 24 =====
+ Project Description: VCS Version 4. 1 
+24 
+Tool Applicability The Project 
+Emission sources associated with 
+N2O emissions from physical 
+leakages from the digester, 
+transportation of feed  material and 
+digestate or any other on -site 
+transportation, piped distribution of 
+the biogas, aerobic treatment  of    
+liquid    digestate    and   land 
+application of the digestate are 
+neglected because these are minor 
+emission sources or because they 
+are accounted in the 
+methodologies referring  to this  
+tool. 
+Applicable. 
+ 
+These are minor emission 
+sources for the project. 
+
+
+===== PAGE 25 =====
+ Project Description: VCS Version 4. 1 
+25 
+Tool Applicability The Project 
+Emissions from 
+solid waste 
+disposal sites 
+(version 08.0) 
+The tool can be used to determine 
+emissions for the following types of 
+applications: 
+(a) Application A: The CDM project 
+activity mitigates methane 
+emissions from a specific 
+existing SWDS. Methane 
+emissions are mitigated by 
+capturing and flaring or 
+combusting the methane (e.g.  
+“ACM0001: Flaring or use of 
+landfill gas”). The methane is 
+generated from waste 
+disposed in the past, including 
+prior to the start of the CDM 
+project activity. In these cases, 
+the tool is only applied for an ex 
+ante estimation of emissions in 
+the project design document 
+(CDM-PDD). The emissions 
+will then be monitored during 
+the crediting period using the 
+applicable approaches in the 
+relevant methodologies (e.g. 
+measuring the amount  of 
+methane captured from the 
+SWDS); 
+(b) Application B: The CDM project 
+activity avoids or involves the 
+disposal of waste at a SWDS. 
+An example of this application 
+of the tool is ACM0022, in 
+which municipal solid waste 
+(MSW) is treated with an 
+alternative option, such as 
+composting or anaerobic 
+digestion, and is then 
+prevented from being disposed 
+of in a SWDS. The methane is 
+generated from waste 
+disposed or avoided from 
+disposal during the crediting 
+period. In these cases, the tool 
+can be applied for both ex ante 
+and ex post estimation of 
+emissions.  These  project 
+activities may appl y the 
+simplified approach detailed in 
+0 when calculating baseline 
+emissions. 
+Applicable. 
+ 
+The project is the condition  of 
+application B, that avoids or 
+involves the disposal of  waste at 
+a SWDS. 
+
+
+===== PAGE 26 =====
+ Project Description: VCS Version 4. 1 
+26 
+Tool Applicability The Project 
+Tool  to calculate the 
+emission factor for 
+an electricity system 
+(version 07.0) 
+This tool may be applied to estimate 
+the OM, BM and/or CM when 
+calculating baseline emissions for a 
+project activity that substitutes grid 
+electricity that is where a project 
+activity supplies electricity to a grid or 
+a project activity that results in 
+savings of electricity that would have 
+been provided by the grid (e.g. 
+demand-side energy efficiency 
+projects) 
+Applicable. 
+The project utilizes the methane 
+from anaerobic digestion of 
+fresh waste for power 
+generation supplied to grid that 
+dominated by fossil -fuel plants. 
+Therefore, the tool is applied to  
+estimate the OM, BM and /or CM 
+when calculating  baseline 
+emissions for the project. 
+The Emission Factor is given 
+from Turkish National Electricity 
+Network calculated annually and 
+for the year 20 20 the combined 
+emission factor is 0,5 552 
+tCO2/MWh10. 
+ 
+ 
+10https://enerji.gov.tr//Media/Dizin/EVCED/tr/%C3%87evreVe%C4%B0klim/%C4%B0klimDe%C4%9Fi%C5%9Fikli%C4%9Fi/TUE
+SEmisyonFktr/Belgeler/Bform2020.pdf  
+
+
+===== PAGE 27 =====
+ Project Description: VCS Version 4. 1 
+27 
+Tool Applicability The Project 
+Under this tool, the emission factor 
+for the project electricity system can 
+be calculated either for grid power 
+plants only or, as an option, can 
+include off-grid power plants. In the 
+latter case, two sub - options under 
+the step 2 of the tool are available to 
+the project participants, i.e. option II a 
+and option II b. If option II a is chosen, 
+the conditions specified in “Appendix 
+1: Procedures related to off -grid 
+power generation” should be met. 
+Namely, the total capacity of off -grid 
+power  plants (in MW) should be at 
+least 10 per cent of the total capacity 
+of grid power plants in the electricity 
+system;   or   the   total   electr icity 
+generation by off -grid power plants 
+(in MWh) should be at least 10 per 
+cent of the total electricity generation 
+by grid power plants in the electricity 
+system; and that factors which 
+negatively affect the reliability and 
+stability of the grid are pri marily due 
+to constraints in generation and not to 
+other aspects such as transmission 
+capacity. 
+In the host country as off -grid 
+power generation is not 
+significant. Therefore, emission 
+factor for the project electricity 
+system is calculated only for the 
+grid power plants. Thus, this 
+applicability criterion is satisfied.  
+In case of CDM projects the tool is not 
+applicable if the project electricity 
+system is located partially or totally in 
+an Annex I country. 
+Not Applicable. The project 
+electricity system is located in a 
+Annex I country. 
+Under this tool, the value applied to 
+the CO2 emission factor of biofuels is 
+zero. 
+The project does not involve 
+biofuels. 
+
+
+===== PAGE 28 =====
+ Project Description: VCS Version 4. 1 
+28 
+Tool Applicability The Project 
+Baseline, project 
+and/or leakage 
+emissions from 
+electricity 
+consumption and 
+monitoring of 
+electricity 
+generation (version 
+03.0) 
+If emissions are calculated for 
+electricity consumption, the tool is 
+only applicable if one out of the 
+following three scenarios applies to 
+the sources of electricity 
+consumption: 
+(a) Scenario A: Electricity 
+consumption from the grid. The 
+electricity is purchased from the 
+grid only, and either no captive 
+power plant(s) is/are installed at 
+the site of electricity consumption 
+or, if any captive power plant 
+exists on site, it is either not 
+operating or it is not physically  
+able to provide electricity to the 
+electricity consumer; 
+(b) Scenario B: Electricity 
+consumption from (an) off -grid 
+fossil fuel fired captive power 
+plant(s). One or more fossil fuel 
+fired   captive   power   plants  are 
+installed at the site of the 
+electricity consumer and supply 
+the consumer with electricity. The 
+captive power plant(s) is/are not 
+connected to the electricity  grid; 
+or  
+(c) Scenario C: Electricity 
+consumption from the grid and (a) 
+fossil fuel fired captive power 
+plant(s). One or more fossi l fuel 
+fired captive power plants operate 
+at the site of the electricity 
+consumer. The captive power 
+plant(s) can provide electricity to 
+the electricity consumer. The 
+captive power plant(s) is/are also 
+connected to the electricity grid. 
+Hence, the electric ity consumer 
+can be provided with electricity 
+from the captive power plant(s) 
+and the grid.  
+ 
+Applicable. 
+ 
+For the project, the electricity 
+consumption is from the grid 
+which the project is connected. 
+Thus, Scenario A is applicable. 
+
+
+===== PAGE 29 =====
+ Project Description: VCS Version 4. 1 
+29 
+Tool Applicability The Project 
+This tool can be referred to in 
+methodologies to provide 
+procedures to monitor amount of 
+electricity generated in the project 
+scenario, only if one out of the 
+following three project scenarios 
+applies to the recipient of the 
+electricity generated: 
+(a) Scenario I: Electricity i s 
+supplied to the grid; 
+(b) Scenario II: Electricity is 
+supplied to consumers/electricity 
+consuming facilities; or 
+(c) Scenario III: Electricity is 
+supplied to the grid and 
+consumers/electricity consuming 
+facilities. 
+Applicable. 
+ 
+For the project, the electricity i s 
+supplied to the grid. Thus, 
+Scenario I is applicable.  
+This tool is not applicable in cases 
+where captive renewable power 
+generation      technologies      are 
+installed to provide electricity in the 
+project activity, in the baseline 
+scenario or to sources of leakage. 
+The tool only accounts for CO 2 
+emissions. 
+The project does not involve 
+captive renewable power 
+generation technologies 
+installed to provide electricity in 
+the project activity, in the 
+baseline scenario or to sources 
+of leakage. 
+Tool to determine 
+the mass flow of a 
+greenhouse gas in a 
+gaseous stre am 
+(version 03.0) 
+Typical applications of this tool are 
+methodologies where the flow and 
+composition of residual or flared 
+gases or exhaust gases are 
+measured for the  determination of 
+baseline or project emissions. 
+Applicable. 
+ 
+The volumetric flow of the 
+gaseous stream and volumetric 
+fraction of greenhouse gas CH 4 
+will be measured by the project. 
+Methodologies where CO2 is the 
+particular and only gas of interest 
+should continue to adopt material 
+balances as the means of flow 
+determination and may not adopt 
+this tool as material balances are 
+the cost effective way of monitoring 
+flow of CO2. 
+The biogas of the project 
+produced by anaerobic 
+digestion of fresh waste includes 
+CH4, CO2, NH3 etc, CO2 is not 
+the particular and only gas o f 
+interest by the project.  
+
+
+===== PAGE 30 =====
+ Project Description: VCS Version 4. 1 
+30 
+Tool Applicability The Project 
+The underlying methodology 
+should specify: 
+(a) The gaseous stream the tool 
+should be applied to; 
+(b) For which greenhouse gases 
+the mass flow should be 
+determined; 
+(c) In which time intervals the flow 
+of the gaseous stream should be 
+measured; and 
+(d) Situations where the 
+simplification offered for calculating 
+the molecular mass of the   
+gaseous   stream  (equations 
+(3) or (17)) is not valid (such as the 
+gaseous stream is predominantly 
+composed of a gas other than N2). 
+Applicable. 
+The methodology has specified 
+(a) to (d). 
+Combined tool to 
+identify the baseline 
+scenario and 
+demonstrate 
+additionality 
+(version 07.0) 
+The tool is applicable to all types of 
+proposed project activities. 
+However, in some cases, 
+methodologies   referring   to  this 
+tool may require adjustments or 
+additional explanations as per the 
+guidance in the respective 
+methodologies. This  could include, 
+inter alia, a listing of relevant  
+alternative  scenarios that should 
+be considered in Step 1, any 
+relevant types of barriers other than 
+those presented in this tool and 
+guidance on how common practice 
+should be established. 
+Applicable. 
+ 
+The project utilizes the methane 
+from anaerobic digestion of 
+fresh waste for power 
+generation. 
+Project emissions 
+from flaring” (version 
+03.0) 
+This tool provides procedures to 
+calculate project emissions from 
+flaring of a residual gas. The tool is 
+applicable to enclosed or open 
+flares and project participants 
+should document in the CDM-PDD 
+the type of flare used in the project 
+activity. 
+Applicable. 
+ 
+The project activity includes the 
+enclosed flare and the type of 
+which has been documented in 
+the PD&MR. 
+
+
+===== PAGE 31 =====
+ Project Description: VCS Version 4. 1 
+31 
+Tool Applicability The Project 
+This tool is applicable to the flaring 
+of flammable greenhouse gases  
+where: 
+(a) Methane is the  component with 
+the highest concentration in the 
+flammable residual gas; and 
+(b) The source of the residual gas 
+is coal mine methane or a gas from 
+a biogenic source (e.g. biogas, 
+landfill gas or wastewater treatment 
+gas). 
+Applicable. 
+The purpose of the project is to 
+utilize biogas produced by 
+anaerobic digestion, which 
+consists mainly of methane, for 
+electricity generation. 
+The tool is not applicable to the use 
+of auxiliary fuels  and therefore the 
+residual gas must have sufficient 
+flammable gas present to sustain 
+combustion. For the case of an 
+enclosed flare, there shall be 
+operating specifications provided 
+by the manufacturer of the flare. 
+The project does not involve the 
+use of auxiliary fuels. And the 
+residual biogas has a methane 
+content of over 50% and 
+therefore has sufficient 
+flammable gas present to 
+sustain combustion.  
+3.3 Project Boundary 
+According to the methodology ACM0022 (version 0 3.0), the spatial extent of the project 
+boundary is the SWDS where the waste is disposed of in the baseline, anaerobic lagoons or 
+sludge pits treating organic wastewater in the baseline, and the site of the alternative waste 
+treatment process(es). The boundary also includes on-site electricity and/or heat generation 
+and use, on- site fuel use and the wastewater treatment plant used to treat the wastewater 
+by-products of the alternative waste treatment process(es). The project boundary does not 
+include facilities for waste collection and transport.   
+The spatial extent of the project boundary is the project site where the facility units of the 
+project connected to the grid -system are located. The project boundary is the physical and 
+geographical site of the methane recovery and renewable energy production, respectively. 
+Both the physical and geographic al project boundaries is schematically illustrated in the 
+figure below. 
+
+
+===== PAGE 32 =====
+ Project Description: VCS Version 4. 1 
+32 
+ 
+Figure 10. Project Boundary 
+ 
+Table 7. Emission sources included in or excluded from the project boundary  
+Source Gas Included?  Justification/Explanation  
+Baseline 
+Emissions from 
+heat generation 
+CO2 No 
+Excluded for simplification. This is 
+conservative. 
+CH4 No 
+N2O No 
+Other No 
+Emissions at the 
+SWDS 
+CO2 No 
+CO2 emissions from the 
+decomposition of fresh waste are not 
+accounted for. 
+CH4 Yes Major emission source. 
+N2O No 
+N2O emissions are small compared to 
+CH4 emissions from biogas. Exclusion 
+of this gas is conservative.  
+Other No - 
+Emissions from 
+anaerobic lagoons 
+or sludge pits 
+CO2 No The project is not involved baseline 
+emissions from anaerobic lagoons or 
+sludge pits. CH4 No 
+
+
+
+===== PAGE 33 =====
+ Project Description: VCS Version 4. 1 
+33 
+Source Gas Included?  Justification/Explanation  
+N2O No 
+Other No 
+Emissions from 
+electricity 
+generation 
+CO2 Yes 
+Major source, electricity generation is 
+included in the project activity and is 
+sent to the grid or displaces fossil fuel 
+fired electricity generation in the  
+baseline. 
+CH4 No Excluded for simplification. This  is 
+conservative. 
+N2O No Excluded for simplification. This  is 
+conservative. 
+Other No - 
+Emissions from use 
+of natural gas 
+CO2 No 
+ 
+ 
+The project is not involved baseline 
+emissions from use of natural gas . 
+CH4 No 
+N2O No 
+Other No 
+Project 
+Emissions from on - 
+site fossil fuel 
+consumption due to 
+the project activity 
+other than for 
+electricity 
+generation 
+CO2 Yes 
+Included. This system is used when 
+the grid cannot be utilized in case of 
+power failures. 
+CH4 No 
+Excluded for simplification. This 
+emission source is assumed to be very 
+small 
+N2O No 
+Excluded for simplification. This 
+emission source is assumed to be very 
+small 
+Other No - 
+Emissions from on - 
+site electricity use 
+CO2 Yes May be an important emission  source. 
+CH4 No 
+Excluded for simplification. This 
+emission source is assumed to be very  
+small. 
+
+
+===== PAGE 34 =====
+ Project Description: VCS Version 4. 1 
+34 
+Source Gas Included?  Justification/Explanation  
+N2O No 
+Excluded for simplification. This 
+emission source is assumed to be very  
+small. 
+Other No - 
+Emissions from the 
+waste treatment 
+processes 
+CO2 No 
+The project is not involved 
+incineration, gasification or 
+combustion of fossil based waste.  
+CH4 Yes 
+CH4 leakage from the anaerobic 
+digester and incomplete combustion in 
+the flaring process are potential source 
+of project emissions. 
+N2O No 
+The project is not involved 
+incineration, gasification or 
+combustion of fossil based waste . 
+Other No - 
+Emissions from 
+wastewater 
+treatment 
+CO2 No 
+CO2 emissions from the 
+decomposition of fresh waste are not 
+accounted. 
+CH4 No The project does not involve anaerobic 
+treatment of wastewater. 
+N2O No 
+Excluded for simplification. This 
+emission source is assumed to be very  
+small. 
+Other No - 
+3.4 Baseline Scenario 
+According to the methodology ACM0022 (Version 03.0), using “TOOL02: Combined tool to 
+identify the baseline scenario and demonstrate additionality” (version 07.0) to identify the 
+baseline scenario and demonstrate additionality. 
+According to tool 02, the project participants shall apply the following four Steps:  
+STEP 0. Demonstration that a proposed project activity is the first -of-its-kind;   
+STEP 1. Identification of alternative  scenarios;  
+STEP 2. Barrier analysis; 
+STEP 3. Investment analysis (if applicable); STEP 4. Common practice analysis.  
+
+
+===== PAGE 35 =====
+ Project Description: VCS Version 4. 1 
+35 
+Step 0: Demonstration whether the proposed project activity is the first -of-its-kind  
+• The project is not the first -of-its-kind  project. 
+Step 1: Identification of alternative  scenarios  
+This step serves to identify all alternative scenarios to the project activity(s) which can be 
+the baseline scenario. 
+Step 1a: Define alternative scenarios to the proposed VCS project activity  
+Since the project only involves the treatment of fresh waste (anaerobic digestion) and the 
+generation of electricity, the baseline sc enario will be identified based on these two  parts.  
+In identifying baseline alternatives for the treatment of the fresh waste, the following 
+alternatives or combinations of these alternatives shall, inter alia, be considered:  
+Alternative scenarios provided by 
+methodology ACM0022 (Version 03.0) 
+Realistic 
+and 
+credible? 
+Alternatives to Electricity 
+Generation Component 
+M1 The project activity without being 
+registered as a VCS project activity 
+(i.e. any (combination) of the waste 
+treatment options listed in Table 2  of 
+methodology ACM0022). 
+Yes Anaerobic digestion treatment 
+method adopted in this project 
+is an encouraging policy in 
+Turkey, therefore, M1 is a 
+feasible baseline scenario.  
+
+
+===== PAGE 36 =====
+ Project Description: VCS Version 4. 1 
+36 
+M2 Disposal of the fresh waste in a 
+SWDS with a partial capture of the 
+LFG and flaring of  the captured LFG.  
+Yes At present, there are no laws 
+and regulations in our 
+country that require landfills 
+to recycle landfill gas.  
+It is demonstrated that 
+sufficient landfill capacity 
+would be available to dispose 
+waste at a SWDS with a 
+comparable annual waste 
+acceptance rate and  with the 
+same operating lifetime as 
+the project activity. 
+And there may be monitored 
+data for LFG recovered by 
+LFG capture system and 
+flaring or power generation 
+system, however, since LFG 
+recovery and power 
+generation system is owned 
+by another company, the 
+data is out of reach. 
+Furthermore, it is hard to 
+capture and monitor all LFG 
+generated by the SWDS. 
+Hence, to be conservative, 
+the SWDS is with a partial 
+capture of the LFG and 
+flaring  of the captured LFG. 
+To be conservative, M2 is a 
+realistic and credible 
+alternative scenario. 
+M3 Disposal of the fresh waste in a 
+SWDS without  a LFG capture  
+system. 
+Yes M3 is a realistic and credible 
+scenario. The alternative 
+doesn’t require any 
+investment. There are no 
+mandatory regulatory or 
+contractual requirements that 
+mandate to undertake the 
+alternative. Therefore, M3 is 
+considered for further 
+assessment.  
+
+
+===== PAGE 37 =====
+ Project Description: VCS Version 4. 1 
+37 
+M4 Part of the fresh  fraction of the solid 
+waste is recycled and not disposed in 
+the SWDS. 
+Yes If part of the fresh portion of the 
+solid waste is in a condition 
+that can be recycled, it is 
+recycled and not disposed of in 
+the SWDS. 
+M5 Part of the fresh  fraction of the solid 
+waste is treated aerobically and not 
+disposed in the SWDS. 
+No According to project,  there is 
+no such facility at the location 
+of this project, therefore, M5 is 
+not a realistic and credi ble 
+alternative scenario. 
+M6 Part of the organic fraction of the solid 
+waste is incinerated and not disposed 
+in the SWDS. 
+No According to project,  there is 
+no such facility at the location 
+of this project, therefore, M6 is 
+not a realistic and credible 
+alternative scenario. 
+M7 Part of the organic fraction of the solid 
+waste is gasified and not disposed in 
+the SWDS. 
+No According to project,  there is 
+no such facility at the location 
+of this project, therefore, M7 is 
+not a realistic and credible 
+alternative scenario. 
+M8 Part of the organic fraction of the solid 
+waste is treated in an anaerobic 
+digester and not disposed in the  
+SWDS. 
+No According to project, before 
+the implementation of the 
+project, there is no such facility 
+at the location of this  project, 
+therefore, M8 is not a realistic 
+and credible alternative 
+scenario. 
+M9 Part of the organic fraction of the solid 
+waste is mechanically or thermally 
+treated to produce RDF/SB and not 
+disposed in the SWDS. 
+Yes According to project, before 
+the implementation of the 
+project, there was such facility 
+at the location of this project, 
+therefore, M9 is a realistic and 
+credible alternative scenario.  
+ 
+Electricity generation is an aspect of the project activity, then alternative scenarios for the 
+generation of electricity shall also be identified. Alternative(s) shall include, inter  alia: 
+
+
+===== PAGE 38 =====
+ Project Description: VCS Version 4. 1 
+38 
+Alternative scenarios provided by 
+methodology ACM0022 (Version 03.0) 
+Realistic 
+and 
+credible? 
+Justification/explanation 
+P1 
+Electricity generated as an output of 
+one of the waste treatment options 
+listed in Table 2 of methodology 
+ACM0022   (Version  03.0), not 
+undertaken as a VCS project 
+activity. 
+Yes 
+The methane from anaerobic 
+digestion will be utilized for 
+generation, which i s an 
+encouraging policy in Turkey, 
+therefore, P1 is a feasible 
+baseline scenario. 
+P2 
+Use of an existing or construction of a 
+new on- site or off-site fossil fuel fired 
+cogeneration plant. 
+Yes 
+The project involved power 
+generation, and cogeneration 
+plant. Thus, P2 is a realistic and 
+credible alternative scenario.  
+P3 
+Existing or new construction of an on-
+site or off-site renewable based 
+cogeneration plant. 
+Yes 
+The project involved power 
+generation, and a cogeneration 
+plant. Thus, P3 is a realistic and 
+credible alternative scenario.  
+P4 
+Existing or new construction of an on-
+site  or off -site fossil fuel fired 
+electricity plant. 
+No 
+Construction of a power plant 
+with the same capacity as the 
+Project using coal, diesel oil or 
+natural gas as fuel would be 
+prohibited. Thus, P4 is not a 
+realistic and credible alternative 
+scenario. 
+
+
+===== PAGE 39 =====
+ Project Description: VCS Version 4. 1 
+39 
+P5 
+Existing or new construction of an on-
+site  or off -site renewable based 
+electricity plant. 
+No 
+Wind, solar photovoltaic, hydro, 
+biomass and geothermal 
+energy are feasible renewable 
+energy sources  that can be 
+applied. 
+The wind resources  of İstanbul 
+Province is in the provincial  
+capital  city area, which is not 
+suitable f or the construction of 
+wind farms. 
+The solar energy of İstanbul 
+Province is in the provincial 
+capital city area, which is not 
+suitable for the construction of 
+and solar plants. 
+The facility  is located in the 
+provincial capital city area, 
+which is not suitable for the 
+construction of hydropower 
+stations. 
+The project is  located in the 
+provincial capital city area, the 
+project site has no adequate 
+biomass materials supplied for a 
+biomass power. 
+Thus, P5 is not a realistic and 
+credible alternative scenario.  
+P6 
+Electricity generation in existing   
+and/or   new  grid- connected 
+electricity plants. 
+Yes 
+P6 is the actual situation before 
+the start of the project activities 
+and meets the requirements of 
+national regulations, so it is a 
+feasible alternative.  Electricity 
+generated in new grid -
+connected electricity plant.  
+ 
+Outcome of Step 1a: List of plausible alternative scenarios to the project activity  
+
+
+===== PAGE 40 =====
+ Project Description: VCS Version 4. 1 
+40 
+According to the analysis above, M1 and M2 for the treatment of the fresh waste, P1 and P6 
+for electricity generation are feasible baseline scenarios.  
+Step 1b: Consistency with mandatory applicable laws and regulations  
+M1 and M8 for the treatment of the fresh waste, P1 and P6 for electricity generation are all 
+consistent with mandatory applicable la ws and  regulations. 
+ 
+Scenario ID Treatment of the 
+fresh waste 
+Electricity 
+generation 
+Combined alternative scenario 1  (M1+P1): 
+This is the project activity not implemented as a VCS 
+project. This scenario faces investment barriers, which 
+will be discussed in section 3.5. 
+M1 P1 
+Combined alternative scenario 2  (M1+P6): 
+This is a conflicted scenario for use of methane for 
+electricity production conflicted with equivalent quantity 
+of electricity supply from existing and/or new grid -
+connected electricity plants. 
+M1 P6 
+Combined alternative scenario 3  (M2+P1): 
+This is a conflicted scenario, for the disposal of the fresh 
+waste in a SWDS with a partial capture of the LFG and 
+flaring of the captured LFG is conflicted with the fresh  
+waste will be treated by way of anaerobic digestion, the 
+two scenarios will not be existed at the same time. 
+M8 P1 
+Combined alternative scenario 4  (M2+P6): 
+This is the continuation of business as usual. It remains 
+as a possible baseline scenario alternative. 
+M8 P6 
+ 
+Outcome of Step 1b: List of alternative scenarios to the project activity that follow mandatory 
+legislation and regulations considering the enforcement in the region or country and Board 
+decisions on national and/or sectoral policies and  regulations.  
+As above, the baseline alternative options that are technically feasible and comply with all 
+legal and regulatory requirements are combined alternative Scenario 1 (M1+P1) and 
+Scenario 4 (M8+P6). 
+
+
+===== PAGE 41 =====
+ Project Description: VCS Version 4. 1 
+41 
+3.5 Additionality 
+As per 25th and 26th paragraphs of ACM0022 (V 03.0); 
+“25. Project activities to implement a Greenfield composting facility to treat MSW are 
+deemed automatically additional, if any of conditions below is fulfilled:  
+(a) The host country is a LDC; or  
+(b) If MSW collection coverage is below 50 per cent for the applicable 
+geographical region; or 
+(c) If MSW collection coverage is 50–80 per cent for the applicable geographical 
+region11 and if the waste received by the project composting facility does not have 
+formal (i.e. excluding recycling by the informal sector) segregation of wet and dry 
+waste; or 
+(d) If no gate/tipping fees are received by the project composting facility or any 
+upstream waste collection or segregation facility which is contractually bound to 
+provide waste to the project composting facility 12; or 
+(e) If less than two per cent of the collected MSW of the municipality  (or the 
+region from where the MSW treated by the project activity is sourced) 13 are treated 
+by composting in the year before the PDD is published for global stakeholder 
+consultation.  
+26. If any of the above conditions applies, the baseline scenario is assumed to be 
+disposal of the fresh waste in the nearest SWDS (where the LFG is released, or captured 
+and destructed through flaring to comply with regulations or contractual requirements, to 
+address safety and odour concerns, or for other reasons). If condition (d) or (e) appli es, it 
+shall also be demonstrated that 80 per cent of the collected MSW of the municipality (or the 
+region from where the MSW treated by the project activity is sourced) are treated in SWDS 
+or stockpiles or are dumped in the year before the PDD is publishe d for global stakeholder 
+consultation. 
+The project is a Greenfield project implementing composting facility as an alternative 
+municipal solid waste treatment.  
+As required in the 25th paragraph of the methodology condition (d) and (e) apply. Therefore, 
+the baseline scenario is assumed to be disposal of the fresh waste in the nearest SWDS. 
+ 
+11 May be certified by a municipal authority or another MS W treatment facility in the municipality.   
+12 May be certified by a municipal authority or another MSW treatment facility in the municipality.   
+13 The applicable geographical region may be the host country, the region or the municipality where the project 
+activity is located.   
+
+
+===== PAGE 42 =====
+ Project Description: VCS Version 4. 1 
+42 
+Moreover, more than the 80% of the collected MSW of the are treated in SWDS or stockpiles 
+or are dumped in the year before the PDD is published for global stakeholder consultation.  
+Hence, the proposed project meets the criteria for deemed additionality.  
+3.6 Methodology Deviations 
+No methodology deviation is applied in the project.  
+4 QUANTIFICATION OF GHG EMISSION 
+REDUCTIONS AND REMOVALS 
+4.1 Baseline Emissions 
+It is stated in the methodology ACM0022 (V 03.0) baseline emissions are calculated 
+according to equation (1). Based on methodology the baseline scenario for the project is:  
+𝐵𝐸𝑦 = ∑(𝐵𝐸𝐶𝐻4,𝑡,𝑦 + 𝐵𝐸𝑊𝑊,𝑡,𝑦 + 𝐵𝐸𝐸𝑁,𝑡,𝑦 + 𝐵𝐸𝑁𝐺,𝑡,𝑦) × (1 −
+𝑡
+𝑅𝐴𝑇𝐸𝑐𝑜𝑚𝑝𝑙𝑖𝑎𝑛𝑐𝑒,𝑡) Equation (1) 
+ 
+DFRATE,t,y  = 1 − RATEcompliance,t,y ,   if RATEcompliance,t,y    <  0.5         
+DFRATE,t,y = 0, if RATEcompliance,t,y    ≥  0.5                                                                          Equation (2)  
+  
+Where: 
+𝐵𝐸𝑦 = Baseline emissions in year y (t CO2e) 
+𝐵𝐸𝐶𝐻4,𝑡,𝑦 = Baseline emissions of methane from the SWDS in year  y 
+(t CO2e) 
+𝐵𝐸𝑊𝑊,𝑡,𝑦 = Baseline methane emissions from anaerobic treatment of the 
+wastewater in open anaerobic lagoons or of sludge in sludge 
+pits in the absence of the project activity in year y (t CO2e)  
+𝐵𝐸𝐸𝑁,𝑡,𝑦 = Baseline emissions associated with energy generation in 
+year y (t CO2) 
+𝐵𝐸𝑁𝐺,𝑡,𝑦 = Baseline emissions associated with natural gas use in year  y 
+(t CO2) 
+
+
+===== PAGE 43 =====
+ Project Description: VCS Version 4. 1 
+43 
+𝑅𝐴𝑇𝐸𝑐𝑜𝑚𝑝𝑙𝑖𝑎𝑛𝑐𝑒,𝑡 = Discount factor to account for the rate of compliance of a 
+regulatory requirement that mandates the use of alternative 
+waste treatment process t 14 
+𝑡 = Type of alternative waste treatment process  
+ 
+In the case that legislative or regulatory requirements mandate the use of any (combination) 
+of the waste treatment options t that are being implemented in the project activity, then the 
+rate of compliance with these  requirements in the host country shall be monitored 
+(RATEcompliance,t,y). This rat e is then used to adjust the baseline  emissions calculation, 
+according to equation 1. It shall be described and justified in the PDD which baseline  
+emission sources apply for each waste treatment option t implemented under the project 
+activity. 
+In the project context, there are no regulations that mandate the use of the project activity 
+treatment option. 
+Therefore RATEcompliance,t,y  = 0. 
+So that; 
+𝐷𝐹𝑅𝐴𝑇𝐸,𝑡,𝑦 = 1– 0 = 1        Equation (3)  
+Additionally, project activity   does not include treatment of the wastewater and natural gas 
+replacement. Therefore; 
+𝐵𝐸𝑊𝑊,y =0 
+𝐵𝐸𝑁𝐺,𝑦 =0 
+Thus, baseline emissions are;  
+• Emissions of methane from the SWDS,  
+• Emissions associated with energy generation. 
+ Baseline emissions of methane from the SWDS (BECH4,t,y) 
+Baseline emissions of methane from the SWDS are determined using the methodological 
+tool “Emissions from solid waste disposal sites”. Additionally, “emissions are calculated using 
+Application B in the tool, meaning that on ly waste avoided from the disposal after the start 
+ 
+14 Determined once for each crediting period, based on the most recent data available at the time of submission of the 
+CDM-PDD to the DOE for validation.  
+
+
+===== PAGE 44 =====
+ Project Description: VCS Version 4. 1 
+44 
+of the first crediting period shall be considered in the tool” . The tool can be applied for both 
+ex ante and ex post estimation of emissions.  
+The amount of methane generated from disposal of waste at the S WDS is calculated based 
+on a first order decay (FOD) model in line with the methodological tool “Emissions from solid 
+waste disposal sites”, V.08.0.  
+𝐵𝐸𝐶𝐻4,𝑆𝑊𝐷𝑆,𝑦 =  𝜑𝑦 (1 − 𝑓𝑦 ) ∗  𝐺𝑊𝑃 𝐶𝐻4 ∗ (1 −  𝑂𝑋 ) ∗  16/12 ∗  𝐹 ∗  𝐷𝑂𝐶𝑓, 𝑦 ∗  𝑀𝐶𝐹𝑦
+∗ ∑∑ 𝑊𝑗, 𝑥 ∗  𝐷𝑂𝐶𝑗∗  𝑒𝑥𝑝(−𝑘𝑗 (𝑦 − 𝑥)) ∗ (1 −  𝑒𝑥𝑝(−𝑘𝑗)) 
+Equation (4) 
+𝐵𝐸𝐶𝐻4,𝑆𝑊𝐷𝑆,𝑦 = Baseline methane emissions occurring in year y generated from 
+waste disposal at the solid waste disposal site (SWDS) during a 
+period ending in year y (tCO2e/y) 
+𝜑 = Model correction factor to account for model uncertainties (default 
+value of 0. 85), Option 1 in the Tool has been selected, value as per 
+Table 3 of the Tool (Application B and humid wet conditions).  
+𝑓 = Fraction of methane captured at the SWDS and flared, combusted or 
+used in another manner that prevents the emissions of methane to 
+the atmosphere in year y.  
+𝐺𝑊𝑃𝐶𝐻4 = Global warming potential of CH 4 (tCO2e/tCH4) 
+𝑂𝑋 = Oxidation factor (reflecting the amount of methane from SWDS that 
+is oxidized in the soil or other material covering the waste)  
+F = Fraction of methane in the SWDS gas (volume fraction) (0.5)  
+𝐷𝑂𝐶𝑓, 𝑦 = Fraction of degradable organic carbon (DOC) that decomposes under 
+the specific conditions occurring in the SWDS for year y (weight 
+fraction). Default value of 0.5 used as per page 65 of the Tool.  
+𝑀𝐶𝐹𝑦 = Methane correction factor for year y (1.0)  
+𝑊𝑗, 𝑥 = Amount of solid waste type j disposed or prevented from disposal in 
+the SWDS in the year x (t)  
+𝐷𝑂𝐶 = Fraction of degradable organic carbon (by weight fraction) in the 
+waste type j 
+𝑘𝑗 = Decay rate for the waste type j (1/yr)  
+j = Type of residual waste or types of waste in the MSW 
+x = Years in the time period in which waste is disposed at the SWDS, 
+extending from the first year in the time period (x=1) to year (x = y)  
+y = Year for which methane emissions are calculated (considering a 
+consecutive period of 12 months)  
+ 
+ 
+Table 8. Determining the parameters required to apply the FOD model  
+
+
+===== PAGE 45 =====
+ Project Description: VCS Version 4. 1 
+45 
+Parameter Value Determination Application B 
+φy  0.85 Default value as per "Emission from solid waste 
+disposal sites" Ver.08.0 
+OX  0.1 Default value as per "Emission from solid waste 
+disposal sites" Ver.08.0 
+GWPCH4 28 tCO2e/tCH4  https://www.ipcc.ch/report/ar5/syr/  
+F  0.5 Default value as per "Emission from solid waste 
+disposal sites" Ver.08.0 
+DOCf,y  0.5 Default value as per "Emission from solid waste 
+disposal sites" Ver.08.0 
+MCFy  1 Default values (based on SWDS type)  
+fy  0.0 Default value as per "Emission from solid waste 
+disposal sites" Ver.08.0 
+ 
+ 
+BECH4,SWDS,y = 273,073 tCO2e (annual average)      
+        
+ Baseline emissions from generation of energy 
+This procedure is distinguished depending on whether the baseline is the separate 
+generation of electricity and heat or the combined generation of heat and electricity by 
+cogeneration. 
+The project is using methane from fresh waste by anaerobic digestion treatment for 
+electricity generation. Thus, baseline emissions from separate generation of electricity 
+(BEEC,y)is considered. 
+ Separate generation of electricity and heat 
+ 
+𝐵𝐸𝐸𝑁,𝑦 = 𝐵𝐸𝐸𝐶,𝑦 + 𝐵𝐸𝐻𝐺,𝑦            Equation (5) 
+Where: 
+𝐵𝐸𝐸𝑁,𝑦 = Baseline emissions associated with energy generation in year y 
+(t CO2) 
+𝐵𝐸𝐸𝐶,𝑦 = Baseline emissions associated with electricity generation in 
+year y (t CO2) 
+𝐵𝐸𝐻𝐺,𝑦 = Baseline emissions associated with heat generation in year  y 
+(t CO2) 
+
+
+===== PAGE 46 =====
+ Project Description: VCS Version 4. 1 
+46 
+As per mentioned above, there is no baseline emissions associated with heat generation 
+thus 𝐵𝐸𝐻𝐺,𝑦=0 and consequently 𝐵𝐸𝐸𝑁,𝑦= 𝐵𝐸𝐸𝐶,𝑦. 
+Baseline emissions associated with electricity generation ( 𝑩𝑬𝑬𝑪,𝒚) 
+The baseline emissions associated with electricity generation in year  y ( 𝐵𝐸𝐸𝐶,𝑦) shall be 
+calculated using the "Methodological tool: Baseline, project and/or leakage emissions from 
+electricity consumption and monitoring of electricity generation". When applying the tool:  
+(a) The electricity sources  k in the tool correspond to the sources of electricity generated 
+identified in the selection of the most plausible baseline scenario; and  
+(b) ECBL,k,y in the tool is equivalent to the net amount of electricity generated using LFG in 
+year y (EGPJ,y). 
+Taking into account the approach provided by the tool, baseline emissions are then 
+calculated using the generic approach based on the quantity of electricity dispatched into 
+the National Grid, an emission factor for electricity generation and a factor to account for 
+transmission losses, as follows:  
+𝐵𝐸𝐸𝐶,𝑦 =  ∑ 𝐸𝐶𝐵𝐿,𝑘,𝑦 ∗ 𝐸𝐹𝐸𝐿,𝑘,𝑦 ∗ (1 + 𝑇𝐷𝐿𝑘,𝑦) Equation (6) 
+Where; 
+𝐸𝐶𝐵𝐿,𝑘,𝑦 = Net amount of electricity generated using LFG in year y (MWh/yr)  
+𝐸𝐹𝐸𝐿,𝑘,𝑦 = Emission factor for electricity generation for source k in year y 
+(tCO2/MWh) 
+𝑇𝐷𝐿𝑘,𝑦 = Average technical transmission and distribution losses for providing 
+electricity to source k in year y  
+         k = Sources of electricity generated in the baseline  
+Emission Factor calculation  
+The Emission Factor is calculated as the Combined Margin (CM), comprised by two 
+components: the Built Margin (BM) and the Operation Margin (OM). The BM evaluates the 
+contribution of the power plants which would have been built if the project plant would not 
+have been implemented. The OM evaluates the contribution of the power plants which would 
+have been dispatched in  the absence of the project activity. TOOL07 presents the following 
+steps to calculate the Emission Factor:  
+● STEP 1: Identify the relevant electricity systems:  
+
+
+===== PAGE 47 =====
+ Project Description: VCS Version 4. 1 
+47 
+The sources of power in the Turkish electric system were taken from the Turkish Electricity 
+transmission corporation. https://www.teias.gov.tr/en-US  
+● STEP 2: Choose whether to include off -grid power plants in the project electricity 
+system (optional) 
+Option I:   Only grid power plants are included in the calculation.  
+Option II:  Both grid power plants and off -grid power plants are included in the calculation . 
+ 
+Option I of the tool is chosen, which is to incl ude only grid power plants in the calculation.  
+● STEP 3 - Select a method to determine the operating margin (OM). The calculation 
+of the operating margin emission factor (EF grid,OM,y) is based on one of the following 
+methods: 
+(a) Simple OM, or  
+(b) Simple adjusted OM, or  
+(c) Dispatch data analysis OM, or  
+(d) Average OM. The simple operating margin can only be used where low -cost/must-run 
+resources15 constitute less than 50% of total grid generation in:  
+1) average of 5 most recent years, or  
+2) based on long-term normality’s for hydroelectricity production. Figure 9 shows the share 
+of the electricity production in the turkey interconnected system. The results show the 
+applicability of the simple operating margin.
+ 
+Figure 11. Electricity generation in Turkish interconnected system by source 15 
+ 
+15 http://www.teias.gov.tr/sites/default/files/2019 -03/56%2893-2017%29.xls 
+Coal
+21%
+ Diesel Oil
+15%
+Fuel Oil
+0%
+Lignite
+0%
+Natural Gas
+29%
+Renewable
+35%
+Coal
+Diesel Oil
+Fuel Oil
+Lignite
+Natural Gas
+Renewable
+
+
+===== PAGE 48 =====
+ Project Description: VCS Version 4. 1 
+48 
+● STEP 4 - Calculate the operating margin emission factor according to the selected 
+method  
+Simple OM 
+The simple OM emission factor is calculated as the generation-weighted average CO2 
+emissions per unit net electricity generation (tCO2/MWh) of all generating power plants 
+serving the system, not including low -cost/must-run power plants/units. 
+The simple OM may be calculated by one of the following two options:  
+(a) Option A: Based on the net electricity generation and a CO 2 emission factor of each pow er 
+unit; or 
+(b) Option B: Based on the total net electricity generation of all power plants serving the system 
+and the fuel types and total fuel consumption of the project electricity system. Option B can 
+only be used if: 
+a. The necessary data for Option A is not available; and 
+b. Only nuclear and renewable power generation are considered as low - 
+cost/must-run power sources and the quantity of electricity supplied to the  
+grid by these sources is known; and  
+c. Off-grid power plants are not included in the calculation  (i.e. if Option I has 
+been chosen in Step 2) 
+Under this option, the simple OM emission factor is calculated based on the net electricity 
+generation of each power unit and an emission factor for each power unit, as follows:  
+𝐸𝐹𝑔𝑟𝑖𝑑,𝑂𝑀 𝑠𝑖𝑚𝑝𝑙𝑒,𝑦 =
+∑ 𝐸𝐺𝑚,𝑦𝑚 ∗  𝐸𝐹𝐸𝐿,𝑚,𝑦
+∑ 𝐸𝐺𝑚,𝑦𝑚
+ 
+Where: 
+𝐸𝐹𝑔𝑟𝑖𝑑,𝑂𝑀 𝑠𝑖𝑚𝑝𝑙𝑒,𝑦 = Simple adjusted operating margin CO 2 emission factor in year y 
+(tCO2/MWh) 
+𝐸𝐺𝑚,𝑦 = Net quantity of electricity generated and delivered to the grid by 
+power 
+unit m in year y (MWh) 
+𝐸𝐹𝐸𝐿,𝑚,𝑦 = CO2 emission factor of power unit m in year y (tCO 2/MWh) 
+𝑚 = All power units serving the grid in year y except low -cost/must-run 
+power units 
+y = The relevant year as per the data vintage chosen in Step 3  
+
+
+===== PAGE 49 =====
+ Project Description: VCS Version 4. 1 
+49 
+● STEP 5 - Calculate the build margin (BM) emission factor The sample group of power units 
+m used to calculate the build margin was determined following the procedure provided by 
+the tool and BM emission factor shall be calculated based on the equation below:  
+𝐸𝐹𝑔𝑟𝑖𝑑,𝐵𝑀 𝑠𝑖𝑚𝑝𝑙𝑒,𝑦 =
+∑ 𝐸𝐺𝑚,𝑦𝑚 ∗ 𝐸𝐹𝐸𝐿,𝑚,𝑦
+∑ 𝐸𝐺𝑚,𝑦𝑚
+ 
+Where: 
+𝐸𝐹𝑔𝑟𝑖𝑑,𝐵𝑀,𝑦= = Build margin CO 2 emission factor in year y (tCO 2/MWh) 
+𝐸𝐺𝑚,𝑦 = Net quantity of electricity generated and delivered to the grid by 
+power 
+unit m in year y (MWh) 
+𝐸𝐹𝐸𝐿,𝑚,𝑦 = CO2 emission factor of power unit m in year y (tCO2/MWh)  
+𝑚 = All power units serving the grid in year y except low -cost/must-run 
+power units 
+y = The relevant year as per the data vintage chosen in Step 3  
+● STEP 6 – Calculate the combined margin (CM) emissions factor. The calculation of 
+the combined margin (CM) emission factor is based on one of the following methods:  
+(a) Weighted average CM; or  
+(b) Simplified CM.  
+Since power grid is not located in LDC/SID s/URC and the weighted average CM method 
+(option A) is the preferred option, this method was considered. The combined margin 
+emissions factor is calculated as follows:  
+𝐸𝐹𝑔𝑟𝑖𝑑,𝐶𝑀,𝑦 =  𝐸𝐹𝑔𝑟𝑖𝑑,𝑂𝑀,𝑦 ∗ 𝑤𝑂𝑀 + 𝐸𝐹𝑔𝑟𝑖𝑑,𝐵𝑀,𝑦 ∗ 𝑤𝐵𝑀 
+Where: 
+𝐸𝐹𝑔𝑟𝑖𝑑,𝑂𝑀,𝑦  = Operating margin CO 2 emission factor in year y (tCO 2/MWh) 
+𝑤𝑂𝑀 = Weighting of operating margin emissions factor (%)  
+𝐸𝐹𝑔𝑟𝑖𝑑,𝐵𝑀,𝑦 = Build margin CO 2 emission factor in year y (tCO 2/MWh) 
+𝑤𝐵𝑀 = Weighting of build margin emissions factor (%)  
+ 
+As per the applicable “Tool to calculate the emission factor for an electricity system”, 
+version 07.0, the default weights for the operating margin and build margin emission 
+factors for the proposed project activity is d efined as: 
+
+
+===== PAGE 50 =====
+ Project Description: VCS Version 4. 1 
+50 
+𝑤𝑂𝑀 = 0.50 
+𝑤𝐵𝑀 = 0.50 
+The Emission Factor is given from Turkish National Electricity Network calculated 
+annually and for the year 2020 the combined emission factor is 0,5552 tCO2/MWh 16. 
+𝐵𝐸𝑒𝑙𝑒𝑐𝑡𝑟𝑖𝑐𝑖𝑡𝑦,𝑦  = 62,579.956 tCO2e (annual average) 
+4.2 Project Emissions 
+The project emissions in year y are calculated for each alternative waste treatment option 
+implemented in the project activity as follows:  
+𝑃𝐸𝑦 = 𝑃𝐸𝐶𝑂𝑀𝑃,𝑦 + 𝑃𝐸𝐴𝐷,𝑦 + 𝑃𝐸𝐺𝐴𝑆,𝑦 + 𝑃𝐸𝑅𝐷𝐹_𝑆𝐵,𝑦 + 𝑃𝐸𝐼𝑁𝐶,𝑦 Equation (7) 
+Where: 
+𝑃𝐸𝑦 = Project emissions in year y (t CO2e) 
+𝑃𝐸𝐶𝑂𝑀𝑃,𝑦 = Project emissions from composting or co -composting in year  y 
+(t CO2e) 
+𝑃𝐸𝐴𝐷,𝑦 = Project emissions from anaerobic digestion and biogas 
+combustion in year y (t CO2e) 
+𝑃𝐸𝐺𝐴𝑆,𝑦 = Project emissions from gasification in year y (t CO2e) 
+𝑃𝐸𝑅𝐷𝐹_𝑆𝐵,𝑦 = Project emissions associated with RDF/SB in year y (t CO2e) 
+𝑃𝐸𝐼𝑁𝐶,𝑦 = Project emissions from incineration in year y (t CO2e) 
+ 
+Project activity does not include gasification and incineration.  
+So that; 
+𝑃𝐸𝑦 = 𝑃𝐸𝐴𝐷,𝑦 + 𝑃𝐸𝑅𝐷𝐹_𝑆𝐵,𝑦 + 𝑃𝐸𝐶𝑂𝑀𝑃,𝑦     Equation (8) 
+ 
+ Project emissions from anaerobic digestion (PEAD,y) 
+𝑃𝐸𝐴𝐷,𝑦 is calculated according to the methodological tool “Project and leakage emissions from 
+anaerobic digesters” (V02.0).  
+ 𝑃𝐸𝐴𝐷,𝑦=𝑃𝐸𝐸𝐶,𝑦+𝑃𝐸𝐹𝐶,𝑦+𝑃𝐸𝐶𝐻4,𝑦+𝑃𝐸𝑓𝑙𝑎𝑟𝑒,𝑦 
+Equation (9)  
+ 
+16https://enerji.gov.tr//Media/Dizin/EVCED/tr/%C3%87evreVe%C4%B0klim/%C4%B0klimDe%C4%9Fi%C5%9Fikli%C4%9Fi/TUE
+SEmisyonFktr/Belgeler/Bform2020.pdf  
+
+
+===== PAGE 51 =====
+ Project Description: VCS Version 4. 1 
+51 
+Where: 
+𝑃𝐸𝐴𝐷,𝑦 =  Project emissions associated with the anaerobic digester in year y (t CO 2e)  
+𝑃𝐸𝐸𝐶,𝑦 =  Project emissions from electricity consumption associated with the anaerobic 
+digester in year y (t CO 2e)  
+𝑃𝐸𝐹𝐶,𝑦 =  Project emissions from fossil fuel consumption associated with the anaerobic 
+digester in year y (t CO 2e)  
+𝑃𝐸𝐶𝐻4,𝑦 =  Project emissions of methane from the anaerobic digester in year y (t CO 2e)  
+𝑃𝐸𝑓𝑙𝑎𝑟𝑒,𝑦 =  Project emissions from flaring of biogas in year y (t CO 2e)  
+ 
+ 
+ Project emissions from electricity consumption associated with the 
+anaerobic digester (𝑃𝐸𝐸𝐶,𝑦 ) 
+Project emissions from electricity consumption will be calculated as a bundle for the 
+all units included in the project activity.  
+ Project emissions from fossil fuel consumption associated with the 
+anaerobic digester (𝑃𝐸𝐹𝐶,𝑦) 
+According to regulation there is to have a captive power plant or urgency diesel 
+generator in case of shortage on methane for electricity production in case the 
+electricity needs to be maintained and the engines don’t provide it temporarily.  
+CO2 emissions from fossil fuel combustion in process j are calculated based on the 
+quantity of fuels combusted and the CO2 emission coefficient of those fuels, as 
+follows:  
+𝑃𝐸𝐹𝐶,𝑗,𝑦  =  ∑𝐹𝐶𝑃𝐽,𝑗,𝑦𝑗 ∗ 𝐶𝑂𝐸𝐹𝑖,𝑦  Equation (9) 
+Where: 
+𝑃𝐸𝐹𝐶,𝑗,𝑦 = Are the CO2 emissions from fossil fuel combustion in process j during 
+the year y (tCO2/yr)  
+ 
+𝐹𝐶𝑃𝐽,𝑗,𝑦 = Is the quantity of fuel type i  combusted in process j during the year y 
+(mass or volume unit/yr)  
+ 
+
+
+===== PAGE 52 =====
+ Project Description: VCS Version 4. 1 
+52 
+𝐶𝑂𝐸𝐹𝑖,𝑦 = Is the CO2 emission coefficient of fuel type i in year y (tCO2/mass or 
+volume unit)  
+ 
+i = Are the fuel types combusted in process j during the year y  
+ 
+𝐶𝑂𝐸𝐹 = 0,00268tCO2
+L 𝑓𝑢𝑒𝑙 
+As per tool 3, in order to determine the parameter CO EF, option A is the preferred approach 
+as the necessary data is available.  
+ Project emissions from flaring (𝑃𝐸𝑓𝑙𝑎𝑟𝑒,𝑦) 
+Methodological TOOL06 show the calculation procedure to determine the project 
+emissions form flaring the residual gas PE, flare based on the flare efficiency (flare) 
+and the mass flow of methane to the flare (FCH4,RG,m). The fla re efficiency is 
+determined based on monitored data or default values.  
+The methodological TOOL shows a procedure form three steps to calculate those emissions. 
+The tool to be used to calculates the project emissions from flaring, if working hours wouldn’t 
+have been 0. 
+ (a) STEP 1: Determination of the methane mass flow of the residual gas;  
+ (b) STEP 2: Determination of the flare efficiency;  
+ (c) STEP 3: Calculation of project emissions from flaring.  
+  
+a.  STEP 1: Determination of the methane mass flow of the residual gas 
+ 
+The residual gas is monitored continuously  in normal conditions (Nm3/h) every 10 min for 
+24/7. The mass flow of methane in the residual gas in (kg/m) is calculated .  
+ 
+ 
+FCH 4,RG,t = Vt ,db * vCH 4,wb ,t * CH 4,n 
+ 
+ 
+Equation (10) 
+ 
+ 
+Where:  
+ 
+𝐅𝐂𝐇𝟒, 𝐭 = Mass flow of greenhouse gas (CH4) in the gaseous stream in time 
+interval t (kg gas/h) 
+𝐕𝐭, 𝐰𝐛 = Volumetric flow of the gaseous stream in time interval t on a 
+dry basis (m³ dry gas/h) 
+𝐯𝐂𝐇𝟒, 𝐭, 𝐰𝐛 = Volumetric fraction of greenhouse gas CH4 in the gaseous 
+stream in a time interval t on a dry basis (m³ gas i/m³ dry gas) 
+
+
+===== PAGE 53 =====
+ Project Description: VCS Version 4. 1 
+53 
+CH 4,n 
+ 
+ Density of greenhouse gas CH4 in the gaseous stream at 
+normal conditions t (kg gas i/m³ gas i)  
+  
+ 
+b. STEP 2: Determination of the flare efficiency;  
+✓ Enclosed flare 
+In this case the project implemented an enclosed flare, there are two options to determine 
+the flare efficiency for minute m (ŋflare,m)  
+(a) Option A: Apply a default value for flare efficiency;  
+ (b) Option B: Measure the flare efficiency.  
+ 
+Option A is chosen because: 
+(a) The temperature of the flare (TEG,m) and the flow rate of the residual gas to the flare 
+(FRG,m) is within the ARİŞ Enerji’s operating specification for the flare (SPECflare) in the 
+minute m;  
+(b) The flame is detected in the minute m (Flame).  
+ 
+The set of thermocouples, measure continuously temperature and allow the detection of the 
+presence and absence of flame, which can be cross check with the flare working hours and 
+amount of residual gas to flare. T (0) flare is the parameter can be read form the compiled 
+store data from the control system.  
+ 
+Since the e nclose flare could be define as low height flare the efficiency is adjusted 10 
+percentile points less form the default value:  
+Ŋflare,m 80% 
+ 
+ c. STEP 3: Calculation of project emissions from flaring.  
+  
+ 
+𝑃𝐸𝑓𝑙𝑎𝑟𝑒,𝑦  =  𝐺𝑊𝑃𝐶𝐻4 ∗ ∑ 𝐹𝐶𝐻4,𝑅𝐺,𝑚
+525600
+𝑚=1
+∗  (1 − 𝜂𝑓𝑙𝑎𝑟𝑒,𝑚) ∗  10−3 Equation (11) 
+ 
+Where: 
+𝑃𝐸𝑓𝑙𝑎𝑟𝑒,𝑦 = Project emissions from flaring of the residual gas in year y (tCO2e)  
+ 
+𝐺𝑊𝑃𝐶𝐻4 = Global warming potential of methane valid for the commitment period 
+(tCO2e/tCH4)  
+ 
+
+
+===== PAGE 54 =====
+ Project Description: VCS Version 4. 1 
+54 
+𝐹𝐶𝐻4,𝑅𝐺,𝑚  
+ 
+= Mass flow of methane in the residual gas in the minute m (kg)  
+ 
+𝜂𝑓𝑙𝑎𝑟𝑒,𝑚  = Flare efficiency in the minute m 
+ 
+Parameter flare working hours and hour meter flare  can be read directly for crosschecking.  
+ 
+Therefore:  
+Flare working hours  (h) 0 
+𝑃𝐸𝑓𝑙𝑎𝑟𝑒,𝑦 ((tCO2e)) 0 
+ 
+𝑃𝐸𝐹𝐶,𝑗,𝑦 is determined by “TOOL03 Methodological tool: Tool to calculate project or leakage 
+CO2 emissions from fossil fuel combustion. Version 03.0”. They are the CO 2 emissions from 
+fossil fuel combustion in process j during the year y (tCO2/yr).  
+ 
+According to regulation there is to have a captive power plant or urgency diesel generator in 
+case of shortage on methane or a break out. this only implement diesel and has not been 
+used once, please refer to monitoring reports. Therefore, CO2 emissions fr om fossil fuel 
+combustion in process is taken as zero.   
+ 
+𝑃𝐸𝐹𝐶,𝑗,𝑦 = 0 
+ 
+ Project emissions of methane from the anaerobic digester (PECH4,y) 
+Project emissions of methane from the anaerobic digester include emissions during  
+maintenance of the digester, physical leaks through the roof and side walls, and release  
+through safety valves due to excess pressure in the digester. These emissions are calculated 
+using a default emission factor ( 𝐸𝐹𝐶𝐻4,𝑑𝑒𝑓𝑎𝑢𝑙𝑡), as follows: 
+ 
+𝑃𝐸𝐶𝐻4,𝑦=𝑄𝐶𝐻4,𝑦×𝐸𝐹𝐶𝐻4,𝑑𝑒𝑓𝑎𝑢𝑙𝑡×𝐺𝑊𝑃𝐶𝐻4       Equation (12) 
+ 
+Where: 
+ 
+𝑃𝐸𝐶𝐻4,𝑦 =  Project emissions of methane from the anaerobic digester in year y (t CO 2e)  
+𝑄𝐶𝐻4,𝑦 =  Quantity of methane produced in the anaerobic digester in year y (t CH 4)  
+𝐸𝐹𝐶𝐻4,𝑑𝑒𝑓𝑎𝑢𝑙𝑡 =  Default emission factor for the fraction of CH 4 produced that leaks from the 
+anaerobic digester (fraction)  
+
+
+===== PAGE 55 =====
+ Project Description: VCS Version 4. 1 
+55 
+𝐺𝑊𝑃𝐶𝐻4 =  Global warming potential of CH 4 (t CO2 / t CH4)  
+ 
+ P𝐸CH4= 12,845.469 tCO2e (annual average) 
+ 
+ Project emissions associated with mechanical or thermal production of 
+RDF/SB (PERDF_SB,y) 
+Project emissions associated with RDF/SB 17 comprise both the emissions from the 
+mechanical/thermal production process (e.g. electricity, fossil fuel consump tion and 
+wastewater treatment, if relevant) as well as the combustion of RDF/SB. Project emissions 
+are determined as follows : 
+𝑃𝐸𝑅𝐷𝐹_𝑆𝐵,𝑦 = 𝑃𝐸𝐶𝑂𝑀,𝑅𝐷𝐹_𝑆𝐵,𝑦 + 𝑃𝐸𝐸𝐶,𝑅𝐷𝐹_𝑆𝐵,𝑦 + 𝑃𝐸𝐹𝐶,𝑅𝐷𝐹_𝑆𝐵,𝑦 + 𝑃𝐸𝑤𝑤,𝑅𝐷𝐹_𝑆𝐵,𝑦   
+        Equation (13) 
+Where: 
+𝑃𝐸𝑅𝐷𝐹_𝑆𝐵,𝑦 = Project emissions associated with RDF/SB in year y (t CO2e) 
+𝑃𝐸𝐶𝑂𝑀,𝑅𝐷𝐹_𝑆𝐵,𝑦 = Project emissions from combustion of fossil waste associated 
+with combustion of RDF/SB within the project boundary in year y 
+(t CO2)  
+𝑃𝐸𝐸𝐶,𝑅𝐷𝐹_𝑆𝐵,𝑦 = Project emissions from electricity consumption associated with 
+RDF/SB (production and on-site combustion) in year y (t CO2e) 
+𝑃𝐸𝐹𝐶,𝑅𝐷𝐹_𝑆𝐵,𝑦 = Project emissions from fossil fuel consumption associated with 
+RDF/SB (production and on-site combustion) in year y (t CO2e) 
+𝑃𝐸𝑤𝑤,𝑅𝐷𝐹_𝑆𝐵,𝑦 = Project emissions from the wastewater treatment associated with 
+RDF/SB (production and on-site combustion) in year y (t CH4)  
+ Project emissions from composting  
+ 
+𝑃𝐸𝐶𝑂𝑀𝑃,𝑦=𝑃𝐸𝐸𝐶,𝑦+𝑃𝐸𝐹𝐶,𝑦+𝑃𝐸𝐶𝐻4,𝑦+𝑃𝐸𝑁20𝑦+𝑃𝐸𝑅𝑂,𝑦 
+Where: 
+𝑃𝐸𝐶𝑂𝑀𝑃,𝑦 =  Project emissions associated with composting in year y (t 
+CO2e/yr)  
+𝑃𝐸𝐸𝐶,𝑦 =  Project emissions from electricity consumption associated 
+with composting in year y (t CO 2/yr)  
+ 
+17 RDF system is being planned to get active in the first quarter of the 2023.  
+
+
+===== PAGE 56 =====
+ Project Description: VCS Version 4. 1 
+56 
+𝑃𝐸𝐹𝐶,𝑦 =  Project emissions from fossil fuel consumption associated 
+with composting in year y (t CO 2/yr)  
+𝑃𝐸𝐶𝐻4,𝑦 =  Project emissions of methane from the composting process 
+in year y (t CO 2e/yr)  
+𝑃𝐸𝑁20,𝑦 =  Project emissions of nitrous oxide from the composting 
+process in year y (t CO 2e/yr)  
+𝑃𝐸𝑅𝑂,𝑦 =  Project emissions of methane from run -off wastewater 
+associated with co -composting in year y (t CO2e/yr)  
+Project emissions from electricity consumption will be calculated as a bundle for the all units 
+included in the project activity. Due to composting facility is being considered for June 2023, 
+calculations are going to be included after composting units commissioned.  
+Project emissions from electricity consumption (PEEC,y) 
+As it was stated above Project emissions from electricity consumption is calculated as a 
+bundle for the all units included in the project activity.  
+ACM0022 (V03.0) refers the methodological tool “Baseline, project and/or leakage 
+emissions from electricity consumption and monitoring of electricity gene ration (V 03.0)” to 
+calculate emissions from consumption of electricity due to the project activity and this tool 
+directs to the methodological tool “Tool to calculate the emission factor for an electricity 
+system (V 07.0)”.  
+“Tool to calculate the emissio n factor for an electricity system (V 07.0)” is applied in the 
+above section to calculate the combined margin emission factor of the applicable electricity 
+system for the calculations of baseline emissions. Since the electricity to be consumed is 
+being sup plied by the same grid that the generated electricity fed into, same e combined 
+margin emission factor is being used to calculate the project emissions from electricity 
+consumption. 
+Thus: 
+𝑃𝐸𝐸𝐶, = ∑𝐸𝐶𝑃𝐽,𝑗,𝑦 × 𝐸𝐹𝐸𝐹,𝑗,𝑦 × (1 + 𝑇𝐷𝐿𝑗,𝑦)   Equation (14) 
+Where: 
+𝑃𝐸𝐸𝐶,𝑦 = Project emissions from electricity consumption in year y (tCO 2/yr) 
+𝐸𝐶𝑃𝐽,𝑗,𝑦 = Quantity of electricity consumed by the project electricity consumption 
+source j in year y (MWh/yr)  
+𝐸𝐹𝐸𝐹,𝑗,𝑦 = Emission factor for electricity generation for source j in year y (tCO 2/MWh) 
+
+
+===== PAGE 57 =====
+ Project Description: VCS Version 4. 1 
+57 
+𝑇𝐷𝐿𝑗,𝑦 = Average technical transmission and distribution losses for providing 
+electricity to source j in year y  
+ 
+According to the TEIAS data 18  the transmission loss rate is 1.7% and distribution loss rate 
+is 10.2% for the year 2018. Thus;  
+𝑇𝐷𝐿𝑗, = 11.9% 
+P𝐸EC,y  = 28.172 tCO2e (annual average) 
+4.3 Leakage 
+According to the ACM0022 (Version 03.0), leakage emissions are associated with 
+composting/co-composting, anaerobic digestion and the use of RDF that is exported outside 
+the project boundary after June 2023.  
+And the waste by-products of the project do not involve compost or co -compost and the use 
+of RDF  outside the project boundary. Leakage emissions associated with anaerobic 
+digestion of waste (LE AD,y) are calculated according to  “TOOL14: Project and leakage 
+emissions from anaerobic digesters”(Version 02.0).  According to the tool, the leakage 
+emissions associated with the anaerobic digester (LE AD,y) depend on how the digestate is 
+managed. They include emissions associated with storage and composting of the digestate. 
+Since the solid digestate will be outward transported and incinerated directly in thermal 
+power plant and wi ll not be stored under anaerobic conditions   after June 2023 and the 
+wastewater is treated aerobically by wastewater treatment plant nearby, leakage emission 
+has been calculated until June 2023 and rest of the years of crediting period have been 
+considered zero. 
+LEAD,y  = 2,737 tCO2e (annual average) 
+4.4 Net GHG Emission Reductions and Removals 
+To calculate the emission reductions the project participant shall apply the following 
+equation: 
+𝐸𝑅𝑦 = 𝐵𝐸𝑦 − 𝑃𝐸𝑦 − 𝐿𝐸𝑦 
+Where: 
+𝐸𝑅𝑦 = Emissions reductions in year y (t CO2e) 
+𝐵𝐸𝑦 = Baseline emissions in year y (t CO2e) 
+𝑃𝐸𝑦 = Project emissions in the year y (t CO2e) 
+ 
+18 https://webapi.teias.gov.tr/file/512cbf1d -0ca3-4492-b901-3722c7b682f7?download  
+
+
+===== PAGE 58 =====
+ Project Description: VCS Version 4. 1 
+58 
+𝐿𝐸𝑦 = Leakage emissions in year y (t CO2e) 
+Therefore, during the first crediting period, the total ex ante estimated emission reduction 
+is 2,240,299 tCO2e, the average annual emission reduction is 320,042 tCO2e. 
+Year Estimated 
+baseline 
+emissions or 
+removals (tCO 2e) 
+Estimated project 
+emissions or 
+removals (tCO 2e) 
+Estimated 
+leakage 
+emissions 
+(tCO2e) 
+Estimated net 
+GHG emission 
+reductions or 
+removals (tCO 2e) 
+1  151,298  1,816 3,417  146,065  
+2  227,619  3,573 7,362  216,684  
+3  293,516  4,992 8,379  280,145  
+4  350,639  19,933 0  330,706  
+5  400,364  19,933 0  380,431  
+6  443,949  19,933 0  424,016  
+7  482,187  19,933 0  462,254  
+Total 2,349,572.13 90,115 19,158 2,240,299 
+5 MONITORING 
+Flow meters, sampling devices and gas analysers are subject to regular maintenance, testing 
+and calibration to ensure accuracy. Parameters for monitoring under the ACM0022 
+Methodology. 
+5.1 Data and Parameters Available at Validation 
+
+
+===== PAGE 59 =====
+ Project Description: VCS Version 4. 1 
+59 
+Data / Parameter: RATECOMPLIANCE,t  
+Data unit Fraction  
+Description Rate of compliance with a regulatory requirement to implement the 
+alternative waste treatment t implemented in the project activity  
+Source of data Official studies, reports and certification from municipal authorities 
+Value applied 0 
+Justification of choice 
+of data or description 
+of measurement 
+methods and 
+procedures applied 
+- 
+Purpose of Data To determine DFRATE 
+Comments Calculated based on the number of instances of compliance 
+identified at the time of the investment decision and updated once 
+for every subsequent crediting period  
+ 
+ 
+Data / Parameter: φdefault 
+Data unit - 
+Description Default value for the model correction factor to account for model 
+uncertainties 
+Source of data “Methodological Tool: Emissions from solid waste disposal sites” 
+(Version 08.0) 
+Value applied 0.85 
+ Humid/wet 
+conditions 
+Dry conditions 
+Application A 0.75 0.75 
+Application B 0.85 0.80 
+Justification of choice 
+of data or description 
+of measurement 
+methods and 
+procedures applied 
+Default value suggested in the tool. 
+ 
+The project selects Option 1 :Use a default value to  determine 
+φy in the tool “Emissions from solid waste disposal sites” (version 
+08.0), and the project belongs to the situation  of Application B: The 
+VCS project activity mitigates  methane emissions from a specific 
+existing SWDS, thus 0.85 is chosen  for  y. 
+Purpose of Data Calculation of baseline emissions 
+Comments - 
+ 
+
+
+===== PAGE 60 =====
+ Project Description: VCS Version 4. 1 
+60 
+Data / Parameter: DOCf,y 
+Data unit Weight fraction 
+Description Default value for the fraction of degradable organic carbon (DOC) 
+in MSW that decomposes in the SWDS 
+Source of data IPCC 2006 Guidelines for National Greenhouse Gas  Inventories 
+Value applied 0.5 
+Justification of 
+choice of data or 
+description of 
+measurement 
+methods and 
+procedures applied 
+ 
+Using IPCC 2006 Guidelines default  value 
+Purpose of Data Calculation of baseline emissions 
+Comments - 
+ 
+Data / Parameter: OX 
+Data unit - 
+Description Oxidation factor (reflecting the amount of methane from SWDS that 
+is oxidized in the soil or other material covering the  waste) 
+Source of data IPCC 2006 Guidelines for National Greenhouse Gas  Inventories 
+Value applied 0.1 
+Justification of choice 
+of data or description 
+of measurement 
+methods and 
+procedures applied 
+ 
+The landfill is covered with plastic film or soil, for  conservative 0.1 
+was chosen. 
+Purpose of Data Calculation of baseline emissions 
+Comments - 
+ 
+Data / Parameter: F 
+Data unit - 
+Description Fraction of methane in the digester gas (volume  fraction) 
+Source of data 2006 IPCC Guidelines for National Greenhouse Gas Inventories, 
+Vol. 5 Waste, 
+Value applied 0.5 
+Justification of choice 
+of data or description 
+of measurement 
+methods and 
+procedures applied 
+- 
+Purpose of Data Ex ante calculation of baseline  emissions 
+Comments - 
+ 
+
+
+===== PAGE 61 =====
+ Project Description: VCS Version 4. 1 
+61 
+Data / Parameter: MCF 
+Data unit - 
+Description Methane correction factor 
+Source of data 2006 IPCC Guidelines for National Greenhouse Gas Inventories, 
+Vol. 5 Waste, Chapter-3, Table 3.1 
+Value applied 1 
+Justification of choice 
+of data or description 
+of measurement 
+methods and 
+procedures applied 
+In case that the SWDS does not have a water table above the 
+bottom of the SWDS and in case of application B, then  select 
+the applicable value from the following: 
+(a) 1.0 for anaerobic managed solid waste disposal  sites. 
+These must have controlled placement of waste  (i.e.waste 
+directed to specific deposition areas, a degree of control  of 
+scavenging and a degree of control of fires) and will include  at 
+least one of the following: (i) cover material; (ii)  mechanical 
+compacting; or (iii) levelling of the waste; 
+(b) 0.5 for semi-aerobic managed solid waste disposal 
+sites. These must have controlled placement of waste and  will 
+include all of the following structures for introducing air to  the 
+waste layers: (i) permeable cover material; (ii)  leachate 
+drainage system; (iii) regulating pondage; and (iv)  gas 
+ventilation system; 
+(c) 0.8 for unmanaged solid waste disposal sites –  deep. 
+This comprises all SWDS not meeting the criteria of  managed 
+SWDS and which have depths of greater than or equal to  5 
+meters; 
+(d) 0.4 for unmanaged-shallow solid waste disposal  sites 
+or stockpiles that are considered SWDS. This comprises  all 
+SWDS not meeting the criteria of managed SWDS and  which 
+have depths of less than five meters. This includes  stockpiles 
+of solid waste that are considered SWDS (according to  the 
+definition given for a SWDS)  
+Application B is applicable. The site of Istanbul is an anaerobic 
+managed solid waste disposal site, as described under (a). 
+Purpose of Data Ex ante calculation of baseline  emissions 
+Comments - 
+ 
+Data / Parameter: DOCj 
+Data unit: % (Wet waste) 
+Description: Fraction of degradable organic carbon in the waste type j (weight 
+fraction) 
+Source of data 2006 IPCC Guidelines for National Greenhouse Gas Inventories, 
+Vol. 5 Waste, Tables 2.4 and 2.5. 
+
+
+===== PAGE 62 =====
+ Project Description: VCS Version 4. 1 
+62 
+Value applied The following values for different waste types have been 
+applied as a default value: 
+Waste Type j DOCj 
+  (% wet waste) 
+Wood and wood products 43 
+Pulp, paper and cardboard (other than 
+sludge) 40 
+Food, food waste, beverages and 
+tobacco (other than sludge) 15 
+Textiles 24 
+Garden, park and yard waste 20 
+Glass, plastic, metal, other inert 0 
+Sewage sludge 5 
+ 
+Justification of choice 
+of data or description 
+of measurement 
+methods and 
+procedures applied 
+ 
+Using IPCC 2006 Guidelines default  value 
+Purpose of Data Ex ante calculation of baseline  emissions 
+Comments - 
+ 
+Data / Parameter: kj 
+Data unit: 1/yr 
+Description: Decay rate for the waste type j 
+Source of data Source: https://www.mgm.gov.tr 
+Value applied 
+ 
+
+
+
+===== PAGE 63 =====
+ Project Description: VCS Version 4. 1 
+63 
+Justification of choice 
+of data or description 
+of measurement 
+methods and 
+Climatic conditions for Istanbul where project site located in: 
+ 
+MAT – mean annual temperature: 14.3 °C 
+MAP – Mean annual precipitation: 1,176 mm 
+PET – potential evapotranspiration: 1,000 mm (max-annual)  
+MAP/PET = 1.18 (wet) 
+ 
+Therefore, Boreal and Temperate (MAT≤20°C) and dry (MAP/PET 
+>)1 conditions are observed in the project site. 
+ 
+Purpose of Data Ex ante calculation of baseline emissions 
+Any comment:  
+ 
+Data / Parameter: GWPCH4 
+Data unit: tCO2e/tCH4 
+Description: Global warming potential of CH4 
+Source of data IPCC 5th Assessment Report15 
+Value applied 28 
+Justification of choice 
+of data or description 
+of measurement 
+methods and 
+- 
+Purpose of Data Ex ante calculation of baseline  emissions 
+Any comment: - 
+ 
+Data / Parameter  Factor leaked CH4 
+Data unit  m³ biogas leaked/m³ biogas 
+Description  Biogas leaked form biogas unit  
+Source of data  - 
+Value applied 0.05 
+Justification of choice 
+of data or description 
+of measurement 
+methods and 
+procedures applied  
+According to the Biogas produce in the biogas unit  
+ Purpose of Data  For the calculation of PE phy leakage default as AMS.III-AO 
+Comments - 
+ 
+
+
+===== PAGE 64 =====
+ Project Description: VCS Version 4. 1 
+64 
+ 
+ 
+Data / Parameter  EFCH4,default 
+Data unit  t CH4 leaked / t CH4 produced  
+Description  Digesters with steel or lined concrete or fiberglass digesters and 
+a gas holding system (egg shaped digesters) and monolithic 
+construction; 
+Default emission factor for the fraction of CH4 produced that leak 
+from the anaerobic digester  
+Source of data  - 
+Value applied  0.028 / 0.05 
+Justification of choice 
+of data or description 
+of measurement 
+methods and 
+procedures applied  
+the default value corresponding to the type of digester used in the 
+project activity. 
+ Purpose of Data  - 
+Comments Applicable to the step “Determination of project emissions of 
+methane from the anaerobic digester”  
+ 
+Data / Parameter  𝑇𝐷𝐿𝑗,𝑦 
+Data unit  - 
+Description  Average technical transmission and distribution losses for 
+providing electricity to source j in year y  
+Source of data  Source: ANNUAL DEVELOPMENT OF ELECTRICITY 
+GENERATION- CONSUMPTION AND LOSSES IN TURKEY 
+(1993-2019) https://webapi.teias.gov.tr/file/512cbf1d -0ca3-4492-
+b901-3722c7b682f7?download 
+Value applied  0.11 
+Justification of choice 
+of data or description 
+of measurement 
+methods and 
+procedures applied  
+TEİAŞ is publicly owned transmission company which publishes 
+official statistics about electricity generation and distribution. 
+
+
+===== PAGE 65 =====
+ Project Description: VCS Version 4. 1 
+65 
+ Purpose of Data  Calculate Project Emissions  
+Comments Due to project doesn’t involve the emissions from consumption of 
+fossil fuels, only emissions from use of electricity for the operation 
+and electricity from grid has already been conside red when 
+calculation the quantity net electricity generation, project 
+emissions from electricity consumption is considered 0.  
+ 
+ 
+ 
+Data / Parameter: EFCO2,m,i,y (combined) 
+Data unit tCO2/MWh 
+Description CO2 emission factor of fuel type i in year y 
+Source of data Turkish National Electricity Network pdf 
+Value applied 0.5706 
+Justification of choice 
+of data or description 
+of measurement 
+methods and 
+procedures applied 
+The Emission Factor is given from Turkish National Electricity 
+Network calculated annually and for the year 2019 
+Purpose of Data Calculation Emission Factor 
+Comment - 
+ 
+Data / Parameter: EGy 
+Data unit MWh 
+Description Net electricity generated in the project electricity system in year 
+Source of data Electricity Meter 
+Value applied 101,546 
+Data / Parameter: DCH4 
+Data unit t CH4/m3 CH4 
+Description Density of methane at the temperature and pressure of the landfill 
+gas in the year y 
+Source of data Default value as per the latest version of “Tool to determine project 
+emissions from flaring gases containing  methane” 
+Value applied 0.00067 at normal condition 
+Justification of choice 
+of data or description 
+of measurement 
+methods and 
+procedures applied 
+ 
+ 
+- 
+Purpose of Data Calculation of baseline emissions 
+Comments  
+
+
+===== PAGE 66 =====
+ Project Description: VCS Version 4. 1 
+66 
+Justification of choice 
+of data or description 
+of measurement 
+methods and 
+procedures applied 
+The operating hours are monitor from the gas engine software and are 
+monitor and saved in the internal files. 
+Purpose of Data Calculation of Project emission 
+Comments  
+ 
+Data / Parameter  ηm,y 
+Data unit  1/yr 
+Description  Average net energy conversion efficiency of power unit m in year y  
+Source of data  As per Factsheet of the gas engines  
+Value applied  0.43 
+Justification of choice 
+of data or description 
+of measurement 
+methods and 
+procedures applied  
+According to the electricity produce in ratio to the Methane as input  
+ Purpose of Data  - 
+Comments - 
+ 
+Data / Parameter  ρCH4,n  
+Data unit  kg/m3  
+Description  Density of methane gas at reference conditions  
+Source of data  Default Value of TOOL06 
+Value applied  0.716  
+ 
+Justification of choice 
+of data or description 
+of measurement 
+methods and 
+procedures applied  
+- 
+ Purpose of Data  Determination of the methane mass flow of the residual gas   
+Comments - 
+
+
+===== PAGE 67 =====
+ Project Description: VCS Version 4. 1 
+67 
+ 
+Data / Parameter  SPECflare 
+Data unit  Temperature - °C  
+Flow rate or heat flux - kg/h or m3/h  
+Maintenance schedule - number of days  
+ 
+Description  The operator will decide whether to start and ignite the Flare 
+with Cogeneration either on or off (see settings page on Data 
+sheet specifications). 
+Source of data  Specialist in Biogas technology  
+Value applied  Due to almost it has been not used and for simplification, it is 
+zero. 
+Justification of 
+choice of data or 
+description of 
+measurement 
+methods and 
+procedures applied  
+High temperature combustion and extraction system  
+ Purpose of Data  Calculation of project emissions from residual gas  
+ 
+Comments Please find the specifications on the folder data sheet of 
+equipment. This in an enclosed flare.  
+5.2 Data and Parameters Monitored  
+Parameters for monitoring under the ACM0022 Methodology.  
+Data / Parameter:  LFGtotal,y 
+Data unit:  Nm3 
+Description:  Total amount of landfill gas captured under Normal 
+Temperature and Pressure in year y 
+Source of data  Measured by flow meters. The data will be aggregated 
+regularly (monthly-yearly) 
+Description of 
+measurement 
+methods and 
+procedures to be 
+applied 
+- 
+
+
+===== PAGE 68 =====
+ Project Description: VCS Version 4. 1 
+68 
+Frequency of 
+monitorin g/recording  
+Continuous measurement by the flowmeters in real time.  
+Value applied  To be monitored during verification 
+Monitoring equipment  Flow Meter 
+QA/QC procedures to 
+be applied  
+Data is measured continuously with a flow meter by the Project 
+owner. Flow meters will be subject to a regular maintenance 
+and testing regime to ensure accuracy. This will ensure that the 
+accuracy of the measurement instrument is maintained. The 
+measurement frequency is equal to or more than one sampling 
+each hour. 
+Purpose of data   
+Calculation method  - 
+Comments - 
+ 
+Data / Parameter:  LFGelectricity,y 
+Data unit:  Nm3 
+Description:  Total amount of landfill gas combusted in the gas generator 
+under normal temperature and pressure in year y  
+Source of data  Measured by flow meters. The data will be aggregated 
+regularly (monthly-yearly) for each gas generator. 
+Description of 
+measurement methods 
+and procedures to be 
+applied 
+LFG electricity measured via flowmeter.  
+Frequency of 
+monitoring/recording  
+Continuous measurement by the flowmeters in real time.  
+Value applied  To be monitored during verification 
+Monitoring equipment  Flow Meter 
+QA/QC procedures to be 
+applied 
+Data is measured continuously with a flow meter by the Project 
+owner. Flow meters will be subject to a regular maintenance 
+and testing regime to ensure accuracy. This will ensure that the 
+accuracy of the measurement instrument is maintained. The 
+measurement frequency is equal to or more than one sampling 
+each hour. 
+
+
+===== PAGE 69 =====
+ Project Description: VCS Version 4. 1 
+69 
+Purpose of data  This parameter will be used for emission reduction 
+calculation. 
+Calculation method  - 
+Comments - 
+ 
+Data / Parameter:  FCH4,RG,m  
+Data unit:  kg 
+Description:  Mass flow of methane in the residual gas in the minute m  
+Source of data  Flowmeter  
+Description of 
+measurement methods 
+and procedures to be 
+applied 
+The flow rate of the residual landfill gas is automatically 
+converted to dry basis and normal conditions by the  PLC 
+system without any intervention by the Project owner. This 
+parameter is calculated by multiplying LFGflare, density  of 
+methane and wCH4 (percentage of methane measured by  the 
+gas analyzer). 
+This is in compliance with the “Tool to determine the  mass 
+flow of a greenhouse gas in a gaseous stream”,  v.03.0.0. 
+For conversion, volumetric flow rate data will collected  from 
+the flow meter Nr.1 (FM 1). 
+Frequency of 
+monitoring/recording  
+Measured continuously in real -time and recorded every 30 
+minutes. 
+Value applied  T o be monitored during verification 
+Monitoring equipment  Flow meter 
+QA/QC procedures to be 
+applied 
+A separate flow meter is installed for the flare unit. Data is 
+measured continuously with a flow meter by the Project owner. 
+Flow meters will be subject to a regular maintenance and testing 
+regime to ensure accuracy. This will ensure that the accuracy 
+of the measurement instrument is maintained. The 
+measurement frequency is equal to or more than one sampling 
+each hour. 
+Purpose of da ta This parameter will be used to check with the SPEC flare 
+parameter. 
+This parameter will be used to calculate PE flare,y 
+Calculation method  - 
+Comments - 
+ 
+
+
+===== PAGE 70 =====
+ Project Description: VCS Version 4. 1 
+70 
+ 
+Data / Parameter:  WCH4 
+Data unit:  % 
+Description:  Methane fraction in the landfill gas  
+Source of data  Gas analyser (at the main booster pipe)  
+Description of 
+measurement 
+methods and 
+procedures to be 
+applied 
+Methane content is measured directly and continuously with a 
+gas analyser. 
+Frequency of 
+monitoring/recording  
+Continuous measurement by the flowmeters in real time.  
+Value applied  53% 
+Monitoring equipment  - 
+QA/QC procedures to 
+be applied  
+The gas analyser  will be maintained and calibrated regularly 
+according to the manufacturer’s requirements in order to 
+ensure that required level of accuracy is maintained. The gas 
+analyser is subject to a regular maintenance and testing regime 
+to ensure accuracy, therefor e the analyser will be calibrated 
+according to the manufacturer’s recommendations. The 
+measurement interval is equal to or more than one sampling 
+each hour. 
+Purpose of data  The percentage of methane in the landfill gas is used to 
+calculated the amount of methane destroyed in the gas engine 
+and flare units. It is also used to check whether it satisfies the 
+minimum methane content threshold for the flare unit to ensure 
+the gas is flared  efficiently. 
+Calculation method  - 
+Comments - 
+ 
+Data / parameter:  Operation of the power plant  
+Data unit:  8,760 
+Description:  Operational duration of the power plant  
+Source of data:  Gas Engine System, Scada System  
+
+
+===== PAGE 71 =====
+ Project Description: VCS Version 4. 1 
+71 
+Description of 
+measurement 
+methods and 
+procedures to be 
+applied 
+- 
+Frequency of 
+monitoring/recording  
+Monitored daily, monthly and yearly 
+Value monitored  - 
+Monitoring equipment  - 
+QA/QC procedures to 
+be applied  
+- 
+Purpose of the data  Calculation of Baseline/project emissions from electricity 
+generation 
+Calculation method  - 
+ 
+Data / parameter:  TEG,m 
+Data unit:  °C 
+Description:  Temperature in the exhaust gas of the enclosed flare in 
+minute m 
+Source of data:  Scada System 
+Description of 
+measurement methods 
+and procedures to be 
+applied 
+If more than one temperature port is fitted to the flare, the 
+flare manufacturer must provide written instructions detailing 
+the conditions under which each location shall be used and 
+the port most suitable for monitoring the operation of the flare 
+according to manufacturers specifications for temperature  
+Frequency of 
+monitoring/recording  
+Daily 
+Value monitored  - 
+Monitoring equipment  - 
+QA/QC procedures to be 
+applied 
+- 
+Purpose of the data  Calculation of project emissions from flaring  
+
+
+===== PAGE 72 =====
+ Project Description: VCS Version 4. 1 
+72 
+Calculation method  - 
+Comments - 
+ 
+Data / parameter:  ERy 
+Data unit:  t CO2e/y 
+Description:  Emission Reductions in year y  
+Source of data:  - 
+Description of 
+measurement 
+methods and 
+procedures to be 
+applied 
+If more than one temperature port is fitted to the flare, the 
+flare manufacturer must provide written instructions detailing 
+the conditions under which each location shall be used and 
+the port most suitable for monitoring the operation of the flare 
+according to manufacturer’s specifications for tempera ture 
+Frequency of 
+monitoring/recording  
+Once for each monitoring period  
+Value monitored  - 
+Monitoring equipment  - 
+QA/QC procedures to 
+be applied  
+- 
+Purpose of the data  - 
+Calculation method  - 
+Comments - 
+ 
+Data / Parameter:  𝐸𝐺𝑃𝐽,𝑦 
+Data unit:  MWh/yr 
+Description:  Quantity of net electricity (difference between the total quantity 
+of electricity generated by the power plant/unit and the auxiliary 
+electricity consumption) generation that is produced and fed 
+into the grid as a result of the implementation of the project 
+activity in year y 
+Source of data  Meter reading protocols (OSOS records)  
+
+
+===== PAGE 73 =====
+ Project Description: VCS Version 4. 1 
+73 
+Description of 
+measurement 
+methods and 
+procedures to be 
+applied 
+The quantity of net electricity generation supplied to the grid by 
+the project plant will recorded and reported based on the 
+DEDAS meters at the project site.  
+Frequency of 
+monitoring/recording  
+Continuous measurement and at least monthly recording. 
+(Remote automatic meter reading system -OSOS) 
+Value applied  101,546 
+Monitoring equipment  Electricity meter 
+QA/QC procedures to 
+be applied  
+The data will be cross checked with sales receipts. The 
+electricity meter will be periodically calibrated  
+Purpose of data Calculation of baseline emissions  
+Calculation method  Continuous measurement and at least monthly recording. 
+(Remote automatic meter reading system -OSOS) 
+Comments - 
+ 
+Data / parameter:  Wx 
+Data unit:  tons 
+Description:  Total amount of waste disposed in a SWDS in year x 
+Source of data:  Weighbridge data 
+Description of 
+measurement methods 
+and procedures to be 
+applied 
+The garbage truck which carries municipal waste is weighed 
+and printed receipts are filed  
+Frequency of 
+monitoring/recording  
+The total amount of waste is continuously measured and the 
+data is aggregated at least annually. 
+Value monitored  2,000 t/day 
+Monitoring equipment  - 
+QA/QC procedures to be 
+applied 
+- 
+Purpose of the data  Baseline Emissions from SWDS 
+Calculation method  - 
+
+
+===== PAGE 74 =====
+ Project Description: VCS Version 4. 1 
+74 
+Comments - 
+ 
+ 
+Data / parameter:  Ŋflare,m  
+Data unit:  % (Percentage) 
+Description:  Flare efficiency 
+Source of data:  Default Value of TOOL06 
+Description of 
+measurement 
+methods and 
+procedures to be 
+applied 
+Since option A conditions are met and enclosed flare could be 
+defined low height, 80% has been chosen.  
+Frequency of 
+monitoring/recording  
+Continuously  
+Value monitored  80% 
+Monitoring equipment  - 
+QA/QC procedures to 
+be applied  
+- 
+Purpose of the data  Determination of project emissions from flaring 
+Calculation method  - 
+Comments  
+ 
+Data / Parameter:  NCVi,y  
+Data unit:  GJ per mass or volume unit (e.g. GJ/m³, GJ/ton)  
+Description:  Weighted average net calorific value of fuel type i in year y  
+Source of data:  Measurements by the project proponent  
+Description of 
+measurement methods 
+and procedures to be 
+applied 
+Measurements be undertaken in line with national or 
+international fuel standards  
+
+
+===== PAGE 75 =====
+ Project Description: VCS Version 4. 1 
+75 
+Frequency of 
+monitoring/recording  
+The NCV be obtained for each fuel delivery, from which 
+weighted average annual values be calculated.  
+Value monitored  - 
+Monitoring equipment  - 
+QA/QC procedures to be 
+applied 
+- 
+Purpose of the data  - 
+Calculation method  - 
+Comments - 
+ 
+Data / Parameter:  FCH4,EG,t  
+Data unit:  kg  
+Description:  Mass flow of methane in the exhaust gas of the flare on a dry 
+basis at reference conditions in the time period t  
+Source of data:  Measurements undertaken by a third -party accredited entity  
+Description of 
+measurement methods 
+and procedures to be 
+applied 
+Values taken form the system that has been calibrated  
+Frequency of 
+monitoring/recording  
+Biannual  
+Value monitored  - 
+Monitoring equipment  - 
+QA/QC procedures to be 
+applied 
+According to standard applied  
+Purpose of the data  - 
+Calculation method  - 
+Comments The project implements an enclosed flare therefore, there is 
+monitoring. 
+ 
+Data / Parameter:  Vi,RG,m  
+
+
+===== PAGE 76 =====
+ Project Description: VCS Version 4. 1 
+76 
+Data unit:  - 
+Description:  Volumetric fraction of component i in the residual gas on a dry 
+basis in the minute m where i = CH4,  
+Source of data  Measurements by project operator using a continuous gas 
+analyzer (values are recorded with the same frequency as the 
+flow).  
+Description of 
+measurement methods 
+and procedures to be 
+applied 
+Measurement may be made on dry basis.  
+Frequency of 
+monitoring/recording  
+Continuously. Values are to be averaged on a minute basis if 
+flare is on operation 100% status  
+Value monitored  - 
+Monitoring equipment  - 
+QA/QC procedures to be 
+applied 
+Analyzers must be periodically calibrated according to the 
+manufacturer’s recommendation.  
+Purpose of the data  - 
+Calculation method  - 
+Comments Project operator measure the content CH4, CO2   
+ 
+ 
+Data / Parameter:  vRG,m  
+Data unit:  m3  
+Description:  Volumetric flow of the residual gas on a dry basis at reference 
+conditions in the minute m  
+Source of data:  Measurements by project participants using a flow meter  
+Description of 
+measurement methods 
+and procedures to be 
+applied 
+Measurements by project operator using a calibrated flow 
+meter  
+Frequency of 
+monitoring/recording  
+Continuously. In flare operation is 100% or on.  
+Value monitored  - 
+
+
+===== PAGE 77 =====
+ Project Description: VCS Version 4. 1 
+77 
+Monitoring equipment  - 
+QA/QC procedures to be 
+applied 
+Flow meters are to be periodically calibrated according to the 
+manufacturer’s recommendation  
+Purpose of the data  - 
+Calculation method  - 
+Comments This parameter is monitored, project implements enclosed flare  
+ 
+ 
+Data / Parameter:  fcCH4,EG,m  
+Data unit:  mg/m3  
+Description:  Concentration of methane in the exhaust gas of the flare on a 
+dry basis at reference conditions in the minute m  
+Source of data  Measurements by project operator using a continuous gas 
+analyser  
+Description of 
+measurement methods 
+and procedures to be 
+applied 
+Extractive sampling analysers with water and particulates 
+removal 
+Frequency of 
+monitoring/recording  
+Continuously 
+Value monitored  - 
+Monitoring equipment  - 
+QA/QC procedures to be 
+applied 
+- 
+Purpose of the data  - 
+Calculation method  - 
+Comments - 
+ 
+ 
+ 
+ 
+
+
+===== PAGE 78 =====
+ Project Description: VCS Version 4. 1 
+78 
+5.3 Monitoring Plan 
+The responsible entity for the monitoring system is Vega-Hereko personnel. The monitoring 
+activities will primarily involve four types of personnel: the Operation Site Manager, Field 
+Operator, Electrical & Mechanical Operator and the Laboratory Operator.  
+The Field Operators will perform activities such as monitoring and checking operations of 
+the blower and flare, recording data at the blower/flare station, routine maintenance of 
+collection system components, preparing daily logs and completing checklists, and send 
+data to the Operation Site Manager.  
+The Operation Manager’s responsibilities include reviewing the data collected both manually 
+by the Field Technicians and the one recorded automatically by analytical equipment, making 
+recommendations and/or implementing system adjustments to maximize methane capture 
+and d estruction, scheduling monitoring and O&M activities, performing quality assurance 
+checks on operations, coordinating with system component manufacturers as needed, to 
+maintain proper operations and calibration, and compiling data as required by the 
+Methodology.  
+Only for manual data collection, the Operation Manager will be responsible for reviewing the 
+data collected. 
+Project Management Responsibility 
+The operators of the Methane recovery and electricity generation system will be responsible 
+for collectin g all data monitored on -site. The operating and maintenance personnel will be 
+skilled technicians, with extensive experience in equipment operation, maintenance and 
+calibration, and emergency procedures. Overall responsibility for the monitoring and 
+maintenance of all required  tasks and their adequate management lie with the project 
+manager. Detailed roles and responsibilities of the relevant staff involved in VCS monitoring 
+are placed.  
+Training of Monitoring Personnel  
+The monitoring personnel is trained in the beginning of the project; the purpose of this 
+training is to operate the project in a well manner. Periodical training will be defined by Vega-
+Hereko.  
+er 
+
+
+===== PAGE 79 =====
+ Project Description: VCS Version 4. 1 
+79 
+ 
+Figure 12. Organizational Structure of the Carbon Project  
+ 
+Data Analysis 
+The collected data will be reviewed and analyzed on a daily basis by the Operation Manager. 
+In case of a drift of one parameter the Manager or Technician can react quickly to fix potential 
+problems. All data required for the emission reduction cal culations will be kept in the onsite -
+monitoring database. The Monitoring Manager will be the responsible to report the necessary 
+information to Vega-Hereko. 
+The quality actions that will guarantee the success of the monitoring plan are the following:  
+Maintenance Plan 
+The plant's computerized management and control system includes: the management of 
+level management in gas meters through the level indicators; monitoring and control of the 
+heating system; alarm management of minimum and maximum levels and se curity; and 
+monitoring of the data analysis of the gas analysis. With regards to the electricity generation 
+component of the project, given that it dispatches electricity to the National Grid, measuring, 
+recording, storing, aggregating, collating and repor ting data and parameters will follow the 
+procedure described by the authorities.  
+The following aspects are core to the maintenance of the monitoring system in order to 
+assure proper data monitoring during the project:  
+• Equipment preventive maintenance  
+• Equipment calibration  
+
+
+
+===== PAGE 80 =====
+ Project Description: VCS Version 4. 1 
+80 
+All data collected as part of monitoring will be archived electronically and be kept at least for 
+2 years after the end of the last crediting period. Regarding the monitoring equipment of the 
+methane recovery component of the proje ct, maintenance and calibration will be performed 
+in line with manufacturers’ recommendations. With regards to the electricity meter, it is a 
+high accuracy measurement device/s and meets all relevant metrological requirements 
+prescribed by the state authority. Procedures for maintenance of the meter will be conducted 
+in accordance with national procedures and standards.  
+Quality assurance and Control (QA/QC) 
+ 
+Quality control and quality assurance procedures will guarantee the quality of monitored 
+data.  
+All data is archived electronically, backed up regularly and kept at least for 2 years after the 
+end of the last crediting period.  There are corrective actions when the parameters are out 
+of the permitted range.  
+Regarding the monitoring equipment of the meth ane recovery component of the project, 
+maintenance and calibration will be performed in line with manufacturers’ recommendations. 
+With regards to the electricity meter, as mentioned above, it is a high accuracy measurement 
+device/s and meets all relevant m etrological requirements prescribed by the state authority. 
+Procedures for maintenance of the meter will be conducted in accordance with national 
+procedures and standards.  
+Flaring  
+For the control of the Flare ignition, all management and operation is tro ugh PLC, on screen 
+looks like a switch . The user will decide whether to start and ignite the Flare with 
+Cogeneration either on or off. This is all managed with secure data logging and storage of 
+data is happening automatically to be downloaded in excel.  
+Calibration plans: 
+The company SICK SENSOR performs every year calibration visits from the gas flow meters 
+in the booster unit, the values of O2%, CO2% and CH4% are measured. Please see the 
+calibration certificates documents.  
+The gas engines have their own monitoring system and parameters can be seen every time 
+on the display. There is an internal storage of the data on PC and on the cloud. All data can 
+be downloaded in an excel file.  
+Emergencies Procedures  
+The running hours of the power plants will be monitored as part of the monitoring procedures. 
+In case of failure of one of the monitoring devices, portable instruments will be used in order 
+
+
+===== PAGE 81 =====
+ Project Description: VCS Version 4. 1 
+81 
+to carry out periodic daily monitoring of the missing parameter(s). These data are recorded 
+on paper. Vega-Hereko defined emergency procedures according to the provider 
+recommendations. 
+APPENDIX 
+Not Applicable. 

@@ -1,0 +1,3146 @@
+
+
+===== PAGE 1 =====
+ 
+ 
+ 
+ 
+BERGAMA INTEGRATED SOLID WASTE 
+MANAGEMENT FACILITY AND 
+ELECTRICITY GENERATION FACILITY 
+Document Prepared by GAIA Climate 
+ 
+Project Title  Bergama Integrated Solid Wa ste Management Facility and Electricity Generation 
+Facility 
+Version 01 
+Date of Issue 20.07.2022 
+Prepared By Gaia Climate Finansal Dan ışmanlık Hizmetleri ve Ticaret A. Ş. 
+Contact Gediz S. Kaya  
+gkaya@gaiaclimate.com  
+Maslak Meydan Sokak No:1 Beybi Giz Plaza Kat: 26 
+Maslak/İstanbu+9002122240450 
+
+
+
+===== PAGE 2 =====
+CONTENTS 
+1 PROJECT DETAILS................................................................................................. 4 
+1.1 Summary Description of the Project ................................................................................ 4 
+1.2 Sectoral Scope and Project Type .................................................................................... 5 
+1.3 Project Eligibility .................................................................................................................. 5 
+1.4 Project Design ..................................................................................................................... 5 
+1.5 Project Proponent .............................................................................................................. 5 
+1.6 Other Entities Involved in the Project ............................................................................... 6 
+1.7 Ownership ............................................................................................................................ 6 
+1.8 Project Start Date ............................................................................................................... 6 
+1.9 Project Crediting Period .................................................................................................... 6 
+1.10 Project Scale and Estimated GHG Emission Reductions or Removals ........................ 7 
+1.11 Description of the Project Activity .................................................................................... 8 
+1.12 Project Location ............................................................................................................... 10 
+1.13 Conditions Prior to Project Initiation ............................................................................... 11 
+1.14 Compliance with Laws, Statutes and Other Regulatory Frameworks ....................... 11 
+1.15 Participation under Other GHG Programs .................................................................... 15 
+1.16 Other Forms of Credit ....................................................................................................... 15 
+1.17 Sustainable Development Contributions ...................................................................... 15 
+1.18 Additional Information Relevant to the Project ........................................................... 19 
+2 SAFEGUARDS ..................................................................................................... 19 
+2.1 No Net Harm ..................................................................................................................... 19 
+2.2 Local Stakeholder Consultation ..................................................................................... 19 
+2.3 Environmental Impact ..................................................................................................... 20 
+2.4 Public Comments ............................................................................................................. 21 
+2.5 AFOLU-Specific Safeguards ............................................................................................ 21 
+3 APPLICATION OF METHODOLOGY ................................................................... 21 
+3.1 Title and Reference of Methodology ............................................................................ 21 
+3.2 Applicability of Methodology ......................................................................................... 22 
+3.3 Project Boundary .............................................................................................................. 29 
+3.4 Baseline Scenario ............................................................................................................. 32 
+
+
+===== PAGE 3 =====
+3.5 Additionality ...................................................................................................................... 33 
+3.6 Methodology Deviations ................................................................................................. 34 
+4 ESTIMATED GHG EMISSION REDUCTIONS AND REMOVALS ............................ 34 
+4.1 Baseline Emissions ............................................................................................................. 35 
+4.2 Project Emissions ............................................................................................................... 39 
+4.3 Leakage ............................................................................................................................. 40 
+4.4 Estimated Net GHG Emission Reductions and Removals ............................................ 41 
+5 MONITORING .................................................................................................... 42 
+5.1 Data and Parameters Available at Validation ............................................................ 42 
+5.2 Data and Parameters Monitored ................................................................................... 43 
+5.3 Monitoring Plan ................................................................................................................. 56 
+6 ACHIEVED GHG EMISSION REDUCTIONS AND REMOVALS ............................ 56 
+6.1 Data and Parameters Monitored ................................................................................... 59 
+6.2 Baseline Emissions ............................................................................................................. 72 
+6.3 Project Emissions ............................................................................................................... 76 
+6.4 Leakage ............................................................................................................................. 77 
+6.5 Net GHG Emission Reductions and Removals .............................................................. 78 
+APPENDIX 1: PUBLIC PARTICIPATION MEETING ANNOUNCEMENTS ......................... 79 
+
+
+===== PAGE 4 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+4 
+1 PROJECT DETAILS 
+1.1 Summary Description of the Project 
+The project, Bergama Integrated Solid Waste Ma nagement Facility and Electricity Generation 
+Facility (10.157 MWm / 9.898 MWe / 13.895) is in Izmir Province, Bergama District, Ka şıkçı 
+Neighborhood, and owned and operated by İzmir Doğu Star Elektrik Üretim A. Ş.. 
+The project site is located within the boundari es of the II. Class Bergama Solid Waste Landfill 
+Facility. It is planned to integrate the facilities to be established within the scope of the project 
+and the existing II. Class Solid Waste Landfill Facility. 
+Waste acceptance to the sanitary landfill started in 2011. The facility has two lots. Currently, 
+only municipal wastes from Bergama and Dikili dist ricts are disposed of with the regular landfill 
+method in the mentioned facility. In the planned situation within the scope of the project, waste 
+will be brought to the site from Be rgama District, Dikili District, K ınık District and Alia ğa District. 
+It is planned that the most suitable system for the conversion of th e "Bergama Solid Waste 
+Disposal Facility", which is operated by the Izmi r Metropolitan Municipality, into an Integrated 
+Solid Waste Management Facility, to integrate the Mechanical Separation Facility, 
+Biomethanization Facility, Compost Facility and Electricity Generation Facility. 
+After the mixed municipal wastes coming to the fa cility are separated according to their types at 
+the Mechanical Separation Facility, the biodegradable wastes will be taken to the 
+Biomethanization Facility, the remaining wastes will  be sent to the existing sanitary landfill and 
+the recyclable wastes will be sent to licensed companies. The biogas to be obtained from the 
+Biomethanization Facility and the methane gas to be extracted from the sanitary landfill will be 
+converted into electrical energy at the Electric ity Generation Facility and transferred to the 
+interconnected system to generate income. In ad dition, the solid fermented product obtained in 
+the Biomethanization Facility will be sent to the Compost Facility and can be offered to the 
+market if the compost product to be obtained meets the standards. In this way, the waste will 
+be stabilized, the amount of waste to be stored will be minimized, electricity and heat energy 
+will be obtained and the negative effects of wastes on the environment will be eliminated. 
+In line with the sustainable integrated wast e management planned within the scope of the 
+project, the packaging wastes to be collected se parately at the source will be sent to the 
+collection and sorting facilities  licensed by the Ministry of Environment and Urbanization, and 
+they will be sorted according to their types there. Packaging wastes to be collected separately 
+at their source will not be accepted to the facility or any sanitary landfill. 
+Estimated electricity generation and correspo nding annual estimated emission reduction 
+values are 74,235 MWh and 76,729 tCO2 respectively. The starting date of the project activity 
+
+
+===== PAGE 5 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+5 
+shall be considered as 31/10/2020 which is th e provisional acceptance date of the first two 
+gas engines.  
+This electricity amount has contributed to the following goals: 
+• Reduction in fossil fuel use (imported or lo cal) by using renewable energy resources. 
+• Displacement of ecologically unsound and climate unfriendly power generation 
+• Extension of nationally sourced power generation. 
+• Improvement of environmental conditions (GHG and odour) and safety in the landfill area 
+• Reduce the greenhouse gas emissions from be ing emitted directly to the atmosphere from 
+waste at the Bergama SWDS that would be otherwise left to be decomposed. 
+1.2 Sectoral Scope and Project Type 
+Sectoral scopes:  01 (Energy Industry – Renewable /Non-renewable Sources) and 13 (Waste 
+handling and disposal) 
+Methodology: ACM0022: Alternative waste treatment processes --- Version 3.0 and ACM0001: 
+Flaring or use of landfill gas --- Version 19.0 (Superposed) 
+The project type is waste handling and disposal, and the project is not a grouped project. 
+1.3 Project Eligibility 
+The project is eligible under the scope of the VCS Program. Since the project meets the 
+applicability conditions set ou t in the ACM0022 and ACM0001. 
+1.4 Project Design 
+☒  The project includes a single location or installation only 
+☐  The project includes multiple locations or project activity instances, but is not being 
+developed as a grouped project 
+☐  The project is a grouped project 
+Eligibility Criteria 
+Not applicable since the project is not a grouped project. 
+1.5 Project Proponent 
+ 
+
+
+===== PAGE 6 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+6 
+Organization name Biotrend Çevre ve Enerji Yat ırımları A.Ş 
+Contact person İlhan Doğan 
+Title Chairman 
+Address Kavacık, Ekinciler Caddesi, Ertürk Sk. No:3, 34810 Beykoz/ İstanbul 
+Telephone +905325523220 
+Email ilhan.dogan@biotrendenerji.com.tr 
+ 
+Organization name Gaia Climate Finansal Dan ışmanlık Hizmetleri ve Ticaret A. Ş. 
+Contact person Gediz Kaya 
+Title Managing Partner 
+Address Maslak Mah. Maslak Meydan Sk. Beybi Giz Plaza A Blok No:1/99 
+Sarıyer/İstanbul 
+Telephone +902122240450 
+Email gkaya@gaiaclimate.com 
+ 
+1.6 Other Entities Involved in the Project 
+There are no other entities involved. 
+1.7 Ownership 
+In accordance with the generation license issued by Energy Market Regulatory Authority 
+(EMRA), all legal rights of  the project belong to İzmir Doğu Star Elektrik Üretim A. Ş. The 
+generation license is dated 28/10/2020 and valid for 13 years 9 months 18 days. 
+1.8 Project Start Date 
+The project start date is 31/10/2020, which corresponds with the provisional acceptance date 
+of the first two gas engines .  
+1.9 Project Crediting Period 
+
+
+===== PAGE 7 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+7 
+The project activity adopts renewable crediting period of 7 years which can be renewed for 
+maximum 2 times. 
+1st Crediting period: 31/10/2020-30/10/2027 
+1.10 Project Scale and Estimated GHG Emission Reductions or Removals 
+As per the section 3.9.1 of VCS standard version 4.1, the projects are classified as follows: 
+1) Projects: Less than or equal to 300,000 tonnes of CO2e per year 
+2) Large Projects: Greater than 300,000 tonnes of CO2e per year  
+The estimated annual GHG emission reductions/removals of the project are: 
+☐  <20,000 tCO 2e/year 
+☒  20,000 – 100,000 tCO 2e/year 
+☐  100,001 – 1,000,000 tCO 2e/year 
+☐  >1,000,000 tCO 2e/year 
+ 
+ 
+Project Scale  
+Project X 
+Large project  
+ 
+Year Estimated GHG emission 
+reductions or removals (tCO 2e) 
+2020 2,936.65 
+2021 29,373.93  
+2022 46,427.50 
+2023 81,381.27 
+2024 89,574.61  
+2025 95,731.99 
+2026 102,167.76  
+2027 89,510.11 
+
+
+===== PAGE 8 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+8 
+Total estimated ERs 537,103.83 
+Total number of crediting years 7 
+Average annual ERs 76,729.12 
+1.11 Description of the Project Activity 
+Mixed municipal wastes collected from the projec t area will be brought to the waste reception 
+unit of the Facility and after all of them enter the Mechanical Separation Facility, they will be 
+separated as biodegradable waste, residual waste and waste suitable for recycling. 
+Some of the biodegradable waste will be sent to the Biomethanization Facility, and some of it 
+will be sent to the Sanitary Landfill Area within the scope of the Temporary Article 1 of the 
+Regulation on Regular Storage of Wastes, which was published in the Official Gazette dated 
+26.03.2010 and numbered 27533.  
+Portion of the waste suitable for recovery will be sent to licensed disposal facilities and will 
+contribute to the economy. 
+Remaining waste will be sent to the Landfill for disposal. 
+The capacity of the Mechanical Separation Facility to be established within the scope of the 
+project has been determined as 435 tons/day, taking into account the total waste generation 
+amount to be generated according to the population in the target year 2035. The units to be 
+found in the system are given below. It will be a fully automatic system without manual 
+separation. 
+ Waste Reception Area 
+ Bag Opener 
+ Conveyors 
+ Trommel Sieve 
+ Magnetic Separator 
+ Optical Separator 
+ Ballistic Separator 
+ Bale Press 
+ Product/Waste Accumulation Area (The area where the waste bales pressed in the bale 
+press machine are stored) 
+ Product Warehouse (Biode gradable wastes and residual wast es will be collected in closed 
+trailers that will be constantly present)  
+ 
+
+
+===== PAGE 9 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+9 
+The biodegradable wastes from the Mechanical Separation Facility will come to the 
+Biomethanization Facility, where there will be 27.30% solid fermented product, 36.35% liquid 
+fermented product and 36.35% decomposition loss. 
+A part of the liquid fermented product formed in the Biomethanization Facility will be 
+transferred back to the system, the remaining port ion will be taken to the balancing pool and a 
+treatment plant in order to meet the conditions for the discharge of water into the sewer system 
+in accordance with the provisions of the Water Pollution Control Regulation and the IZSU 
+Wastewater Discharge into the Sewage Network.  
+Approximately 75% of the liquid fermented product can be returned to the system. The 
+remaining 25% will be transferred to the treatment plant to be established within the scope of 
+the project. The treatment plant to be established will be established in accordance with the 
+technology that can purify the liquid fermented product. 
+The solid fermented product formed in the Biomet hanization Facility will be directed to the 
+Compost Facility, where compost product and non-standard compost will be obtained. The 
+compost product coming out of the Compost Facility  will be offered to the market in order to be 
+used as fertilizer if it meets the Compost Communiqué, Annex-2 Compost Quality Parameters 
+and Annex-3 Stability Parameters, published in the Official Gazette dated 05.03.2015 and 
+numbered 29286. Regarding the placing of compost on the market, the opinion will be taken 
+from the Ministry of Agriculture and Forestry. If the compost product from the Compost Facility 
+cannot be supplied to the market, it will be disposed of by storing in the sanitary landfill in the 
+appropriate class to be determined according to  the analysis result. Non-standard compost will 
+be disposed of by storage in the existing Landfill. 
+The Biomethanization Facility will have a total ca pacity of 228 tons/day, where 208 tons/day of 
+biodegradable waste calculated for the target year within the scope of the project and 
+biodegradable waste that can be taken from outside according to the conditions of the day will 
+be processed. The final capacity of the Biomethanization Facility  will be reached by increasing 
+the number of years. A total of 3 reactors with a capacity of 130 tons/reactor (3.512 
+m
+3/reactor) are planned to be built in the Biomethanization Facility. In the biomethanization 
+facility, 1 reactor will be commissioned for the year 2020; A total of 2 reactors will be 
+commissioned by adding 1 reactor for 2023, and a to tal of 3 reactors will be reached by adding 
+1 more reactor for 2035. 
+The units to be found in the system are given below. 
+ Waste Acceptance Unit (It will consist of 4 compartments. Since different waste codes can 
+be accepted at the facility, the number of compartments can be increased when 
+necessary.) 
+ Preconditioning Unit (Coarse Crusher) 
+ Reactor, 
+ Dewatering Unit and Liquid Fermented Product Storage 
+
+
+===== PAGE 10 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+10 
+ Solid Fermented Product Warehouse (Compost plant waste reception area) 
+ Mixing System, 
+ Gas Storage Unit 
+ Gas Purification System, 
+ Early Warning System 
+ Coarse Crusher (in a separate area within the Waste Reception Unit) 
+ 
+The biogas generated in the Biomethanization Facility and the methane gas that will be drawn 
+from the Landfill Gas collection system from the Landfill Area will be converted into electricity 
+and heat in the Electricity Generation Facility to be established. All of the electrical energy to be 
+obtained will be transferred to the interconnect ed system and economic gain will be achieved. 
+The heat will be used in the Biomethanization Plant process. 
+Heat and electrical energy will be obtained by  burning the methane gas to be generated in the 
+landfill lots currently being used in the Electricity Generation Facility to be established within 
+the scope of the project and the biogas to be fo rmed in the Biomethanization Facility to be 
+added within the scope of this project. 
+The capacity of the Electricity Generation Facilities to be established within the scope of the 
+project has been determined as 9.898 MW
+e. The units to be found in the system are given 
+below. 
+ Steam Trap 
+ Chiller Unit 
+ Gas Combustion Tanks 
+ Booster Units 
+ Gas Engine 
+1.12 Project Location 
+The project is in İzmir Province, Bergama District, Ka şıkçı Neighborhood. The central coordinated 
+of the project location are longitude of +39.061921 and latitude of +27.200708 . 
+ 
+
+
+===== PAGE 11 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+11 
+ 
+Figure 1. Project Site 
+1.13 Conditions Prior to Project Initiation 
+Within the borders of İzmir Province, Bergama District, Ka şıkçı Neighborhood, Bergama 
+Municipality took the decision of "Environmental Impacts are Insignificant" with the decision 
+number 162/2002/02 and dated 28/02/2002 and started to be operated by Bergama 
+Municipality as "Bergama Regular Solid Waste Disposal Facility" in 2011. The facility continued 
+to be operated by the Izmir Metropolitan Municipality as of 01/10/2014 with the law numbered 
+6360. 
+Prior to the proposed project activity, the wastes were left to decay within landfill site and 
+methane was emitted to the atmosphere without any control or utilization.  
+Please refer to Section 3.4 for further details on baseline scenario.  
+1.14 Compliance with Laws, Statutes and Other Regulatory Frameworks 
+The following laws and regulations regarding the existing and planned activities of the facility 
+will be complied with; 0F
+1 
+ Fisheries Law No. 1380 
+ 
+1 Please refer to the Final EIA Report, pages 273‐276 
+
+
+
+===== PAGE 12 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+12 
+ Law No. 1595 on the Establishment and Duties of the Ministry of Forestry 
+ Law No. 167 on Groundwater 
+ Law No. 2863 on the Protection of  Cultural and Natural Assets 
+ Environmental Law No. 2872 
+ National Parks Law No. 2873 
+ Highway Traffic Law No. 2918 
+ Law No. 3996 on the Making of Some Invest ments and Services within the Framework 
+of the Build-Operate-Transfer Model 
+ Law No. 4126 on the Improvement of Olive Cultivation and the Vaccination of Wilds 
+ Pasture Law No. 4342 
+ Tender Law No. 4734 
+ Labor Law No. 4857 
+ Land Hunting Law No. 4915 
+ Metropolitan Municipality Law No. 5216 
+ Public Health Law No. 593 
+ Occupational Health and Safety Law No. 6331 
+ Forest Law No. 6831 
+ Regulation on Discharge of İZSU Wastewater to the Sewerage Network 
+ Highway Traffic Regulation, which came into force after being published in the Official 
+Gazette dated 18/07/1997 and numbered 23053 
+ Occupational Health and Safety Regulation, published in the Official Gazette dated 
+09/12/2003 and numbered 25311 
+ Regulation on Control of Excavated Soil, Construction and Demolition Wastes, which 
+entered into force by being published in  the Official Gazette dated 18/03/2004 and 
+numbered 25406 
+ Regulation on Control of Waste Batteries and Accumulators, published in the Official 
+Gazette dated 31/08/2004 and numbered 25569 
+ Regulation on Wildlife Protection and Wildli fe Development Areas, which entered into 
+force after being published in the Offici al Gazette dated 08.11.2004 and numbered 
+25637 
+ Regulation on the Establishment, Manageme nt and Supervision of Hunting and Wild 
+Animal Breeding Places and Stations and Rescue Centers, which was published in the 
+Official Gazette dated 30/11/2004 and numbered 25656 
+ Water Pollution Control Regulation, which entered into force after being published in the 
+Official Gazette dated 31/12/2004 and numbered 25687 
+
+
+===== PAGE 13 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+13 
+ Regulation on the Usage Procedures and Principles of Biocidal Products, which entered 
+into force by being published in the Offici al Gazette dated 27/01/2005 and numbered 
+25709 
+ Regulation on Water Intended for Human Consumption, which entered into force after 
+being published in the Official Gazett e dated 17/02/2005 and numbered 25730 
+ Waste Management Regulation, published in  the Official Gazette dated 02/04/2015 
+and numbered 29314 
+ Regulation on Business and Work Licenses, which entered into force after being 
+published in the Official Gazette dated 10/08/2005 and numbered 25902 
+ Regulation on Control of End-of-Life Tires, which was published in the Official Gazette 
+dated 25/11/2006 and numbered 26357 
+ Regulation on the Structures to be Constructed in Disaster Areas, published in the 
+Official Gazette dated 14/07/2007 and numbered 26582 
+ Regulation on Buildings to be Constructed in Earthquake Zones, published in the 
+Official Gazette dated 06/03/2007 and numbered 26454 
+ Air Quality Assessment and Management Regulation, published in the Official Gazette 
+dated 06/06/2008 and numbered 26898 
+ Waste Oil Management Regulation, published in the Official Gazette dated 
+21/12/2019 and numbered 30985 
+ Regulation Amending the Air Quality Assessment and Management Regulation, which 
+came into force after being published in the Official Gazette dated 05/05/2009 and 
+numbered 27219 
+ Regulation on Control of Industrial Air Pollution, which entered into force by being 
+published in the Official Gazette dated 03/07/2009 and numbered 27277 
+ Regulation on Control of Medical Wastes, whic h entered into force by being published in 
+the Official Gazette dated 25/01/2017 and numbered 29959 
+ Regulation on Landfilling of Wastes, which entered into force by being published in the 
+Official Gazette dated 26/03/2010 and numbered 27533 
+ Regulation on Evaluation and Management of Environmental Noise, published in the 
+Official Gazette dated 04/06/2010 and numbered 27601 
+ Regulation on Control of Soil Pollution an d Point Source Contaminated Fields, which 
+entered into force by being published in the Official Gazette dated 08/06/2010 and 
+numbered 27605 
+ Regulation on Incineration of Wastes, which entered into force after being published in 
+the Official Gazette dated 06/10/2010 and numbered 27721 
+ Communiqué on the Recovery of Certain No n-Hazardous Wastes, which was published 
+in the Official Gazette dated 17/06/2011 and numbered 27967 
+
+
+===== PAGE 14 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+14 
+ Packaging Waste Control Regulation, which entered into force by being published in the 
+Official Gazette No. 27/12/2017 and No. 30283 
+ Regulation on the Protection of Groundwaters Against Pollution and Deterioration, 
+which entered into force by being published in the Official Gazette dated 07/04/2012 
+and numbered 28257 
+ Regulation on the Quality of Surface Waters from which Drinking Water is Obtained or 
+Planned to be Obtained, dated 29/06/2012 and numbered 28338 
+ Regulation on the Protection of Water Basins and Preparation of Management Plans, 
+which entered into force after being published in the Official Gazette dated 
+17/10/2012 and numbered 28444 
+ Regulation on the Control of Odor-Creating Emissions published in the Official Gazette 
+dated 19/07/2013 and numbered 28712 
+ Exhaust Gas Emission Control Regulation, published in the Official Gazette dated 
+11/03/2017 and numbered 30004 
+ Wetlands Protection Regulation, which entered into force by being published in the 
+Official Gazette dated 04/04/2014 and numbered 28962 
+ Regulation on the Monitoring of Greenhouse Gas Emissions, published in the Official 
+Gazette dated 17/05/2014 and numbered 29003 
+ Communiqué on Waste Derived Fuel, Additional Fuel and Alternative Raw Materials 
+published in the Official Gazette dated 20/06/2014 and numbered 29036 
+ Environmental Permit and License Regulation, published in the Official Gazette dated 
+10/09/2014 and numbered 29115 
+ Environmental Impact Assessment (EIA) Regulation, published in the Official Gazette 
+dated 25/11/2014 and numbered 29186 
+ Compost Communiqué published in the Of ficial Gazette dated 05/03/2015 and 
+numbered 29286 
+ Waste Management Regulation published in  the Official Gazette dated 02/04/2015 
+and numbered 29314 
+ The Regulation on Control of Waste Vegetable Oils, which entered into force after being 
+published in the Official Gazette dated 06/06/2015 and numbered 29378 
+ Communiqué on Mechanical Separation, Biodrying and Biomethanization Plants and 
+Fermented Product Management, published in the Official Gazette dated 10/10/2015 
+and numbered 29498 
+ Zero Waste Regulation published in the Official Gazette dated 12/07/2019 and 
+numbered 30829 
+ Waste Electrical and Electronic Equipment Control Regulation, published in the Official 
+Gazette dated 22/05/2012 and numbered 28300 
+
+
+===== PAGE 15 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+15 
+ The Regulation on Flood and Dirt Control, which entered into force by being published 
+in the Official Gazette dated 03/05/2019 and numbered 30763 
+1.15 Participation under Other GHG Programs 
+ Projects Registered (or seeking registration) under Other GHG Program(s) 
+The project has not been registered or is not seeking registration under any other GHG 
+programs. 
+ Projects Rejected by Other GHG Programs 
+The project has not been rejected by any other GHG programs.  
+1.16 Other Forms of Credit 
+ Emissions Trading Programs and Other Binding Limits 
+Does the project reduce GHG emissions from ac tivities that are included in an emissions 
+trading program or any other mechanism that includes GHG allowance trading? 
+☐  Yes   ☒  No 
+Net GHG emission reductions or removals generated by the Project will not be used for 
+compliance with an emissions trading program or to meet binding limits on GHG emissions in 
+any Emission Trading program or other binding limits. 
+ Other Forms of Environmental Credit 
+Has the project sought or received another form of GHG-related credit, including renewable 
+energy certificates? 
+☐  Yes   ☒  No 
+The project has not sought or received anothe r form of GHG-related environmental credit, 
+including renewable energy certificates.  
+ Supply Chain (Scope 3) Emissions  
+In this project, the product of the project activity is generated electricity which is a product 
+considered within the scope 1 or scope 2 emissions of the user. In this regard, the project 
+activities don’t affect emissions asso ciated with any good or service. 
+1.17 Sustainable Development Contributions 
+ Sustainable Development Contributions Activity Description 
+
+
+===== PAGE 16 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+16 
+The Project will contribute to sustainabl e development in the following ways:  
+ Reduce CH 4 emission. The project will recover and destroy landfill gas that consists 
+mainly of greenhouse gas methane and would otherwise be released directly into the 
+atmosphere, effectively reducing greenhouse  gas emissions, which contributes to the 
+Turkey’s commitment to carbon dioxide emissions;  
+ Increase electricity production from renewable sources, which will certainly reduce the 
+consumption of fossil fuel in Turkish Power Grid and further help to achieve the national 
+action to promote renewable energy development;  
+ Improve the operational safety of the landfills. The project reduces the potential safety 
+hazards of landfill gas explosion by recycling landfill gas and improves the safety of 
+landfill operation;  
+ The project will also provide new jobs opport unities and increase tax revenue, which will 
+have a positive effect on the local economy.  
+ Improving air quality (i.e. by reducing odor) and therefore having positive effects on the 
+local environment.  
+Nevertheless, it is still possible to note that the project will make positive contributions to at least 
+four Sustainable Development Goals (SDGs). These are:  
+SDG Goal 3: Good Health and Well-being: The proposed project acti vity will reduce GHG 
+emissions, methane in particular, which is directly related to harmful effect of bad air quality. By 
+implying this project air pollution will be decrease and reduce the number of deaths and illnesses 
+from hazardous chemicals and air, the proposed Project will improve air quality.  
+SDG Goal 7: Affordable and Clean Energy: The proposed Project is a waste to power project that 
+will generate renewable energy by capturing methane from municipal waste and utilizing it to 
+produce thermal and electric energy through gas engine systems. By supplying renewable energy 
+generated at the plant to the national grid, the pr oposed Project will contribute to increasing the 
+share of renewable energy in the global energy mix and the proportion of the population with 
+primary reliance on clean fuels and technology.  
+SDG Goal 8: Decent Work and Economic Growth : The demand for food and electric energy is 
+rapidly increasing in Turkey for various reasons, such as industrialization, urbanization, economic 
+development, and population growth. The country's external dependence on agricultural products 
+has intensified because the increasing demand cannot be met by a decreasing domestic 
+agricultural production capacity which is due to several reasons, such as shrinkage of agricultural 
+land, increasing migration to urban spaces from rural areas where agricultural production is 
+densely located, and dramatic increase in the cost of inputs for agricultural production. 
+Therewithal, Turkey, which cannot meet its increasing electricity demand due to the deprivation 
+of conventional resources used to generate energy, such as coal, oil, and natural gas, has also 
+become foreign-dependent on energy. Through its implementation, the proposed project activity 
+will contribute to reducing Turkey's foreign dependency by generating renewable energy out of 
+
+
+===== PAGE 17 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+17 
+municipal wastes. In addition, as an LFG- base d renewable energy technology implementation, 
+the proposed project activity will achieve higher levels of economic productivity; hence, increasing 
+the annual growth rate of real GDP per employed person. Moreover, it will increase the region's 
+employment capacity while decreasing the unemployment rate.  
+SDG Goal 13: Climate Action : The proposed project activity will reduce GHG emissions by 
+capturing and utilizing methane, one of the most potent GHGs triggering climate change. It is 
+estimated that the average annual emission reduction that the proposed Project will generate is 
+around 76,729 tCO2e .  
+ 
+ Sustainable Development Contributions Activity Monitoring 
+To be provided at a later stage.  
+ 
+
+
+===== PAGE 18 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+18 
+Table 1: Sustainable De velopment Contributions 
+Row number 
+SDG Target 
+SDG Indicator Net Impact on SDG Indicator Current Project Contributions Contributions Over Project Lifetime 
+Sequential row 
+number 
+SDG Target number 
+Number and text of 
+SDG indicator or, if 
+no official SDG 
+indicator is 
+applicable, user-
+defined indicator 
+Indicate the project’s contribution 
+to the SDG Indicator (implemented 
+activities to increase or decrease) 
+Brief description of the quantifiable 
+impact of the project’s activities 
+related to the SDG indicator, 
+during the monitoring period. 
+Brief description of the cumulative quantifiable 
+impact of the project’s activities related to the 
+SDG indicator, over the project lifetime.  
+1) 7.2  Amount of 
+Renewable energy 
+supplied to the 
+power grid 
+Implemented activities to 
+increase 
+55,304 MWh of electricity from 
+renewable sources has been 
+supplied to the power grid during 
+the reporting period.  
+It was estimated that the project will 
+generate 445,410 MWh over the first 
+crediting period .  
+2) 8.5 Numbers of job 
+opportunities 
+Provided by the 
+project  
+Implemented activities to 
+increase  
+46 people have been employed 
+by the project as long-term 
+employees. 
+46 people have been employed by the 
+project as long-term employees by end of 
+the reporting period.  
+3) 13.0 Tonnes of 
+greenhouse gas 
+emissions 
+avoided or 
+removed  
+Implemented activities to 
+increase 
+The project has achieved a total 
+GHG emission reduction of 
+78,738 tCO2e during the 
+reporting period.  
+The project has achieved an accumulated 
+GHG emission reduct ion of 537,103.83 
+tCO2e 1st monitoring period by end of the 
+reporting period.  
+
+
+===== PAGE 19 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+19 
+1.18 Additional Information Relevant to the Project  
+Leakage Management 
+Leakage emissions are considered  as per the applicable tool. 
+Commercially Sensitive Information  
+No commercially sensitive information has been excluded from the public version of the project 
+description. 
+Further Information 
+There is no further information to be shared.  
+2 SAFEGUARDS 
+2.1 No Net Harm 
+The Ministry of Environment and Urbanization has authorized the Environmental Impact 
+Assessment (EIA) Report. According to Turkish ru les and regulations, an EIA's permission may 
+only be granted if the project in question has no detrimental effects on the environment or the 
+economy, thus the project has no net harm. All kinds of preventive measures will be taken to 
+minimize the odor, dust, leachate, gas and similar negative effects that may arise from the 
+facility. These preventive measures are explained in Environmental Impact Assessment Report 
+in further detail. The landfill floor will be constructed in accordance with the provisions of the 
+"Regulation on the Landfilling of Wastes" and th e Circular on the Preparation of the Sanitary 
+Landfills Implementation Project, numbered 2018/15, which was published in the Official 
+Gazette dated 26.03.2010 and number ed 27533. A letter of confor mity will be obtained from 
+the relevant institution regarding the impermeabi lity of the sealed floors and the impermeable 
+pools throughout the project. If it is determined that the springs, fountains, groundwaters and 
+boreholes in the vicinity of the activity area are adversely affected in terms of water quantity 
+and quality, the activity will be stopped immediat ely, and the project will be terminated, and any 
+damage will be borne by the activity owner.  
+2.2 Local Stakeholder Consultation 
+Within the scope of the Enviro nmental Impact Assessment Regulation, which was published in 
+the Official Gazette dated 25/11/2014 and numbered 29186, a public participation meeting 
+was held at the place and date determined by the Provincial Directorate of Environment and 
+Urbanization in order to inform the public about the investment and to receive their opinions 
+and suggestions regarding the project. The Public Participation Meeting was held on 
+12/12/2019, under the presidency of İzmir Provincial Directorate of Environment and 
+
+
+===== PAGE 20 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+20 
+Urbanization, in Sindel District, District Coffeehouse. Please note that the photo of the meeting 
+is given below. 
+ 
+Figure 2. Public Participation Meeting  
+Before the meeting date, the meeting was announ ced in both local and regional newspapers. 
+The newspaper announcements are given in the appendix. 
+During the Public Participation Meeting, th e environmental impacts of the Project were 
+explained by the company representative who pr epared the EIA report and the questions were 
+answered. Information about the project was given with a visual presentation which included 
+the environmental impacts that will occur during the construction and operation phases and 
+the precautions to be taken. 
+Logbooks will be used for continuous feedback from local stakeholders. A logbook was left to 
+the Mukhtar where complaints and wishes can be conveyed. The Mukhtar will be visited and 
+checked regularly. 
+2.3 Environmental Impact 
+An environmental impact assessment dated in  20/08/2020 was prepared to assess the 
+environmental effects of the project activity. The report has been prepared in accordance with 
+Turkey’s national standards. Therefore, the pr oject is implemented according to the national 
+laws and regulations if the environmental precauti ons stated in the report  are applied. EIA has 
+been conducted to assess all potential impacts and minimize through measures adopted. 
+
+
+
+===== PAGE 21 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+21 
+A public participation meeting was held on 12/12/2019, within the scope of the Environmental 
+Impact Assessment Regulation, which was published in the Official Gazette dated 25/11/2014 
+and numbered 29186. The meeting’s purpose was to inform the public about the investment 
+and to receive their opinions and suggestions regarding the project. 
+2.4 Public Comments 
+There was great interest to the Public Participation Meeting held regarding the project. The 
+meeting was started by İzmir Provincial Directorate of Environment and Urbanization EIA Branch 
+Manager S. Deniz SEV İMOĞLU. During the meeting, the presentation was made by the EIA 
+Report Expert regarding the characteristics and environmental effects of the project was 
+completed, and the public's opinions and sugge stions were received after the presentation. 
+During the meeting; 
+ It was asked whether if similar facilities exist elsewhere in Turkey, and it was informed 
+that the largest facility in this regard is in Ankara, Istanbul and Antalya. 
+ It has been said that there is no such thing as clean energy and that somehow the 
+environment is harmed; Regarding this issue, it has been stated that no waste will be 
+incinerated within the scope of the project, energy will be obtained from the methane 
+gas that will be generated and there will be no environmental impact like the 
+incineration plants. 
+ It was asked whether there is any data on how much methane gas will be generated in 
+the facility, and it was stated that methane gas that will be generated during the 
+storage of garbage will be combusted, thus preventing the release of methane gas to 
+the atmosphere. 
+ It has been stated that the local people ha ve concerns about the formation of an odor 
+originating from the facilities, and it has been  stated that the facilities will be planned 
+in a completely closed manner, they will be made much better than the current 
+situation and all necessary precautions will be taken. 
+The meeting was ended without any problems by the İzmir Directorate of Environment and 
+Urbanization and the meeting was recorded in the minutes.  
+2.5 AFOLU-Specific Safeguards 
+Not applicable since the project is a non-AFOLU project. 
+3 APPLICATION OF METHODOLOGY 
+3.1 Title and Reference of Methodology  
+
+
+===== PAGE 22 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+22 
+Sectoral scopes:  01 (Energy Industry – Renewable /Non-renewable Sources) and 13 (Waste 
+handling and disposal) 
+Methodology: ACM0022: Alternative waste treatment processes --- Version 3.0 and ACM0001: 
+Flaring or use of landfill gas --- Version 19.0 (Superposed) 
+Tools: “TOOL11: Assessment of the validity of the or iginal/current baseline and update of the 
+baseline at the renewal of the crediting period”; 
+“TOOL02: Combined tool to identify the baseline scenario and demonstrate additionality”; 
+“TOOL06: Project emissions from flaring”; 
+“TOOL05: Baseline, project and/or leakage em issions from electricity consumption and 
+monitoring of electricity generation”; 
+“TOOL03: Tool to calculate project or leakage CO2 emissions from fossil fuel combustion”; 
+“TOOL09: Determining the baseline efficiency of thermal or electric energy generation 
+systems”. 
+“TOOL04: Emissions from solid waste disposal sites”; 
+“TOOL13: Project and leakage emissions from composting”; 
+“TOOL14: Project and leakage emissi ons from anaerobic digesters”; 
+“TOOL08: Tool to determine the mass flow of a greenhouse gas in a gaseous stream” 
+“TOOL32: Positive lists of technologies” Version 04.0 
+3.2 Applicability of Methodology 
+Applicability of ACM0022: Alternative waste treatment processes --- Version 3.0 
+Applicability Condition Justification 
+
+
+===== PAGE 23 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+23 
+3. The methodology applies to project 
+activities that install and operate new 
+plants for the treatment of fresh waste 
+through any combination of the 
+following processes: 
+(a) Composting process under 
+aerobic conditions; 
+(b) Anaerobic digestion with biogas 
+recovery and flaring and/or its 
+use; 
+(c) Co-composting of wastewater in 
+combination with solid waste; 
+(d) Anaerobic co-treatment of 
+wastewater in combination with 
+solid waste; 
+(e) Mechanical/thermal treatment 
+process to produce refuse-
+derived fuel (RDF) or stabilized 
+biomass (SB) that is produced 
+within the project boundary and 
+its use
+1F2 ; 
+(f) Gasification process to produce 
+syngas and its use; 
+(g) Incineration of fresh waste for 
+the generation of 
+thermal/electric energy. 
+(h) The following conditions apply 
+to all project activities using this 
+methodology:  
+(i) The project plant only treats 
+fresh waste/wastewater for 
+which emission reductions are 
+claimed, except for cases 
+involving composting, co-
+composting and anaerobic 
+digestion; 
+(j) Neither the fresh waste nor the 
+products from the project plant 
+are stored on-site under 
+anaerobic conditions; 
+(k) Any wastewater discharge 
+resulting from the project 
+activity is treated in accordance 
+with applicable regulations; 
+Fresh waste is separated, and 
+the 
+biodegradable wastes is taken to the 
+Biomethanization Facility whereas the 
+remaining wastes is sent to the existing 
+sanitary landfill. Other waste treatment 
+methods are not a part of the project 
+activity.  
+
+
+===== PAGE 24 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+24 
+(l) The project activity does not 
+reduce the amount of waste 
+t h a t  w o u l d  b e  r e c y c l e d  i n  t h e  
+absence of the project activity.  
+This shall be justified and 
+documented in the clean 
+development mechanism 
+project design document (CDM-
+PDD); 
+(m) When applicable regulations 
+mandate any waste treatment 
+process implemented under the 
+project activity, the rate of 
+compliance with such 
+regulations for the treatment 
+process is below 50 per cent
+2F3; 
+(n) Hazardous wastes/wastewater 
+are not eligible under this 
+methodology.
+ 
+ 
+2  The methodology  is not applicable  to project activities  using RDF produced outside of the project boundary. 
+3  Supporting  evidence may include official studies, reports and certification  from municipal  authorities.  
+
+
+===== PAGE 25 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+25 
+4. The methodology is only applicable if 
+the baseline scenario is: 
+(a) The disposal of the fresh waste 
+in a SWDS with or without a 
+partial LFG capture system (M2 
+or M3)
+3F4; 
+(b) In the case of co-composting or 
+co-treatment of wastewater in 
+an anaerobic digester, the 
+treatment of organic 
+wastewater in either an existing 
+or new anaerobic lagoon or 
+sludge pit without methane 
+recovery (W1 or W4); 
+(c) In the case of electricity 
+generation, the electricity is 
+generated in an existing/new 
+captive fossil fuel fired power-
+only plant, captive cogeneration 
+plant and/or the grid (P2, P4 or 
+P6); 
+(d) In the case of heat generation, 
+the heat is generated in an 
+existing/new fossil fuel fired 
+cogeneration plant, boiler or air 
+heater (H2 or H4).
+4F5 
+Prior to the proposed project activity, the 
+wastes were left to decay within landfill site 
+and methane was emitted to the 
+atmosphere without any control or 
+utilization. 
+5. Specific applicability cond itions for the 
+different processes are provided in 
+Table 2 in ACM0022. 
+Anaerobic digestion is applicable to the 
+project activity. 
+Applicability of ACM0001: Flaring or use of landfill gas --- Version 19.0 
+Applicability Condition Justification 
+ 
+4  Project participants  shall demonstrate  that sufficient  landfill capacity would be available to dispose waste at a SWDS with 
+a comparable  annual waste acceptance  rate and with the same operating lifetime as the project activity. 
+5  When heat is generated with a product or by‐product from the project activity and used in the cement industry, project 
+participants  should refer to specific methodologies  applicable  to the cement sector. 
+
+
+===== PAGE 26 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+26 
+6. The methodology is applicable under 
+the following conditions:  
+(a) Install a new LFG 
+capture system in an 
+existing or new 
+(Greenfield) SWDS 
+where no LFG capture 
+system was or would 
+have been installed 
+prior to the 
+implementation of the 
+project activity; or 
+(b) Make an investment 
+into an existing LFG 
+capture system to 
+increase the recovery 
+rate or change the use 
+of the captured LFG, 
+provided that: 
+(i) The captured LFG was 
+vented or flared and not 
+used prior to the 
+implementation of the 
+project activity; and 
+(ii) In the case of an existing 
+active LFG capture 
+system for which the 
+amount of LFG cannot be 
+collected separately from 
+the project system after 
+the implementation of 
+the project activity and its 
+efficiency is not impacted 
+on by the project system: 
+historical data on the 
+amount of LFG capture 
+and flared is available; 
+(c) Flare the LFG and/or 
+use the captured LFG in 
+any (combination) of 
+the following ways: 
+(i) Generating electricity; 
+(ii) Generating heat in a 
+boiler, air heater or kiln 
+(brick firing only) or glass 
+melting furnace;
+5F6 and/or 
+Prior to the project activity, there was no 
+LFG capture system in SWDS.  
+
+
+===== PAGE 27 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+27 
+(iii) Supplying the LFG to 
+consumers through a 
+natural gas distribution 
+network; 
+(iv) Supplying 
+compressed/liquefied 
+LFG to consumers using 
+trucks;6F7 
+(v) Supplying the LFG to 
+consumers through a 
+dedicated pipeline; 
+(d) Do not reduce the 
+amount of organic 
+waste that would be 
+recycled in the absence 
+of the project activity. 
+ 
+ 
+6  For claiming emission reductions  for other heat generation  equipment (including  other products in kilns), project participants  
+may submit a revision to this methodology.  
+7  In case other means of transportation  are used a revision to this methodology  may be requested.  
+
+
+===== PAGE 28 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+28 
+7. The methodology is only applicable if 
+the application of the procedure to 
+identify the baseline scenario confirms 
+that the most plausible baseline 
+scenario is: 
+(a) Atmospheric release of the LFG 
+or capture of LFG and 
+destruction thro ugh flaring to 
+comply with regulations or 
+contractual requirements, to 
+address safety and odour 
+concerns, or for other reasons; 
+and 
+(b) In the case that the LFG is used 
+in the project activity for 
+generating electricity and/or 
+generating heat in a boiler, air 
+heater, glass melting furnace or 
+kiln: 
+(c) For electricity generation: that 
+electricity would be generated 
+in the grid or in captive fossil 
+fuel fired power plants; and/or 
+(d) For heat generation: that heat 
+would be generated using fossil 
+fuels in equipment located 
+within the project boundary; 
+(e) In the case of LFG supplied to 
+the end-user(s) through natural 
+gas distribution network, trucks 
+or the dedicated pipeline, the 
+baseline scenario is assumed 
+to be displacement of natural 
+gas. 
+(f) In the case of LFG from a 
+Greenfield SWDS, the identified 
+baseline scenario is 
+atmospheric release of the LFG 
+or capture of LFG in a managed 
+SWDS and destruction through 
+flaring to comply with 
+regulations or contractual 
+requirements, to address safety 
+and odour concerns, or for 
+other reasons. 
+Prior to the proposed project activity, the 
+wastes were left to decay within landfill site 
+and methane was emitted to the 
+atmosphere without any control or 
+utilization. 
+ 
+
+
+===== PAGE 29 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+29 
+ 
+Regarding to tool—“Positive lists of technologies” (Version 04.0): 
+Applicability Condition Justification 
+The use of this methodological tool is not 
+mandatory for the project participants of a 
+CDM project activity or CDM POA for 
+demonstrating their additionality. 
+ 
+This methodological tool shall be applied in 
+conjunction with a small-scale or large-scale 
+methodology which refers to this tool. 
+ 
+The positive lists as contained in section 5 of 
+this tool are valid up to 10 March 2025. 
+Notwithstanding the provisions on the validity 
+of new, revised and previous versions of 
+methodologies and methodological tools in the 
+“Procedure: Development, revision and 
+clarification of baseline and monitoring 
+methodologies and methodological tools”, 
+there will be no grace period for the application 
+of this tool and the validity of the positive list 
+after this date, including in cases where 
+further technologies are added to the positive 
+list through revisions of this tool before this 
+date. 
+Applicable. The project collects the LFG 
+from the landfill site and uses it to 
+generate the electricity, with a total 
+capacity of 9,898 MW, which conforms to 
+5.1.1 (a) “The LFG is used to generate 
+electricity in one or several power plants 
+with a total nameplate capacity that equals 
+or is below 10 MW”. 
+ 
+3.3 Project Boundary 
+According to the ACM0022, the spatial extent of the project boundary is the SWDS where the 
+waste is disposed of in the baseline, anaerobic lagoons or sludge pits treating organic 
+wastewater in the baseline, and the site of the alternative waste treatment process(es). The 
+boundary also includes on-site electricity and/or heat generation and use, on-site fuel use and 
+the wastewater treatment plant used to treat the wastewater by-products of the alternative 
+waste treatment process(es). The project boun dary does not include facilities for waste 
+collection and transport. 
+In the case that the project provides electricity to a grid, then the spatial extent of the project 
+boundary will also include those plants connected to the energy system to which the plant is 
+
+
+===== PAGE 30 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+30 
+connected. If upgraded biogas is fed to a natural gas distribution system, then the natural gas 
+distribution system is also  included in the boundary. 
+ 
+Source Gas Included? Justification/Explanation 
+Baseline 
+Emissions 
+from heat 
+generation 
+CO2 No Excluded for simplification. This is conservative. 
+CH4 No Excluded for simplification. This is conservative. 
+N2O No Excluded for simplification. This emission source is 
+assumed to be very small. 
+Emissions at 
+the SWDS 
+CO2 Yes The major source of emissions in the baseline. 
+CH4 No N2O emissions are smal l compared to CH4 
+emissions from landfills. Exclusion of this gas is 
+conservative. 
+N2O No CO2 emissions from the decomposition of fresh 
+waste are not accounted for. 
+Emissions 
+from 
+anaerobic 
+lagoons or 
+sludge pits 
+CO2 No CO2 emissions from biomass source are considered 
+GHG neutral. 
+CH4 Yes Methane emission from anaerobic process. 
+N2O No Not significant. Excluded for simplification and 
+conservativeness. 
+Emissions 
+from 
+electricity 
+generation 
+CO2 Yes Major source emissions, si nce electricity generation 
+is included in the project activity and is sent to the 
+grid. 
+CH4 No Excluded for simplification. This is conservative. 
+N2O No Excluded for simplification. This is conservative. 
+Emissions 
+from use of 
+natural gas 
+CO2 No Excluded for simplification. This is conservative. 
+CH4 No Excluded because the project activity does not 
+include supply of upgraded biogas through a natural 
+gas distribution network. 
+N2O No Excluded for simplification. This is conservative. 
+Project 
+Emissions 
+from on-site 
+CO2 No Negligible, excluded for simplification. This emission 
+source is assumed to be very small. 
+
+
+===== PAGE 31 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+31 
+Source Gas Included? Justification/Explanation 
+fossil fuel 
+consumption 
+due to the 
+project 
+activity other 
+than for 
+electricity 
+generation 
+CH4 No Excluded for simplification. This emission source is 
+assumed to be very small. 
+N2O No Excluded for simplification. This emission source is 
+assumed to be very small. 
+Emissions 
+from on-site 
+electricity 
+use 
+CO2 Yes May be an importan t emission source 
+CH4 No Excluded for simplification. This emission source is 
+assumed to be very small. 
+N2O No Excluded for simplification. This emission source is 
+assumed to be very small. 
+Emissions 
+from the 
+waste 
+treatment 
+processes 
+CO2 No CO2 emissions from incine ration, gasification or 
+combustion of fossil-based waste shall be included. 
+CO2 emissions from the decomposition or 
+combustion of fresh waste are not accounted. This 
+source is excluded since the project activity does 
+not involve incineration, gasification or combustion 
+of fossil-based waste. 
+CH4 Yes CH4 leakage from the anaerobic digester and 
+incomplete combustion in the flaring process are 
+potential sources of project emissions.  
+N2O No N2O may be emitted from composting, incineration, 
+syngas produced and RDF/SB combustion, excluded 
+since the project activity does not include 
+composting, incineration, syngas production or 
+RDF/SB. 
+Emissions 
+from 
+wastewater 
+treatment 
+CO2 No CO2 emissions from the decomposition of fresh 
+waste are not accounted. 
+CH4 No CH4 emissions from anaerobic treatment of 
+wastewater are accounted for. Aerobic treatment of 
+wastewater shall not resu lt in CH4 emissions. 
+However, this emission source is excluded since the 
+project activity does not include wastewater 
+treatment. 
+N2O No Excluded for simplification. This emission source is 
+assumed to be very small. 
+
+
+===== PAGE 32 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+32 
+ 
+Figure 3. Project Diagram  
+3.4 Baseline Scenario 
+According to ACM0022: Alternative waste treatment processes --- Version 3.0, the following 
+alternatives or combinations of these alternatives shall, inter alia, be considered for the 
+baseline scenario of the fresh waste treatment: 
+(a) M1: The project activity without being regi stered as a CDM project activity (i.e. any 
+(combination) of the waste treatment processes listed in Table 2); 
+(b) M2: Disposal of the fresh waste in a SWDS with a partial capture of the LFG and flaring 
+of the captured LFG; 
+(c) M3: Disposal of the fresh waste in a SWDS without a LFG capture system; 
+(d) M4: Part of the fresh fraction of the soli d waste is recycled and not disposed in the 
+SWDS; 
+(e) M5: Part of the fresh fraction of the solid waste is treated aerobically and not disposed 
+in the SWDS; 
+(f) M6: Part of the organic fraction of the solid waste is incinerated and not disposed in 
+the SWDS; 
+
+
+
+===== PAGE 33 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+33 
+(g) M7: Part of the organic fraction of the solid waste is gasified and not disposed in the 
+SWDS; 
+(h) M8: Part of the organic fraction of the solid waste is treated in an anaerobic digester 
+and not disposed in the SWDS; 
+(i) M9: Part of the organic fraction of the solid waste is mechanically or thermally treated 
+to produce RDF/SB and not disposed in the SWDS. 
+There is no national regulation which would requ ire the recovery or flaring of the LFG emitted 
+from landfill sites. The relevant environmental legislation does not force municipalities to 
+effectively control LFG emissions from landfills; henc e, it is rather a tender for the rights to use 
+the site for power generation purposes. The LFG is  not being flared. Thus, baseline scenario M3 
+is applicable. 
+For electricity generation the following alternatives or combinations of these alternatives, inter 
+alia, shall be considered: 
+(a) P1: Electricity generated as an output of one of the waste treatment processes listed in 
+Table 1, not undertaken as a CDM project activity; 
+(b) P2: Use of an existing or construction of a new on-site or off-site fossil fuel fired 
+cogeneration plant; 
+(c) P3: Existing or new construction of an on -site or off-site renewable based cogeneration 
+plant; 
+(d) P4: Existing or new construction of an on-sit e or off-site fossil fuel fired electricity plant; 
+(e) P5: Existing or new construction of an on-site or off-site renewable based electricity 
+plant; 
+(f) P6: Electricity generation in existing an d/or new grid-connected electricity plants. 
+P5 is a plausible scenario for the project activity. 
+ 
+3.5 Additionality 
+According to the section 5.3.1 of the methodology ACM0001, the project chooses simplified 
+procedures to demonstrate additionality. Tool 32  (Positive lists of technologies) is used to 
+demonstrate additionality.  
+Section 5 of this tool contains a positive list  of technologies, which are deemed automatically 
+additional if project activities exclusively appl y the technologies listed and demonstrate that 
+they fulfil the related conditions . Paragraph 11 of the tool specifies landfill gas recovery and its 
+gainful use: 
+
+
+===== PAGE 34 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+34 
+“The project activities and PoAs at new or existing landfills (greenfield or brownfield) are 
+deemed automatically additional, if it is demons trated that prior to the implementation of the 
+project activities and PoAs the landfill gas (LFG) was only vented and/or flared (in the case of 
+brownfield projects) or would have been only vented and/or flared (in the case of greenfield 
+projects) but not utilized for energy generation, and that under the project activities and PoAs 
+any of the following conditions are met: 
+• The LFG is used to generate electricity in on e or several power plants with a total nameplate 
+capacity that equals or is below 10 MW; 
+• The LFG is used to generate heat for internal or external consumption; 
+• The LFG is flared. 
+Prior to the implementation of th e project, the wastes were left to decay within landfill site and 
+methane was emitted to the atmosphere without any control or utilization. 
+It is concluded that the project meets the re quirements of Tool 32 and is additional. 
+3.6 Methodology Deviations 
+There are no methodology deviations. 
+4 IMPLEMENTATION STATUS 
+4.1 Implementation Status of the Project Activity 
+ 
+The project, Bergama Integrated Solid Waste Ma nagement Facility and Electricity Generation 
+Facility (10.157 MWm / 9.898 MWe / 13.895) is in Izmir Province, Bergama District, Ka şıkçı 
+Neighborhood, and owned and operated by İzmir Doğu Star Elektrik Üretim A. Ş.. 
+The project site is located within the boundari es of the II. Class Bergama Solid Waste Landfill 
+Facility. It is planned to integrate the facilities to be established within the scope of the project 
+and the existing II. Class Solid Waste Landfill Facility. 
+Waste acceptance to the sanitary landfill started in 2011. The facility has two lots. Currently, 
+only municipal wastes from Bergama and Dikili dist ricts are disposed of with the regular landfill 
+method in the mentioned facility. In the planned situation within the scope of the project, waste 
+will be brought to the site from Be rgama District, Dikili District, K ınık District and Alia ğa District. 
+After the mixed municipal wastes coming to the fa cility are separated according to their types at 
+the Mechanical Separation Facility, the biodegradable wastes will be taken to the 
+Biomethanization Facility, the remaining wastes will  be sent to the existing sanitary landfill and 
+the recyclable wastes will be sent to licensed companies. The biogas to be obtained from the 
+Biomethanization Facility and the methane gas to be extracted from the sanitary landfill will be 
+
+
+===== PAGE 35 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+35 
+converted into electrical energy at the Electric ity Generation Facility and transferred to the 
+interconnected system to generate income. In ad dition, the solid fermented product obtained in 
+the Biomethanization Facility will be sent to the Compost Facility and can be offered to the 
+market if the compost product to be obtained meets the standards. In this way, the waste will 
+be stabilized, the amount of waste to be stored will be minimized, electricity and heat energy 
+will be obtained and the negative effects of wastes on the environment will be eliminated. 
+In line with the sustainable integrated wast e management planned within the scope of the 
+project, the packaging wastes to be collected se parately at the source will be sent to the 
+collection and sorting facilities  licensed by the Ministry of Environment and Urbanization, and 
+they will be sorted according to their types there. Packaging wastes to be collected separately 
+at their source will not be accepted to the facility or any sanitary landfill. 
+Estimated electricity generation and correspo nding annual estimated emission reduction 
+values are 74,235 MWh and 76,729 tCO2 respectively. The starting date of the project activity 
+shall be considered as 31/10/2020 which is th e provisional acceptance date of the first two 
+gas engines.  
+The Ministry of Environment and Urbanization has authorized the Environmental Impact 
+Assessment (EIA) Report. According to Turkish ru les and regulations, an EIA's permission may 
+only be granted if the project in question has no detrimental effects on the environment or the 
+economy, thus the project has no net harm. All kinds of preventive measures will be taken to 
+minimize the odor, dust, leachate, gas and similar negative effects that may arise from the 
+facility. These preventive measures are explained in Environmental Impact Assessment Report 
+in further detail. 
+ 
+5 ESTIMATED GHG EMISSION 
+REDUCTIONS AND REMOVALS 
+5.1 Baseline Emissions 
+Baseline emissions are determined as follows: 
+𝐵𝐸௬ ൌ෍ ൫ 𝐵 𝐸஼ுସ,௧,௬൅𝐵 𝐸ௐௐ,௧,௬൅𝐵 𝐸ாே,௧,௬൅𝐵 𝐸ேீ,௧,௬൯ൈሺ1
+௧
+െ𝑅 𝐴 𝑇 𝐸௖௢௠௣௟௜௔௡௖௘,௧ሻ 
+Equation (1) 
+Where: 
+𝐵𝐸௬ = Baseline emissions in year y (t CO2e) 
+
+
+===== PAGE 36 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+36 
+𝐵𝐸஼ுସ,௧,௬ = Baseline emissions of methane from the SWDS in year y 
+(t CO2e) 
+𝐵𝐸ௐௐ,௧,௬ = Baseline methane emissions from anaerobic treatment of the 
+wastewater in open anaerobic lagoons or of sludge in sludge 
+pits in the absence of the project activity in year y (t CO
+2e)  
+𝐵𝐸ாே,௧,௬ = Baseline emissions associated with energy generation in year y 
+(t CO2) 
+𝐵𝐸ேீ,௧,௬ = Baseline emissions associated with natural gas use in year y 
+(t CO2) 
+𝑅𝐴𝑇𝐸௖௢௠௣௟௜௔௡௖௘,௧ = Discount factor to account for the rate of compliance of a 
+regulatory requirement that mandates the use of alternative 
+waste treatment process t 
+7F
+8 
+𝑡 = Type of alternative waste treatment process  
+ 
+BEWW,t,y and BENG,t,y are assumed to be zero, since the project activity does not include 
+wastewater treatment or biogas sent to the gas network. 
+There is currently no regulation on requiremen t that mandates the use of alternative waste 
+treatment option in Turkey, thus RATEcompliance equals 0.  
+As per Tool 04, the amount of methane generated from disposal of waste at the SWDS is 
+calculated based on a first order decay (FOD) model. The model differentiates between the 
+different types of waste j with respective constant decay rates (k j) and fractions of degradable 
+organic carbon (DOC j). 
+Application B is used for baseline emissions for biomethanization facility, according to the 
+ACM0022. The methane is generated from waste disposed or avoided from disposal during the 
+crediting period. In these cases, the tool can be applied for both ex ante and ex post estimation 
+of emissions. These project activities may appl y the simplified approach detailed in 0 when 
+calculating baseline emissions. 
+Application A is used for baseline emissions fo r the portion of waste that is disposed with 
+sanitary landfill. Same tool applies with Application B, however some of the default values 
+differ. 
+The amount of methane generated from disposal of waste at the SWDS is calculated for year y 
+with the following equation: 
+ 
+8  Determined  once for each crediting period, based on the most recent data available  at the time of submission  of the 
+CDM‐PDD to the DOE for validation.  
+
+
+===== PAGE 37 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+37 
+𝐵𝐸஼ுସ,ௌௐ஽ௌ,௬ൌ𝑗௬ൈ൫1 െ𝑓௬൯ൈ𝐺 𝑊 𝑃஼ுସൈሺ1 െ𝑂 𝑋ሻൈ16
+12 ൈ𝐹ൈ𝐷 𝑂 𝐶௙,௬
+ൈ𝑀 𝐶 𝐹௬
+ൈ෍෍ ቀ𝑊௝,௫ൈ𝐷 𝑂 𝐶௝ൈ𝑒ି௞ೕൈሺ௬ି௫ሻൈ൫1 െ𝑒ି௞ೕ൯ቁ
+௝
+௬
+௫ୀଵ
+ 
+Equation (2) 
+Where: 
+𝐵𝐸஼ுସ,ௌௐ஽ௌ,௬ = 
+Baseline, project or leakage methan e emissions occurring in year y 
+generated from waste disposal at a SWDS during a time period ending 
+in year y (t CO2e/yr.) 
+𝑗௬ = Model correction factor to account for model uncertainties for year y 
+𝑓௬ = 
+Fraction of methane captured at the SWDS and flared, combusted or 
+used in another manner that prevents the emissions of methane to the 
+atmosphere in year y 
+𝐺𝑊𝑃஼ுସ = Global Warming Potential of methane 
+OX   = 
+Oxidation factor (reflecting the amount of methane from SWDS that is 
+oxidized in the soil or other material covering the waste) 
+𝐹   = Fraction of methane in the SWDS gas (volume fraction) 
+𝐷𝑂𝐶௙,௬ = 
+Fraction of degradable organic carbon (DOC) that decomposes under 
+the specific conditions occurring in the SWDS for year y (weight fraction) 
+𝑀𝐶𝐹௬   = Methane correction factor for year y 
+𝑊௝,௫   = 
+Amount of solid waste type j disposed  or prevented from disposal in the 
+SWDS in the year x (t) 
+𝐷𝑂𝐶௝   = 
+Fraction of degradable organic carbon in the waste type j (weight 
+fraction) 
+k   = Decay rate for the waste type j (1 / yr) 
+j   = Type of residual waste or types of waste in the MSW 
+x   = 
+Years in the time period in which waste is disposed at the SWDS, 
+extending from the first year in the time period (x = 1) to year y (x = y) 
+y = 
+Year of the crediting period for which methane emissions are calculated 
+(y is a consecutive period of 12 months) 
+ 
+The model correction factor ( y) depends on the uncertainty of the parameters used in the FOD 
+model. It is determined by using Option 1 ( y=default) 
+
+
+===== PAGE 38 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+38 
+Since the project activity involves only one type of waste, W j,x = Wx and the further procedures 
+do not need to be applied (e.g. waste sampling is not required). 
+DOCf,y as well as MCF y are chosen as the default value given in the methodological tool. 
+(DOCf,y=DOCf,default and MCFy=MCFdefault) 
+ 
+𝐵𝐸ாே,௬ ൌ𝐵 𝐸ா஼,௬൅𝐵 𝐸ுீ,௬ Equation (1) 
+Where: 
+𝐵𝐸ாே,௬ = Baseline emissions associated with energy generation in year y 
+(t CO2) 
+𝐵𝐸ா஼,௬ = Baseline emissions associated with electricity generation in 
+year y (t CO2) 
+𝐵𝐸ுீ,௬ = Baseline emissions associated with heat generation in year y 
+(t CO2) 
+The baseline emissions associated with electricity generation in year y (BEEC,y) shall be 
+calculated using  “TOOL05: Baseline, project and/or leakage emissions from electricity 
+consumption and monitoring of electricity generation”. When applying the tool: 
+The electricity sources  k in the tool correspond to the source s of electricity generated identified 
+in the selection of the most pl ausible baseline scenario; and 
+EC
+BL,k,y in the tool is equivalent to the net amount  of electricity generated by the alternative 
+waste treatment process t and exported to the grid or displaci ng fossil fuel fired captive energy 
+plant in year y (EGt,y). 
+BEHG,y is assumed zero, since heat generation is ex cluded in project boundary for conservative 
+approach. 
+The project consumes electricity from the grid therefore the tool is applicable. (Scenario A). 
+Generic approach is used when calculating the baseline emissions associated with electricity 
+generation: 
+ 
+𝐵𝐸
+ா஼,௬ ൌ෍ 𝐸 𝐶஻௅,௞,௬ൈ𝐸 𝐹ா௅,௞,௬ൈ൫1 ൅𝑇 𝐷 𝐿௞,௬൯
+௞
+ 
+Where: 
+𝐸𝐶஻௅,௞,௬ ൌ Quantity of electricity that would be consumed by the baseline electricity 
+consumption source k in year y (MWh/yr)  
+𝐸𝐹ா௅,௞,௬ൌ Emission factor for electricity generation for source k in year y (tCO2/MWh)  
+
+
+===== PAGE 39 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+39 
+𝑇𝐷𝐿௞,௬ൌ Average technical transmission and distribution losses for providing electricity to 
+source k in year y 
+ 
+Emission factor for electricity generation for the proposed project activity is taken as the 
+national EF published by Turkis h Republic Ministry of energy. 
+ 
+It is defined that Combined margin emissions calculated by source type can be used in the 
+greenhouse gas emission (GHG) type reduction calculations to be achieved by generating 
+renewable energy electricity generation. 
+ 
+5.2 Project Emissions 
+The project emissions in year y are calculated  for each alternative waste treatment process 
+implemented in the project activity as follows: 
+𝑃𝐸௬ ൌ𝑃 𝐸஼ைெ௉,௬൅𝑃 𝐸஺஽,௬൅𝑃 𝐸ீ஺ௌ,௬൅𝑃 𝐸ோ஽ி_ௌ஻,௬൅𝑃 𝐸ூே஼,௬ Equation (2) 
+Where: 
+𝑃𝐸௬ = Project emissions in year y (t CO2e) 
+𝑃𝐸஼ைெ௉,௬ = Project emissions from composting or co-composting in year y 
+(t CO2e) 
+𝑃𝐸஺஽,௬ = Project emissions from anaerobic digestion and biogas 
+combustion in year y (t CO2e) 
+𝑃𝐸ீ஺ௌ,௬ = Project emissions from gasification in year y (t CO2e) 
+𝑃𝐸ோ஽ி_ௌ஻,௬ = Project emissions associated with RDF/SB in year y (t CO2e) 
+𝑃𝐸ூே஼,௬ = Project emissions from incineration in year y (t CO2e) 
+ 
+Since the project activity includes anaerobic digestion and biogas combustion as well as landfill 
+gas combustion, PE COMP,y, PEGAS,y, PERDF,SB,y, and PEINC,y are zero.  
+ 
+PE
+AD,y is calculated according to  “TOOL14: Project and leakage emissions from anaerobic 
+digesters”. When estimating the parameters PEEC,y and PEFC,y in the tool, the sources of 
+electricity and fossil fuel consumption shall in clude processing, upgrading and compressing the 
+biogas into the natural gas network (if this is part of the project activity). 
+ 
+
+
+===== PAGE 40 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+40 
+The project emissions from electricity consumption due to waste treatment process t 
+implemented under the project activity ( PEEC,t,y) shall be calculated using  “TOOL05: Baseline, 
+project and/or leakage emissions from electric ity consumption and moni toring of electricity 
+generation”. When applying the tool: 
+Project emissions shall be calculated for the sources of electricity consumed due to the 
+alternative waste treatment process t, excluding consumption of electricity that was generated 
+by the project activity ( ECt,y); 
+If the project activity consists of more than one alternative waste treatment process, then 
+project participants may choose to monitor electricity consumption for the entire site and then 
+allocate this consumption to one of the different alternative waste treatment processes (e.g. 
+apportionment based on sub-metering data is not required). 
+𝑃𝐸
+ா஼,௬ ൌ෍ 𝐸 𝐶௉௃,௝,௬ൈ𝐸 𝐹ாி,௝,௬ൈ൫1 ൅ 𝑇𝐷𝐿௝,௬൯
+௝
+ 
+Where: 
+𝑃𝐸ா஼,௬ൌ Project emissions from electricity consumption in year y (t CO2 / yr)  
+𝐸𝐶௉௃,௝,௬ ൌ Quantity of electricity consumed by the pr oject electricity consumption source j in 
+year y (MWh/yr) 
+𝐸𝐹ாி,௝,௬ ൌ Emission factor for electricity generation  for source j in year y (t CO2/MWh) 
+𝑇𝐷𝐿௝,௬ ൌ Average technical transmission and distribution losses for providing electricity to 
+source j in year y 
+j ൌ Sources of electricity consumption in the project  
+ 
+As previously mentioned, emission factor for electricity generation for the proposed project 
+activity is taken as the national EF published by Turkish Republic Ministry of energy. 
+ 
+5.3 Leakage 
+𝐿𝐸௬ ൌ𝐿 𝐸஼ைெ௉,௬൅𝐿 𝐸஺஽,௬൅𝐿 𝐸ோ஽ி_ௌ஻,௬ Equation (1) 
+Where: 
+𝐿𝐸௬ = Leakage emissions in the year y (t CO2e) 
+𝐿𝐸஼ைெ௉,௬ = Leakage emissions from composting or co-composting in year y 
+(t CO2e) 
+𝐿𝐸஺஽,௬ = Leakage emissions from anae robic digester in year y (t CO2e) 
+𝐿𝐸ோ஽ி_ௌ஻,௬ = Leakage emissions associated with RDF/SB in year y (t CO2e) 
+
+
+===== PAGE 41 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+41 
+ 
+Leakage emissions associated with composting ( LECOMP,y) are calculated according to  “TOOL13: 
+Project and leakage emissions from composting”. However, since the project activity does not 
+include composting of fresh waste or RDF/SB production, LE
+COMP,y and LERDF_SB,y are zero. In the 
+Project case LEStorage,y is considered zero as the storage lagoon is not un-aerated. 
+No leakage effects are accounted for under the applied methodology. 
+5.4 Estimated Net GHG Emission Reductions and Removals 
+To calculate the emission reductions the project participant shall apply the following equation: 
+𝐸𝑅௬ൌ𝐵 𝐸௬െ𝑃 𝐸௬െ𝐿 𝐸௬ Equation (2) 
+Where: 
+𝐸𝑅௬ = Emissions reductions in year y (t CO2e) 
+𝐵𝐸௬ = Baseline emissions in year y (t CO2e) 
+𝑃𝐸௬ = Project emissions in the year y (t CO2e) 
+𝐿𝐸௬ = Leakage emissions in year y (t CO2e) 
+ 
+Year Estimated 
+baseline 
+emissions or 
+removals 
+(tCO2e) 
+Estimated project 
+emissions or 
+removals 
+(tCO2e) 
+Estimated 
+leakage 
+emissions 
+(tCO2e) 
+Estimated net 
+GHG emission 
+reductions or 
+removals 
+(tCO2e) 
+2020 4,674.03  1,737.38 - 2,936.65 
+2021 39,890.86  10,516.94 - 29,373.93  
+2022 57,483.86  11,056.35 - 46,427.50 
+2023 93,990.82  12,609.55 - 81,381.27 
+2024 102,391.14 12,816.52 - 89,574.61  
+2025 109,925.85 14,193.86 - 95,731.99 
+2026 116,573.77  14,406.01 - 102,167.76  
+2027 101,659.24 12,149.13 - 89,510.11 
+Total  626,589.56   89,485.73 - 537,103.83 
+
+
+===== PAGE 42 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+42 
+6  MONITORING 
+6.1 Data and Parameters Available at Validation 
+ 
+Data / Parameter  RATECOMPLIANCE,t  
+Data unit Fraction  
+Description Rate of compliance with a regulatory requirement to implement 
+the alternative waste treatment t implemented in the project 
+activity  
+Source of data N/A 
+Value applied: 0 
+Justification of choice of 
+data or description of 
+measurement methods 
+and procedures applied 
+There is no regulation in Turkey to mandate the implementation 
+of alternative waste treatment options for anaerobic digestion 
+and mechanical treatment employed for the project activity. “ 
+ Purpose of Data Calculation of baseline emissions 
+Comments - 
+ 
+ 
+Data / Parameter  φ 
+Data unit Dimensionless 
+Description Model correction factor to account for model uncertainties 
+Source of data First order decay model from the “Tool to determine methane 
+emissions avoided from dumping waste at a solid waste disposal 
+site”. 
+Value applied: 0.75 
+Justification of choice of 
+data or description of 
+For baseline emissions: according to the “Tool to determine 
+methane emissions avoided from dumping waste at a solid waste 
+
+
+===== PAGE 43 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+43 
+measurement methods 
+and procedures applied 
+disposal site”. The appropriate factor was taken based on the  
+application of the tool (A).See table below and the climate where 
+the SWDS is located (Dry conditions). 
+ Humid/Wet 
+Conditions 
+Dry Conditions 
+Application A 0.75 0.75 
+Application B 0.85 0.80 
+ 
+ Purpose of Data Calculation of baseline emissions 
+Comments - 
+6.2 Data and Parameters Monitored  
+To be provided at a later stage. 
+Data / Parameter  Management of SWDS  
+Data unit - 
+Description Management of SWDS 
+Source of data Original design of the landfill 
+Description of 
+measurement methods 
+and procedures to be 
+applied 
+Project participants  should refer to the original design of the 
+landfill to ensure that any pr actice to increase methane 
+generation have been occurring prior to the implementation of 
+the project activity. Any change in the management of the SWDS 
+after the implementation of the project activity should be 
+justified by referring to technical or regulatory specifications. 
+Frequency of 
+monitoring/recording Annually 
+Value monitored PO stated that there is no change to the design.  
+Monitoring equipment - 
+QA/QC procedures to be 
+applied - 
+Purpose of the data Calculation of baseline emissions 
+Calculation method - 
+Comments - 
+
+
+===== PAGE 44 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+44 
+ 
+Data / Parameter  EGPJ,y 
+Data unit MWh 
+Description Amount of electricity generated using LFG by the project activity 
+in year y 
+Source of data EPİAŞ (Electricity Market Operator Company) records of 
+settlement notifications 
+Description of 
+measurement methods 
+and procedures to be 
+applied 
+Monitor net electricity generation by the project activity using 
+LFG 
+Frequency of 
+monitoring/recording Continuous measurement every 10 min (24/7) all year and data 
+can be downloaded and saved anytime 
+Value monitored 2020(01/11/2020-31/12/2020): 1,742 MWh 
+2021: 21,136 MWh 
+2022(01/01/2022-30/10/2022): 32,424 MWh 
+Monitoring equipment Calibrated electricity meter 
+QA/QC procedures to be 
+applied Electricity meter is subject to regular (in accordance with 
+stipulation of the meter supplier) maintenance and testing by 
+regulation to ensure accuracy and TE İAŞ (Transmission System 
+Operator) is responsible of calibrating these meters, which is a 
+government-owned corporation. The readings are double 
+checked by the electricity distribution company. The calibration 
+of meter, including the frequency of calibration, will be done in 
+accordance with national standards or requirements set by the 
+meter supplier or requirements set by the grid operators. The 
+accuracy class of the meter is in accordance with the stipulation 
+of the meter supplier and/or as per the requirements set by the 
+grid operators or national requirements. 
+Purpose of the data Calculation of baseline emissions 
+Calculation method - 
+Comments This parameter is required for calculating baseline emissions 
+associated with electricity generation (BEEC,y) using the 
+methodological tool “Baseline, project and/or leakage emissions 
+from electricity consumption and monitoring of electricity 
+generation” 
+ 
+
+
+===== PAGE 45 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+45 
+Data / Parameter  ECPJ,y 
+Data unit MWh 
+Description Amount of electricity consumed by the project activity in year y 
+Source of data EPİAŞ (Electricity Market Operator Company) records of 
+settlement notifications 
+Description of 
+measurement methods 
+and procedures to be 
+applied 
+Sources of consumption shall include, where applicable, 
+electricity consumed for the operation of the LFG capture 
+system, for any processing and upgrading of the LFG, for 
+transportation of the LFG to the flare or other applications 
+(boilers, power generators), for the compression of the LFG into 
+the natural gas network, etc. 
+Frequency of 
+monitoring/recording Continuous measurement and monthly recording 
+Value monitored 2020(01/11/2020-31/12/2020): 1.9 MWh 
+2021: 5.75 MWh 
+2022(01/01/2022-30/09/2022): 2.445 MWh 
+Monitoring equipment Electricity meter 
+QA/QC procedures to be 
+applied Electricity meter is subject to regular (in accordance with 
+stipulation of the meter supplier) maintenance and testing by 
+regulation to ensure accuracy and TE İAŞ (Transmission System 
+Operator) is responsible of calibrating these meters, which is a 
+government-owned corporation. The readings are double 
+checked by the electricity distribution company. The calibration 
+of meter, including the frequency of calibration, will be done in 
+accordance with national standards or requirements set by the 
+meter supplier or requirements set by the grid operators. The 
+accuracy class of the meter is in accordance with the stipulation 
+of the meter supplier and/or as per the requirements set by the 
+grid operators or national requirements. 
+Purpose of the data Calculation of project emissions 
+Calculation method - 
+Comments This parameter is required for calculating project emissions from 
+electricity consumption due to an alternative waste treatment 
+process t PEEC,y) using the me thodological tool “Baseline, 
+project and/or leakage emission s from electricity consumption 
+and monitoring of electricity generation” 
+ 
+
+
+===== PAGE 46 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+46 
+Data / Parameter  Opj,h 
+Data unit h 
+Description Operation of the equipment that consumes the LFG 
+Source of data Project participants 
+Description of 
+measurement methods 
+and procedures to be 
+applied 
+For each equipment unit j using the LFG monitor that the plant is 
+operating in hour h by the monitoring any one or more of the 
+following three parameters: 
+(a) Temperature. Determine the location for temperature 
+measurements and minimum operational temperature 
+based on manufacturer’s specifications of the burning 
+equipment. Document and justify the location and 
+minimum threshold in the PDD; 
+(b) Flame. Flame detection system is used to ensure that 
+the equipment is in operation; 
+(c) Products generated. Mo nitor the generation 
+Opj,h = 0 when: 
+(a) One of more temperature measurements are missing 
+below the minimum threshold in hour h (instantaneous 
+measurements are made at least every minute); 
+(b) Flame is not detected continuously in hour h 
+(instantaneous measurements are made at least every 
+minute) 
+Otherwise, Opj,h = 1 
+Frequency of 
+monitoring/recording Hourly 
+Value monitored 0 
+Monitoring equipment Flare program logic controller 
+QA/QC procedures to be 
+applied - 
+Purpose of the data Calculation of baseline emissions 
+Calculation method Calculated in the workbook using a formula that checks the flow 
+from the flow meters against the flare temperature and UV 
+sensor and or electricity flow meter. 
+Comments None 
+ 
+
+
+===== PAGE 47 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+47 
+Data / Parameter  Vi,t,wb 
+Data unit m3 gas i/m3 wet gas 
+Description Volumetric fraction of greenhouse gas i in a time interval t on a 
+wet basis 
+Source of data Measurement 
+Description of 
+measurement methods 
+and procedures to be 
+applied 
+Continuous in-situ analyzers 
+Frequency of 
+monitoring/recording Continuous measurement and hourly recording 
+Value monitored - 
+Monitoring equipment Infrared Gas Analyzer 
+The instrument is calibrated regu larly utilizing a certified span 
+gas on site until the unit is no longer able to be calibrated on 
+site. Should the instrument not be able to be calibrated then the 
+instrument sensor is replaced. 
+QA/QC procedures to be 
+applied  
+Purpose of the data Calculation of Baseline Emissions 
+Calculation method Not Applicable 
+Comments This parameter will be monitored in Option F as per the applied 
+“Tool to determine the mass flow of a greenhouse gas in a 
+gaseous stream” (Version 02.0.0). 
+ 
+Data / Parameter  CAPEX and OPEX 
+Data unit Currency (USD, EUR, etc.) 
+Description Total investment to implement the project and total cost to 
+operate the project. 
+Source of data Engineering, procurement and construction contracts; and 
+maintenance contracts. 
+Description of 
+measurement methods 
+and procedures to be 
+applied 
+Measured and calculated 
+
+
+===== PAGE 48 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+48 
+Frequency of 
+monitoring/recording At the first issuance request after each phase of the project is 
+fully implemented. 
+Value monitored CAPEX:  
+4,773,460 USD (2020) 
+4,131,554 USD (2021) 
+7,538,023 USD (2022) 
+OPEX: 
+0 USD (2020) 
+1,981,655 USD (2021) 
+5,129,556 USD (2022) 
+Monitoring equipment Not applicable 
+QA/QC procedures to be 
+applied Audited by professional, independent financial auditors. The DOE 
+should only verify that the data provided corresponds to the data 
+from independent financial auditors. 
+Purpose of the data In order to collect the information that is required for the update 
+of the provisions in section 5.3.1 of ACM0001 (version 19). 
+Project activities that are registered using these simplified 
+procedures are required to report cost and revenue information 
+at the first issuance request after each phase of the project is 
+fully implemented. 
+Calculation method Not applicable 
+Comments - 
+ 
+Data / Parameter  Tariff or electricity exported 
+Data unit Currency – Lira 
+Description Tariff of electricity exported 
+Source of data Power Purchase Agreement 
+Description of 
+measurement methods 
+and procedures to be 
+applied 
+Monitored annually. In the absence of data from the relevant 
+year, most recent figures should be used, but not older than 5 
+years. 
+Frequency of 
+monitoring/recording At the first issuance request after each phase of the project is 
+fully implemented 
+Value monitored - 
+
+
+===== PAGE 49 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+49 
+Monitoring equipment - 
+QA/QC procedures to be 
+applied Audited by professional, independent financial auditors. The DOE 
+should only verify that the data provided corresponds to the data 
+from independent financial auditors 
+Purpose of the data - 
+Calculation method - 
+Comments The monitoring of this parameter is only required for projects 
+applying the simplified procedures to identify the baseline 
+scenario and demonstrate additionality. Parameter in 
+accordance with the applied ACM0001. 
+ 
+Data / Parameter  V,t,wb 
+Data unit m3 gas / hours 
+Description Volumetric flow of the gaseous stream in time interval t on a wet 
+basis 
+Source of data Measurement 
+Description of 
+measurement methods 
+and procedures to be 
+applied 
+Volumetric flow measurement should always refer to the actual 
+pressure and temperature. In struments with recordable 
+electronic signal (analogical or digital) are required 
+Frequency of 
+monitoring/recording Continuous measurement and hourly recording 
+Value monitored - 
+Monitoring equipment Flow meter  
+Periodic calibration against a primary device provided by an 
+independent accredited laboratory is mandatory for all projects 
+applying large scale methodology(ies). Calibration and frequency 
+of calibration is according to manufacturer’s specifications. 
+QA/QC procedures to be 
+applied - 
+Purpose of the data Calculation of Baseline Emissions 
+Calculation method Not applicable 
+Comments - 
+ 
+
+
+===== PAGE 50 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+50 
+Data / Parameter  T 
+Data unit o C 
+Description Temperature of the gaseous stream in time interval t  
+Source of data Measurement 
+Description of 
+measurement methods 
+and procedures to be 
+applied 
+Thermocouple  
+Frequency of 
+monitoring/recording Continuous measurement and hourly recording 
+Value monitored - 
+Monitoring equipment Flow meter  
+Periodic calibration against a primary device provided by an 
+independent accredited laboratory is mandatory for all projects 
+applying large scale methodology(ies). Calibration and frequency 
+of calibration is according to manufacturer’s specifications. 
+QA/QC procedures to be 
+applied - 
+Purpose of the data Calculation of Project Emissions 
+Calculation method Not applicable 
+Comments - 
+ 
+Data / Parameter  P 
+Data unit Pascals (Pa) 
+Description Pressure of the gaseous stream in time interval t 
+Source of data Measurement 
+Description of 
+measurement methods 
+and procedures to be 
+applied 
+Flow meter 
+Frequency of 
+monitoring/recording Continuous measurement and hourly recording 
+Value monitored - 
+Monitoring equipment Flow meter  
+
+
+===== PAGE 51 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+51 
+Periodic calibration against a primary device provided by an 
+independent accredited laboratory is mandatory for all projects 
+applying large scale methodology(ies). Calibration and frequency 
+of calibration is according to manufacturer’s specifications. 
+QA/QC procedures to be 
+applied - 
+Purpose of the data Calculation of Project Emissions 
+Calculation method Not applicable 
+Comments - 
+ 
+ 
+Data / Parameter  FCH4,EG,t 
+Data unit kg 
+Description Mass flow of methane in the exhaust gas of the flare on a dry 
+basis at reference conditions in the time period t 
+Source of data Measurements undertaken by a third-party accredited entity 
+Description of 
+measurement methods 
+and procedures to be 
+applied 
+Values taken form the system that has been calibrated 
+Frequency of 
+monitoring/recording Biannual 
+Value monitored - 
+Monitoring equipment - 
+QA/QC procedures to be 
+applied According to standard applied 
+Purpose of the data Calculation of Project Emissions 
+Calculation method - 
+Comments The project implements an enclosed flare therefore, there is 
+monitoring. 
+ 
+ 
+ 
+
+
+===== PAGE 52 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+52 
+Data / Parameter  TEG,m 
+Data unit °C 
+Description Temperature in the exhaust gas of the enclosed flare in the 
+minute m 
+Source of data Project operator’s Monitoring reports 
+Description of 
+measurement methods 
+and procedures to be 
+applied 
+Values display on the PLC of calibrated instruments 
+Frequency of 
+monitoring/recording Once per minute if the flare in is on meaning 100% operation 
+Value monitored - 
+Monitoring equipment - 
+QA/QC procedures to be 
+applied Temperature measurement equipment should be replaced or 
+calibrated in accordance with their maintenance schedule 
+Purpose of the data - 
+Calculation method - 
+Comments The project implements an enclosed flare therefore, there is 
+monitoring. 
+ 
+Data / Parameter  vi,RG,m 
+Data unit - 
+Description Volumetric fraction of component i in the residual gas on a dry 
+basis in the minute m where i = CH 4, CO, CO2, O2, H2, H2S, NH4, 
+N2 
+Source of data Measurements by project oper ator using a continuous gas 
+analyzer (values are recorded with the same frequency as the 
+flow). 
+Description of 
+measurement methods 
+and procedures to be 
+applied 
+Measurement may be made on wet basis. Analyzers are 
+periodically calibrated according to the manufacturer’s 
+recommendation. 
+Frequency of 
+monitoring/recording Continuously. Values are to be averaged on a minute basis if 
+flare is on operation 100% status. 
+
+
+===== PAGE 53 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+53 
+Value monitored - 
+Monitoring equipment Biogas Analyzer 
+QA/QC procedures to be 
+applied Analyzers must be periodically calibrated according to the 
+manufacturer’s recommendation. 
+Purpose of the data - 
+Calculation method - 
+Comments Project operator measure the content CH 4, CO, CO2 and H2S 
+ 
+Data / Parameter  MRG,m 
+Data unit kg 
+Description Mass flow of the residual gas on a dry basis at reference 
+conditions in the minute m 
+Source of data Flare Unit 
+Description of 
+measurement methods 
+and procedures to be 
+applied 
+Instruments with recordable electronic signal (analogical or 
+digital) With calibrated instruments 
+Frequency of 
+monitoring/recording Continuous 
+Value monitored 0 
+Monitoring equipment Flow meter 
+QA/QC procedures to be 
+applied Calibration and frequency of calibration is according to 
+manufacturer’s specifications 
+Purpose of the data - 
+Calculation method - 
+Comments This parameter is monitored, project implements enclosed flare 
+ 
+Data / Parameter  vO2,EG,m 
+Data unit - 
+Description Volumetric fraction of O2 in the exhaust gas on a dry basis at 
+reference conditions in the minute m 
+
+
+===== PAGE 54 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+54 
+Source of data Measurements by project oper ator using a continuous gas 
+analyzer 
+Description of 
+measurement methods 
+and procedures to be 
+applied 
+Extractive sampling analyzers with water and particulates 
+removal devices or in situ analyzers for wet basis determination. 
+Frequency of 
+monitoring/recording Continuous 
+Value monitored - 
+Monitoring equipment - 
+QA/QC procedures to be 
+applied Analyzers must be periodically calibrated according to the 
+manufacturer’s recommendation. 
+Purpose of the data - 
+Calculation method - 
+Comments This parameter is monitored, project implements enclosed flare 
+ 
+Data / Parameter  fcCH4,EG,m 
+Data unit mg/m3 
+Description Concentration of methane in the exhaust gas of the flare on a 
+dry basis at reference conditions in the minute m 
+Source of data Measurements by project oper ator using a continuous gas 
+analyzer 
+Description of 
+measurement methods 
+and procedures to be 
+applied 
+Extractive sampling analyzers with water and particulates 
+removal 
+Frequency of 
+monitoring/recording Continuously 
+Value monitored - 
+Monitoring equipment - 
+QA/QC procedures to be 
+applied Analyzers must be periodically calibrated according to the 
+manufacturer’s recommendation. 
+Purpose of the data - 
+
+
+===== PAGE 55 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+55 
+Calculation method - 
+Comments This parameter is monitored, project implements enclosed flare 
+ 
+Data / Parameter  Flamem 
+Data unit Flame on or Flame off (0% or 100%) 
+Description Flame detection of flare in the minute m 
+Source of data Measure using a fixed installation optical flame detector with 
+calibrated instrument 
+Description of 
+measurement methods 
+and procedures to be 
+applied 
+Once per minute. Detection of flame recorded as a minute that 
+the flame was on. 
+Frequency of 
+monitoring/recording Continuously 
+Value monitored - 
+Monitoring equipment - 
+QA/QC procedures to be 
+applied Equipment shall be maintained and calibrated in accordance 
+with manufacturer’s recommendations 
+Purpose of the data - 
+Calculation method - 
+Comments This parameter is monitored, project implements enclosed flare 
+ 
+Data / Parameter  Maintenance 
+Data unit Calendar dates 
+Description Maintenance events completed in year y 
+Source of data Project operator 
+Description of 
+measurement methods 
+and procedures to be 
+applied 
+Record the date that maintenance events were completed in 
+year y. Records of maintenance logs must include all aspects of 
+the maintenance including the details of the person(s) 
+undertaking the work, parts replaced, or needing to be replaced, 
+source of replacement parts, serial numbers and calibration 
+certificates 
+
+
+===== PAGE 56 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+56 
+Frequency of 
+monitoring/recording Annual 
+Value monitored - 
+Monitoring equipment - 
+QA/QC procedures to be 
+applied Records must be kept in a maintenance log for two years beyond 
+the life of the flare 
+Purpose of the data - 
+Calculation method - 
+Comments This parameter is monitored, project implements enclosed flare 
+ 
+6.3 Monitoring Plan 
+The responsible entity for the monitoring system is Biotrend personnel. The monitoring activities 
+will primarily involve four type s of personnel: the Operation Site Manager, Field Operator, 
+Electrical & Mechanical Operator  and the Laboratory Operator. 
+The Field Operators will perform ac tivities such as monitoring and adjusting LFG extraction wells, 
+checking operations of the blower and flare, recording data at the blower/flare station, routine 
+maintenance of collection system components, preparing daily logs and completing checklists, 
+and send data to the Operation Site Manager. 
+The Operation Manager’s responsibilities include reviewing the data collected both manually by 
+the Field Technicians and the one recorded automatically by analytical equipment, making 
+recommendations and/or implem enting system adjustments to  maximize methane capture and 
+destruction, scheduling monitoring and O&M activities, performing quality assurance checks on 
+operations, coordinating with system component manufacturers as needed , to maintain proper 
+operations and calibration, and compiling data as required by the Methodology. 
+Only for manual data collection, the Operation Manager will be responsible for reviewing the data 
+collected. 
+Project Management Responsibility 
+The operators of the LFG recovery and electricit y generation system will be responsible for 
+collecting all data monitored on -site. The operating and mainte nance personnel will be skilled 
+technicians, with extensive experience in equipment operation, maintenance and calibration, and 
+emergency procedures. Overall responsibility for the monitoring and maintenance of all required 
+tasks and their adequate management lie with  the project manager. Detailed roles and 
+responsibilities of the relevant staff involved in VCS monitoring are placed. 
+
+
+===== PAGE 57 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+57 
+Training of Monitoring Personnel 
+The monitoring personnel is trained in the beginnin g of the project; the purpose of this training 
+is to operate the project in a well manner. Periodical training will be defined by Biotrend. 
+ 
+Organizational Structure of the Carbon Project 
+Data Analysis 
+The collected data will be reviewed and analyzed on a daily basis by the Operation Manager. In 
+case of a drift of one parameter the Manager or Technician can react quickly to fix potential 
+problems. All data required for the emission reduction calculations will be kept in the onsite- 
+monitoring database. The Monitoring Manager will be the responsible to report the necessary 
+information to Biotrend. 
+The quality actions that will guarantee the success of the monitoring plan are the following: 
+Maintenance Plan 
+The LFG plant's computerized management and control system includes: the management of 
+level management in gas meters through the le vel indicators; monitoring and control of the 
+heating system; alarm manage ment of minimum and maximu m levels and security; and 
+monitoring of the data analysis of the LFG analysis. With regards to the electricity generation 
+component of the project, given that it dispatch es electricity to the National Grid, measuring, 
+recording, storing, aggregating, collating and reporting data and parameters will follow the 
+procedure described by the authorities. 
+The following aspects are core to the maintenance of the monitoring system in order to assure 
+proper data 
+monitoring during the project: 
+• Equipment preventive maintenance  
+
+
+
+===== PAGE 58 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+58 
+• Equipment calibration 
+All data collected as part of monitoring will be ar chived electronically and be kept at least for 2 
+years after the end of the last crediting peri od. Regarding the monitoring equipment of the 
+methane recovery component of the project, ma intenance and calibratio n will be performed in 
+line with manufacturers’ recommendations. With regards to the electricity meter, it is a high 
+accuracy measurement device/s and meets all rele vant metrological requirements prescribed by 
+the state authority. Procedures for maintenance of the meter will be conducted in accordance 
+with national procedures and standards. 
+Quality assurance and Control (QA/QC) 
+Quality control and quality assurance procedures will guarantee the quality of monitored data. 
+All data is archived electronically, backed up regularly and kept at least for 2 years after the end 
+of the last crediting period. There are corrective actions when the parameters are out of the 
+permitted range. 
+Regarding the monitoring equipment of the me thane recovery component of the project, 
+maintenance and calibration will be performed in line with manufacturers’ recommendations. 
+With regards to the electricity meter, as mentio ned above, it is a high  accuracy measurement 
+device/s and meets all relevant metrological requirements prescribed by the state authority. 
+Procedures for maintenance of the meter will be conducted in accordance with national 
+procedures and standards. 
+Calibration plans: 
+The company MRU BACA GAZI LTD. Performs every 6 months calibration visits from the gas flow 
+meters in the booster unit, the values of O
+2%, H2S ppm, CO 2% and CH 4% are measured. Please 
+see the calibration certificates documents. 
+The gas engines have their own monitoring system and parameters can be seen every time on 
+the display. There is an internal storage of the data on PC and on the cloud. All data can be 
+downloaded in an excel file. 
+Emergencies Procedures 
+The running hours of the power plants will be monitored as part of the monitoring procedures. In 
+case of failure of one of the monitoring devices,  portable instruments will be used in order to 
+carry out periodic daily monitoring of the missing parameter(s). These data are recorded on 
+paper. Biotrend defined emergency procedures  according to the provider recommendations. 
+
+
+===== PAGE 59 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+59 
+7 QUANTIFICATION OF GHG EMISSION 
+REDUCTIONS AND REMOVALS 
+7.1 Data and Parameters Monitored  
+To be described at a later stage. 
+To be provided at a later stage. 
+Data / Parameter  Management of SWDS 
+Data unit - 
+Description Management of SWDS 
+Source of data Original design of the landfill 
+Description of 
+measurement methods 
+and procedures to be 
+applied 
+Project participants should refer to the original design of the 
+landfill to ensure that any practice to increase methane 
+generation have been occurring prior to the implementation of 
+the project activity. Any change in the management of the SWDS 
+after the implementation of the project activity should be 
+justified by referring to technica l or regulatory specifications. 
+Frequency of 
+monitoring/recording Annually 
+Value monitored PO stated that there is no change to the design.  
+Monitoring equipment  
+QA/QC procedures to be 
+applied - 
+Purpose of the data Calculation of baseline emissions 
+Calculation method - 
+Comments - 
+ 
+Data / Parameter  EGPJ,y 
+Data unit MWh 
+Description Amount of electricity generated using LFG by the project activity 
+in year y 
+
+
+===== PAGE 60 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+60 
+Source of data EPİAŞ (Electricity Market Operator Company) records of 
+settlement notifications 
+Description of 
+measurement methods 
+and procedures to be 
+applied 
+Monitor net electricity generation by the project activity using 
+LFG 
+Frequency of 
+monitoring/recording Continuous measurement every 10 min (24/7) all year and data 
+can be downloaded and saved anytime 
+Value monitored 2020(01/11/2020-31/12/2020): 1,742 MWh 
+2021: 21,136 MWh 
+2022(01/01/2022-30/10/2022): 32,424 MWh 
+Monitoring equipment Calibrated electricity meter 
+QA/QC procedures to be 
+applied Electricity meter is subject to regular (in accordance with 
+stipulation of the meter supplier) maintenance and testing by 
+regulation to ensure accuracy and TE İAŞ (Transmission System 
+Operator) is responsible of calibrating these meters, which is a 
+government-owned corporation. The readings are double 
+checked by the electricity distribution company. The calibration 
+of meter, including the frequency of calibration, will be done in 
+accordance with national standards or requirements set by the 
+meter supplier or requirements set by the grid operators. The 
+accuracy class of the meter is in accordance with the stipulation 
+of the meter supplier and/or as per the requirements set by the 
+grid operators or national requirements. 
+Purpose of the data Calculation of baseline emissions 
+Calculation method  
+Comments This parameter is required for calculating baseline emissions 
+associated with electricity generation (BEEC,y) using the 
+methodological tool “Baseline, project and/or leakage emissions 
+from electricity consumption and monitoring of electricity 
+generation” 
+ 
+Data / Parameter  ECPJ,y 
+Data unit MWh 
+Description Amount of electricity consumed by the project activity in year y 
+
+
+===== PAGE 61 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+61 
+Source of data EPİAŞ (Electricity Market Operator Company) records of 
+settlement notifications 
+Description of 
+measurement methods 
+and procedures to be 
+applied 
+Sources of consumption shall include, where applicable, 
+electricity consumed for the operation of the LFG capture 
+system, for any processing and upgrading of the LFG, for 
+transportation of the LFG to the flare or other applications 
+(boilers, power generators), for the compression of the LFG into 
+the natural gas network, etc. 
+Frequency of 
+monitoring/recording Continuous measurement and monthly recording 
+Value monitored 2020(01/11/2020-31/12/2020): 1.9 MWh 
+2021: 5.75 MWh 
+2022(01/01/2022-30/09/2022): 2.445 MWh 
+Monitoring equipment Electricity meter 
+QA/QC procedures to be 
+applied Electricity meter is subject to regular (in accordance with 
+stipulation of the meter supplier) maintenance and testing by 
+regulation to ensure accuracy and TE İAŞ (Transmission System 
+Operator) is responsible of calibrating these meters, which is a 
+government-owned corporation. The readings are double 
+checked by the electricity distribution company. The calibration 
+of meter, including the frequency of calibration, will be done in 
+accordance with national standards or requirements set by the 
+meter supplier or requirements set by the grid operators. The 
+accuracy class of the meter is in accordance with the stipulation 
+of the meter supplier and/or as per the requirements set by the 
+grid operators or national requirements. 
+Purpose of the data Calculation of project emissions 
+Calculation method  
+Comments This parameter is required for calculating project emissions from 
+electricity consumption due to an alternative waste treatment 
+process t PEEC,y) using the me thodological tool “Baseline, 
+project and/or leakage emission s from electricity consumption 
+and monitoring of electricity generation” 
+ 
+Data / Parameter  Opj,h 
+Data unit - 
+Description Operation of the equipment that consumes the LFG 
+
+
+===== PAGE 62 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+62 
+Source of data Project participants 
+Description of 
+measurement methods 
+and procedures to be 
+applied 
+For each equipment unit j using the LFG monitor that the plant is 
+operating in hour h by the monitoring any one or more of the 
+following three parameters: 
+(d) Temperature. Determine the location for temperature 
+measurements and minimum operational temperature 
+based on manufacturer’s specifications of the burning 
+equipment. Document and justify the location and 
+minimum threshold in the PDD; 
+(e) Flame. Flame detection system is used to ensure that 
+the equipment is in operation; 
+(f) Products generated. Mo nitor the generation 
+Opj,h = 0 when: 
+(c) One of more temperature measurements are missing 
+below the minimum threshold in hour h (instantaneous 
+measurements are made at least every minute); 
+(d) Flame is not detected continuously in hour h 
+(instantaneous measurements are made at least every 
+minute) 
+Otherwise, Opj,h = 1 
+Frequency of 
+monitoring/recording Hourly 
+Value monitored 0 
+Monitoring equipment Flare program logic controller 
+QA/QC procedures to be 
+applied - 
+Purpose of the data Calculation of baseline emissions 
+Calculation method Calculated in the workbook using a formula that checks the flow 
+from the flow meters against the flare temperature and UV 
+sensor and or electricity flow meter. 
+Comments None 
+ 
+Data / Parameter  Vi,t,wb 
+Data unit m3 gas i/m3 wet gas 
+
+
+===== PAGE 63 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+63 
+Description Volumetric fraction of greenhouse gas i in a time interval t on a 
+wet basis 
+Source of data Measurement 
+Description of 
+measurement methods 
+and procedures to be 
+applied 
+Continuous in-situ analyzers 
+Frequency of 
+monitoring/recording Continuous measurement and hourly recording 
+Value monitored  
+Monitoring equipment Infrared Gas Analyzer 
+The instrument is calibrated regu larly utilizing a certified span 
+gas on site until the unit is no longer able to be calibrated on 
+site. Should the instrument not be able to be calibrated then the 
+instrument sensor is replaced. 
+QA/QC procedures to be 
+applied  
+Purpose of the data Calculation of Baseline Emissions 
+Calculation method Not Applicable 
+Comments This parameter will be monitored in Option F as per the applied 
+“Tool to determine the mass flow of a greenhouse gas in a 
+gaseous stream” (Version 02.0.0). 
+ 
+Data / Parameter  CAPEX and OPEX 
+Data unit Currency (USD, EUR, etc.) 
+Description Total investment to implement the project and total cost to 
+operate the project. 
+Source of data Engineering, procurement and construction contracts; and 
+maintenance contracts. 
+Description of 
+measurement methods 
+and procedures to be 
+applied 
+Measured and calculated 
+Frequency of 
+monitoring/recording At the first issuance request after each phase of the project is 
+fully implemented. 
+
+
+===== PAGE 64 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+64 
+Value monitored CAPEX (USD) 
+OPEX (USD) 
+Monitoring equipment Not applicable 
+QA/QC procedures to be 
+applied Audited by professional, independent financial auditors. The DOE 
+should only verify that the data provided corresponds to the data 
+from independent financial auditors. 
+Purpose of the data In order to collect the information that is required for the update 
+of the provisions in section 5.3.1 of ACM0001 (version 19). 
+Project activities that are registered using these simplified 
+procedures are required to report cost and revenue information 
+at the first issuance request after each phase of the project is 
+fully implemented. 
+Calculation method Not applicable 
+Comments - 
+ 
+Data / Parameter  Tariff or electricity exported 
+Data unit Currency – Lira 
+Description Tariff of electricity exported 
+Source of data Power Purchase Agreement 
+Description of 
+measurement methods 
+and procedures to be 
+applied 
+Monitored annually. In the absence of data from the relevant 
+year, most recent figures should be used, but not older than 5 
+years. 
+Frequency of 
+monitoring/recording At the first issuance request after each phase of the project is 
+fully implemented 
+Value monitored - 
+Monitoring equipment - 
+QA/QC procedures to be 
+applied Audited by professional, independent financial auditors. The DOE 
+should only verify that the data provided corresponds to the data 
+from independent financial auditors 
+Purpose of the data - 
+Calculation method - 
+Comments The monitoring of this parameter is only required for projects 
+applying the simplified procedures to identify the baseline 
+
+
+===== PAGE 65 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+65 
+scenario and demonstrate additionality. Parameter in  
+accordance with the applied ACM0001. 
+ 
+Data / Parameter  V,t,wb 
+Data unit m3 gas / hours 
+Description Volumetric flow of the gaseous stream in time interval t on a wet 
+basis 
+Source of data Measurement 
+Description of 
+measurement methods 
+and procedures to be 
+applied 
+Volumetric flow measurement should always refer to the actual 
+pressure and temperature. In struments with recordable 
+electronic signal (analogical or digital) are required 
+Frequency of 
+monitoring/recording Continuous measurement and hourly recording 
+Value monitored  
+ 
+Monitoring equipment Flow meter  
+Periodic calibration against a primary device provided by an 
+independent accredited laboratory is mandatory for all projects 
+applying large scale methodology(ies). Calibration and frequency 
+of calibration is according to manufacturer’s specifications. 
+QA/QC procedures to be 
+applied  
+Purpose of the data Calculation of Baseline Emissions 
+Calculation method Not applicable 
+Comments - 
+ 
+Data / Parameter  T 
+Data unit °C 
+Description Temperature of the gaseous stream in time interval t  
+Source of data Measurement 
+Description of 
+measurement methods Thermocouple  
+
+
+===== PAGE 66 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+66 
+and procedures to be 
+applied 
+Frequency of 
+monitoring/recording Continuous measurement and hourly recording 
+Value monitored  
+Monitoring equipment Flow meter  
+Periodic calibration against a primary device provided by an 
+independent accredited laboratory is mandatory for all projects 
+applying large scale methodology(ies). Calibration and frequency 
+of calibration is according to manufacturer’s specifications. 
+QA/QC procedures to be 
+applied 
+ 
+Purpose of the data Calculation of Project Emissions 
+Calculation method Not applicable 
+Comments - 
+ 
+Data / Parameter  P 
+Data unit Pascals (Pa) 
+Description Pressure of the gaseous stream in time interval t 
+Source of data Measurement 
+Description of 
+measurement methods 
+and procedures to be 
+applied 
+Flow meter 
+Frequency of 
+monitoring/recording Continuous measurement and hourly recording 
+Value monitored  
+Monitoring equipment Flow meter  
+Periodic calibration against a primary device provided by an 
+independent accredited laboratory is mandatory for all projects 
+applying large scale methodology(ies). Calibration and frequency 
+of calibration is according to manufacturer’s specifications. 
+QA/QC procedures to be 
+applied 
+ 
+
+
+===== PAGE 67 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+67 
+Purpose of the data Calculation of Project Emissions 
+Calculation method Not applicable 
+Comments - 
+ 
+Data / Parameter  FCH4,EG,t 
+Data unit kg 
+Description Mass flow of methane in the exhaust gas of the flare on a dry 
+basis at reference conditions in the time period t 
+Source of data Measurements undertaken by a third-party accredited entity 
+Description of 
+measurement methods 
+and procedures to be 
+applied 
+Values taken form the system that has been calibrated 
+Frequency of 
+monitoring/recording Biannual 
+Value monitored  
+Monitoring equipment  
+QA/QC procedures to be 
+applied According to standard applied 
+Purpose of the data  
+Calculation method  
+Comments The project implements an enclosed flare therefore, there is 
+monitoring. 
+ 
+Data / Parameter  TEG,m 
+Data unit °C 
+Description Temperature in the exhaust gas of the enclosed flare in the 
+minute m 
+Source of data Project operator’s Monitoring reports 
+Description of 
+measurement methods Values display on the PLC of calibrated instruments 
+
+
+===== PAGE 68 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+68 
+and procedures to be 
+applied 
+Frequency of 
+monitoring/recording Once per minute if the flare in is on meaning 100% operation 
+Value monitored  
+Monitoring equipment  
+QA/QC procedures to be 
+applied Temperature measurement equipment should be replaced or 
+calibrated in accordance with their maintenance schedule 
+Purpose of the data  
+Calculation method  
+Comments The project implements an enclosed flare therefore, there is 
+monitoring. 
+ 
+Data / Parameter  vi,RG,m 
+Data unit - 
+Description Volumetric fraction of component i in the residual gas on a dry 
+basis in the minute m where i = CH4, CO, CO2, O2, H2, H2S, 
+NH4, N2 
+Source of data Measurements by project oper ator using a continuous gas 
+analyzer (values are recorded with the same frequency as the 
+flow). 
+Description of 
+measurement methods 
+and procedures to be 
+applied 
+Measurement may be made on wet basis. Analyzers are 
+periodically calibrated according to the manufacturer’s 
+recommendation. 
+Frequency of 
+monitoring/recording Continuously. Values are to be averaged on a minute basis if 
+flare is on operation 100% status. 
+Value monitored  
+Monitoring equipment  
+QA/QC procedures to be 
+applied Analyzers must be periodically calibrated according to the 
+manufacturer’s recommendation. 
+Purpose of the data  
+Calculation method  
+
+
+===== PAGE 69 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+69 
+Comments Project operator measure the content CH 4, CO, CO2 and H2S 
+ 
+ 
+Data / Parameter  MRG,m 
+Data unit kg 
+Description Mass flow of the residual gas on a dry basis at reference 
+conditions in the minute m 
+Source of data - 
+Description of 
+measurement methods 
+and procedures to be 
+applied 
+Instruments with recordable electronic signal (analogical or 
+digital) With calibrated instruments 
+Frequency of 
+monitoring/recording Continuous 
+Value monitored  
+Monitoring equipment  
+QA/QC procedures to be 
+applied Calibration and frequency of calibration is according to 
+manufacturer’s specifications 
+Purpose of the data  
+Calculation method  
+Comments This parameter is monitored, project implements enclosed flare 
+ 
+Data / Parameter  vO2,EG,m 
+Data unit - 
+Description Volumetric fraction of O2 in the exhaust gas on a dry basis at 
+reference conditions in the minute m 
+Source of data Measurements by project oper ator using a continuous gas 
+analyzer 
+Description of 
+measurement methods 
+and procedures to be 
+applied 
+Extractive sampling analyzers with water and particulates 
+removal devices or in situ analyzers for wet basis determination. 
+
+
+===== PAGE 70 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+70 
+Frequency of 
+monitoring/recording Continuous 
+Value monitored  
+Monitoring equipment  
+QA/QC procedures to be 
+applied Analyzers must be periodically calibrated according to the 
+manufacturer’s recommendation. 
+Purpose of the data  
+Calculation method  
+Comments This parameter is monitored, project implements enclosed flare 
+ 
+Data / Parameter  fcCH4,EG,m 
+Data unit mg/m3 
+Description Concentration of methane in the exhaust gas of the flare on a dry 
+basis at reference conditions in the minute m 
+Source of data Measurements by project operator using a continuous gas 
+analyzer 
+Description of 
+measurement methods 
+and procedures to be 
+applied 
+Extractive sampling analyzers with water and particulates 
+removal 
+Frequency of 
+monitoring/recording Continuously 
+Value monitored  
+Monitoring equipment  
+QA/QC procedures to be 
+applied Analyzers must be periodically calibrated according to the 
+manufacturer’s recommendation. 
+Purpose of the data  
+Calculation method  
+Comments This parameter is monitored, project implements enclosed flare 
+ 
+Data / Parameter  Flamem 
+Data unit Flame on or Flame off (0% or 100%) 
+
+
+===== PAGE 71 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+71 
+Description Flame detection of flare in the minute m 
+Source of data Measure using a fixed installation optical flame detector with 
+calibrated instrument 
+Description of 
+measurement methods 
+and procedures to be 
+applied 
+Once per minute. Detection of flame recorded as a minute that 
+the flame was on. 
+Frequency of 
+monitoring/recording Continuously 
+Value monitored  
+Monitoring equipment  
+QA/QC procedures to be 
+applied Equipment shall be maintained and calibrated in accordance 
+with manufacturer’s recommendations 
+Purpose of the data  
+Calculation method  
+Comments This parameter is monitored, project implements enclosed flare 
+ 
+Data / Parameter  Maintenancey 
+Data unit Calendar dates 
+Description Maintenance events completed in year y 
+Source of data Project operator 
+Description of 
+measurement methods 
+and procedures to be 
+applied 
+Record the date that maintenance events were completed in year 
+y. Records of maintenance logs must include all aspects of the 
+maintenance including the detail s of the person(s) undertaking 
+the work, parts replaced, or needing to be replaced, source of 
+replacement parts, serial numbers and calibration certificates 
+Frequency of 
+monitoring/recording Annual 
+Value monitored  
+Monitoring equipment  
+QA/QC procedures to be 
+applied Records must be kept in a maintenance log for two years beyond 
+the life of the flare 
+Purpose of the data  
+
+
+===== PAGE 72 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+72 
+Calculation method  
+Comments This parameter is monitored, project implements enclosed flare 
+ 
+7.2 Baseline Emissions  
+Baseline emissions are determined as follows: 
+𝐵𝐸௬ ൌ෍ ൫ 𝐵 𝐸஼ுସ,௧,௬൅𝐵 𝐸ௐௐ,௧,௬൅𝐵 𝐸ாே,௧,௬൅𝐵 𝐸ேீ,௧,௬൯ൈሺ1
+௧
+െ𝑅 𝐴 𝑇 𝐸௖௢௠௣௟௜௔௡௖௘,௧ሻ 
+Equation (3) 
+Where: 
+𝐵𝐸௬ = Baseline emissions in year y (t CO2e) 
+𝐵𝐸஼ுସ,௧,௬ = Baseline emissions of methane from the SWDS in year y 
+(t CO2e) 
+𝐵𝐸ௐௐ,௧,௬ = Baseline methane emissions from anaerobic treatment of the 
+wastewater in open anaerobic lagoons or of sludge in sludge 
+pits in the absence of the project activity in year y (t CO
+2e)  
+𝐵𝐸ாே,௧,௬ = Baseline emissions associated with energy generation in year y 
+(t CO2) 
+𝐵𝐸ேீ,௧,௬ = Baseline emissions associated with natural gas use in year y 
+(t CO2) 
+𝑅𝐴𝑇𝐸௖௢௠௣௟௜௔௡௖௘,௧ = Discount factor to account for the rate of compliance of a 
+regulatory requirement that mandates the use of alternative 
+waste treatment process t 
+8F
+9 
+𝑡 = Type of alternative waste treatment process  
+ 
+BEWW,t,y and BENG,t,y are assumed to be zero, since the project activity does not include 
+wastewater treatment or biogas sent to the gas network. 
+There is currently no regulation on requiremen t that mandates the use of alternative waste 
+treatment option in Turkey, thus RATEcompliance equals 0.  
+As per Tool 04, the amount of methane generated from disposal of waste at the SWDS is 
+calculated based on a first order decay (FOD) model. The model differentiates between the 
+ 
+9  Determined  once for each crediting period, based on the most recent data available  at the time of submission  of the 
+CDM‐PDD to the DOE for validation.  
+
+
+===== PAGE 73 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+73 
+different types of waste j with respective constant decay rates (k j) and fractions of degradable 
+organic carbon (DOC j). 
+Application B is used for baseline emissions for biomethanization facility, according to the 
+ACM0022. The methane is generated from waste disposed or avoided from disposal during the 
+crediting period. In these cases, the tool can be applied for both ex ante and ex post estimation 
+of emissions. These project activities may appl y the simplified approach detailed in 0 when 
+calculating baseline emissions. 
+Application A is used for baseline emissions fo r the portion of waste that is disposed with 
+sanitary landfill. Same tool applies with Application B, however some of the default values 
+differ. 
+The amount of methane generated from disposal of waste at the SWDS is calculated for year y 
+with the following equation: 
+𝐵𝐸஼ுସ,ௌௐ஽ௌ,௬ൌ𝑗௬ൈ൫1 െ𝑓௬൯ൈ𝐺 𝑊 𝑃஼ுସൈሺ1 െ𝑂 𝑋ሻൈ16
+12 ൈ𝐹ൈ𝐷 𝑂 𝐶௙,௬
+ൈ𝑀 𝐶 𝐹௬
+ൈ෍෍ ቀ𝑊௝,௫ൈ𝐷 𝑂 𝐶௝ൈ𝑒ି௞ೕൈሺ௬ି௫ሻൈ൫1 െ𝑒ି௞ೕ൯ቁ
+௝
+௬
+௫ୀଵ
+ 
+Equation (4) 
+Where: 
+
+
+===== PAGE 74 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+74 
+𝐵𝐸஼ுସ,ௌௐ஽ௌ,௬ = 
+Baseline, project or leakage methan e emissions occurring in year y 
+generated from waste disposal at a SWDS during a time period ending 
+in year y (t CO2e/yr) 
+𝑗௬ = Model correction factor to account for model uncertainties for year y 
+𝑓௬ = 
+Fraction of methane captured at the SWDS and flared, combusted or 
+used in another manner that prevents the emissions of methane to the 
+atmosphere in year y 
+𝐺𝑊𝑃஼ுସ = Global Warming Potential of methane 
+OX   = 
+Oxidation factor (reflecting the amount of methane from SWDS that is 
+oxidized in the soil or other material covering the waste) 
+𝐹   = Fraction of methane in the SWDS gas (volume fraction) 
+𝐷𝑂𝐶௙,௬ = 
+Fraction of degradable organic carbon (DOC) that decomposes under 
+the specific conditions occurring in the SWDS for year y (weight fraction) 
+𝑀𝐶𝐹௬   = Methane correction factor for year y 
+𝑊௝,௫   = 
+Amount of solid waste type j disposed  or prevented from disposal in the 
+SWDS in the year x (t) 
+𝐷𝑂𝐶௝   = 
+Fraction of degradable organic carbon in the waste type j (weight 
+fraction) 
+k   = Decay rate for the waste type j (1 / yr) 
+j   = Type of residual waste or types of waste in the MSW 
+x   = 
+Years in the time period in which waste is disposed at the SWDS, 
+extending from the first year in the time period (x = 1) to year y (x = y) 
+y = 
+Year of the crediting period for which methane emissions are calculated 
+(y is a consecutive period of 12 months) 
+ 
+The model correction factor ( y) depends on the uncertainty of the parameters used in the FOD 
+model. It is determined by using Option 1 ( y=default) 
+Since the project activity involves only one type of waste, W j,x = Wx and the further procedures 
+do not need to be applied (e.g. waste sampling is not required). 
+DOCf,y as well as MCF y are chosen as the default value given in the methodological tool. 
+(DOCf,y=DOCf,default and MCFy=MCFdefault) 
+ 
+𝐵𝐸ாே,௬ ൌ𝐵 𝐸ா஼,௬൅𝐵 𝐸ுீ,௬ Equation (5) 
+
+
+===== PAGE 75 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+75 
+Where: 
+𝐵𝐸ாே,௬ = Baseline emissions associated with energy generation in year y 
+(t CO2) 
+𝐵𝐸ா஼,௬ = Baseline emissions associated with electricity generation in 
+year y (t CO2) 
+𝐵𝐸ுீ,௬ = Baseline emissions associated with heat generation in year y 
+(t CO2) 
+The baseline emissions associated with electricity generation in year y (BEEC,y) shall be 
+calculated using  “TOOL05: Baseline, project and/or leakage emissions from electricity 
+consumption and monitoring of electricity generation”. When applying the tool: 
+The electricity sources  k in the tool correspond to the source s of electricity generated identified 
+in the selection of the most pl ausible baseline scenario; and 
+EC
+BL,k,y in the tool is equivalent to the net amount  of electricity generated by the alternative 
+waste treatment process t and exported to the grid or displaci ng fossil fuel fired captive energy 
+plant in year y (EGt,y). 
+BEHG,y is assumed zero, since heat generation is ex cluded in project boundary for conservative 
+approach. 
+The project consumes electricity from the grid therefore the tool is applicable. (Scenario A). 
+Generic approach is used when calculating the baseline emissions associated with electricity 
+generation: 
+ 
+𝐵𝐸
+ா஼,௬ ൌ෍ 𝐸 𝐶஻௅,௞,௬ൈ𝐸 𝐹ா௅,௞,௬ൈ൫1 ൅𝑇 𝐷 𝐿௞,௬൯
+௞
+ 
+Where: 
+𝐸𝐶஻௅,௞,௬ ൌ  Quantity of electricity that would be consumed by the baseline electricity 
+consumption source k in year y (MWh/yr) 
+𝐸𝐹ா௅,௞,௬ൌ Emission factor for electricity generation for source k in year y (tCO2/MWh) 
+𝑇𝐷𝐿௞,௬ൌ Average technical transmission and distribution losses for providing electricity to 
+source k in year y 
+ 
+Emission factor for electricity generation for the proposed project activity is taken as the 
+national EF published by Turkis h Republic Ministry of energy. 
+ 
+
+
+===== PAGE 76 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+76 
+It is defined that Combined margin emissions calculated by source type can be used in the 
+greenhouse gas emission (GHG) type reduction calculations to be achieved by generating 
+renewable energy electricity generation. 
+ 
+7.3 Project Emissions  
+The project emissions in year y are calculated  for each alternative waste treatment process 
+implemented in the project activity as follows: 
+𝑃𝐸௬ ൌ𝑃 𝐸஼ைெ௉,௬൅𝑃 𝐸஺஽,௬൅𝑃 𝐸ீ஺ௌ,௬൅𝑃 𝐸ோ஽ி_ௌ஻,௬൅𝑃 𝐸ூே஼,௬ Equation (1) 
+Where: 
+𝑃𝐸௬ = Project emissions in year y (t CO2e) 
+𝑃𝐸஼ைெ௉,௬ = Project emissions from composting or co-composting in year y 
+(t CO2e) 
+𝑃𝐸஺஽,௬ = Project emissions from anaerobic digestion and biogas 
+combustion in year y (t CO2e) 
+𝑃𝐸ீ஺ௌ,௬ = Project emissions from gasification in year y (t CO2e) 
+𝑃𝐸ோ஽ி_ௌ஻,௬ = Project emissions associated with RDF/SB in year y (t CO2e) 
+𝑃𝐸ூே஼,௬ = Project emissions from incineration in year y (t CO2e) 
+ 
+Since the project activity includes anaerobic digestion and biogas combustion as well as landfill 
+gas combustion, PE COMP,y, PEGAS,y, PERDF,SB,y, and PEINC,y are zero.  
+ 
+PE
+AD,y is calculated according to  “TOOL14: Project and leakage emissions from anaerobic 
+digesters”. When estimating the parameters PEEC,y and PEFC,y in the tool, the sources of 
+electricity and fossil fuel consumption shall in clude processing, upgrading and compressing the 
+biogas into the natural gas network (if this is part of the project activity). 
+ 
+The project emissions from electricity consumption due to waste treatment process t 
+implemented under the project activity ( PE
+EC,t,y) shall be calculated using  “TOOL05: Baseline, 
+project and/or leakage emissions from electric ity consumption and moni toring of electricity 
+generation”. When applying the tool: 
+
+
+===== PAGE 77 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+77 
+Project emissions shall be calculated for the sources of electricity consumed due to the 
+alternative waste treatment process t, excluding consumption of electricity that was generated 
+by the project activity ( ECt,y); 
+If the project activity consists of more than one alternative waste treatment process, then 
+project participants may choose to monitor electricity consumption for the entire site and then 
+allocate this consumption to one of the different alternative waste treatment processes (e.g. 
+apportionment based on sub-metering data is not required). 
+𝑃𝐸
+ா஼,௬ ൌ෍ 𝐸 𝐶௉௃,௝,௬ൈ𝐸 𝐹ாி,௝,௬ൈ൫1 ൅ 𝑇𝐷𝐿௝,௬൯
+௝
+ 
+Where: 
+𝑃𝐸ா஼,௬ൌ Project emissions from electricity consumption in year y (t CO2 / yr) 
+𝐸𝐶௉௃,௝,௬ ൌ Quantity of electricity consumed by the pr oject electricity consumption source j in 
+year y (MWh/yr) 
+𝐸𝐹ாி,௝,௬ ൌ Emission factor for electricity generation  for source j in year y (t CO2/MWh) 
+𝑇𝐷𝐿௝,௬ ൌ Average technical transmission and distribution losses for providing electricity to 
+source j in year y 
+j ൌ Sources of electricity consumption in the project 
+ 
+As previously mentioned, emission factor for electricity generation for the proposed project 
+activity is taken as the national EF published by Turkish Republic Ministry of energy. 
+ 
+7.4 Leakage  
+𝐿𝐸௬ ൌ𝐿 𝐸஼ைெ௉,௬൅𝐿 𝐸஺஽,௬൅𝐿 𝐸ோ஽ி_ௌ஻,௬ Equation (2) 
+Where: 
+𝐿𝐸௬ = Leakage emissions in the year y (t CO2e)  
+𝐿𝐸஼ைெ௉,௬ = Leakage emissions from composting or co-composting in year y 
+(t CO2e) 
+𝐿𝐸஺஽,௬ = Leakage emissions from anaerobic digester in year y (t CO2e) 
+𝐿𝐸ோ஽ி_ௌ஻,௬ = Leakage emissions associated with RDF/SB in year y (t CO2e) 
+ 
+Leakage emissions associated with composting ( LECOMP,y) are calculated according to  “TOOL13: 
+Project and leakage emissions from composting”. However, since the project activity does not 
+
+
+===== PAGE 78 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+78 
+include composting of fresh waste or RDF/SB production, LE COMP,y and LERDF_SB,y are zero. In the 
+Project case LEStorage,y is considered zero as the storage lagoon is not un-aerated. 
+No leakage effects are accounted for under the applied methodology. 
+ 
+7.5 Net GHG Emission Reductions and Removals 
+ 
+To calculate the emission reductions the project participant shall apply the following equation: 
+𝐸𝑅௬ൌ𝐵 𝐸௬െ𝑃 𝐸௬െ𝐿 𝐸௬ Equation (3) 
+Where: 
+𝐸𝑅௬ = Emissions reductions in year y (t CO2e) 
+𝐵𝐸௬ = Baseline emissions in year y (t CO2e) 
+𝑃𝐸௬ = Project emissions in the year y (t CO2e) 
+𝐿𝐸௬ = Leakage emissions in year y (t CO2e) 
+ 
+Year Estimated 
+baseline 
+emissions or 
+removals 
+(tCO2e) 
+Estimated project 
+emissions or 
+removals 
+(tCO2e) 
+Estimated 
+leakage 
+emissions 
+(tCO2e) 
+Estimated net 
+GHG emission 
+reductions or 
+removals 
+(tCO2e) 
+2020 4,674.03  1,737.38 - 2,936.65 
+2021 39,890.86  10,516.94 - 29,373.93  
+2022 57,483.86  11,056.35 - 46,427.50 
+ 
+
+
+===== PAGE 79 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.1 
+APPENDIX 1: PUBLIC PARTICIPATION 
+MEETING ANNOUNCEMENTS 
+ 
+
+
+
+===== PAGE 80 =====
+ Joint Project Description & Monitoring Report: VCS Version 4.2 
+80 
+ 

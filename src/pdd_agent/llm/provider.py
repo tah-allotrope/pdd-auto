@@ -33,6 +33,7 @@ class DraftSection:
     output_references: list[dict[str, Any]] = field(default_factory=list)
     review_sensitivity: str = "LOW"
     content_class: str = "NARRATIVE"
+    structured_content: dict[str, Any] | None = None
 
 
 @dataclass
@@ -261,6 +262,7 @@ class DraftRun:
                     "output_references": s.output_references,
                     "review_sensitivity": s.review_sensitivity,
                     "content_class": s.content_class,
+                    "structured_content": s.structured_content,
                 }
                 for s in self.sections
             ],
