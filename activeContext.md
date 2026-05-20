@@ -4,13 +4,46 @@
 - **Q-002:** Retrofit new DOCX table structures to Soc Son and Vietnam demos as well (not just Inegol).
 - **Q-003:** Official VCS v4.4 DOCX template FOUND and downloaded from Verra (`VCS-Project-Description-Template-v4.4-FINAL2.docx`, 277 KB). Will use as base document for export; if unavailable at runtime, fall back to scratch generation.
 
+## PHASE-02 — Reverse-Engineer Inegol ProjectInput + Extend Schema
+
+- [x] TASK-02-01: Extract Inegol project facts from generated DOCX tables (cover, identity, location, technology, monitoring, applicability, gaps).
+- [x] TASK-02-02: Extend `schemas/project_input.py` with Inegol-specific sub-models: `AuditHistoryEntry`, `EngineEntry`, `RDFCapacity`, `Coordinate`.
+- [x] TASK-02-03: Add optional fields to `ProjectIdentity` (`vcs_standard_version`, `prepared_by`, `audit_history`), `ProjectLocation` (`site_area_m2`, `grid_connection_point`, `boundary_coordinates`), and `ProjectTechnology` (`gas_engine_commissioning`, `rdf_capacity`, `biomethanization_suitable_fraction`).
+- [x] TASK-02-04: Make `QuantificationInputs` fields optional (`None` defaults) to support TBD values; update `validate_net_emissions` to skip when any key value is None.
+- [x] TASK-02-05: Construct `configs/demo/inegol_project_input.yaml` with all reverse-engineered facts.
+- [x] TASK-02-06: Write `tests/test_inegol_input.py` with 35 validation tests covering identity, location, dates, technology, applicability, quantification, monitoring, safeguards, compliance, SD, and summary.
+- [x] TASK-02-07: Backport 4 Codex-extracted reference texts into `data/corpus/normalized/` and update manifest.
+- [x] TASK-02-08: Run full test suite (190 passed, 7 skipped).
+
+## Review / Results - Phase 02
+
+- Extracted all key Inegol facts from 32 tables in `INEGOL_VCS_Project_Description_v4.4_draft.docx` using python-docx.
+- Schema extensions are backward-compatible: all new fields have `None` or `default_factory=list` defaults; existing tests pass unchanged.
+- `configs/demo/inegol_project_input.yaml` contains: project identity (VCS-3908, BIOTREND, Gaia Climate, MUNDO VERDE, Doğu Star), location (İnegöl, Bursa, Türkiye, 10 boundary coordinates, 38,490.14 m²), dates (2020-12-31 start, 7-year crediting), technology (ACM0022, combined WTE/AD, 8.484 MW, 262,970 t/year, 6 engines, RDF 27 tph/93 tpd/125 tpd, 45% biomethanization fraction), applicability (11 conditions all true), monitoring (10 parameters), safeguards (consultation not done, EIA not done), compliance (MUNDO VERDE sole credit owner), and SD (4 contributions).
+- Quantification fields are intentionally TBD (null) pending validated emission reduction spreadsheet.
+- `summary()` method updated to handle None net emissions gracefully (displays "TBD").
+- 35 Inegol-specific tests all pass; full suite 190 passed, 7 skipped.
+- 4 Codex reference texts backported to corpus: `DraftProjectDescription` (32,375 words), `EB111_repan07_ACM0022_v03.0` (26,046 words), `VCS-Project-Description-HEREKO-v4.1` (18,861 words), `Bergama_VCS-Joint-Project-Description-Monitoring-Report-v4.2` (19,507 words).
+
 ## PHASE-01 — DOCX Export Upgrade with VCS v4.4 Table Structures
 
-- [ ] TASK-01-01: Create `src/pdd_agent/export/table_helpers.py` with OOXML primitives.
-- [ ] TASK-01-02: Implement 11 VCS v4.4 table renderer functions.
-- [ ] TASK-01-03: Refactor `export_run_to_docx()` to dispatch structured tables.
-- [ ] TASK-01-04: Update base styles (Arial, VCS margins) and support template-based export.
-- [ ] TASK-01-05: Write unit tests in `tests/test_docx_export_tables.py`.
+- [x] TASK-01-01: Create `src/pdd_agent/export/table_helpers.py` with OOXML primitives.
+- [x] TASK-01-02: Implement 11 VCS v4.4 table renderer functions.
+- [x] TASK-01-03: Refactor `export_run_to_docx()` to dispatch structured tables.
+- [x] TASK-01-04: Update base styles (Arial, VCS margins) and support template-based export.
+- [x] TASK-01-05: Write unit tests in `tests/test_docx_export_tables.py`.
+
+## Review / Results - Phase 01
+
+- Downloaded official Verra VCS v4.4 template (277 KB) from verra.org.
+- Added `structured_content` field to `DraftSection` dataclass for table dispatch.
+- Created `src/pdd_agent/export/table_helpers.py` with OOXML primitives (shading, margins, cant_split, repeat_header).
+- Rewrote `src/pdd_agent/export/docx_export.py` with 11 VCS v4.4 table renderers + template support + safe style fallback.
+- Created `tests/test_docx_export_tables.py` covering all 11 renderers + TBD appendix.
+- Fixed template compatibility issues (missing styles) via `_safe_set_table_style()` and `_safe_paragraph_style()`.
+- All 155 tests pass, 7 skipped.
+- Committed and pushed Phase 01.
+- Generated Phase 01 HTML report: `reports/2026-05-20-docx-export-upgrade.html`.
 
 ## Soc Son Client Demo Output Upgrade - Phase 04 (Verification & Fresh Client Demo Artifact)
 

@@ -10,6 +10,14 @@ from typing import Annotated, Literal
 from pydantic import BaseModel, Field, field_validator
 
 
+class AuditHistoryEntry(BaseModel):
+    audit_type: str = Field(..., description="e.g. validation, verification")
+    period: str = Field(..., description="Audit period string")
+    program: str = Field(..., description="e.g. VCS")
+    vvb_name: str = Field(..., description="Validation/Verification Body name")
+    number_of_years: int = Field(..., ge=1, description="Number of years covered")
+
+
 class ProjectIdentity(BaseModel):
     project_name: str = Field(
         ..., min_length=1, description="Official project name as registered or intended"
@@ -25,6 +33,20 @@ class ProjectIdentity(BaseModel):
         default_factory=list, description="Names of other entities involved in the project"
     )
     ownership: str = Field(..., description="Ownership structure description")
+    vcs_standard_version: str | None = Field(
+        None, description="VCS Standard version (e.g. v4.4, v4.7)"
+    )
+    prepared_by: str | None = Field(
+        None, description="Entity that prepared the project description"
+    )
+    audit_history: list[AuditHistoryEntry] = Field(
+        default_factory=list, description="List of audit/verification history entries"
+    )
+
+
+class Coordinate(BaseModel):
+    latitude: float = Field(..., ge=-90.0, le=90.0)
+    longitude: float = Field(..., ge=-180.0, le=180.0)
 
 
 class ProjectLocation(BaseModel):
@@ -42,6 +64,15 @@ class ProjectLocation(BaseModel):
     landfill_longitude: float | None = Field(
         None, ge=-180.0, le=180.0, description="Baseline landfill GPS longitude if applicable"
     )
+    site_area_m2: float | None = Field(
+        None, gt=0, description="Site area in square meters"
+    )
+    grid_connection_point: str | None = Field(
+        None, description="Grid connection substation or point"
+    )
+    boundary_coordinates: list[Coordinate] = Field(
+        default_factory=list, description="List of GPS coordinates defining project boundary"
+    )
 
 
 class ProjectDates(BaseModel):
@@ -54,6 +85,17 @@ class ProjectDates(BaseModel):
         False,
         description="True if project qualifies as small-scale under the applicable methodology",
     )
+
+
+class EngineEntry(BaseModel):
+    model: str = Field(..., description="Engine model identifier")
+    commissioning_date: str | None = Field(None, description="Commissioning date ISO 8601")
+
+
+class RDFCapacity(BaseModel):
+    max_capacity_tph: float | None = Field(None, ge=0, description="Maximum RDF production capacity in tonnes per hour")
+    planned_2024_tpd: float | None = Field(None, ge=0, description="Planned RDF production in 2024 in tonnes per day")
+    planned_2035_tpd: float | None = Field(None, ge=0, description="Planned RDF production in 2035 in tonnes per day")
 
 
 class ProjectTechnology(BaseModel):
@@ -93,6 +135,15 @@ class ProjectTechnology(BaseModel):
         False,
         description="True if the project claims credits for fossil fuel displacement (cement / industrial fuel substitution)",
     )
+    gas_engine_commissioning: list[EngineEntry] = Field(
+        default_factory=list, description="List of gas engines with commissioning dates"
+    )
+    rdf_capacity: RDFCapacity | None = Field(
+        None, description="RDF production capacity and planned production"
+    )
+    biomethanization_suitable_fraction: float | None = Field(
+        None, ge=0, le=1, description="Fraction of waste suitable for biomethanization (0-1)"
+    )
 
 
 class MethodologyApplicability(BaseModel):
@@ -108,23 +159,23 @@ class MethodologyApplicability(BaseModel):
 
 
 class QuantificationInputs(BaseModel):
-    baseline_emissions_tco2e_per_year: float = Field(
-        ..., ge=0, description="Estimated annual baseline emissions in tCO2e/year"
+    baseline_emissions_tco2e_per_year: float | None = Field(
+        None, ge=0, description="Estimated annual baseline emissions in tCO2e/year"
     )
-    project_emissions_tco2e_per_year: float = Field(
-        ..., ge=0, description="Estimated annual project emissions in tCO2e/year"
+    project_emissions_tco2e_per_year: float | None = Field(
+        None, ge=0, description="Estimated annual project emissions in tCO2e/year"
     )
-    leakage_tco2e_per_year: float = Field(
+    leakage_tco2e_per_year: float | None = Field(
         0.0, ge=0, description="Estimated annual leakage in tCO2e/year"
     )
-    net_emissions_tco2e_per_year: float = Field(
-        ..., description="Net annual emission reductions = Baseline - Project - Leakage"
+    net_emissions_tco2e_per_year: float | None = Field(
+        None, description="Net annual emission reductions = Baseline - Project - Leakage"
     )
-    grid_emission_factor: float = Field(
-        ..., gt=0, description="Grid emission factor in tCO2e/MWh (from official source)"
+    grid_emission_factor: float | None = Field(
+        None, gt=0, description="Grid emission factor in tCO2e/MWh (from official source)"
     )
-    grid_emission_factor_source: str = Field(
-        ...,
+    grid_emission_factor_source: str | None = Field(
+        None,
         description="Source of grid emission factor (e.g. ACM0022 default, national grid authority, regional grid operator)",
     )
     methane_capture_rate: float | None = Field(
@@ -135,8 +186,8 @@ class QuantificationInputs(BaseModel):
         gt=0,
         description="Methano-genesis factor for landfill baseline (tonnes CH4/tonne waste)",
     )
-    crediting_period_total_tco2e: float = Field(
-        ..., description="Total estimated credits over the crediting period (net × years)"
+    crediting_period_total_tco2e: float | None = Field(
+        None, description="Total estimated credits over the crediting period (net × years)"
     )
 
 
@@ -233,11 +284,14 @@ class ProjectInput(BaseModel):
     @classmethod
     def validate_net_emissions(cls, v):
         net = v.net_emissions_tco2e_per_year
-        if net < 0:
-            raise ValueError(f"Net emissions cannot be negative: got {net}")
         baseline = v.baseline_emissions_tco2e_per_year
         project = v.project_emissions_tco2e_per_year
         leakage = v.leakage_tco2e_per_year
+        # Skip validation if any key value is None (TBD / incomplete input)
+        if net is None or baseline is None or project is None or leakage is None:
+            return v
+        if net < 0:
+            raise ValueError(f"Net emissions cannot be negative: got {net}")
         expected_net = baseline - project - leakage
         if abs(net - expected_net) > 0.01:
             raise ValueError(
@@ -248,6 +302,8 @@ class ProjectInput(BaseModel):
         return v
 
     def summary(self) -> str:
+        net = self.quantification.net_emissions_tco2e_per_year
+        net_str = f"{net:,.0f}" if net is not None else "TBD"
         return (
             f"Project: {self.project.project_name}\n"
             f"  Country: {self.location.country}\n"
@@ -255,6 +311,6 @@ class ProjectInput(BaseModel):
             f"  Technology: {self.technology.technology_type}\n"
             f"  Capacity: {self.technology.installed_capacity_mw} MW\n"
             f"  Annual waste: {self.technology.annual_waste_throughput:,.0f} tonnes\n"
-            f"  Net tCO2e/year: {self.quantification.net_emissions_tco2e_per_year:,.0f}\n"
+            f"  Net tCO2e/year: {net_str}\n"
             f"  Crediting period: {self.dates.crediting_period_years} years\n"
         )

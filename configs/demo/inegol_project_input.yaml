@@ -1,0 +1,216 @@
+project:
+  project_name: "INEGOL INTEGRATED SOLID WASTE STORAGE AND DISPOSAL FACILITY"
+  project_id_vcs: "3908"
+  proponent_name: "BIOTREND Çevre ve Enerji Yatırımları Anonim Şirketi"
+  proponent_contact_email: "akif.demir@biotrendenerji.com.tr"
+  other_entities:
+    - "MUNDO VERDE CLIMATE SA"
+    - "Gaia Climate Finansal Danışmanlık Hizmetleri ve Ticaret A.Ş."
+    - "Doğu Star Elektrik Üretim A.Ş."
+  ownership: >
+    MUNDO VERDE CLIMATE SA is the sole owner of carbon credits produced by this project.
+    Doğu Star Elektrik Üretim A.Ş. holds legal rights under the EMRA electricity generation
+    license, and is responsible for operations. BIOTREND is the parent holding company.
+  vcs_standard_version: "v4.7"
+  prepared_by: "Gaia Climate Finansal Danışmanlık Hizmetleri ve Ticaret A.Ş."
+  audit_history:
+    - audit_type: "validation"
+      period: "2020-12-31 to 2027-12-30"
+      program: "VCS"
+      vvb_name: "Earthood"
+      number_of_years: 7
+
+location:
+  country: "Türkiye"
+  region: "Bursa Province"
+  city: "İnegöl District"
+  latitude: 40.1505
+  longitude: 29.5810
+  landfill_latitude: null
+  landfill_longitude: null
+  site_area_m2: 38490.14
+  grid_connection_point: "İnegöl TM No-154/34.5 kV substation"
+  boundary_coordinates:
+    - latitude: 40.149970
+      longitude: 29.577019
+    - latitude: 40.149353
+      longitude: 29.577619
+    - latitude: 40.148985
+      longitude: 29.578291
+    - latitude: 40.149871
+      longitude: 29.579175
+    - latitude: 40.150012
+      longitude: 29.580261
+    - latitude: 40.149356
+      longitude: 29.581040
+    - latitude: 40.149598
+      longitude: 29.581945
+    - latitude: 40.150018
+      longitude: 29.583487
+    - latitude: 40.151261
+      longitude: 29.583638
+    - latitude: 40.151250
+      longitude: 29.582575
+
+dates:
+  start_date: "2020-12-31"
+  crediting_period_start: "2020-12-31"
+  crediting_period_years: 7
+  project_scale_small: false
+
+technology:
+  methodology_ids:
+    - "ACM0022"
+  technology_type: "combined_wte_ad"
+  waste_type:
+    - "municipal_solid_waste"
+  annual_waste_throughput: 262970.37
+  installed_capacity_mw: 8.484
+  energy_generation_mwh_year: 49935.315
+  tip_fee_usd_per_tonne: null
+  landfill_diversion_claim: true
+  fuel_substitution_claim: false
+  gas_engine_commissioning:
+    - model: "CAT 3412C (Engine 1)"
+      commissioning_date: "2018-01-01"
+    - model: "CAT 3412C (Engine 2)"
+      commissioning_date: "2018-01-01"
+    - model: "CAT 3412C (Engine 3)"
+      commissioning_date: "2018-01-01"
+    - model: "CAT 3412C (Engine 4)"
+      commissioning_date: "2018-01-01"
+    - model: "CAT 3512B (Engine 5)"
+      commissioning_date: "2020-01-01"
+    - model: "CAT 3512B (Engine 6)"
+      commissioning_date: "2020-01-01"
+  rdf_capacity:
+    max_capacity_tph: 27
+    planned_2024_tpd: 93
+    planned_2035_tpd: 125
+  biomethanization_suitable_fraction: 0.45
+
+methodology_applicability:
+  eligibility_checklist:
+    'Applicability of methodology 2 (ID): "ACM0022, version 6.1.0"': true
+    "Applicability Conditions 1 - Geographic applicability is unrestricted": true
+    "Applicability Conditions 2 - Primary technology: anaerobic digestion + RDF + mechanical separation": true
+    "Applicability Conditions 3 - Waste source: municipal solid waste (MSW)": true
+    "Applicability Conditions 4 - Landfill diversion is applied (Section 2 of the methodology)": true
+    "Applicability Conditions 5 - Grid connection is used for electricity export": true
+    "Applicability Conditions 6 - Baseline treatment option: disposal to landfill with no capture system (PB) and no power generation": true
+    "Applicability Conditions 7 - Emission sources include: fugitive methane, electricity grid, soil carbon change (SCC), fossil fuel leakage (LEF), electricity generation emissions (PE) are quantified": true
+    "Applicability Conditions 8 - Monitoring includes: W_MSW, waste fractions, EG_export, EG_import, Q_biogas, CH4_biogas, flare operation, fossil fuel use, RDF/end use, residual waste/by-products": true
+    "Applicability Conditions 9 - Monitoring plan is aligned with ACM0022 requirements (Section 2 of the methodology)": true
+    "Applicability Conditions 10 - Applicability conditions are satisfied in the context of the ACM0022 methodology": true
+    "AC1. Applicability conditions and methodology version are specified (Section 1 of the methodology)": true
+    "AC2. Geographic conditions are unrestricted (Section 2 of the methodology)": true
+    "AC3. Project is located in İnegöl District, Bursa Province, Türkiye, which is within the scope of ACM0022": true
+  deviation_from_methodology: null
+
+quantification:
+  baseline_emissions_tco2e_per_year: null
+  project_emissions_tco2e_per_year: null
+  leakage_tco2e_per_year: 0.0
+  net_emissions_tco2e_per_year: null
+  grid_emission_factor: null
+  grid_emission_factor_source: null
+  methane_capture_rate: null
+  methane_generation_factor: null
+  crediting_period_total_tco2e: null
+
+monitoring:
+  parameters_monitored:
+    - name: "W_MSW,y"
+      unit: "tonnes"
+      description: "Municipal solid waste received/treated by the project"
+      frequency: "Continuous/weighbridge or operational records; aggregated monthly and annually"
+      method: "Weighbridge/waste acceptance system"
+      data_source: "Calibration and reconciliation with municipal records"
+    - name: "Waste fractions"
+      unit: "fraction or %"
+      description: "Composition of waste by relevant ACM0022 categories"
+      frequency: "Sampling/characterization according to approved procedure"
+      method: "Waste characterization records/lab analysis"
+      data_source: "Sampling plan and QA/QC required"
+    - name: "EG_export,y"
+      unit: "MWh"
+      description: "Electricity supplied to the grid"
+      frequency: "Continuous meter reading; monthly and annual aggregation"
+      method: "Revenue/export meter"
+      data_source: "Meter calibration, cross-check with grid invoices"
+    - name: "EG_import,y"
+      unit: "MWh"
+      description: "Electricity consumed from the grid"
+      frequency: "Continuous meter reading; monthly and annual aggregation"
+      method: "Import meter/invoices"
+      data_source: "Used for project emissions from electricity consumption"
+    - name: "Q_biogas,y"
+      unit: "Nm3 or m3"
+      description: "Biogas flow to engines/flare"
+      frequency: "Continuous flow measurement; aggregated monthly and annually"
+      method: "Biogas flow meters/SCADA"
+      data_source: "Meter calibration and data completeness checks"
+    - name: "CH4_biogas,y"
+      unit: "% v/v"
+      description: "Methane content of biogas"
+      frequency: "Continuous analyzer or periodic measurement per monitoring plan"
+      method: "Gas analyzer/lab records"
+      data_source: "QA/QC and calibration required"
+    - name: "Flare operation"
+      unit: "hours/flow/temperature"
+      description: "Emergency flare operation and destruction conditions"
+      frequency: "Event-based and continuous where applicable"
+      method: "Flare logs/SCADA"
+      data_source: "Demonstrate combustion and destruction efficiency"
+    - name: "Fossil fuel use"
+      unit: "litres, kg, or GJ"
+      description: "Fossil fuels consumed by project equipment"
+      frequency: "As consumed; monthly/annual aggregation"
+      method: "Fuel purchase/use records"
+      data_source: "Apply TOOL03 where applicable"
+    - name: "RDF production/end use"
+      unit: "tonnes"
+      description: "RDF produced and sent to end users or otherwise managed"
+      frequency: "Operational records; monthly/annual aggregation"
+      method: "RDF production/offtake records"
+      data_source: "Needed for RDF/SB leakage/end-use assessment"
+    - name: "Residual waste/by-products"
+      unit: "tonnes"
+      description: "Residuals, digestate, leachate or by-products sent to disposal/treatment/use"
+      frequency: "Operational records; monthly/annual aggregation"
+      method: "Facility logs/manifests"
+      data_source: "Needed for leakage and project emissions"
+  monitoring_equipment:
+    - "Weighbridge"
+    - "Revenue/export meter"
+    - "Import meter"
+    - "Biogas flow meters"
+    - "Gas analyzer"
+    - "SCADA"
+    - "Flare logs"
+  data_management: >
+    Monitoring data is recorded electronically and physically archived per VCS
+    requirements. Monthly and annual aggregation reports are produced and
+    reconciled with invoices and operational logs.
+
+safeguards:
+  no_net_harm_statement: "No net harm analysis completed"
+  stakeholder_consultation_completed: false
+  stakeholder_consultation_date: null
+  environmental_impact_assessment: false
+  eia_reference: null
+
+compliance_and_ownership:
+  no_participation_other_programs: true
+  no_other_forms_of_credit: true
+  other_ghg_programs: []
+  credit_ownership_statement: "MUNDO VERDE CLIMATE SA is the sole owner of carbon credits produced by this project"
+  double_counting_risk: false
+
+sustainable_development:
+  sd_contributions:
+    - "Climate mitigation"
+    - "Clean energy"
+    - "Responsible waste management"
+    - "Local employment and skills"
+  sd_comments: null
