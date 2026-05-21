@@ -193,6 +193,8 @@ class SectionOrchestrator:
         if not self._project:
             return "ProjectInput not available.\n"
         p = self._project
+        net = p.quantification.net_emissions_tco2e_per_year
+        net_str = f"{net:,.0f}" if net is not None else "TBD"
         parts = [
             f"- Project: {p.project.project_name}",
             f"- Location: {p.location.city}, {p.location.country}",
@@ -200,7 +202,7 @@ class SectionOrchestrator:
             f"- Technology: {p.technology.technology_type}",
             f"- Capacity: {p.technology.installed_capacity_mw} MW",
             f"- Annual waste: {p.technology.annual_waste_throughput:,.0f} tonnes/year",
-            f"- Net tCO2e/yr: {p.quantification.net_emissions_tco2e_per_year:,.0f}",
+            f"- Net tCO2e/yr: {net_str}",
             f"- Crediting period: {p.dates.crediting_period_years} years",
         ]
         return "\n".join(parts) + "\n"

@@ -96,7 +96,13 @@ def check_quantitative_consistency(
 
     section_map: dict[str, str] = {}
     for s in draft_sections:
-        key = f"{s.section_id}.{s.sub_section_id}" if s.sub_section_id else s.section_id
+        if s.sub_section_id:
+            if s.sub_section_id.startswith(s.section_id + "."):
+                key = s.sub_section_id
+            else:
+                key = f"{s.section_id}.{s.sub_section_id}"
+        else:
+            key = s.section_id
         section_map[key] = s.text
 
     _check_net_emissions_cross_ref(section_map, project_input, report)
@@ -251,8 +257,12 @@ def _check_crediting_period_total(
 
     net = project_input.quantification.net_emissions_tco2e_per_year
     years = project_input.dates.crediting_period_years
-    expected_total = net * years
     actual_total = project_input.quantification.crediting_period_total_tco2e
+
+    if net is None or actual_total is None:
+        return
+
+    expected_total = net * years
 
     if abs(expected_total - actual_total) > 0.01:
         report.flags.append(

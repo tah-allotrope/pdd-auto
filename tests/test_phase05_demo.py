@@ -266,7 +266,7 @@ def test_run_demo_benchmark_with_demo_provider_emits_non_placeholder_sections(tm
 
     assert "[PLACEHOLDER" not in by_key["1.1.1"].text
     assert "REVIEW REQUIRED" not in by_key["1.1.1"].text
-    assert "Soc Son-like Waste-to-Power Demonstration Project" in by_key["1.1.1"].text
+    assert "synthetic client-demo case" in by_key["1.1.1"].text
     assert run.provider == "demo"
 
 
