@@ -4,6 +4,29 @@
 - **Q-002:** Retrofit new DOCX table structures to Soc Son and Vietnam demos as well (not just Inegol).
 - **Q-003:** Official VCS v4.4 DOCX template FOUND and downloaded from Verra (`VCS-Project-Description-Template-v4.4-FINAL2.docx`, 277 KB). Will use as base document for export; if unavailable at runtime, fall back to scratch generation.
 
+## PHASE-03 — Review Layer Strengthening
+
+- [x] TASK-03-01: Add `TBDTracker` class to `src/pdd_agent/review/tbd_tracker.py` with regex scanning for `[TBD]`, `[PLACEHOLDER]`, `[INSERT]`, `[SOURCE]`, `[EVIDENCE]` markers and schema-based evidence type mapping.
+- [x] TASK-03-02: Integrate `TBDTracker` into `SectionOrchestrator.run_review()` so every draft run produces a TBD report alongside consistency report.
+- [x] TASK-03-03: Add `_check_ghg_boundary_completeness()` to `src/pdd_agent/review/consistency.py` verifying Section 3.3 contains all 5 required boundary elements (included/excluded sources, geographic, temporal, project type).
+- [x] TASK-03-04: Add `_check_monitoring_parameter_coverage()` to `src/pdd_agent/review/consistency.py` cross-referencing sections 5.1/5.2 against ACM0022 required parameters (waste throughput, biogas CH4%, recovered electricity, grid emission factor).
+- [x] TASK-03-05: Fix `render_tbd_appendix()` in `docx_export.py` to match `TBDReport.to_dict()` output format and render as "Appendix C - Data Gaps and Evidence Requirements".
+- [x] TASK-03-06: Write `tests/test_tbd_tracker.py` covering detection, section attribution, evidence mapping, false positive avoidance, and report serialization (14 tests).
+- [x] TASK-03-07: Run full test suite (204 passed, 7 skipped).
+
+## Review / Results - Phase 03
+
+- Created `src/pdd_agent/review/tbd_tracker.py` with `TBDTracker`, `TBDReport`, `TBDItem` dataclasses.
+- TBD regex detects 5 marker types case-insensitively: `[TBD...]`, `[PLACEHOLDER]`, `[INSERT...]`, `[SOURCE...]`, `[EVIDENCE...]`.
+- Each TBD item mapped to `evidence_required` from `schemas/pdd_section_schema.yaml` via section_id/sub_section_id lookup.
+- Integrated into orchestrator: `run_review()` now returns dict with `"tbd"` key containing serialized report.
+- Fixed DOCX renderer key mismatch: `render_tbd_appendix()` now reads `section_id`/`sub_section_id`/`evidence_type` from TBDReport.to_dict().
+- Added GHG boundary completeness check: flags HIGH severity when any of 5 required elements missing from Section 3.3.
+- Added monitoring parameter coverage check: flags MEDIUM severity when ACM0022 required parameters missing from Sections 5.1/5.2.
+- All 204 tests pass (7 skipped), zero regressions.
+- Committed and pushed Phase 03.
+- Generated Phase 03 HTML report: `reports/2026-05-21-review-layer-strengthening.html`.
+
 ## PHASE-02 — Reverse-Engineer Inegol ProjectInput + Extend Schema
 
 - [x] TASK-02-01: Extract Inegol project facts from generated DOCX tables (cover, identity, location, technology, monitoring, applicability, gaps).
