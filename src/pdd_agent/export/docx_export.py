@@ -129,7 +129,7 @@ def export_run_to_docx(
     if not is_demo:
         _add_reviewer_issues_appendix(doc, run_data, sections, blocked_paths)
 
-    tbd_report = run_data.get("tbd_report")
+    tbd_report = run_data.get("tbd")
     if tbd_report:
         render_tbd_appendix(doc, tbd_report)
 
@@ -396,11 +396,14 @@ def render_tbd_appendix(doc: Any, tbd_report: dict[str, Any]) -> Any:
         return None
     rows = [["Section", "Marker", "Context", "Suggested evidence"]]
     for item in items:
+        sid = item.get("section_id", "")
+        ssid = item.get("sub_section_id", "")
+        section_label = f"{sid}.{ssid}" if ssid else sid
         rows.append([
-            str(item.get("section", "-")),
+            section_label,
             str(item.get("marker", "-")),
             str(item.get("context", "-")),
-            str(item.get("suggested_evidence", "-")),
+            str(item.get("evidence_type", "-")),
         ])
     return add_styled_table(doc, rows, widths=[Inches(1.0), Inches(1.5), Inches(2.5), Inches(2.1)], header=True, font_size=8.0)
 

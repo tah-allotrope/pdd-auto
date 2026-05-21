@@ -12,6 +12,23 @@ from typing import Any
 
 from schemas.project_input import ProjectInput
 
+# Required boundary elements per VCS PDD Section 3.3 schema
+_GHG_BOUNDARY_REQUIRED = [
+    ("included emission sources", ["included", "emission source"]),
+    ("excluded emission sources", ["excluded", "emission source"]),
+    ("geographic boundary", ["geographic", "gps", "coordinate", "boundary"]),
+    ("temporal boundary", ["temporal", "crediting period", "time boundary"]),
+    ("project type", ["project type", "single project", "poa", "programme of activities"]),
+]
+
+# ACM0022 required monitoring parameters (from methodology_rules.yaml)
+_ACM0022_REQUIRED_PARAMS = [
+    "Annual waste throughput",
+    "Biogas methane concentration",
+    "Recovered electricity",
+    "Grid emission factor",
+]
+
 
 @dataclass
 class ConsistencyFlag:
@@ -87,6 +104,8 @@ def check_quantitative_consistency(
     _check_capacity_consistency(section_map, project_input, report)
     _check_crediting_period_total(section_map, project_input, report)
     _check_baseline_project_emissions_relation(section_map, report)
+    _check_ghg_boundary_completeness(section_map, report)
+    _check_monitoring_parameter_coverage(section_map, project_input, report)
 
     return report
 
@@ -286,6 +305,85 @@ def _check_baseline_project_emissions_relation(
                     ),
                 )
             )
+
+
+def _check_ghg_boundary_completeness(
+    sections: dict[str, str],
+    report: ConsistencyReport,
+) -> None:
+    """Verify Section 3.3 addresses all required GHG boundary elements."""
+    sec_3_3 = sections.get("3.3", "")
+    if not sec_3_3:
+        report.flags.append(
+            ConsistencyFlag(
+                section_a="3.3",
+                section_b="schema",
+                field_name="ghg_boundary",
+                value_a=None,
+                value_b=None,
+                expected=None,
+                tolerance=0.0,
+                severity="HIGH",
+                message="Section 3.3 (Project Boundary) is missing or empty.",
+            )
+        )
+        return
+
+    text_lower = sec_3_3.lower()
+    for element_name, keywords in _GHG_BOUNDARY_REQUIRED:
+        if not any(kw in text_lower for kw in keywords):
+            report.flags.append(
+                ConsistencyFlag(
+                    section_a="3.3",
+                    section_b="schema",
+                    field_name="ghg_boundary",
+                    value_a=None,
+                    value_b=None,
+                    expected=None,
+                    tolerance=0.0,
+                    severity="HIGH",
+                    message=(
+                        f"Section 3.3 appears to lack '{element_name}'. "
+                        f"Required per VCS PDD schema. Keywords checked: {', '.join(keywords)}."
+                    ),
+                )
+            )
+
+
+def _check_monitoring_parameter_coverage(
+    sections: dict[str, str],
+    project_input: ProjectInput | None,
+    report: ConsistencyReport,
+) -> None:
+    """Cross-reference monitoring parameters in 5.1/5.2 against methodology requirements."""
+    if project_input is None:
+        return
+
+    methodology_ids = project_input.technology.methodology_ids
+    sec_5_1 = sections.get("5.1", "")
+    sec_5_2 = sections.get("5.2", "")
+    combined_text = f"{sec_5_1}\n{sec_5_2}".lower()
+
+    if "ACM0022" in methodology_ids:
+        for param in _ACM0022_REQUIRED_PARAMS:
+            param_lower = param.lower()
+            if param_lower not in combined_text:
+                report.flags.append(
+                    ConsistencyFlag(
+                        section_a="5.1/5.2",
+                        section_b="ACM0022",
+                        field_name="monitoring_parameter",
+                        value_a=None,
+                        value_b=None,
+                        expected=None,
+                        tolerance=0.0,
+                        severity="MEDIUM",
+                        message=(
+                            f"ACM0022 required monitoring parameter '{param}' "
+                            f"not found in Sections 5.1 or 5.2."
+                        ),
+                    )
+                )
 
 
 def summarize_consistency_report(report: ConsistencyReport) -> dict[str, Any]:

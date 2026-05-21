@@ -40,6 +40,7 @@ from pdd_agent.review.consistency import (
     summarize_consistency_report,
 )
 from pdd_agent.review.states import ReviewStateStore, init_review_state, ReviewState
+from pdd_agent.review.tbd_tracker import TBDTracker
 from schemas.project_input import ProjectInput
 
 logger = structlog.get_logger()
@@ -409,11 +410,18 @@ class SectionOrchestrator:
             run_id=self._run_id,
         )
 
+        tbd_tracker = TBDTracker()
+        tbd_report = tbd_tracker.scan(
+            draft_sections=self._run.sections,
+            run_id=self._run_id,
+        )
+
         logger.info(
             "review_run_complete",
             run_id=self._run_id,
             review_passed=review_result.passed,
             consistency_passed=consistency_report.passed,
+            tbd_count=tbd_report.count,
             blocking_issues=len(review_result.blocking_issues),
         )
 
@@ -423,6 +431,7 @@ class SectionOrchestrator:
             "run_id": self._run_id,
             "review": summarize_review_result(review_result),
             "consistency": summarize_consistency_report(consistency_report),
+            "tbd": tbd_report.to_dict(),
             "review_state_path": str(state_store.save()),
             "draft_run_path": str(self._run.save()),
             "assumption_burden_path": str(assumption_burden_path),
