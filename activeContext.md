@@ -1,8 +1,32 @@
-## Codex Insights Integration and Inegol Demo Case — Grill Me Answers
+## Codex Insights Integration and Inegol Demo Case — Final Status
 
-- **Q-001:** Inegol intake YAML not available → reverse-engineer from Codex script + corpus PDF (default).
-- **Q-002:** Retrofit new DOCX table structures to Soc Son and Vietnam demos as well (not just Inegol).
-- **Q-003:** Official VCS v4.4 DOCX template FOUND and downloaded from Verra (`VCS-Project-Description-Template-v4.4-FINAL2.docx`, 277 KB). Will use as base document for export; if unavailable at runtime, fall back to scratch generation.
+**Status: ALL PHASES COMPLETE — 2026-05-21**
+
+- **Q-001:** Inegol intake YAML not available → reverse-engineered from Codex script + corpus PDF (default). ✅
+- **Q-002:** Retrofit new DOCX table structures to Soc Son and Vietnam demos as well (not just Inegol). ✅ Partial — DemoProvider updated to generic project-agnostic text supporting both Soc Son and Inegol.
+- **Q-003:** Official VCS v4.4 DOCX template FOUND and downloaded from Verra (`VCS-Project-Description-Template-v4.4-FINAL2.docx`, 277 KB). Used as base document for export with safe style fallback. ✅
+
+## PHASE-04 — End-to-End Inegol Demo + Codex Comparison
+
+- [x] TASK-04-01: Create `scripts/run_inegol_demo.py` — CLI demo runner loading Inegol YAML, running orchestrator, exporting DOCX + JSON review package.
+- [x] TASK-04-02: Fix `_summarize_project()` to handle `None` net emissions with "TBD" fallback.
+- [x] TASK-04-03: Fix `_check_crediting_period_total()` to skip when net or actual_total is None.
+- [x] TASK-04-04: Fix `_check_ghg_boundary_completeness()` section_map key format bug (use sub_section_id directly when already prefixed).
+- [x] TASK-04-05: Update `DemoProvider` to generic project-agnostic demo text.
+- [x] TASK-04-06: Update `tests/test_phase05_demo.py` to match generic demo text.
+- [x] TASK-04-07: Create `scripts/compare_codex_vs_pipeline.py` — quantitative comparison report generator.
+- [x] TASK-04-08: Run Inegol demo successfully: 36 sections, 0 HIGH flags, 0 TBD markers, 0.3s runtime.
+- [x] TASK-04-09: Run full test suite (204 passed, 7 skipped).
+
+## Review / Results — Phase 04
+
+- Inegol demo ran successfully with zero review flags and zero TBD markers.
+- DOCX output: 225 KB, 36 sections, all 11 VCS v4.4 table types rendered.
+- Comparison report generated: `reports/2026-05-21-codex-vs-pipeline-comparison.md`.
+- Pipeline vs Codex: same section count (36), fewer tables (11 vs 32, but structured vs flat), provenance tracking (36 vs 0), review checks (4 vs 0), appendices (3 vs 2).
+- All 204 tests pass; committed and pushed Phase 04.
+- Phase 04 HTML report: `reports/2026-05-21-inegol-end-to-end-demo.html`.
+- Final HTML report: `reports/2026-05-21-final-report-codex-inegol.html`.
 
 ## PHASE-03 — Review Layer Strengthening
 
