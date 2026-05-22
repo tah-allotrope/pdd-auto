@@ -1,3 +1,21 @@
+## Colleague-Testable Demo — Planning Complete
+
+**Status: GAP ANALYSIS + 3 IMPLEMENTATION PLANS READY — 2026-05-22**
+
+### Gap Analysis
+- `reports/2026-05-22-colleague-demo-gap-analysis.md` — 7 gaps identified (1 CRITICAL, 1 HIGH, 3 MEDIUM, 2 LOW)
+
+### Implementation Plans (3 sprints over next week)
+- **Sprint 1 (2026-05-23 to 2026-05-24):** `plans/2026-05-22-demo-quickstart-setup-hardening-plan.md` — QUICKSTART.md, .gitignore fixes, gws error guards (GAP-01, GAP-03, GAP-05)
+- **Sprint 2 (2026-05-25 to 2026-05-26):** `plans/2026-05-22-demo-output-ux-prebuilt-artifacts-plan.md` — Demo script output UX, stable output paths, pre-built example DOCX (GAP-04, GAP-06)
+- **Sprint 3 (2026-05-27 to 2026-05-28):** `plans/2026-05-22-demo-corpus-bundle-test-cleanup-plan.md` — Demo corpus bundle, degraded-mode warnings, test skip cleanup (GAP-02, GAP-07)
+
+### Open Questions
+- Q-001 (Sprint 2): Should the pre-built example DOCX be Inegol or Soc Son? Default: Inegol.
+- Q-001 (Sprint 3): Are Verra VCS project descriptions acceptable to commit as normalized text? Default: Yes (public registry docs).
+
+---
+
 ## Codex Insights Integration and Inegol Demo Case — Final Status
 
 **Status: ALL PHASES COMPLETE — 2026-05-21**
