@@ -2,6 +2,8 @@
 
 **Status:** Codex Insights Integration & Inegol Demo Case — ALL PHASES COMPLETE (2026-05-21). 204 tests pass. Inegol end-to-end demo produces 36-section DOCX with zero review flags. Pipeline proven superior to standalone Codex script per quantitative comparison.
 
+**Demo Quickstart:** Want to see it working in 5 minutes? → [QUICKSTART.md](QUICKSTART.md)
+
 ## What This Tool Does
 
 Builds Verra VCS Project Design Documents (PDDs) for waste-to-energy (WTE) carbon credit projects using a corpus-bucketed RAG approach — no external API costs required for retrieval, optional LLM calls only where rule-based methods are insufficient.
