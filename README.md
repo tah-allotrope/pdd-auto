@@ -115,6 +115,16 @@ pdd-agent upload --run-id <run-id>
 
 ## Prerequisites
 
+### Demo Prerequisites (5-minute path)
+
+- **Python 3.11+**
+- **pip**
+- **git**
+
+No API keys, no Google Drive, no Node.js. See [QUICKSTART.md](QUICKSTART.md) for the full demo walkthrough.
+
+### Full Pipeline Prerequisites
+
 - **Python 3.11+**
 - **Node.js 18+** (for `gws` CLI)
 - **`gws`** authenticated: `npm install -g @googleworkspace/cli && gws auth setup`

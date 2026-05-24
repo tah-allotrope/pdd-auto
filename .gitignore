@@ -16,8 +16,10 @@ htmlcov/
 data/corpus/raw/
 data/corpus/normalized/
 data/corpus/manifest.jsonl
-data/index/
-data/runs/
+data/index/*
+!data/index/.gitkeep
+data/runs/*
+!data/runs/.gitkeep
 
 # Keep tracked spreadsheet source inputs for the Vietnam workflow
 !data/source_inputs/
