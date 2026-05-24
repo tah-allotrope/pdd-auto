@@ -7,6 +7,7 @@ No Google SDK / OAuth is required at the application layer.
 from __future__ import annotations
 
 import json
+import shutil
 import subprocess
 import uuid
 from datetime import datetime, timezone
@@ -22,9 +23,23 @@ if not Path(GWS).exists():
     GWS = "gws"  # fallback to PATH lookup
 VERRA_FOLDER_ID = "1pp23yRZ8qtopw1BPXrzVewXsmmWplCse"
 
+GWS_ERROR_MESSAGE = (
+    "gws CLI not found. Install it with 'npm install -g @googleworkspace/cli && gws auth setup'. "
+    "Note: gws is only required for corpus ingestion and Drive upload — "
+    "demo workflows (scripts/run_demo.py, scripts/run_inegol_demo.py) do not need it."
+)
+
+
+def _check_gws_available() -> None:
+    """Raise a helpful RuntimeError if gws is not installed."""
+    resolved = shutil.which(GWS)
+    if resolved is None:
+        raise RuntimeError(GWS_ERROR_MESSAGE)
+
 
 def _run(args: list[str], timeout: int = 60) -> str:
     """Execute a gws command and return stdout as text."""
+    _check_gws_available()
     log.debug("gws_call", args=args)
     result = subprocess.run(
         [GWS] + args,
