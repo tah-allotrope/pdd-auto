@@ -1,12 +1,18 @@
-## Colleague-Testable Demo — Planning Complete
+## Colleague-Testable Demo — Sprint 1 Complete
 
-**Status: GAP ANALYSIS + 3 IMPLEMENTATION PLANS READY — 2026-05-22**
+**Status: SPRINT 1 COMPLETE — 2026-05-24**
 
 ### Gap Analysis
 - `reports/2026-05-22-colleague-demo-gap-analysis.md` — 7 gaps identified (1 CRITICAL, 1 HIGH, 3 MEDIUM, 2 LOW)
 
 ### Implementation Plans (3 sprints over next week)
-- **Sprint 1 (2026-05-23 to 2026-05-24):** `plans/2026-05-22-demo-quickstart-setup-hardening-plan.md` — QUICKSTART.md, .gitignore fixes, gws error guards (GAP-01, GAP-03, GAP-05)
+- **Sprint 1 (2026-05-23 to 2026-05-24):** `plans/2026-05-22-demo-quickstart-setup-hardening-plan.md` — ✅ COMPLETE
+  - PHASE-01: `QUICKSTART.md` created (7 sections), link added to README
+  - PHASE-02: `_check_gws_available()` guard in `drive.py`, 3 tests in `test_drive_guard.py`
+  - PHASE-03: `.gitignore` fixed for `.gitkeep` tracking, README prerequisites split into Demo/Full Pipeline
+  - PHASE-04: Verified — 207 passed, 7 skipped, 0 failed; both demos produce DOCX; gws guard fires correctly
+  - Commits: `4d19d96` (PHASE-01), `43b06a1` (PHASE-02), `bb12380` (PHASE-03)
+  - Reports: `reports/2026-05-24-sprint1-phase01-quickstart.html`, `reports/2026-05-24-sprint1-phase02-gws-guard.html`, `reports/2026-05-24-sprint1-phase03-gitignore.html`
 - **Sprint 2 (2026-05-25 to 2026-05-26):** `plans/2026-05-22-demo-output-ux-prebuilt-artifacts-plan.md` — Demo script output UX, stable output paths, pre-built example DOCX (GAP-04, GAP-06)
 - **Sprint 3 (2026-05-27 to 2026-05-28):** `plans/2026-05-22-demo-corpus-bundle-test-cleanup-plan.md` — Demo corpus bundle, degraded-mode warnings, test skip cleanup (GAP-02, GAP-07)
 

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sprint 1 PHASE-03 — .gitignore Fixes &amp; README Prerequisites</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; color: #1a1a1a; line-height: 1.6; }
+  h1 { border-bottom: 2px solid #2563eb; padding-bottom: 8px; }
+  h2 { color: #2563eb; margin-top: 32px; }
+  .status { display: inline-block; background: #dcfce7; color: #166534; padding: 4px 12px; border-radius: 9999px; font-weight: 600; font-size: 14px; }
+  table { border-collapse: collapse; width: 100%; margin: 16px 0; }
+  th, td { border: 1px solid #e5e7eb; padding: 8px 12px; text-align: left; }
+  th { background: #f9fafb; font-weight: 600; }
+  code { background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 14px; }
+  pre { background: #1e293b; color: #e2e8f0; padding: 16px; border-radius: 8px; overflow-x: auto; }
+  pre code { background: none; color: inherit; }
+  .meta { color: #6b7280; font-size: 14px; }
+</style>
+</head>
+<body>
+<h1>Sprint 1 PHASE-03 — .gitignore Fixes &amp; README Prerequisites</h1>
+<p class="meta">Date: 2026-05-24 | Sprint: 1 of 3 | Gap: GAP-03 (missing directories)</p>
+<p><span class="status">COMPLETE</span></p>
+
+<h2>Objective</h2>
+<p>Ensure <code>.gitkeep</code> sentinel files are actually tracked for <code>data/runs/</code> and <code>data/index/</code>, and restructure the README's prerequisites section to clearly separate demo vs. full-pipeline requirements.</p>
+
+<h2>Tasks Completed</h2>
+<table>
+<tr><th>Task</th><th>Status</th><th>Output</th></tr>
+<tr><td>TASK-03-01: Update .gitignore with .gitkeep exceptions</td><td>Done</td><td><code>.gitignore</code></td></tr>
+<tr><td>TASK-03-02: Verify .gitkeep files exist</td><td>Done</td><td>Both files confirmed present</td></tr>
+<tr><td>TASK-03-03: Verify .gitkeep files are tracked</td><td>Done</td><td><code>git ls-files</code> shows both</td></tr>
+<tr><td>TASK-03-04: Restructure README prerequisites</td><td>Done</td><td><code>README.md</code></td></tr>
+</table>
+
+<h2>Changes</h2>
+<pre><code>.gitignore  | Changed data/index/ → data/index/* and data/runs/ → data/runs/*
+            | Added !data/index/.gitkeep and !data/runs/.gitkeep exceptions
+README.md   | Split "Prerequisites" into "Demo" and "Full Pipeline" subsections
+.gitkeep    | 2 new files tracked: data/index/.gitkeep, data/runs/.gitkeep</code></pre>
+
+<h2>Verification</h2>
+<ul>
+<li><code>git ls-files data/runs/.gitkeep data/index/.gitkeep</code> shows both files tracked</li>
+<li>README "Prerequisites" section has two clear subsections</li>
+<li>Fresh clone would have <code>data/runs/</code> and <code>data/index/</code> directories present</li>
+<li>Committed and pushed: <code>bb12380</code></li>
+</ul>
+
+<h2>Next</h2>
+<p>PHASE-04: Fresh-clone verification — simulate a fresh clone experience and verify the entire quickstart flow works end to end.</p>
+</body>
+</html>

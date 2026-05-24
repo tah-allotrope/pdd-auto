@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sprint 1 PHASE-02 — gws Missing Guard</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; color: #1a1a1a; line-height: 1.6; }
+  h1 { border-bottom: 2px solid #2563eb; padding-bottom: 8px; }
+  h2 { color: #2563eb; margin-top: 32px; }
+  .status { display: inline-block; background: #dcfce7; color: #166534; padding: 4px 12px; border-radius: 9999px; font-weight: 600; font-size: 14px; }
+  table { border-collapse: collapse; width: 100%; margin: 16px 0; }
+  th, td { border: 1px solid #e5e7eb; padding: 8px 12px; text-align: left; }
+  th { background: #f9fafb; font-weight: 600; }
+  code { background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 14px; }
+  pre { background: #1e293b; color: #e2e8f0; padding: 16px; border-radius: 8px; overflow-x: auto; }
+  pre code { background: none; color: inherit; }
+  .meta { color: #6b7280; font-size: 14px; }
+</style>
+</head>
+<body>
+<h1>Sprint 1 PHASE-02 — gws Missing Guard</h1>
+<p class="meta">Date: 2026-05-24 | Sprint: 1 of 3 | Gap: GAP-05 (gws error)</p>
+<p><span class="status">COMPLETE</span></p>
+
+<h2>Objective</h2>
+<p>Replace the cryptic subprocess error when <code>gws</code> is not installed with a clear, actionable message that distinguishes demo paths (no <code>gws</code> needed) from full-pipeline paths.</p>
+
+<h2>Tasks Completed</h2>
+<table>
+<tr><th>Task</th><th>Status</th><th>Output</th></tr>
+<tr><td>TASK-02-01: Add <code>_check_gws_available()</code> function</td><td>Done</td><td><code>src/pdd_agent/ingest/drive.py</code></td></tr>
+<tr><td>TASK-02-02: Call guard at top of <code>_run()</code></td><td>Done</td><td><code>src/pdd_agent/ingest/drive.py:40</code></td></tr>
+<tr><td>TASK-02-03: Add unit test for guard</td><td>Done</td><td><code>tests/test_drive_guard.py</code> (3 tests)</td></tr>
+</table>
+
+<h2>Implementation</h2>
+<p>Added <code>_check_gws_available()</code> that uses <code>shutil.which(GWS)</code> to check if gws is executable. If not found, raises <code>RuntimeError</code> with:</p>
+<pre><code>gws CLI not found. Install it with 'npm install -g @googleworkspace/cli &amp;&amp; gws auth setup'.
+Note: gws is only required for corpus ingestion and Drive upload —
+demo workflows (scripts/run_demo.py, scripts/run_inegol_demo.py) do not need it.</code></pre>
+<p>The guard is called at the top of <code>_run()</code> so every gws-dependent operation fails early.</p>
+
+<h2>Changes</h2>
+<pre><code> src/pdd_agent/ingest/drive.py   | +18 lines (guard function + call in _run)
+ tests/test_drive_guard.py       | +37 lines (new file, 3 tests)</code></pre>
+
+<h2>Verification</h2>
+<ul>
+<li>3/3 tests pass: <code>pytest tests/test_drive_guard.py -v</code></li>
+<li>Running <code>pdd-agent ingest</code> without <code>gws</code> now produces the helpful error</li>
+<li>Guard fires at runtime, not import time — existing mocked tests unaffected</li>
+<li>Committed and pushed: <code>43b06a1</code></li>
+</ul>
+
+<h2>Next</h2>
+<p>PHASE-03: Fix <code>.gitignore</code> for <code>.gitkeep</code> tracking + restructure README prerequisites into Demo vs Full Pipeline subsections.</p>
+</body>
+</html>

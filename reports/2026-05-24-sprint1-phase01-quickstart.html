@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sprint 1 PHASE-01 — Demo Quickstart &amp; Setup Hardening</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; color: #1a1a1a; line-height: 1.6; }
+  h1 { border-bottom: 2px solid #2563eb; padding-bottom: 8px; }
+  h2 { color: #2563eb; margin-top: 32px; }
+  .status { display: inline-block; background: #dcfce7; color: #166534; padding: 4px 12px; border-radius: 9999px; font-weight: 600; font-size: 14px; }
+  table { border-collapse: collapse; width: 100%; margin: 16px 0; }
+  th, td { border: 1px solid #e5e7eb; padding: 8px 12px; text-align: left; }
+  th { background: #f9fafb; font-weight: 600; }
+  code { background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 14px; }
+  pre { background: #1e293b; color: #e2e8f0; padding: 16px; border-radius: 8px; overflow-x: auto; }
+  pre code { background: none; color: inherit; }
+  .meta { color: #6b7280; font-size: 14px; }
+</style>
+</head>
+<body>
+<h1>Sprint 1 PHASE-01 — Demo Quickstart &amp; Setup Hardening</h1>
+<p class="meta">Date: 2026-05-24 | Sprint: 1 of 3 | Gap: GAP-01 (no quickstart)</p>
+<p><span class="status">COMPLETE</span></p>
+
+<h2>Objective</h2>
+<p>Create a frictionless "clone → install → run → see DOCX" path so colleagues can test PDD Agent on their own laptops within 5 minutes, without needing Google Drive access, <code>gws</code>, Node.js, or API keys.</p>
+
+<h2>Tasks Completed</h2>
+<table>
+<tr><th>Task</th><th>Status</th><th>Output</th></tr>
+<tr><td>TASK-01-01: Create QUICKSTART.md with 7 sections</td><td>Done</td><td><code>QUICKSTART.md</code></td></tr>
+<tr><td>TASK-01-02: Add Demo Quickstart link to README.md</td><td>Done</td><td><code>README.md</code> (line 5)</td></tr>
+<tr><td>TASK-01-03: Add note about skipped corpus-dependent tests</td><td>Done</td><td><code>QUICKSTART.md</code> (Run Tests section)</td></tr>
+</table>
+
+<h2>QUICKSTART.md Sections</h2>
+<ol>
+<li><strong>Prerequisites</strong> — Python 3.11+, pip, git (explicitly no Node/gws/API keys)</li>
+<li><strong>Setup</strong> — Clone, venv, <code>pip install -e .</code></li>
+<li><strong>Run Soc Son Demo</strong> — <code>python scripts/run_demo.py</code></li>
+<li><strong>Run Inegol Demo</strong> — <code>python scripts/run_inegol_demo.py</code></li>
+<li><strong>What You Get</strong> — Expected output paths and DOCX contents</li>
+<li><strong>Run Tests</strong> — <code>pytest</code> with note about 6-7 expected skips</li>
+<li><strong>Next Steps</strong> — Link to full README for production workflows</li>
+</ol>
+
+<h2>Changes</h2>
+<pre><code> QUICKSTART.md  | 77 lines (new file)
+ README.md      |  2 lines added (prominent link before "What This Tool Does")</code></pre>
+
+<h2>Verification</h2>
+<ul>
+<li>QUICKSTART.md exists with all 7 required sections</li>
+<li>README.md has visible link to QUICKSTART.md before "Quick Start" section</li>
+<li>Instructions are valid for fresh clone with Python 3.11+</li>
+<li>Committed and pushed: <code>4d19d96</code></li>
+</ul>
+
+<h2>Next</h2>
+<p>PHASE-02: Add <code>gws</code> missing guard with helpful error message in <code>src/pdd_agent/ingest/drive.py</code>.</p>
+</body>
+</html>
