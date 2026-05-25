@@ -6,10 +6,12 @@ and exports DOCX + JSON review package.
 
 from __future__ import annotations
 
+import argparse
 import json
-from pathlib import Path
+import os
 import sys
 import time
+from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
@@ -23,11 +25,26 @@ from pdd_agent.llm.provider import get_provider_registry
 from pdd_agent.review.tbd_tracker import TBDTracker
 from pdd_agent.review.consistency import check_quantitative_consistency
 from schemas.project_input import ProjectInput
+from _demo_helpers import copy_to_output, print_demo_banner
 
 logger = None
 
 
+def _open_docx(path: Path) -> None:
+    """Open a DOCX with the default viewer (platform-aware)."""
+    if sys.platform == "win32":
+        os.startfile(str(path))
+    elif sys.platform == "darwin":
+        os.system(f'open "{path}"')
+    else:
+        os.system(f'xdg-open "{path}"')
+
+
 def main() -> int:
+    parser = argparse.ArgumentParser(description="Run the Inegol demo end to end")
+    parser.add_argument("--open", action="store_true", help="Open the generated DOCX after completion")
+    args = parser.parse_args()
+
     config_path = REPO_ROOT / "configs" / "demo" / "inegol_project_input.yaml"
     if not config_path.exists():
         print(f"ERROR: Inegol config not found at {config_path}")
@@ -63,18 +80,23 @@ def main() -> int:
     tbd_tracker = TBDTracker()
     tbd_report = tbd_tracker.scan(run.sections, run_id=run.run_id)
 
-    # Print summary
-    print("\n=== Inegol Demo Summary ===")
-    print(f"Run ID: {run.run_id}")
-    print(f"Sections drafted: {len(run.sections)}")
-    print(f"Runtime: {runtime}s")
-    print(f"DOCX: {docx_path}")
-    print(f"Review JSON: {review_json_path}")
-    print(f"\nReview results:")
+    # Copy to stable output path
+    stable_path = copy_to_output(Path(docx_path), "latest-inegol-demo.docx")
+
+    # Print summary banner
+    print_demo_banner(
+        docx_path=str(docx_path),
+        run_id=run.run_id,
+        sections_count=len(run.sections),
+        runtime=runtime,
+        review_flags=f"{review_result['consistency']['critical_count']} critical, {review_result['consistency']['high_count']} high",
+        stable_path=str(stable_path),
+    )
+
+    # Detailed review output (secondary)
+    print(f"Review results:")
     print(f"  Review passed: {review_result['review']['passed']}")
     print(f"  Consistency passed: {review_result['consistency']['passed']}")
-    print(f"  Critical flags: {review_result['consistency']['critical_count']}")
-    print(f"  High flags: {review_result['consistency']['high_count']}")
     print(f"  TBD markers found: {tbd_report.count}")
     print(f"  Sections with TBD: {tbd_report.sections_with_tbd}")
 
@@ -85,6 +107,9 @@ def main() -> int:
     print(f"Provenance tracking: per-section corpus citations")
     print(f"Review layers: consistency + TBD + compliance (Codex: static markers only)")
     print(f"Appendices: Assumptions + Reviewer Issues + Data Gaps (Codex: 2 appendices)")
+
+    if args.open:
+        _open_docx(stable_path)
 
     return 0
 
