@@ -60,7 +60,7 @@ Bring the provided Drive spreadsheet into the repo as a reproducible source arti
 - `src/pdd_agent/cli.py` - Needs a command surface for spreadsheet fetch/profile/select flows.
 - `data/source_inputs/spreadsheets/` - Stable cache location for the downloaded workbook and normalized row snapshots.
 - `configs/source_mappings/vietnam_wte_projects.yaml` - Deterministic workbook/tab/header mapping rules for the provided file.
-- `reports/source-profile-vietnam-wte.md` - Human-readable workbook profile and candidate-row summary.
+- `docs/source-profile-vietnam-wte.md` - Human-readable workbook profile and candidate-row summary.
 - `tmp_wte_model.xlsx` - Temporary evidence from this planning session confirms workbook structure and should be replaced by a tracked cache path in implementation.
 
 **Dependencies**
@@ -128,7 +128,7 @@ Make the drafting pipeline understand the difference between real project facts,
 - `docs/provenance-policy.md` - Should be extended to define how synthetic assumptions are permitted, labeled, and review-gated.
 - `src/pdd_agent/review/checks.py` - Should add assumption-aware blocking/non-blocking rules.
 - `src/pdd_agent/review/states.py` - Should persist state transitions caused by unresolved synthetic dependence.
-- `reports/assumption-burden.md` - New reviewer-focused artifact listing where the draft still depends on assumptions.
+- `docs/assumption-burden.md` - New reviewer-focused artifact listing where the draft still depends on assumptions.
 - `tests/test_review_checks.py` - Needs coverage for synthetic-assumption review flags.
 
 **Dependencies**
@@ -192,8 +192,8 @@ Run the full workflow on one Vietnam WTE project and leave behind a concrete rev
 - `scripts/run_vietnam_pdd.py` - One-command runner for the spreadsheet-to-DOCX flow.
 - `configs/projects/vietnam_socson_from_sheet.yaml` - Reused end-to-end config artifact.
 - `configs/projects/vietnam_socson_from_sheet.assumptions.yaml` - Reused assumption source of truth.
-- `reports/vietnam-pdd-gap-analysis.md` - Follow-up report on missing evidence and next-best data sources.
-- `reports/vietnam-pdd-runbook.md` - Operator instructions for later reuse.
+- `docs/vietnam-pdd-gap-analysis.md` - Follow-up report on missing evidence and next-best data sources.
+- `docs/vietnam-pdd-runbook.md` - Operator instructions for later reuse.
 - `data/runs/` - Stores run JSON, review state, and DOCX output.
 
 **Dependencies**

@@ -69,7 +69,7 @@ After either demo script finishes, you'll find:
 | **Full package** | `reports/demo-packages/<project-slug>/` |
 | **Scorecard** | `reports/demo-scorecard.md` |
 | **Section diff** | `reports/section-diff.md` |
-| **Comparison report** | `reports/2026-05-21-codex-vs-pipeline-comparison.md` |
+| **Comparison report** | `docs/2026-05-21-codex-vs-pipeline-comparison.md` |
 
 Each DOCX contains **36 sections** with readable synthetic prose, zero `[PLACEHOLDER]` markers, and aligned quantification numbers. The cover page carries a bold synthetic-use disclosure.
 

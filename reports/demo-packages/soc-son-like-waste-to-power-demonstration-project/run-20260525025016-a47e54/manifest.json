@@ -1,0 +1,11 @@
+{
+  "run_id": "run-20260525025016-a47e54",
+  "project_name": "Soc Son-like Waste-to-Power Demonstration Project",
+  "project_slug": "soc-son-like-waste-to-power-demonstration-project",
+  "published_docx": "reports\\demo-packages\\soc-son-like-waste-to-power-demonstration-project\\run-20260525025016-a47e54\\run-20260525025016-a47e54.docx",
+  "source_docx": "C:\\Users\\tukum\\Downloads\\pdd-auto\\data\\runs\\run-20260525025016-a47e54.docx",
+  "assumptions_yaml": "reports\\demo-packages\\soc-son-like-waste-to-power-demonstration-project\\run-20260525025016-a47e54\\demo_socson_like.assumptions.yaml",
+  "project_yaml": "reports\\demo-packages\\soc-son-like-waste-to-power-demonstration-project\\run-20260525025016-a47e54\\demo_socson_like.yaml",
+  "demo_scorecard": "reports\\demo-packages\\soc-son-like-waste-to-power-demonstration-project\\run-20260525025016-a47e54\\demo-scorecard.md",
+  "section_diff": "reports\\demo-packages\\soc-son-like-waste-to-power-demonstration-project\\run-20260525025016-a47e54\\section-diff.md"
+}

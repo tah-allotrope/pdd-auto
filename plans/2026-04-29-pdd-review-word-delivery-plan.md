@@ -15,9 +15,9 @@ research_inputs:
 Close the gap between successful internal DOCX generation and reviewer-visible Word artifacts. After this work, the PDD workflow should leave behind a stable, easy-to-find Word review package in a reviewer-facing location, with the exact local path and optional Drive URL surfaced in the CLI and human-readable reports.
 
 ## Context Snapshot
-- **Current state:** `src/pdd_agent/export/docx_export.py` can generate a `.docx`, and `src/pdd_agent/phase06/vietnam_workflow.py` already calls it during `run-vietnam-pdd`, but the default output lands in `data/runs/`, which is gitignored in `.gitignore`; the current workspace has no `data/runs/*.docx` files even though `activeContext.md` and `reports/vietnam-pdd-validation.md` reference a prior run artifact.
+- **Current state:** `src/pdd_agent/export/docx_export.py` can generate a `.docx`, and `src/pdd_agent/phase06/vietnam_workflow.py` already calls it during `run-vietnam-pdd`, but the default output lands in `data/runs/`, which is gitignored in `.gitignore`; the current workspace has no `data/runs/*.docx` files even though `activeContext.md` and `docs/vietnam-pdd-validation.md` reference a prior run artifact.
 - **Desired state:** Running `python scripts/run_vietnam_pdd.py` or `pdd-agent run-vietnam-pdd` should publish a current Word draft into a stable, reviewer-facing directory under the workspace, keep the supporting review artifacts aligned to that published package, and optionally upload the published Word file to Drive for external review.
-- **Key repo surfaces:** `.gitignore`, `src/pdd_agent/export/docx_export.py`, `src/pdd_agent/export/drive_upload.py`, `src/pdd_agent/phase06/vietnam_workflow.py`, `src/pdd_agent/cli.py`, `scripts/run_vietnam_pdd.py`, `reports/vietnam-pdd-validation.md`, `reports/vietnam-pdd-runbook.md`, `tests/test_docx_export.py`, `tests/test_vietnam_workflow.py`, `tests/test_phase06_cli.py`, `activeContext.md`.
+- **Key repo surfaces:** `.gitignore`, `src/pdd_agent/export/docx_export.py`, `src/pdd_agent/export/drive_upload.py`, `src/pdd_agent/phase06/vietnam_workflow.py`, `src/pdd_agent/cli.py`, `scripts/run_vietnam_pdd.py`, `docs/vietnam-pdd-validation.md`, `docs/vietnam-pdd-runbook.md`, `tests/test_docx_export.py`, `tests/test_vietnam_workflow.py`, `tests/test_phase06_cli.py`, `activeContext.md`.
 - **Out of scope:** Improving narrative drafting quality, reducing assumption burden, changing the core review-state model, introducing a web UI, or treating the generated Word draft as a final audited submission.
 
 ## Research Inputs
@@ -27,7 +27,7 @@ Close the gap between successful internal DOCX generation and reviewer-visible W
 ## Assumptions and Constraints
 - **ASM-001:** The exporter itself is not the main missing capability; the primary gap is artifact publication and discoverability, because export code and tests already exist while no current review-visible `.docx` is present in the workspace.
 - **ASM-002:** Reviewers need a package, not only a Word file: at minimum the `.docx`, validation report, gap analysis, assumptions context, and run identifier must stay aligned.
-- **ASM-003:** The current Vietnam Soc Son workflow is the right first path to fix, because it already claims end-to-end review-package behavior in `README.md`, `activeContext.md`, and `reports/vietnam-pdd-validation.md`.
+- **ASM-003:** The current Vietnam Soc Son workflow is the right first path to fix, because it already claims end-to-end review-package behavior in `README.md`, `activeContext.md`, and `docs/vietnam-pdd-validation.md`.
 - **CON-001:** `data/runs/` should remain the internal run-artifact surface for JSON/state persistence; reviewer-facing publication should not require humans to inspect internal storage conventions.
 - **CON-002:** Published Word drafts must remain explicitly marked as internal review artifacts when sections are low-confidence or blocked for domain review.
 - **DEC-001:** Existing commands `pdd-agent export`, `pdd-agent upload`, and `pdd-agent run-vietnam-pdd` remain the core interaction surfaces rather than adding a new top-level workflow.
@@ -48,7 +48,7 @@ Close the gap between successful internal DOCX generation and reviewer-visible W
 Define what counts as a reviewer-visible PDD package and close the ambiguity between internal run storage and actual review delivery.
 
 **Tasks**
-- [ ] TASK-01-01: Trace the current `run-vietnam-pdd` output path from `run_vietnam_pdd_workflow()` through `export_run_to_docx()` and `reports/vietnam-pdd-validation.md`, and document where the path becomes invisible or stale for a reviewer.
+- [ ] TASK-01-01: Trace the current `run-vietnam-pdd` output path from `run_vietnam_pdd_workflow()` through `export_run_to_docx()` and `docs/vietnam-pdd-validation.md`, and document where the path becomes invisible or stale for a reviewer.
 - [ ] TASK-01-02: Decide the reviewer-facing local publication directory, with `reports/review-packages/` as the default target, and specify naming for both an immutable run-scoped copy and a stable latest alias.
 - [ ] TASK-01-03: Define the minimum review package contents: published `.docx`, validation report, gap analysis, assumptions burden or assumptions YAML, project YAML, and a small manifest that ties them to one `run_id`.
 - [ ] TASK-01-04: Define whether human-facing reports should reference only published relative paths, or published paths plus internal `data/runs/` paths for debugging.
@@ -57,9 +57,9 @@ Define what counts as a reviewer-visible PDD package and close the ambiguity bet
 **Files / Surfaces**
 - `.gitignore` - Confirms why `data/runs/` is not an appropriate reviewer-facing default.
 - `src/pdd_agent/phase06/vietnam_workflow.py` - Current end-to-end path that exports the DOCX but does not publish it to a reviewer-facing surface.
-- `reports/vietnam-pdd-validation.md` - Current human-readable report that points to an internal DOCX path and should become the canonical review entry point.
+- `docs/vietnam-pdd-validation.md` - Current human-readable report that points to an internal DOCX path and should become the canonical review entry point.
 - `README.md` - Current user promise that the workflow produces review artifacts and needs to match the real publication contract.
-- `reports/vietnam-pdd-runbook.md` - Current operator path that still assumes reviewers will follow internal run IDs.
+- `docs/vietnam-pdd-runbook.md` - Current operator path that still assumes reviewers will follow internal run IDs.
 
 **Dependencies**
 - None
@@ -88,7 +88,7 @@ Make every successful review workflow publish a current Word draft into a stable
 - `src/pdd_agent/export/review_package.py` - New thin helper for packaging and publishing review artifacts.
 - `src/pdd_agent/phase06/vietnam_workflow.py` - Must call the publication helper and return published artifact paths.
 - `reports/review-packages/` - New reviewer-facing local publication directory.
-- `reports/vietnam-pdd-validation.md` - Must point at the published package rather than only internal run storage.
+- `docs/vietnam-pdd-validation.md` - Must point at the published package rather than only internal run storage.
 
 **Dependencies**
 - PHASE-01 publication contract and package definition.
@@ -116,7 +116,7 @@ Make published review packages easy to find from the command surface and easy to
 - `src/pdd_agent/cli.py` - Needs argument surface and output/logging changes.
 - `scripts/run_vietnam_pdd.py` - Needs to print reviewer-facing paths explicitly.
 - `src/pdd_agent/export/drive_upload.py` - Needs to accept the published review path as the upload source.
-- `reports/vietnam-pdd-runbook.md` - Needs updated operator instructions for local review and optional remote sharing.
+- `docs/vietnam-pdd-runbook.md` - Needs updated operator instructions for local review and optional remote sharing.
 - `README.md` - Needs revised examples showing where the Word review draft actually appears.
 
 **Dependencies**
@@ -137,7 +137,7 @@ Prove the new publication contract works and leave behind an actual Word package
 **Tasks**
 - [ ] TASK-04-01: Add regression tests covering published review-package paths, latest-alias behavior, missing-file failures, and CLI surfacing of the published path.
 - [ ] TASK-04-02: Re-run the Vietnam workflow end to end with `python-docx` available and verify that the published `.docx` exists in the reviewer-facing directory.
-- [ ] TASK-04-03: Refresh `reports/vietnam-pdd-validation.md`, `reports/vietnam-pdd-gap-analysis.md`, and `reports/vietnam-pdd-runbook.md` so they reference the current published package rather than stale internal-only paths.
+- [ ] TASK-04-03: Refresh `docs/vietnam-pdd-validation.md`, `docs/vietnam-pdd-gap-analysis.md`, and `docs/vietnam-pdd-runbook.md` so they reference the current published package rather than stale internal-only paths.
 - [ ] TASK-04-04: Manually open the published Word draft and confirm it is the same document described by the latest validation report.
 - [ ] TASK-04-05: Record the final published artifact paths in `activeContext.md` during implementation so the next agent can confirm the delivery gap is actually closed.
 
@@ -145,7 +145,7 @@ Prove the new publication contract works and leave behind an actual Word package
 - `tests/test_docx_export.py` - Needs assertions for publication-aware export behavior.
 - `tests/test_vietnam_workflow.py` - Needs to prove end-to-end publication and report alignment.
 - `tests/test_phase06_cli.py` - Needs to prove CLI surfacing of reviewer-facing artifact paths.
-- `reports/vietnam-pdd-validation.md` - Must become a trustworthy pointer to the current review package.
+- `docs/vietnam-pdd-validation.md` - Must become a trustworthy pointer to the current review package.
 - `activeContext.md` - Should record the concrete published outputs once implementation is complete.
 
 **Dependencies**
@@ -164,7 +164,7 @@ Prove the new publication contract works and leave behind an actual Word package
 - **TEST-002:** Extend `tests/test_vietnam_workflow.py` to assert that `run_vietnam_pdd_workflow()` returns published package paths and that the validation report references them.
 - **TEST-003:** Extend `tests/test_phase06_cli.py` to verify `run-vietnam-pdd` and `export` surface reviewer-facing paths and optional Drive URLs.
 - **MANUAL-001:** Run `python scripts/run_vietnam_pdd.py` and confirm a `.docx` exists under `reports/review-packages/` and can be opened directly from there.
-- **MANUAL-002:** Compare the published `.docx` path shown in CLI output, `reports/vietnam-pdd-validation.md`, and the actual filesystem to ensure they all match the same run.
+- **MANUAL-002:** Compare the published `.docx` path shown in CLI output, `docs/vietnam-pdd-validation.md`, and the actual filesystem to ensure they all match the same run.
 - **OBS-001:** Log both the internal run artifact path and the published review-package path, plus upload success or failure when remote delivery is enabled.
 
 ## Risks and Alternatives

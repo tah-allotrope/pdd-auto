@@ -1,12 +1,12 @@
 # Demo Scorecard
 
-- Run ID: `run-20260525025411-4b6f43`
+- Run ID: `run-20260524135728-687f39`
 - Project: `Soc Son-like Waste-to-Power Demonstration Project`
 - Provider: `demo`
 - Reference: `VCS_Soc Son_Project-Description.norm`
-- Runtime seconds: `1.329`
+- Runtime seconds: `1.271`
 - Manual interventions: `0`
-- DOCX export: `C:\Users\tukum\Downloads\pdd-auto\data\runs\run-20260525025411-4b6f43.docx`
+- DOCX export: `C:\Users\tukum\Downloads\pdd-auto\data\runs\run-20260524135728-687f39.docx`
 
 ## Coverage and Review Burden
 

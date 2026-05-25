@@ -20,7 +20,7 @@ Create a frictionless "clone → install → run → see DOCX" path so colleague
 - **Out of scope:** Corpus bundling (Sprint 3), demo output UX improvements (Sprint 2), pre-built DOCX artifacts (Sprint 2), test cleanup (Sprint 3).
 
 ## Research Inputs
-- `reports/2026-05-22-colleague-demo-gap-analysis.md` — Defines GAP-01 (no quickstart), GAP-03 (missing directories), GAP-05 (gws error). Confirms retrieval layer gracefully degrades when FTS5 index is absent. Confirms `DraftRun.save()` and `RetrievalIndex._open()` both call `mkdir(parents=True, exist_ok=True)`.
+- `docs/2026-05-22-colleague-demo-gap-analysis.md` — Defines GAP-01 (no quickstart), GAP-03 (missing directories), GAP-05 (gws error). Confirms retrieval layer gracefully degrades when FTS5 index is absent. Confirms `DraftRun.save()` and `RetrievalIndex._open()` both call `mkdir(parents=True, exist_ok=True)`.
 
 ## Assumptions and Constraints
 - **ASM-001:** Colleagues have Python 3.11+ and pip available on their laptops (Windows, macOS, or Linux).

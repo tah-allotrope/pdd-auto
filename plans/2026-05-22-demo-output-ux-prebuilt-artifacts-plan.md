@@ -20,7 +20,7 @@ Improve the demo experience so colleagues immediately know where to find their g
 - **Out of scope:** Corpus bundling (Sprint 3), test cleanup (Sprint 3), `gws` guard (Sprint 1), core pipeline changes.
 
 ## Research Inputs
-- `reports/2026-05-22-colleague-demo-gap-analysis.md` — Defines GAP-04 (demo output paths not obvious) and GAP-06 (no pre-built DOCX). Notes that `reports/demo-packages/<slug>/latest.docx` stable alias already exists. Recommends copying to a short predictable path.
+- `docs/2026-05-22-colleague-demo-gap-analysis.md` — Defines GAP-04 (demo output paths not obvious) and GAP-06 (no pre-built DOCX). Notes that `reports/demo-packages/<slug>/latest.docx` stable alias already exists. Recommends copying to a short predictable path.
 
 ## Assumptions and Constraints
 - **ASM-001:** Sprint 1 (QUICKSTART.md) is complete, so `QUICKSTART.md` exists and can be updated to reference new output paths.

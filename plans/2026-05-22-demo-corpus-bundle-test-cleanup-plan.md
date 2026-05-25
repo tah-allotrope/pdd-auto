@@ -20,7 +20,7 @@ Bundle a small demo corpus subset so colleagues see realistic corpus-backed prov
 - **Out of scope:** Bundling the full 18-doc corpus (only 2-3 demo-relevant docs). Wiring real LLM providers. Changing the retrieval algorithm.
 
 ## Research Inputs
-- `reports/2026-05-22-colleague-demo-gap-analysis.md` — Defines GAP-02 (silent degradation without index) and GAP-07 (stale test skips). Notes the retrieval layer's graceful degradation pattern. Identifies IP risk for corpus bundling and recommends only publicly available Verra registry docs.
+- `docs/2026-05-22-colleague-demo-gap-analysis.md` — Defines GAP-02 (silent degradation without index) and GAP-07 (stale test skips). Notes the retrieval layer's graceful degradation pattern. Identifies IP risk for corpus bundling and recommends only publicly available Verra registry docs.
 
 ## Assumptions and Constraints
 - **ASM-001:** The Verra VCS project descriptions in the corpus are publicly available on the Verra registry and can be redistributed in normalized (extracted text) form.

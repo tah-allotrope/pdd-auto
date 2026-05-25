@@ -3,7 +3,7 @@
 **Status: SPRINT 2 COMPLETE — 2026-05-25**
 
 ### Gap Analysis
-- `reports/2026-05-22-colleague-demo-gap-analysis.md` — 7 gaps identified (1 CRITICAL, 1 HIGH, 3 MEDIUM, 2 LOW)
+- `docs/2026-05-22-colleague-demo-gap-analysis.md` — 7 gaps identified (1 CRITICAL, 1 HIGH, 3 MEDIUM, 2 LOW)
 
 ### Implementation Plans (3 sprints over next week)
 - **Sprint 1 (2026-05-23 to 2026-05-24):** `plans/2026-05-22-demo-quickstart-setup-hardening-plan.md` — ✅ COMPLETE
@@ -50,7 +50,7 @@
 
 - Inegol demo ran successfully with zero review flags and zero TBD markers.
 - DOCX output: 225 KB, 36 sections, all 11 VCS v4.4 table types rendered.
-- Comparison report generated: `reports/2026-05-21-codex-vs-pipeline-comparison.md`.
+ - Comparison report generated: `docs/2026-05-21-codex-vs-pipeline-comparison.md`.
 - Pipeline vs Codex: same section count (36), fewer tables (11 vs 32, but structured vs flat), provenance tracking (36 vs 0), review checks (4 vs 0), appendices (3 vs 2).
 - All 204 tests pass; committed and pushed Phase 04.
 - Phase 04 HTML report: `reports/2026-05-21-inegol-end-to-end-demo.html`.
@@ -196,7 +196,7 @@
 - Confirmed the noisy Soc Son DOCX is expected from the current workflow, not an export bug: `src/pdd_agent/phase06/vietnam_workflow.py` drafts with provider `noop`, saves that run JSON, and then exports the same placeholder-heavy draft into `reports/review-packages/`.
 - Confirmed the direct text source of the placeholders in `src/pdd_agent/llm/provider.py`: `NoopProvider.draft_section()` intentionally emits `[PLACEHOLDER ...]` bodies and `REVIEW REQUIRED` issues for human-in-the-loop review mode.
 - Confirmed the current demo benchmark is also not client-safe yet: `reports/demo-scorecard.md` records `36` placeholder sections and `36` low-confidence sections for the benchmark path.
-- Added a dedicated contract note at `reports/demo-artifact-contract.md` that defines the Phase 01 root-cause trace, demo acceptance rules, `reports/demo-packages/<project-slug>/<run-id>/` publication target, and summary-only telemetry policy for future client-demo exports.
+ - Added a dedicated contract note at `docs/demo-artifact-contract.md` that defines the Phase 01 root-cause trace, demo acceptance rules, `reports/demo-packages/<project-slug>/<run-id>/` publication target, and summary-only telemetry policy for future client-demo exports.
 - Updated `README.md` so the review-package workflow remains explicitly internal and review-gated while the client-demo package path is documented as a separate synthetic artifact contract to be implemented in later phases.
 
 ## PDD Review Word Delivery Gap Closure

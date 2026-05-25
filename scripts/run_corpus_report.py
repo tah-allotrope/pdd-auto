@@ -16,7 +16,7 @@ import yaml
 
 MANIFEST_PATH = Path("data/corpus/manifest.jsonl")
 BUCKET_CONFIG_PATH = Path("configs/corpus_buckets/verra-wte-initial.yaml")
-REPORT_PATH = Path("reports/corpus-readiness.md")
+REPORT_PATH = Path("docs/corpus-readiness.md")
 
 
 def main() -> int:

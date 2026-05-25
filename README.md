@@ -103,10 +103,10 @@ Both are synthetic demos with a bold cover-page disclaimer — not real PDDs. Se
 - **`data/source_inputs/spreadsheets/`** — Tracked workbook cache plus generated profile and row snapshot JSON.
 - **`configs/projects/vietnam_socson_from_sheet.yaml`** — Generated Soc Son ProjectInput from the spreadsheet row.
 - **`configs/projects/vietnam_socson_from_sheet.assumptions.yaml`** — Machine-readable assumption register and blocked review items.
-- **`reports/source-profile-vietnam-wte.md`** — Human-readable workbook profile and selected-row report.
-- **`reports/vietnam-pdd-validation.md`** — Human-readable validation report for the latest end-to-end Vietnam run.
-- **`reports/vietnam-pdd-gap-analysis.md`** — Missing-evidence prioritization report showing which facts most reduced confidence.
-- **`reports/vietnam-pdd-runbook.md`** — Operator rerun instructions for spreadsheet refreshes and future Vietnam candidates.
+- **`docs/source-profile-vietnam-wte.md`** — Human-readable workbook profile and selected-row report.
+- **`docs/vietnam-pdd-validation.md`** — Human-readable validation report for the latest end-to-end Vietnam run.
+- **`docs/vietnam-pdd-gap-analysis.md`** — Missing-evidence prioritization report showing which facts most reduced confidence.
+- **`docs/vietnam-pdd-runbook.md`** — Operator rerun instructions for spreadsheet refreshes and future Vietnam candidates.
 
 ### Retrieval & Drafting (PHASE-03)
 - **`src/pdd_agent/retrieval/index.py`** — SQLite FTS5 BM25 index. `RetrievalIndex.build()` indexes the corpus once; `search()` and `get_section_examples()` query it.
@@ -192,10 +192,10 @@ The Vietnam spreadsheet workflow will:
 3. Select the Soc Son row and save `data/source_inputs/spreadsheets/vietnam_socson_snapshot.json`
 4. Generate `configs/projects/vietnam_socson_from_sheet.yaml`
 5. Generate `configs/projects/vietnam_socson_from_sheet.assumptions.yaml`
-6. Write `reports/source-profile-vietnam-wte.md` with review-gated assumption notes
+6. Write `docs/source-profile-vietnam-wte.md` with review-gated assumption notes
 7. Draft a run whose sections persist fact provenance, synthetic usage, and review sensitivity
-8. Write `reports/assumption-burden.md` summarizing material assumption burden by section
-9. Write `reports/vietnam-pdd-validation.md`, `reports/vietnam-pdd-gap-analysis.md`, and `reports/vietnam-pdd-runbook.md`
+8. Write `docs/assumption-burden.md` summarizing material assumption burden by section
+9. Write `docs/vietnam-pdd-validation.md`, `docs/vietnam-pdd-gap-analysis.md`, and `docs/vietnam-pdd-runbook.md`
 10. Export a DOCX with an internal-draft disclaimer, assumption appendix, and reviewer issues appendix
 11. Publish a reviewer-facing package under `reports/review-packages/<project-slug>/<run-id>/` and refresh `reports/review-packages/<project-slug>/latest.docx`
 12. Optionally upload the published reviewer-facing DOCX to Drive and surface the resulting URL in the workflow logs
@@ -243,7 +243,7 @@ The Inegol workflow will:
 4. Run consistency + TBD + compliance review checks
 5. Export a DOCX using the official Verra VCS v4.4 template with 11 structured table types
 6. Print a summary: sections drafted, review flags, TBD markers, runtime
-7. Comparison script generates `reports/2026-05-21-codex-vs-pipeline-comparison.md`
+7. Comparison script generates `docs/2026-05-21-codex-vs-pipeline-comparison.md`
 
 ### Inegol Demo Results (2026-05-21)
 
@@ -257,7 +257,7 @@ The Inegol workflow will:
   - `configs/demo/inegol_project_input.yaml`
   - `scripts/run_inegol_demo.py`
   - `scripts/compare_codex_vs_pipeline.py`
-  - `reports/2026-05-21-codex-vs-pipeline-comparison.md`
+  - `docs/2026-05-21-codex-vs-pipeline-comparison.md`
   - `reports/2026-05-21-inegol-end-to-end-demo.html`
 
 ### Demo Artifact Paths
@@ -275,7 +275,7 @@ After a successful run, the client-demo package lives at:
 - `reports/demo-packages/` is the reserved client-demo artifact area. The intended contract is a readable synthetic sample with a strong cover disclosure, aligned numbers, and summary-level synthetic assumptions only.
 - `configs/projects/demo_socson_like.assumptions.yaml` is the current synthetic input surface for the future client-demo path. Its entries use `demo_curated` provenance and intentionally avoid `blocked_review_paths` so later phases can build client-safe prose without inheriting spreadsheet review gates.
 - `pdd-agent run-vietnam-pdd` remains the reviewer-facing workflow. It should keep publishing review packages under `reports/review-packages/` and must not silently change into the future client-demo workflow.
-- Phase 01 documentation for the split lives in `reports/demo-artifact-contract.md`.
+- Phase 01 documentation for the split lives in `docs/demo-artifact-contract.md`.
 
 ## Key Files
 

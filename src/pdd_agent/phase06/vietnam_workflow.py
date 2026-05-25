@@ -364,7 +364,7 @@ def write_vietnam_runbook(output_path: Path | str = DEFAULT_RUNBOOK_PATH) -> Pat
         "## When the Spreadsheet Changes",
         "",
         "1. Re-run `pdd-agent fetch-workbook --force` if the Drive workbook changed.",
-        "2. Re-run `pdd-agent map-spreadsheet --candidate soc-son` and inspect `reports/source-profile-vietnam-wte.md` for header or row drift.",
+        "2. Re-run `pdd-agent map-spreadsheet --candidate soc-son` and inspect `docs/source-profile-vietnam-wte.md` for header or row drift.",
         "3. Review `configs/projects/vietnam_socson_from_sheet.assumptions.yaml` for any new blocked-review paths before sharing the draft.",
         "4. Re-run `python scripts/run_vietnam_pdd.py` so the validation report, gap analysis, and published review package stay aligned to the latest row snapshot.",
         "",
