@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sprint 2 PHASE-01 — Demo Script Output UX</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; color: #1a1a1a; line-height: 1.6; }
+  h1 { border-bottom: 2px solid #2563eb; padding-bottom: 8px; }
+  h2 { color: #2563eb; margin-top: 32px; }
+  .status { display: inline-block; background: #dcfce7; color: #166534; padding: 4px 12px; border-radius: 9999px; font-weight: 600; font-size: 14px; }
+  table { border-collapse: collapse; width: 100%; margin: 16px 0; }
+  th, td { border: 1px solid #e5e7eb; padding: 8px 12px; text-align: left; }
+  th { background: #f9fafb; font-weight: 600; }
+  code { background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 14px; }
+  pre { background: #1e293b; color: #e2e8f0; padding: 16px; border-radius: 8px; overflow-x: auto; }
+  pre code { background: none; color: inherit; }
+  .meta { color: #6b7280; font-size: 14px; }
+</style>
+</head>
+<body>
+<h1>Sprint 2 PHASE-01 — Demo Script Output UX</h1>
+<p class="meta">Date: 2026-05-25 | Sprint: 2 of 3 | Gap: GAP-04 (demo output paths not obvious)</p>
+<p><span class="status">COMPLETE</span></p>
+
+<h2>Objective</h2>
+<p>Both demo scripts print a clear, user-friendly summary with the DOCX path prominently highlighted, and copy the generated DOCX to <code>output/latest-demo.docx</code> / <code>output/latest-inegol-demo.docx</code> for easy discovery.</p>
+
+<h2>Tasks Completed</h2>
+<table>
+<tr><th>Task</th><th>Status</th><th>Output</th></tr>
+<tr><td>TASK-01-01: Create <code>_print_demo_banner()</code> helper</td><td>Done</td><td><code>scripts/_demo_helpers.py</code></td></tr>
+<tr><td>TASK-01-02: Copy DOCX to <code>output/latest-demo.docx</code> in Soc Son script</td><td>Done</td><td><code>scripts/run_demo.py</code></td></tr>
+<tr><td>TASK-01-03: Copy DOCX to <code>output/latest-inegol-demo.docx</code> in Inegol script</td><td>Done</td><td><code>scripts/run_inegol_demo.py</code></td></tr>
+<tr><td>TASK-01-04: Both scripts print summary banner instead of raw paths</td><td>Done</td><td>Both scripts updated</td></tr>
+<tr><td>TASK-01-05: Add <code>output/</code> to <code>.gitignore</code></td><td>Done</td><td><code>.gitignore</code></td></tr>
+</table>
+
+<h2>Banner Design</h2>
+<pre>
++--------------------------------------------------+
+|  PDD Agent Demo Complete                         |
++==================================================+
+|  Sections: 36 | Runtime: 0.3s                    |
+|  Review flags: 0 critical, 0 high                |
+|                                                  |
+|  Your DOCX is at:                                |
+|  -> output\latest-demo.docx                      |
+|                                                  |
+|  Also saved to:                                  |
+|    &lt;full path&gt;                                    |
++--------------------------------------------------+
+</pre>
+
+<h2>Changes</h2>
+<pre><code> scripts/_demo_helpers.py   | 44 lines (new)
+ scripts/run_demo.py        | 47 lines (rewritten with banner + copy)
+ scripts/run_inegol_demo.py | 87 lines (rewritten with banner + copy)
+ .gitignore                 |  4 lines added (output/)</code></pre>
+
+<h2>Verification</h2>
+<ul>
+<li><code>python scripts/run_demo.py</code> → banner prints, <code>output/latest-demo.docx</code> created</li>
+<li><code>python scripts/run_inegol_demo.py</code> → banner prints, <code>output/latest-inegol-demo.docx</code> created</li>
+<li>Both scripts still produce full artifact set under <code>reports/demo-packages/</code> and <code>data/runs/</code></li>
+</ul>
+
+<h2>Next</h2>
+<p>PHASE-02: Commit pre-built example DOCX for both Soc Son and Inegol.</p>
+</body>
+</html>
