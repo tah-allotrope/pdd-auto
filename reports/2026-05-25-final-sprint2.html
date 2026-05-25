@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Final Report :: Sprint 2: Demo Output UX & Pre-built Artifacts</title>
+  <meta name="color-scheme" content="dark light">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+
+    async function initMermaid() {
+      const blocks = document.querySelectorAll('.mermaid');
+      if (!blocks.length) { return; }
+
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: 'base',
+        securityLevel: 'loose',
+        themeVariables: {
+          primaryColor: '#f3ead9',
+          primaryTextColor: '#1f1912',
+          primaryBorderColor: '#9d6b37',
+          lineColor: '#3b6f76',
+          secondaryColor: '#efe4d0',
+          tertiaryColor: '#ffffff',
+          background: '#fbf7f1',
+          mainBkg: '#fbf7f1',
+          nodeBorder: '#9d6b37',
+          clusterBkg: '#f7efdf',
+          clusterBorder: '#3b6f76',
+          edgeLabelBackground: '#fbf7f1'
+        }
+      });
+
+      await mermaid.run({ nodes: blocks });
+    }
+
+    const run = () => initMermaid().catch((error) => console.error('Mermaid render failed', error));
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', run, { once: true });
+    } else { run(); }
+  </script>
+  <style>
+    :root {
+      --paper: #fbf7f1;
+      --paper-strong: #fffdf9;
+      --ink: #1f1912;
+      --ink-soft: #5f564c;
+      --line: #dccdb6;
+      --line-strong: #bfa37d;
+      --accent: #9d6b37;
+      --accent-soft: #efe4d0;
+      --accent-2: #3b6f76;
+      --shadow: 0 18px 40px rgba(49, 33, 16, 0.08);
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --radius-sm: 12px;
+      --page-width: 1040px;
+      --display-font: Georgia, "Times New Roman", serif;
+      --body-font: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      --mono-font: "Cascadia Code", Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; overflow-x: hidden;
+      color: var(--ink);
+      background: radial-gradient(circle at top left, rgba(157, 107, 55, 0.09), transparent 26%),
+        radial-gradient(circle at 88% 10%, rgba(59, 111, 118, 0.08), transparent 22%),
+        linear-gradient(180deg, #f7f1e7 0%, #fbf7f1 28%, #f6efe5 100%);
+      font-family: var(--body-font); line-height: 1.65; letter-spacing: 0.01em;
+    }
+    a { color: var(--accent-2); }
+    code, pre, .technical, .meta-chip, .section-index, .eyebrow, .stat-label, .stat-value, .mermaid { font-family: var(--mono-font); }
+    .page-shell { width: min(var(--page-width), calc(100vw - 32px)); margin: 0 auto; padding: 28px 0 56px; }
+    .hero {
+      padding: 34px; border: 1px solid rgba(159, 123, 79, 0.28); border-radius: 30px;
+      background: linear-gradient(135deg, rgba(157, 107, 55, 0.1), transparent 34%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0.86)), var(--paper-strong);
+      box-shadow: var(--shadow);
+    }
+    .hero-grid { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(260px, 0.85fr); gap: 24px; align-items: end; }
+    .eyebrow { margin: 0 0 12px; color: var(--accent); font-size: 0.78rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; }
+    .title { margin: 0; max-width: 14ch; font-family: var(--display-font); font-size: clamp(2.8rem, 5vw, 4.8rem); line-height: 0.95; letter-spacing: -0.04em; text-wrap: balance; }
+    .lede { margin: 18px 0 0; max-width: 60ch; color: var(--ink-soft); font-size: 1rem; }
+    .takeaway { margin-top: 22px; padding: 18px 20px; border-left: 4px solid var(--accent-2); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; background: rgba(59, 111, 118, 0.08); color: #20373a; font-size: 1.02rem; }
+    .meta-grid { display: grid; gap: 12px; }
+    .meta-card, .section, .subcard, .empty-state { border: 1px solid rgba(95, 72, 46, 0.12); background: rgba(255, 253, 249, 0.88); box-shadow: var(--shadow); }
+    .meta-card { padding: 16px 18px; border-radius: var(--radius-md); }
+    .meta-label { color: var(--ink-soft); font-size: 0.76rem; letter-spacing: 0.14em; text-transform: uppercase; }
+    .meta-chip { margin-top: 8px; color: var(--accent); font-size: 1rem; font-weight: 700; word-break: break-word; }
+    .section { margin-top: 22px; padding: 24px; border-radius: var(--radius-lg); break-inside: avoid; page-break-inside: avoid; }
+    .section-header { display: flex; justify-content: space-between; gap: 12px 18px; align-items: end; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+    .section-index { color: var(--accent); font-size: 0.78rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; }
+    .section-title { margin: 0; font-family: var(--display-font); font-size: clamp(1.45rem, 2vw, 2rem); line-height: 1.05; }
+    .summary-grid, .dual-grid, .phase-grid, .stat-grid, .appendix-grid { display: grid; gap: 16px; }
+    .summary-grid, .dual-grid, .phase-grid, .appendix-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .subcard { padding: 18px; border-radius: var(--radius-md); break-inside: avoid; page-break-inside: avoid; }
+    .subcard h3, .subcard h4 { margin: 0 0 10px; font-size: 1rem; line-height: 1.2; }
+    .subcard p:first-child, .subcard ul:first-child, .subcard ol:first-child { margin-top: 0; }
+    .stat-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 16px; }
+    .stat { padding: 14px 16px; border: 1px solid rgba(59, 111, 118, 0.16); border-radius: var(--radius-sm); background: rgba(59, 111, 118, 0.06); break-inside: avoid; page-break-inside: avoid; }
+    .stat-label { color: var(--ink-soft); font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; }
+    .stat-value { margin-top: 8px; color: var(--accent-2); font-size: 1.18rem; font-weight: 700; }
+    .narrative, .chart-frame, .technical-frame, .diagram-frame, .viz-frame { padding: 18px; border: 1px solid var(--line); border-radius: var(--radius-md); background: rgba(255, 255, 255, 0.54); break-inside: avoid; page-break-inside: avoid; }
+    .diagram-frame { overflow-x: auto; overflow-y: auto; overscroll-behavior-x: contain; overscroll-behavior-y: contain; max-height: min(70vh, 720px); }
+    .chart-frame, .viz-frame { overflow: hidden; }
+    .mermaid { width: 100%; max-width: 100%; min-width: 0; color: var(--ink); }
+    .mermaid svg { display: block; width: auto !important; min-width: 100%; max-width: none !important; height: auto !important; }
+    .diagram-frame.compact-diagram { padding: 12px; max-height: min(62vh, 560px); }
+    .diagram-frame.compact-diagram .mermaid { min-width: 900px; }
+    .chart-frame canvas, .technical-frame > canvas, .viz-frame canvas, canvas.report-chart { display: block; width: 100% !important; max-width: 100%; height: 300px !important; min-height: 300px; max-height: 300px; }
+    .technical-frame table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+    .technical-frame th, .technical-frame td { padding: 12px 10px; border-bottom: 1px solid var(--line); vertical-align: top; text-align: left; }
+    .technical-frame th { color: var(--accent); font-size: 0.76rem; letter-spacing: 0.1em; text-transform: uppercase; }
+    .empty-state { padding: 20px; border-radius: var(--radius-md); text-align: center; color: var(--ink-soft); break-inside: avoid; page-break-inside: avoid; }
+    .empty-state strong { display: block; margin-bottom: 6px; color: var(--accent); font-size: 0.84rem; letter-spacing: 0.12em; text-transform: uppercase; }
+    ul, ol { margin: 0; padding-left: 20px; }
+    li { margin-bottom: 8px; }
+    p:last-child, li:last-child { margin-bottom: 0; }
+    .footer-note { margin-top: 18px; color: rgba(95, 86, 76, 0.74); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; text-align: right; }
+    @media (max-width: 920px) {
+      .hero-grid, .summary-grid, .dual-grid, .phase-grid, .stat-grid, .appendix-grid { grid-template-columns: 1fr; }
+      .title { max-width: none; }
+    }
+    @media (max-width: 640px) {
+      .page-shell { width: min(100vw - 20px, var(--page-width)); padding-top: 16px; padding-bottom: 36px; }
+      .hero, .section { padding: 18px; border-radius: 20px; }
+      .title { font-size: clamp(2.1rem, 12vw, 3.2rem); }
+    }
+    @media print {
+      :root { --paper: #ffffff; --paper-strong: #ffffff; --ink: #111111; --ink-soft: #444444; --line: #d6d1c8; }
+      @page { size: A4; margin: 14mm; }
+      body { background: #ffffff; }
+      .page-shell { width: 100%; max-width: none; padding: 0; }
+      .hero, .meta-card, .section, .subcard, .narrative, .chart-frame, .technical-frame, .diagram-frame, .viz-frame, .empty-state, .stat { background: #ffffff; box-shadow: none; }
+      .hero, .section { margin-top: 0; margin-bottom: 10mm; }
+      .diagram-frame { overflow: visible; max-height: none; }
+      .diagram-frame.compact-diagram .mermaid { min-width: 0; }
+      .section-header, .takeaway { break-after: avoid; page-break-after: avoid; }
+      a { color: inherit; text-decoration: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page-shell">
+    <section class="hero" id="title-hero">
+      <div class="hero-grid">
+        <div>
+          <p class="eyebrow">Final Report / Shareable Analysis Artifact</p>
+          <h1 class="title">Sprint 2: Demo Output UX &amp; Pre-built Artifacts</h1>
+          <p class="lede">
+            A presentation-ready synthesis of Sprint 2 of the colleague-testable demo initiative, covering improved demo output UX, stable output paths, and committed pre-built example artifacts.
+          </p>
+          <div class="takeaway">
+            Both demo scripts now print a clear summary banner, copy results to <code>output/latest-*.docx</code>, and support <code>--open</code> to auto-launch the DOCX viewer. Two pre-built example DOCX files (Soc Son + Inegol) are committed for zero-install preview. A colleague can now clone, install, and have a DOCX on disk in under 5 minutes.
+          </div>
+        </div>
+        <div class="meta-grid">
+          <div class="meta-card">
+            <div class="meta-label">Project</div>
+            <div class="meta-chip">PDD Agent — Colleague-Testable Demo</div>
+          </div>
+          <div class="meta-card">
+            <div class="meta-label">Repository</div>
+            <div class="meta-chip">tah-allotrope/pdd-auto</div>
+          </div>
+          <div class="meta-card">
+            <div class="meta-label">Date</div>
+            <div class="meta-chip">2026-05-25</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="executive-summary">
+      <div class="section-header">
+        <div>
+          <div class="section-index">01 / Executive Summary</div>
+          <h2 class="section-title">Executive Summary</h2>
+        </div>
+      </div>
+      <div class="summary-grid">
+        <div class="subcard">
+          <h3>What Was Done</h3>
+          <p>Sprint 2 addressed two gaps (GAP-04, GAP-06) identified in the colleague-demo gap analysis. The demo scripts were upgraded with clear ASCII summary banners and stable <code>output/</code> paths. Two pre-built example DOCX files were committed so colleagues can preview output without installing Python.</p>
+        </div>
+        <div class="subcard">
+          <h3>Key Results</h3>
+          <ul>
+            <li><strong>GAP-04 fixed:</strong> <code>output/latest-demo.docx</code> and <code>output/latest-inegol-demo.docx</code> stable aliases created</li>
+            <li><strong>GAP-06 fixed:</strong> Two example DOCX committed in <code>examples/</code> with synthetic disclosure</li>
+            <li><strong>207 tests pass</strong> (7 skipped), zero regressions</li>
+            <li><strong>Q-001 answered:</strong> Both Soc Son <em>and</em> Inegol examples committed</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="background-objective">
+      <div class="section-header">
+        <div>
+          <div class="section-index">02 / Background &amp; Objective</div>
+          <h2 class="section-title">Background &amp; Objective</h2>
+        </div>
+      </div>
+      <div class="narrative">
+        <p>After Sprint 1 established a quickstart path (QUICKSTART.md, gws error guard, .gitkeep sentinels), two usability gaps remained:</p>
+        <ul>
+          <li><strong>GAP-04 (MEDIUM):</strong> Demo output paths were not obvious. Generated DOCX lived in deeply nested <code>reports/demo-packages/&lt;slug&gt;/&lt;run-id&gt;/</code> directories. Scripts printed raw path lines with no visual hierarchy.</li>
+          <li><strong>GAP-06 (MEDIUM):</strong> No pre-built example DOCX was committed. A colleague had to install Python and run a script to see what the tool produced.</li>
+        </ul>
+        <p>The objective was to make the demo experience frictionless: a clear banner at script completion, a predictable <code>output/latest-*.docx</code> path, optional auto-open, and committed example files for zero-install preview.</p>
+      </div>
+    </section>
+
+    <section class="section" id="inputs-scope">
+      <div class="section-header">
+        <div>
+          <div class="section-index">03 / Inputs &amp; Scope</div>
+          <h2 class="section-title">Inputs &amp; Scope</h2>
+        </div>
+      </div>
+      <div class="dual-grid">
+        <div class="subcard">
+          <h3>In Scope</h3>
+          <ul>
+            <li><code>scripts/run_demo.py</code> — Soc Son demo script rewrite</li>
+            <li><code>scripts/run_inegol_demo.py</code> — Inegol demo script rewrite</li>
+            <li><code>scripts/_demo_helpers.py</code> — shared banner + copy utilities</li>
+            <li><code>examples/</code> — committed example DOCX + README</li>
+            <li><code>README.md</code> — "Example Output" section</li>
+            <li><code>QUICKSTART.md</code> — update output paths and <code>--open</code> docs</li>
+            <li><code>.gitignore</code> — add <code>output/</code></li>
+          </ul>
+        </div>
+        <div class="subcard">
+          <h3>Out of Scope</h3>
+          <ul>
+            <li>Corpus bundling (Sprint 3)</li>
+            <li>Test skip cleanup (Sprint 3)</li>
+            <li>gws error guard (Sprint 1, already complete)</li>
+            <li>Core pipeline changes</li>
+            <li>PDF generation (no local converter available)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="assumptions-constraints">
+      <div class="section-header">
+        <div>
+          <div class="section-index">04 / Assumptions &amp; Constraints</div>
+          <h2 class="section-title">Assumptions &amp; Constraints</h2>
+        </div>
+      </div>
+      <div class="dual-grid">
+        <div class="subcard">
+          <h3>Assumptions</h3>
+          <ul>
+            <li>Sprint 1 (QUICKSTART.md) is complete</li>
+            <li>Inegol demo produces a representative 36-section DOCX (~225 KB)</li>
+            <li>Auto-open is opt-in only (CI/headless-safe)</li>
+          </ul>
+        </div>
+        <div class="subcard">
+          <h3>Constraints</h3>
+          <ul>
+            <li>Pre-built DOCX must carry synthetic disclosure (not mistaken for real PDD)</li>
+            <li><code>output/</code> is gitignored; <code>examples/</code> is tracked</li>
+            <li>ASCII-only banner (Windows cp1252 encoding)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="methodology">
+      <div class="section-header">
+        <div>
+          <div class="section-index">05 / Methodology</div>
+          <h2 class="section-title">Methodology</h2>
+        </div>
+      </div>
+      <div class="narrative">
+        <p>Sprint 2 followed the plan's 4-phase structure. PHASE-01 and PHASE-02 were implemented in parallel (they had no dependencies on each other), followed sequentially by PHASE-03 and PHASE-04. Each phase was committed, pushed, and reported before beginning the next.</p>
+        <p>The banner was designed as ASCII-only (no box-drawing characters) to avoid Windows cp1252 encoding issues. The <code>--open</code> flag uses platform detection (<code>os.startfile</code>/<code>open</code>/<code>xdg-open</code>) for cross-platform compatibility.</p>
+      </div>
+      <div class="stat-grid">
+        <div class="stat">
+          <div class="stat-label">Orientation</div>
+          <div class="stat-value">multi-phase</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Audience</div>
+          <div class="stat-value">stakeholder-safe</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Evidence Rule</div>
+          <div class="stat-value">no invented data</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="phase-analysis">
+      <div class="section-header">
+        <div>
+          <div class="section-index">06 / Phase-by-Phase Analysis</div>
+          <h2 class="section-title">Phase-by-Phase Analysis</h2>
+        </div>
+      </div>
+      <div class="phase-grid">
+        <div class="subcard">
+          <h4>PHASE-01 — Demo Script Output UX</h4>
+          <p>Created <code>_demo_helpers.py</code> with <code>print_demo_banner()</code> and <code>copy_to_output()</code>. Both scripts rewritten to print an ASCII banner with sections count, runtime, review flags, and a highlighted DOCX path. Generated DOCX copies to <code>output/latest-demo.docx</code> / <code>output/latest-inegol-demo.docx</code>.</p>
+        </div>
+        <div class="subcard">
+          <h4>PHASE-02 — Pre-built Example DOCX</h4>
+          <p>Both demo DOCX files committed to <code>examples/</code> directory alongside <code>examples/README.md</code>. <code>README.md</code> updated with "Example Output" section before Architecture. Q-001 answered: <strong>both</strong> Soc Son and Inegol.</p>
+        </div>
+        <div class="subcard">
+          <h4>PHASE-03 — QUICKSTART Update</h4>
+          <p>QUICKSTART.md updated: "What You Get" table now points to <code>output/latest-*.docx</code>, "Preview Without Running" section links to <code>examples/</code>, <code>--open</code> flag documented for both scripts.</p>
+        </div>
+        <div class="subcard">
+          <h4>PHASE-04 — Verification</h4>
+          <p>Both demos run successfully with banners. All 4 DOCX files present (2 output/ + 2 examples/). <code>pytest</code>: 207 passed, 7 skipped, 0 failed.</p>
+        </div>
+      </div>
+      <div class="diagram-frame compact-diagram" style="margin-top: 16px;">
+        <div class="mermaid">
+flowchart LR
+          subgraph Sprint2[Sprint 2 Execution]
+            direction LR
+            A[PHASE-01\nOutput UX] --> B[PHASE-02\nPre-built Examples]
+            A --> C[PHASE-03\nQUICKSTART Update]
+            B --> C
+            C --> D[PHASE-04\nVerification]
+          end
+          style A fill:#efe4d0,stroke:#9d6b37
+          style B fill:#efe4d0,stroke:#9d6b37
+          style C fill:#efe4d0,stroke:#9d6b37
+          style D fill:#dcfce7,stroke:#166534
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="findings-recommendation">
+      <div class="section-header">
+        <div>
+          <div class="section-index">07 / Findings &amp; Recommendation</div>
+          <h2 class="section-title">Findings &amp; Recommendation</h2>
+        </div>
+      </div>
+      <div class="narrative">
+        <p><strong>Finding 1:</strong> ASCII-only banner was required because Windows cp1252 encoding cannot render Unicode box-drawing characters in the terminal. The initial implementation used ╔═╗ characters and failed on the first test run. Resolution: replaced with <code>+-|</code> ASCII art.</p>
+        <p><strong>Finding 2:</strong> Both Soc Son and Inegol examples were committed (Q-001). The Inegol example is richer (real VCS-3908 project data, 11 VCS v4.4 table types), while the Soc Son example shows the simpler synthetic case. Committing both gives colleagues a choice of what to preview.</p>
+        <p><strong>Finding 3:</strong> By Sprint 2's completion, the colleague-testable demo journey is now fully documented end to end: clone → install → run (Sprint 1) → preview output at predictable paths (Sprint 2).</p>
+        <p><strong>Recommendation:</strong> Proceed to Sprint 3 (Corpus Bundle &amp; Test Cleanup) to provide realistic provenance citations in demo output and clean up stale test skips.</p>
+      </div>
+      <div class="chart-frame" style="margin-top: 16px;">
+        <canvas id="gapsChart"></canvas>
+      </div>
+    </section>
+
+    <section class="section" id="implementation-path">
+      <div class="section-header">
+        <div>
+          <div class="section-index">08 / Implementation Path</div>
+          <h2 class="section-title">Implementation Path</h2>
+        </div>
+      </div>
+      <div class="phase-grid">
+        <div class="subcard">
+          <h4>Sprint 3 — Corpus Bundle &amp; Test Cleanup</h4>
+          <p>Bundle 2-3 Verra VCS docs in <code>demo/corpus/</code> for realistic provenance citations in demo output. Add degraded-mode warnings in search.py. Remove stale <code>pytest.skip</code> guards, add <code>@pytest.mark.corpus</code> decorators.</p>
+        </div>
+        <div class="subcard">
+          <h4>Future — Corpus-Driven PDD Generation</h4>
+          <p>Replace DemoProvider synthetic prose with real corpus text via BM25 retrieval. Target: &lt;30% synthetic content. This is the biggest pending architectural upgrade (<code>plans/2026-05-05-corpus-driven-pdd-generation-plan.md</code>).</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="risks-open-questions">
+      <div class="section-header">
+        <div>
+          <div class="section-index">09 / Risks / Open Questions</div>
+          <h2 class="section-title">Risks / Open Questions</h2>
+        </div>
+      </div>
+      <div class="dual-grid">
+        <div class="subcard">
+          <h3>Risks</h3>
+          <ul>
+            <li><strong>Example staleness:</strong> Pre-built DOCX may drift from current pipeline output as schema evolves. Mitigation: <code>examples/README.md</code> includes regeneration instructions.</li>
+            <li><strong>Repo size:</strong> Two ~225 KB DOCX files in git (~450 KB total). Acceptable for now; switch to Git LFS if it grows.</li>
+            <li><strong>Platform issues:</strong> <code>--open</code> flag uses platform detection but may fail on uncommon setups. Graceful fallback: prints the path.</li>
+          </ul>
+        </div>
+        <div class="subcard">
+          <h3>Open Questions (Sprint 3)</h3>
+          <ul>
+            <li><strong>Q-001:</strong> Are Verra VCS project descriptions acceptable to commit as normalized text? Default: Yes (public registry docs).</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="appendices-evidence">
+      <div class="section-header">
+        <div>
+          <div class="section-index">10 / Appendices / Evidence Notes</div>
+          <h2 class="section-title">Appendices / Evidence Notes</h2>
+        </div>
+      </div>
+      <div class="appendix-grid">
+        <div class="subcard">
+          <h4>A. Files Changed</h4>
+          <table>
+            <tr><th>File</th><th>Change</th></tr>
+            <tr><td><code>scripts/_demo_helpers.py</code></td><td>new (44 lines)</td></tr>
+            <tr><td><code>scripts/run_demo.py</code></td><td>rewritten</td></tr>
+            <tr><td><code>scripts/run_inegol_demo.py</code></td><td>rewritten</td></tr>
+            <tr><td><code>.gitignore</code></td><td>+<code>output/</code></td></tr>
+            <tr><td><code>examples/example-soc-son-demo.docx</code></td><td>new (~225 KB)</td></tr>
+            <tr><td><code>examples/example-inegol-demo.docx</code></td><td>new (~225 KB)</td></tr>
+            <tr><td><code>examples/README.md</code></td><td>new (33 lines)</td></tr>
+            <tr><td><code>README.md</code></td><td>+"Example Output" section</td></tr>
+            <tr><td><code>QUICKSTART.md</code></td><td>updated paths/preview</td></tr>
+            <tr><td><code>activeContext.md</code></td><td>Sprint 2 status update</td></tr>
+          </table>
+        </div>
+        <div class="subcard">
+          <h4>B. Verification Results</h4>
+          <table>
+            <tr><th>Check</th><th>Result</th></tr>
+            <tr><td><code>run_demo.py</code></td><td>36 sections, banner, output/latest-demo.docx</td></tr>
+            <tr><td><code>run_inegol_demo.py</code></td><td>36 sections, banner, output/latest-inegol-demo.docx</td></tr>
+            <tr><td><code>pytest</code></td><td>207 passed, 7 skipped, 0 failed</td></tr>
+            <tr><td>Example DOCX</td><td>Both Soc Son + Inegol in examples/</td></tr>
+          </table>
+        </div>
+        <div class="subcard">
+          <h4>C. Commits</h4>
+          <table>
+            <tr><th>Commit</th><th>Phase</th></tr>
+            <tr><td><code>ddbed4c</code></td><td>PHASE-01: Output UX</td></tr>
+            <tr><td><code>bd4be01</code></td><td>PHASE-02: Pre-built examples</td></tr>
+            <tr><td><code>94fb4eb</code></td><td>PHASE-03: QUICKSTART update</td></tr>
+            <tr><td><code>9d59b38</code></td><td>PHASE-04: Verification</td></tr>
+            <tr><td><code>03d7733</code></td><td>Per-phase HTML reports</td></tr>
+            <tr><td><code>97861e8</code></td><td>Sprint 2 completion report</td></tr>
+          </table>
+        </div>
+        <div class="subcard">
+          <h4>D. Reports Generated</h4>
+          <ul>
+            <li><code>reports/2026-05-25-sprint2-phase01-output-ux.html</code></li>
+            <li><code>reports/2026-05-25-sprint2-phase02-prebuilt-examples.html</code></li>
+            <li><code>reports/2026-05-25-sprint2-phase03-quickstart-open.html</code></li>
+            <li><code>reports/2026-05-25-sprint2-complete.html</code></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-note">designed for html first, printable without reconstruction</div>
+    </section>
+  </main>
+  <script>
+    (function() {
+      const chartCanvases = document.querySelectorAll('canvas');
+      chartCanvases.forEach((canvas) => {
+        canvas.classList.add('report-chart');
+        const parent = canvas.parentElement;
+        if (parent && parent.classList.contains('technical-frame') && !parent.classList.contains('chart-frame')) {
+          parent.classList.add('chart-frame');
+        }
+      });
+    })();
+
+    if (window.Chart) {
+      Chart.defaults.devicePixelRatio = 1;
+      Chart.defaults.animation = false;
+      Chart.defaults.resizeDelay = 150;
+      Chart.defaults.normalized = true;
+      Chart.defaults.maintainAspectRatio = false;
+      Chart.defaults.responsive = true;
+      window.__REPORT_CHART_DEFAULTS__ = {
+        animation: false, resizeDelay: 150, normalized: true, maintainAspectRatio: false, responsive: true
+      };
+
+      const ctx = document.getElementById('gapsChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['GAP-04 (Output UX)', 'GAP-06 (No Pre-built)'],
+          datasets: [{
+            label: 'Before Sprint 2',
+            data: [1, 1],
+            backgroundColor: 'rgba(157, 107, 55, 0.3)',
+            borderColor: '#9d6b37',
+            borderWidth: 1
+          }, {
+            label: 'After Sprint 2',
+            data: [0, 0],
+            backgroundColor: 'rgba(59, 111, 118, 0.5)',
+            borderColor: '#3b6f76',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          animation: false, resizeDelay: 150, normalized: true,
+          scales: {
+            y: { beginAtZero: true, max: 1.5, title: { display: true, text: 'Gap Severity (1=open, 0=closed)' } }
+          },
+          plugins: {
+            legend: { position: 'bottom' },
+            title: { display: true, text: 'Gap Closure Status', font: { size: 14 } }
+          }
+        }
+      });
+    }
+  </script>
+</body>
+</html>
