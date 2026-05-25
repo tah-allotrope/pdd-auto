@@ -1,6 +1,6 @@
-## Colleague-Testable Demo — Sprint 1 Complete
+## Colleague-Testable Demo — Sprint 2 Complete
 
-**Status: SPRINT 1 COMPLETE — 2026-05-24**
+**Status: SPRINT 2 COMPLETE — 2026-05-25**
 
 ### Gap Analysis
 - `reports/2026-05-22-colleague-demo-gap-analysis.md` — 7 gaps identified (1 CRITICAL, 1 HIGH, 3 MEDIUM, 2 LOW)
@@ -11,13 +11,17 @@
   - PHASE-02: `_check_gws_available()` guard in `drive.py`, 3 tests in `test_drive_guard.py`
   - PHASE-03: `.gitignore` fixed for `.gitkeep` tracking, README prerequisites split into Demo/Full Pipeline
   - PHASE-04: Verified — 207 passed, 7 skipped, 0 failed; both demos produce DOCX; gws guard fires correctly
-  - Commits: `4d19d96` (PHASE-01), `43b06a1` (PHASE-02), `bb12380` (PHASE-03)
-  - Reports: `reports/2026-05-24-sprint1-phase01-quickstart.html`, `reports/2026-05-24-sprint1-phase02-gws-guard.html`, `reports/2026-05-24-sprint1-phase03-gitignore.html`
-- **Sprint 2 (2026-05-25 to 2026-05-26):** `plans/2026-05-22-demo-output-ux-prebuilt-artifacts-plan.md` — Demo script output UX, stable output paths, pre-built example DOCX (GAP-04, GAP-06)
+  - Commits: `4d19d96` (PHASE-01), `43b06a1` (PHASE-02), `bb12380` (PHASE-03), `3011a68` (PHASE-04)
+  - Reports: `reports/2026-05-24-sprint1-phase01-quickstart.html`, `reports/2026-05-24-sprint1-phase02-gws-guard.html`, `reports/2026-05-24-sprint1-phase03-gitignore.html`, `reports/2026-05-24-sprint1-complete.html`
+- **Sprint 2 (2026-05-25):** `plans/2026-05-22-demo-output-ux-prebuilt-artifacts-plan.md` — ✅ COMPLETE
+  - PHASE-01: `_demo_helpers.py` with `print_demo_banner()` + `copy_to_output()`, both scripts print ASCII banner and copy to `output/latest-*.docx`, `--open` flag added
+  - PHASE-02: Pre-built examples committed — `examples/example-soc-son-demo.docx` + `examples/example-inegol-demo.docx` + `examples/README.md`
+  - PHASE-03: QUICKSTART.md updated with `output/` paths, `--open` flag docs, and "Preview Without Running" section
+  - PHASE-04: Verified — 207 passed, 7 skipped, 0 failed; both banners print correctly; all 4 DOCX files present
+  - Commits: `ddbed4c` (PHASE-01), `bd4be01` (PHASE-02), `94fb4eb` (PHASE-03)
 - **Sprint 3 (2026-05-27 to 2026-05-28):** `plans/2026-05-22-demo-corpus-bundle-test-cleanup-plan.md` — Demo corpus bundle, degraded-mode warnings, test skip cleanup (GAP-02, GAP-07)
 
 ### Open Questions
-- Q-001 (Sprint 2): Should the pre-built example DOCX be Inegol or Soc Son? Default: Inegol.
 - Q-001 (Sprint 3): Are Verra VCS project descriptions acceptable to commit as normalized text? Default: Yes (public registry docs).
 
 ---
