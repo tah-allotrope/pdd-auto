@@ -71,6 +71,15 @@ pdd-agent upload --run-id <run-id>
 | `pdd-agent map-spreadsheet` | Profile the workbook and generate Vietnam ProjectInput + assumptions artifacts |
 | `pdd-agent run-vietnam-pdd` | Run the full Vietnam spreadsheet-to-review-package workflow |
 
+## Example Output
+
+To preview what the tool produces without running it, open one of the example DOCX files:
+
+- `examples/example-soc-son-demo.docx` — Synthetic Soc Son-like WTE project (Vietnam)
+- `examples/example-inegol-demo.docx` — Synthetic İnegol integrated waste facility (Türkiye, VCS-3908)
+
+Both are synthetic demos with a bold cover-page disclaimer — not real PDDs. See [examples/README.md](examples/README.md) for details and regeneration instructions.
+
 ## Architecture
 
 ### Corpus Ingestion (PHASE-01)
