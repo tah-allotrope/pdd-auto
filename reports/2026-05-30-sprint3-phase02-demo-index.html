@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sprint 3 PHASE-02 — Demo Index Builder & Degraded-Mode Warnings</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; color: #1a1a1a; line-height: 1.6; }
+  h1 { border-bottom: 2px solid #2563eb; padding-bottom: 8px; }
+  h2 { color: #2563eb; margin-top: 32px; }
+  .status { display: inline-block; background: #dcfce7; color: #166534; padding: 4px 12px; border-radius: 9999px; font-weight: 600; font-size: 14px; }
+  table { border-collapse: collapse; width: 100%; margin: 16px 0; }
+  th, td { border: 1px solid #e5e7eb; padding: 8px 12px; text-align: left; }
+  th { background: #f9fafb; font-weight: 600; }
+  code { background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 14px; }
+  pre { background: #1e293b; color: #e2e8f0; padding: 16px; border-radius: 8px; overflow-x: auto; }
+  pre code { background: none; color: inherit; }
+  .meta { color: #6b7280; font-size: 14px; }
+</style>
+</head>
+<body>
+<h1>Sprint 3 PHASE-02 — Demo Index Builder &amp; Degraded-Mode Warnings</h1>
+<p class="meta">Date: 2026-05-30 | Sprint: 3 of 3 | Gap: GAP-02 (silent retrieval degradation)</p>
+<p><span class="status">COMPLETE</span></p>
+
+<h2>Objective</h2>
+<p>Make corpus-backed provenance buildable on demand and make the previously silent
+"no index" path visible. Adds a demo index builder, a CLI command, and a once-per-session
+warning at the three retrieval graceful-degradation points.</p>
+
+<h2>Tasks Completed</h2>
+<table>
+<tr><th>Task</th><th>Status</th><th>Output</th></tr>
+<tr><td>TASK-02-01: <code>build_demo_index()</code></td><td>Done</td><td><code>src/pdd_agent/demo_setup.py</code> — builds <code>data/index/demo.fts.db</code> from <code>demo/corpus/</code></td></tr>
+<tr><td>TASK-02-02: <code>pdd-agent demo-setup</code> CLI</td><td>Done</td><td><code>cli.py</code> subparser + <code>_run_demo_setup()</code></td></tr>
+<tr><td>TASK-02-03: degraded-mode warning at 3 points</td><td>Done</td><td><code>search()</code>, <code>get_examples_for_section()</code>, <code>get_section_heading_examples()</code></td></tr>
+<tr><td>TASK-02-04: once-per-session flag</td><td>Done</td><td><code>_INDEX_WARNING_SHOWN</code> + <code>_warn_no_index_once()</code></td></tr>
+<tr><td>TASK-02-05: unit test</td><td>Done</td><td><code>tests/test_demo_setup.py</code> (4 tests)</td></tr>
+</table>
+
+<h2>Verification</h2>
+<ul>
+<li><code>pytest tests/test_demo_setup.py</code> → <strong>4 passed</strong> (build, queryable, searchable, missing-corpus error).</li>
+<li><code>pdd-agent demo-setup</code> builds <code>data/index/demo.fts.db</code> from 3 docs / 233 chunks and prints a success line.</li>
+<li>Warning fires exactly <strong>once</strong> across 6 retrieval calls against an unbuilt index (verified by log-line count).</li>
+<li><code>data/index/demo.fts.db</code> is git-ignored (<code>data/index/*</code>) — built on the fly, never committed.</li>
+<li>Full suite: <strong>211 passed, 7 skipped</strong> (was 207/7; +4 new tests, no regressions).</li>
+</ul>
+
+<h2>Incidental Fix</h2>
+<p>The new test surfaced a real bug in <code>RetrievalIndex.stats()</code>: it called
+<code>cur.fetchone()</code> twice per metric (<code>total = cur.fetchone()[0] if cur.fetchone() else 0</code>),
+consuming the row in the condition and dereferencing <code>None</code>. Rewrote both metrics to
+fetch once. Root-cause fix, not a test workaround.</p>
+
+<h2>Changes</h2>
+<pre><code> src/pdd_agent/demo_setup.py            | new (~70 lines)
+ src/pdd_agent/cli.py                   | demo-setup subparser + handler
+ src/pdd_agent/retrieval/search.py      | _warn_no_index_once() at 3 points
+ src/pdd_agent/retrieval/index.py       | fix stats() double-fetchone bug
+ tests/test_demo_setup.py               | new (4 tests)</code></pre>
+
+<h2>Next</h2>
+<p>PHASE-03: auto-build the demo index from the demo scripts and add a demo-index
+fallback in <code>get_retrieval_index()</code> so provenance citations appear automatically.</p>
+</body>
+</html>

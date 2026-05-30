@@ -238,10 +238,10 @@ class RetrievalIndex:
         self._open()
         conn = self._conn
         assert conn is not None
-        cur = conn.execute("SELECT COUNT(*) FROM sections_fts")
-        total = cur.fetchone()[0] if cur.fetchone() else 0
-        cur2 = conn.execute("SELECT COUNT(DISTINCT document_name) FROM sections_fts")
-        docs = cur2.fetchone()[0] if cur2.fetchone() else 0
+        row = conn.execute("SELECT COUNT(*) FROM sections_fts").fetchone()
+        total = row[0] if row else 0
+        row2 = conn.execute("SELECT COUNT(DISTINCT document_name) FROM sections_fts").fetchone()
+        docs = row2[0] if row2 else 0
         return {
             "db_path": str(self._db_path),
             "total_chunks": total,

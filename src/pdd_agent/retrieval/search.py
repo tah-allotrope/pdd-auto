@@ -19,6 +19,23 @@ logger = structlog.get_logger()
 DEFAULT_K = 5
 MAX_K = 50
 
+_INDEX_WARNING_SHOWN = False
+
+
+def _warn_no_index_once() -> None:
+    """Emit a single degraded-mode warning per process when no index is built."""
+    global _INDEX_WARNING_SHOWN
+    if _INDEX_WARNING_SHOWN:
+        return
+    _INDEX_WARNING_SHOWN = True
+    logger.warning(
+        "retrieval_index_unavailable",
+        message=(
+            "Retrieval index not available — running without corpus-backed "
+            "provenance. Run 'pdd-agent demo-setup' to build a demo index."
+        ),
+    )
+
 
 def _clean_query(query: str) -> str:
     """Strip special FTS5 operators and extra whitespace."""
@@ -110,6 +127,7 @@ def search(
         return []
 
     if not index.is_built():
+        _warn_no_index_once()
         return []
 
     k = min(k, MAX_K)
@@ -148,6 +166,7 @@ def get_examples_for_section(
     k = min(k, MAX_K)
 
     if not index.is_built():
+        _warn_no_index_once()
         return []
 
     if sub_section_id:
@@ -181,6 +200,7 @@ def get_section_heading_examples(
         index = get_retrieval_index()
 
     if not index.is_built():
+        _warn_no_index_once()
         return []
 
     raw = index.search_by_heading(heading, k=k)

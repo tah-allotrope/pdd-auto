@@ -54,6 +54,11 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Output FTS5 database path",
     )
 
+    sub.add_parser(
+        "demo-setup",
+        help="Build the demo FTS5 index from the bundled demo/corpus subset",
+    )
+
     draft_parser = sub.add_parser("draft", help="Draft all PDD sections for a project")
     draft_parser.add_argument("--input", "-i", required=True, help="Path to ProjectInput YAML file")
     draft_parser.add_argument(
@@ -257,6 +262,7 @@ def main() -> int:
         "bucket": lambda: _run_bucket(args.manifest),
         "ingest": lambda: _run_ingest(args.folder_id, args.manifest, args.dry_run, log),
         "build-index": lambda: _run_build_index(args, log),
+        "demo-setup": lambda: _run_demo_setup(args, log),
         "draft": lambda: _run_draft(args, log),
         "review": lambda: _run_review(args, log),
         "export": lambda: _run_export(args, log),
@@ -300,6 +306,14 @@ def _run_build_index(args, log) -> None:
     idx = RetrievalIndex(db_path=args.index_db)
     idx.build(normalized_dir=Path(args.corpus_dir))
     log.info("build_index_done", db=args.index_db)
+
+
+def _run_demo_setup(args, log) -> None:
+    from pdd_agent.demo_setup import build_demo_index
+
+    log.info("demo_setup_start")
+    build_demo_index()
+    log.info("demo_setup_done")
 
 
 def _run_draft(args, log) -> None:
