@@ -87,6 +87,7 @@ class TestLoadSchema:
         assert "4.1" in sections["4"]["sub_sections"]
 
 
+@pytest.mark.corpus
 class TestParseCorpus:
     @pytest.fixture
     def corpus_dir(self):
@@ -132,6 +133,7 @@ class TestParseCorpus:
                 assert len(mapped) > 0, f"{r['document_name']} missing {cs}"
 
 
+@pytest.mark.corpus
 class TestCorpusSectionIndex:
     @pytest.fixture
     def parsed(self):

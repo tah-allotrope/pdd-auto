@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sprint 3 PHASE-04 — Test Cleanup</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; color: #1a1a1a; line-height: 1.6; }
+  h1 { border-bottom: 2px solid #2563eb; padding-bottom: 8px; }
+  h2 { color: #2563eb; margin-top: 32px; }
+  .status { display: inline-block; background: #dcfce7; color: #166534; padding: 4px 12px; border-radius: 9999px; font-weight: 600; font-size: 14px; }
+  .warn { display: inline-block; background: #fef9c3; color: #854d0e; padding: 2px 8px; border-radius: 6px; font-size: 13px; }
+  table { border-collapse: collapse; width: 100%; margin: 16px 0; }
+  th, td { border: 1px solid #e5e7eb; padding: 8px 12px; text-align: left; }
+  th { background: #f9fafb; font-weight: 600; }
+  code { background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 14px; }
+  pre { background: #1e293b; color: #e2e8f0; padding: 16px; border-radius: 8px; overflow-x: auto; }
+  pre code { background: none; color: inherit; }
+  .meta { color: #6b7280; font-size: 14px; }
+</style>
+</head>
+<body>
+<h1>Sprint 3 PHASE-04 — Test Cleanup</h1>
+<p class="meta">Date: 2026-05-30 | Sprint: 3 of 3 | Gap: GAP-07 (stale test skips)</p>
+<p><span class="status">COMPLETE</span></p>
+
+<h2>Objective</h2>
+<p>Make the test suite self-explanatory on a fresh clone: remove stale <code>python-docx</code>
+skip guards (python-docx is a core dependency) and tag corpus-dependent tests with an
+explicit <code>corpus</code> marker so they can be cleanly deselected.</p>
+
+<h2>Tasks Completed</h2>
+<table>
+<tr><th>Task</th><th>Status</th><th>Output</th></tr>
+<tr><td>TASK-04-01: remove stale docx skips</td><td>Done</td><td>2 guards in <code>test_docx_export.py</code> + unused <code>importlib.util</code> import</td></tr>
+<tr><td>TASK-04-02: add <code>@pytest.mark.corpus</code></td><td>Done</td><td>Class-level on <code>TestParseCorpus</code> &amp; <code>TestCorpusSectionIndex</code></td></tr>
+<tr><td>TASK-04-03: register marker</td><td>Done</td><td><code>markers</code> in <code>pyproject.toml</code></td></tr>
+<tr><td>TASK-04-04: marker + runtime skip pattern</td><td>Done</td><td>Marker added; existing <code>corpus_dir.exists()</code> skip retained</td></tr>
+<tr><td>TASK-04-05: <code>pytest -m "not corpus"</code> tip</td><td>Done</td><td><code>QUICKSTART.md</code> Run Tests section</td></tr>
+<tr><td>TASK-04-06: run &amp; verify</td><td>Done</td><td>See below</td></tr>
+<tr><td>Extra: third stale guard</td><td>Done <span class="warn">beyond plan</span></td><td><code>test_docx_export_tables.py</code> <code>skipif</code> + conditional import</td></tr>
+</table>
+
+<h2>Verification</h2>
+<ul>
+<li><code>pytest</code> → <strong>211 passed, 7 skipped</strong>; every skip reason is now "Normalized corpus not available" (all in <code>test_section_parser.py</code>).</li>
+<li><code>pytest -m "not corpus"</code> → <strong>211 passed, 7 deselected, 0 skipped</strong> (TEST-002 satisfied).</li>
+<li><code>grep</code> confirms <strong>no</strong> <code>python-docx not installed</code> / <code>_docx_available</code> guards remain in <code>tests/</code>.</li>
+<li>No <code>PytestUnknownMarkWarning</code> — the <code>corpus</code> marker is registered.</li>
+</ul>
+
+<h2>Scope Notes / Deviations</h2>
+<ul>
+<li>The plan named two docx guards in <code>test_docx_export.py</code>; a <strong>third</strong> equivalent
+guard existed in <code>test_docx_export_tables.py</code>. Removed it too, since the exit criterion is
+"no python-docx skip guards remain". Both removed guards were already no-ops (docx is installed),
+so pass counts are unchanged.</li>
+<li><strong>Flagged latent bug (not fixed — out of scope):</strong> the corpus tests resolve
+<code>corpus_dir</code> via <code>Path(__file__).parent.parent.parent / "data" / "corpus" / "normalized"</code>
+— one parent too many, pointing outside the repo. These tests therefore <em>always</em> skip even when
+the corpus is present, and <code>test_parses_all_documents</code> asserts <code>len == 13</code> while the
+corpus now has 18 docs. Fixing the path would surface that mismatch; left as a follow-up so this phase
+stays within its stated scope.</li>
+</ul>
+
+<h2>Changes</h2>
+<pre><code> tests/test_docx_export.py          | remove 2 skip guards + importlib import
+ tests/test_docx_export_tables.py   | remove skipif + conditional import
+ tests/test_section_parser.py       | @pytest.mark.corpus on 2 classes
+ pyproject.toml                     | register corpus marker
+ QUICKSTART.md                      | pytest -m "not corpus" tip</code></pre>
+
+<h2>Next</h2>
+<p>PHASE-05: end-to-end verification on a clean environment and final documentation
+(<code>QUICKSTART.md</code> enhanced-demo note, <code>activeContext.md</code> Sprint 3 completion).</p>
+</body>
+</html>

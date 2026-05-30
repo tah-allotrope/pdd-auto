@@ -88,9 +88,13 @@ Both carry a bold synthetic-use disclaimer on the cover page. See [examples/READ
 pytest
 ```
 
-Expected result: **204 passed, ~7 skipped, 0 failed**.
+Expected result: **211 passed, ~6 skipped, 0 failed**.
 
-The 6-7 skipped tests are corpus-dependent (they require an FTS5 index built from real Verra documents) and skip gracefully on fresh clones. This is expected behavior.
+The skipped tests are corpus-dependent (they require the full normalized corpus in `data/corpus/normalized/`) and skip gracefully on fresh clones. This is expected behavior. They are tagged with the `corpus` marker — to run only the tests that don't need the corpus (0 skipped):
+
+```bash
+pytest -m "not corpus"
+```
 
 ## Next Steps
 

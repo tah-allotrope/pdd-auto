@@ -39,3 +39,6 @@ target-version = "py311"
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-v --tb=short"
+markers = [
+    "corpus: tests that require the normalized corpus in data/corpus/normalized/",
+]

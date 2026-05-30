@@ -2,30 +2,26 @@
 
 from __future__ import annotations
 
-import importlib.util
 import zipfile
 from pathlib import Path
 
 import pytest
 
-_docx_available = importlib.util.find_spec("docx") is not None
-
-if _docx_available:
-    from docx import Document
-    from pdd_agent.export.docx_export import (
-        render_cover_metadata_table,
-        render_audit_history_table,
-        render_proponent_table,
-        render_ghg_boundary_table,
-        render_applicability_table,
-        render_monitoring_fixed_params_table,
-        render_monitoring_tracked_params_table,
-        render_risk_assessment_table,
-        render_emissions_summary_table,
-        render_sustainable_development_table,
-        render_data_gaps_table,
-        render_tbd_appendix,
-    )
+from docx import Document
+from pdd_agent.export.docx_export import (
+    render_cover_metadata_table,
+    render_audit_history_table,
+    render_proponent_table,
+    render_ghg_boundary_table,
+    render_applicability_table,
+    render_monitoring_fixed_params_table,
+    render_monitoring_tracked_params_table,
+    render_risk_assessment_table,
+    render_emissions_summary_table,
+    render_sustainable_development_table,
+    render_data_gaps_table,
+    render_tbd_appendix,
+)
 
 
 def _docx_xml(doc) -> str:
@@ -37,7 +33,6 @@ def _docx_xml(doc) -> str:
         return archive.read("word/document.xml").decode("utf-8")
 
 
-@pytest.mark.skipif(not _docx_available, reason="python-docx not installed")
 class TestTableRenderers:
     """Verify each VCS table renderer produces correct headers and row counts."""
 

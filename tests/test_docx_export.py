@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import importlib.util
 import json
 import zipfile
 from pathlib import Path
@@ -136,9 +135,6 @@ def _read_docx_xml(docx_path: Path) -> str:
 
 
 def test_export_run_to_docx_includes_disclaimer_and_appendices(tmp_path: Path, monkeypatch):
-    if importlib.util.find_spec("docx") is None:
-        pytest.skip("python-docx not installed in test environment")
-
     run_path = _write_run(tmp_path)
     monkeypatch.setattr("pdd_agent.export.docx_export._DRAFT_RUNS_DIR", run_path.parent)
 
@@ -155,9 +151,6 @@ def test_export_run_to_docx_includes_disclaimer_and_appendices(tmp_path: Path, m
 
 
 def test_export_run_to_docx_demo_mode_suppresses_reviewer_noise(tmp_path: Path, monkeypatch):
-    if importlib.util.find_spec("docx") is None:
-        pytest.skip("python-docx not installed in test environment")
-
     run_path = _write_run(tmp_path, run_id="demo-docx-run")
     payload = json.loads(run_path.read_text(encoding="utf-8"))
     payload["provider"] = "demo"
