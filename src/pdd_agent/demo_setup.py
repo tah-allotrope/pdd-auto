@@ -14,7 +14,7 @@ from __future__ import annotations
 import structlog
 from pathlib import Path
 
-from pdd_agent.retrieval.index import RetrievalIndex
+from pdd_agent.retrieval.index import RetrievalIndex, set_retrieval_index
 
 logger = structlog.get_logger()
 
@@ -44,6 +44,10 @@ def build_demo_index(
     n_docs = len(list(corpus_dir.glob("*.norm.json")))
     index = RetrievalIndex(db_path=index_path)
     stats = index.build(normalized_dir=corpus_dir)
+
+    # Make the freshly built index the process-wide singleton so any later
+    # retrieval calls in this run pick it up immediately.
+    set_retrieval_index(index)
 
     logger.info(
         "demo_index_built",

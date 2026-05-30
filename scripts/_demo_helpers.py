@@ -45,3 +45,26 @@ def copy_to_output(src: Path, dest_name: str) -> Path:
     dest = output_dir / dest_name
     shutil.copy2(src, dest)
     return dest
+
+
+def ensure_demo_index() -> None:
+    """Auto-build the demo retrieval index for corpus-backed provenance.
+
+    No-ops when the production corpus index already exists, when the demo index
+    is already built, or when the bundled demo corpus is absent (graceful
+    degradation — the demo still runs, just without provenance citations).
+    """
+    from pdd_agent.demo_setup import (
+        DEMO_CORPUS_DIR,
+        DEMO_INDEX_PATH,
+        build_demo_index,
+    )
+
+    corpus_index = DEMO_INDEX_PATH.parent / "corpus.fts.db"
+    if corpus_index.exists() or DEMO_INDEX_PATH.exists():
+        return
+    if not DEMO_CORPUS_DIR.exists():
+        return
+
+    print("Auto-building demo index for corpus provenance...")
+    build_demo_index()

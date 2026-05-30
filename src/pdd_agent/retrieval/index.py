@@ -277,7 +277,30 @@ _index: RetrievalIndex | None = None
 
 
 def get_retrieval_index() -> RetrievalIndex:
+    """Return the process-wide retrieval index singleton.
+
+    Precedence: the production ``corpus.fts.db`` wins when present. When it is
+    absent but the bundled demo index ``demo.fts.db`` exists, the demo index is
+    used so demo runs get corpus-backed provenance. Otherwise the default
+    (unbuilt) corpus index is returned and retrieval degrades gracefully.
+    """
     global _index
     if _index is None:
-        _index = RetrievalIndex()
+        index_dir = Path(__file__).parent.parent.parent.parent / "data" / "index"
+        corpus_path = index_dir / "corpus.fts.db"
+        demo_path = index_dir / "demo.fts.db"
+        if not corpus_path.exists() and demo_path.exists():
+            _index = RetrievalIndex(db_path=demo_path)
+        else:
+            _index = RetrievalIndex()
     return _index
+
+
+def set_retrieval_index(index: RetrievalIndex) -> None:
+    """Override the process-wide retrieval index singleton.
+
+    Used by ``demo_setup.build_demo_index()`` so a freshly built demo index is
+    immediately used by any later retrieval calls in the same process.
+    """
+    global _index
+    _index = index

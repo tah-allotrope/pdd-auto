@@ -25,7 +25,7 @@ from pdd_agent.llm.provider import get_provider_registry
 from pdd_agent.review.tbd_tracker import TBDTracker
 from pdd_agent.review.consistency import check_quantitative_consistency
 from schemas.project_input import ProjectInput
-from _demo_helpers import copy_to_output, print_demo_banner
+from _demo_helpers import copy_to_output, ensure_demo_index, print_demo_banner
 
 logger = None
 
@@ -58,6 +58,8 @@ def main() -> int:
     print(f"  Methodology: {', '.join(project_input.technology.methodology_ids)}")
     print(f"  Capacity: {project_input.technology.installed_capacity_mw} MW")
     print(f"  Annual waste: {project_input.technology.annual_waste_throughput:,.0f} tonnes")
+
+    ensure_demo_index()
 
     provider = get_provider_registry().get("demo")
     orchestrator = SectionOrchestrator(provider=provider, project_input=project_input)

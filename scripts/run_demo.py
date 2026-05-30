@@ -12,7 +12,7 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from pdd_agent.phase05.benchmark import create_demo_project_input, run_demo_benchmark
-from _demo_helpers import copy_to_output, print_demo_banner
+from _demo_helpers import copy_to_output, ensure_demo_index, print_demo_banner
 
 
 def _open_docx(path: Path) -> None:
@@ -29,6 +29,8 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Run the Soc Son-like demo benchmark")
     parser.add_argument("--open", action="store_true", help="Open the generated DOCX after completion")
     args = parser.parse_args()
+
+    ensure_demo_index()
 
     config_path = create_demo_project_input(Path("configs/projects/demo_socson_like.yaml"))
     artifacts = run_demo_benchmark(

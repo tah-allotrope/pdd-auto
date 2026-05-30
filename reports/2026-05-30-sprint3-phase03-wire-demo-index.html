@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sprint 3 PHASE-03 — Wire Demo Scripts to Demo Index</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; color: #1a1a1a; line-height: 1.6; }
+  h1 { border-bottom: 2px solid #2563eb; padding-bottom: 8px; }
+  h2 { color: #2563eb; margin-top: 32px; }
+  .status { display: inline-block; background: #dcfce7; color: #166534; padding: 4px 12px; border-radius: 9999px; font-weight: 600; font-size: 14px; }
+  table { border-collapse: collapse; width: 100%; margin: 16px 0; }
+  th, td { border: 1px solid #e5e7eb; padding: 8px 12px; text-align: left; }
+  th { background: #f9fafb; font-weight: 600; }
+  code { background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 14px; }
+  pre { background: #1e293b; color: #e2e8f0; padding: 16px; border-radius: 8px; overflow-x: auto; }
+  pre code { background: none; color: inherit; }
+  .meta { color: #6b7280; font-size: 14px; }
+</style>
+</head>
+<body>
+<h1>Sprint 3 PHASE-03 — Wire Demo Scripts to Demo Index</h1>
+<p class="meta">Date: 2026-05-30 | Sprint: 3 of 3 | Gap: GAP-02 (silent retrieval degradation)</p>
+<p><span class="status">COMPLETE</span></p>
+
+<h2>Objective</h2>
+<p>Make both demo scripts surface corpus-backed provenance automatically, with zero manual
+setup, while preserving graceful degradation when no corpus is available.</p>
+
+<h2>Tasks Completed</h2>
+<table>
+<tr><th>Task</th><th>Status</th><th>Output</th></tr>
+<tr><td>TASK-03-01: auto-build in <code>run_demo.py</code></td><td>Done</td><td><code>ensure_demo_index()</code> before benchmark</td></tr>
+<tr><td>TASK-03-02: auto-build in <code>run_inegol_demo.py</code></td><td>Done</td><td><code>ensure_demo_index()</code> before orchestrator run</td></tr>
+<tr><td>TASK-03-03: demo-index fallback in <code>get_retrieval_index()</code></td><td>Done</td><td>uses <code>demo.fts.db</code> when <code>corpus.fts.db</code> is absent</td></tr>
+<tr><td>TASK-03-04: verify non-empty provenance</td><td>Done</td><td>175 <code>[CORPUS:&hellip;]</code> citations per DOCX</td></tr>
+<tr><td>TASK-03-05: run both scripts, confirm provenance</td><td>Done</td><td>Soc Son + Inegol both at 175</td></tr>
+</table>
+
+<h2>Design Notes</h2>
+<ul>
+<li><strong>Precedence:</strong> production <code>corpus.fts.db</code> always wins; <code>demo.fts.db</code> is a fallback only when the production index is absent. Separate filenames avoid any conflict (RISK-02-01).</li>
+<li><strong>Singleton coherence:</strong> <code>build_demo_index()</code> calls a new <code>set_retrieval_index()</code> so a freshly built index is used immediately in-process, and <code>get_retrieval_index()</code> also resolves <code>demo.fts.db</code> from disk on first use (RISK-02-02 covered both ways).</li>
+<li><strong>Shared helper:</strong> <code>ensure_demo_index()</code> lives in <code>scripts/_demo_helpers.py</code> (used by both scripts), and no-ops when an index already exists or the demo corpus is absent.</li>
+</ul>
+
+<h2>Verification</h2>
+<ul>
+<li>Deleted <code>data/index/*.fts.db</code> to simulate a fresh clone, then ran <code>python scripts/run_inegol_demo.py</code>:
+  prints "Auto-building demo index&hellip;", builds 3 docs / 233 chunks, and all <strong>36/36</strong> sections gain provenance.</li>
+<li>Exported Inegol DOCX contains <strong>175</strong> <code>[CORPUS:&hellip;]</code> citations (was 0 before this sprint).</li>
+<li><code>python scripts/run_demo.py</code> (Soc Son): demo package DOCX also contains <strong>175</strong> citations.</li>
+<li>Full suite: <strong>211 passed, 7 skipped</strong> — no regressions.</li>
+</ul>
+
+<h2>Changes</h2>
+<pre><code> src/pdd_agent/retrieval/index.py   | demo fallback in get_retrieval_index() + set_retrieval_index()
+ src/pdd_agent/demo_setup.py        | register built index as singleton
+ scripts/_demo_helpers.py           | new ensure_demo_index() helper
+ scripts/run_demo.py                | call ensure_demo_index() before run
+ scripts/run_inegol_demo.py         | call ensure_demo_index() before run</code></pre>
+
+<h2>Next</h2>
+<p>PHASE-04: remove stale python-docx skip guards and add <code>@pytest.mark.corpus</code>
+markers so the suite is self-explanatory on fresh clones.</p>
+</body>
+</html>
