@@ -1,3 +1,19 @@
+## Colleague-Testable Demo — Sprint 3 Complete
+
+**Status: SPRINT 3 COMPLETE — 2026-05-30 (all 3 sprints done)**
+
+### Sprint 3 — Demo Corpus Bundle & Test Cleanup (`plans/2026-05-22-demo-corpus-bundle-test-cleanup-plan.md`) — ✅ COMPLETE
+- Q-001 answered **yes**: public Verra VCS descriptions; normalized text committed.
+- **PHASE-01:** Bundled 3 public Verra `.norm.json` docs (Soc Son, Inegol, Bergama) under `demo/corpus/` + README (2.6 MB; plan's <1 MB estimate was based on wrong per-file sizes). Commit `63462c1`.
+- **PHASE-02:** `src/pdd_agent/demo_setup.py` `build_demo_index()`, `pdd-agent demo-setup` CLI, once-per-session degraded-mode warning at 3 `search.py` points, `tests/test_demo_setup.py` (4 tests). Incidentally fixed a real `RetrievalIndex.stats()` double-`fetchone()` bug. Commit `a35ed22`.
+- **PHASE-03:** Demo-index fallback in `get_retrieval_index()` + `set_retrieval_index()`; `ensure_demo_index()` auto-build helper wired into both demo scripts. Both demos now emit **175 `[CORPUS:…]` citations** per DOCX (was 0). Commit `d592840`.
+- **PHASE-04:** Removed 3 stale python-docx skip guards (incl. one in `test_docx_export_tables.py` not named in plan), added `@pytest.mark.corpus` + registered marker, QUICKSTART `pytest -m "not corpus"` tip. Commit `b4fbd79`.
+- **PHASE-05:** Clean-env verification — both demos auto-build, 175 citations / 0 placeholders each, stable output paths present. `pytest`: 211 passed, 7 skipped (all corpus); `pytest -m "not corpus"`: 0 skipped.
+- Reports: `reports/2026-05-30-sprint3-phase01-corpus-bundle.html` … `phase04-test-cleanup.html`, `reports/2026-05-30-sprint3-complete.html`.
+- **Flagged follow-up (out of scope):** corpus tests in `test_section_parser.py` use a three-parent `corpus_dir` path that points outside the repo, so they always skip even with the corpus present; `test_parses_all_documents` also asserts `len == 13` vs 18 docs now. Path fix deferred.
+
+---
+
 ## Colleague-Testable Demo — Sprint 2 Complete
 
 **Status: SPRINT 2 COMPLETE — 2026-05-25**
@@ -19,10 +35,10 @@
   - PHASE-03: QUICKSTART.md updated with `output/` paths, `--open` flag docs, and "Preview Without Running" section
   - PHASE-04: Verified — 207 passed, 7 skipped, 0 failed; both banners print correctly; all 4 DOCX files present
   - Commits: `ddbed4c` (PHASE-01), `bd4be01` (PHASE-02), `94fb4eb` (PHASE-03)
-- **Sprint 3 (2026-05-27 to 2026-05-28):** `plans/2026-05-22-demo-corpus-bundle-test-cleanup-plan.md` — Demo corpus bundle, degraded-mode warnings, test skip cleanup (GAP-02, GAP-07)
+- **Sprint 3 (completed 2026-05-30):** `plans/2026-05-22-demo-corpus-bundle-test-cleanup-plan.md` — ✅ COMPLETE (see Sprint 3 block above)
 
 ### Open Questions
-- Q-001 (Sprint 3): Are Verra VCS project descriptions acceptable to commit as normalized text? Default: Yes (public registry docs).
+- Q-001 (Sprint 3): Are Verra VCS project descriptions acceptable to commit as normalized text? **Answered: Yes** (public registry docs).
 
 ---
 

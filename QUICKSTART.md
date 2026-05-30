@@ -73,6 +73,25 @@ After either demo script finishes, you'll find:
 
 Each DOCX contains **36 sections** with readable synthetic prose, zero `[PLACEHOLDER]` markers, and aligned quantification numbers. The cover page carries a bold synthetic-use disclosure.
 
+## Corpus-Backed Provenance
+
+Both demo scripts automatically build a small retrieval index from the bundled
+demo corpus (`demo/corpus/` — 3 public Verra project descriptions) the first time
+they run, so each section in the output DOCX carries `[CORPUS: ...]` provenance
+citations (≈175 per document). No setup required.
+
+You can also build the demo index explicitly:
+
+```bash
+pdd-agent demo-setup
+```
+
+If neither the demo corpus nor a full corpus index is present, the demos still run
+and degrade gracefully — they print a single warning and produce output without
+provenance citations. To work with the complete 18-document corpus instead, run
+`pdd-agent ingest` then `pdd-agent build-index` (the full index takes precedence
+over the demo index).
+
 ## Preview Without Running
 
 To see what the tool produces without installing or running anything, open one of the pre-built example files:
