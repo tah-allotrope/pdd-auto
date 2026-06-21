@@ -1,0 +1,82 @@
+"""Physical constants and methodology defaults for ACM0022 calculations.
+
+Values sourced from:
+- IPCC AR5 (GWP)
+- CDM Tool 04 v08.0 (FOD model defaults)
+- CDM Tool 03 v04.0 (fossil fuel factors)
+- CDM Tool 05 v03.0 (electricity emissions)
+"""
+
+from __future__ import annotations
+
+GWP_CH4: float = 28.0  # AR5, tCO2e per tCH4
+
+DENSITY_CH4: float = 0.0007168  # tonnes CH4 per Nm3 at STP (0°C, 1 atm)
+
+FRACTION_CH4_BIOGAS_DEFAULT: float = 0.56  # m3 CH4 / m3 biogas
+
+MCF_DEFAULT: float = 1.0  # managed, anaerobic SWDS (IPCC Table 3.1)
+MCF_UNMANAGED_SHALLOW: float = 0.4
+MCF_UNMANAGED_DEEP: float = 0.8
+
+DOC_F_DEFAULT: float = 0.5  # fraction of DOC that decomposes
+
+OX_DEFAULT: float = 0.0  # oxidation factor for unmanaged SWDS (conservative)
+OX_MANAGED: float = 0.1
+
+MODEL_CORRECTION_FACTOR_DEFAULT: float = 0.9  # φ_default per Tool 04
+
+F_CH4_DEFAULT: float = 0.5  # fraction of CH4 in SWDS gas (volume)
+
+CH4_TO_CO2_RATIO: float = 16.0 / 12.0  # molecular weight ratio
+
+EF_CH4_DIGESTER_DEFAULT: float = 0.05  # 5% methane leakage from AD (Tool 14)
+
+FLARE_EFFICIENCY_OPEN: float = 0.5  # 50% destruction for open flare (Tool 06)
+FLARE_EFFICIENCY_ENCLOSED: float = 0.9  # 90% for enclosed flare
+
+TDL_DEFAULT: float = 0.0  # transmission/distribution losses (conservative)
+
+# DOC values by waste type (fraction, dry weight basis) - IPCC 2006 Table 2.4
+DOC_BY_WASTE_TYPE: dict[str, float] = {
+    "food_waste": 0.15,
+    "garden_waste": 0.20,
+    "paper_cardboard": 0.40,
+    "wood": 0.43,
+    "textiles": 0.24,
+    "nappies": 0.24,
+    "rubber_leather": 0.39,
+    "municipal_solid_waste": 0.17,  # weighted average for mixed MSW
+}
+
+# Decay rates by waste type (1/year) - IPCC 2006 Table 3.3, wet tropical
+DECAY_RATE_BY_WASTE_TYPE: dict[str, float] = {
+    "food_waste": 0.185,
+    "garden_waste": 0.100,
+    "paper_cardboard": 0.060,
+    "wood": 0.030,
+    "textiles": 0.060,
+    "nappies": 0.060,
+    "rubber_leather": 0.060,
+    "municipal_solid_waste": 0.09,  # conservative default for mixed MSW
+}
+
+# Fossil fuel emission factors (tCO2/GJ) - CDM Tool 03 defaults
+FOSSIL_FUEL_EF: dict[str, float] = {
+    "diesel": 0.0741,
+    "gasoline": 0.0693,
+    "natural_gas": 0.0561,
+    "lpg": 0.0631,
+    "fuel_oil": 0.0774,
+    "coal": 0.0946,
+}
+
+# Net calorific values (GJ/tonne) - CDM Tool 03 defaults
+FOSSIL_FUEL_NCV: dict[str, float] = {
+    "diesel": 43.0,
+    "gasoline": 44.3,
+    "natural_gas": 48.0,  # GJ/1000 Nm3 -> per tonne needs conversion
+    "lpg": 47.3,
+    "fuel_oil": 40.4,
+    "coal": 25.8,
+}

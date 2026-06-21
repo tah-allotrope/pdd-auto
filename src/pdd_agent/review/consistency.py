@@ -12,6 +12,11 @@ from typing import Any
 
 from schemas.project_input import ProjectInput
 
+try:
+    from pdd_agent.calc.models import ACM0022CalcResult
+except ImportError:
+    ACM0022CalcResult = None
+
 # Required boundary elements per VCS PDD Section 3.3 schema
 _GHG_BOUNDARY_REQUIRED = [
     ("included emission sources", ["included", "emission source"]),
@@ -84,6 +89,7 @@ def check_quantitative_consistency(
     draft_sections: list[Any],
     project_input: ProjectInput | None,
     run_id: str,
+    calc_result: "ACM0022CalcResult | None" = None,
 ) -> ConsistencyReport:
     """Check all quantitative consistency rules between sections.
 
@@ -91,6 +97,8 @@ def check_quantitative_consistency(
         draft_sections: List of DraftSection objects from orchestrator run.
         project_input: ProjectInput for absolute cross-checks against known values.
         run_id: Identifier for the report.
+        calc_result: Optional ACM0022CalcResult for cross-checking calc engine output
+            against both ProjectInput and draft sections.
     """
     report = ConsistencyReport(run_id=run_id)
 
@@ -112,6 +120,11 @@ def check_quantitative_consistency(
     _check_baseline_project_emissions_relation(section_map, report)
     _check_ghg_boundary_completeness(section_map, report)
     _check_monitoring_parameter_coverage(section_map, project_input, report)
+
+    if calc_result is not None:
+        _check_calc_result_internal(calc_result, report)
+        if project_input is not None:
+            _check_calc_vs_project_input(calc_result, project_input, report)
 
     return report
 
@@ -394,6 +407,113 @@ def _check_monitoring_parameter_coverage(
                         ),
                     )
                 )
+
+
+def _check_calc_result_internal(
+    calc_result: Any,
+    report: ConsistencyReport,
+) -> None:
+    """Verify internal consistency of an ACM0022CalcResult."""
+    be = calc_result.baseline_emissions_tco2e
+    pe = calc_result.project_emissions_tco2e
+    le = calc_result.leakage_tco2e
+    net = calc_result.net_emission_reductions_tco2e
+
+    expected_net = be - pe - le
+    if abs(net - expected_net) > 0.01:
+        report.flags.append(
+            ConsistencyFlag(
+                section_a="CalcResult",
+                section_b="CalcResult",
+                field_name="net_emission_reductions",
+                value_a=net,
+                value_b=expected_net,
+                expected=expected_net,
+                tolerance=0.01,
+                severity="CRITICAL",
+                message=(
+                    f"Calc engine net ({net:,.2f}) != baseline ({be:,.2f}) "
+                    f"- project ({pe:,.2f}) - leakage ({le:,.2f}) = {expected_net:,.2f}"
+                ),
+            )
+        )
+
+    be_sum = calc_result.baseline_methane_swds_tco2e + calc_result.baseline_electricity_tco2e
+    if abs(be - be_sum) > 0.01:
+        report.flags.append(
+            ConsistencyFlag(
+                section_a="CalcResult.baseline",
+                section_b="CalcResult.baseline_components",
+                field_name="baseline_decomposition",
+                value_a=be,
+                value_b=be_sum,
+                expected=be_sum,
+                tolerance=0.01,
+                severity="CRITICAL",
+                message=(
+                    f"Baseline total ({be:,.2f}) != CH4 ({calc_result.baseline_methane_swds_tco2e:,.2f}) "
+                    f"+ EC ({calc_result.baseline_electricity_tco2e:,.2f}) = {be_sum:,.2f}. "
+                    f"rate_compliance may be applied at the wrong level."
+                ),
+            )
+        )
+
+    if net < 0:
+        report.flags.append(
+            ConsistencyFlag(
+                section_a="CalcResult",
+                section_b="CalcResult",
+                field_name="net_negative",
+                value_a=net,
+                value_b=None,
+                expected=None,
+                tolerance=0.0,
+                severity="HIGH",
+                message=(
+                    f"Net emission reductions are negative ({net:,.2f} tCO2e). "
+                    f"Project would not generate credits."
+                ),
+            )
+        )
+
+
+def _check_calc_vs_project_input(
+    calc_result: Any,
+    project_input: ProjectInput,
+    report: ConsistencyReport,
+) -> None:
+    """Cross-check calc result against ProjectInput quantification fields."""
+    qi = project_input.quantification
+
+    pairs: list[tuple[str, float | None, float | None]] = [
+        ("baseline_emissions", qi.baseline_emissions_tco2e_per_year, calc_result.baseline_emissions_tco2e),
+        ("project_emissions", qi.project_emissions_tco2e_per_year, calc_result.project_emissions_tco2e),
+        ("leakage", qi.leakage_tco2e_per_year, calc_result.leakage_tco2e),
+        ("net_emissions", qi.net_emissions_tco2e_per_year, calc_result.net_emission_reductions_tco2e),
+        ("crediting_total", qi.crediting_period_total_tco2e, calc_result.crediting_period_total_tco2e),
+    ]
+
+    for field_name, qi_val, calc_val in pairs:
+        if qi_val is None:
+            continue
+        if abs(qi_val - calc_val) > 0.01:
+            report.flags.append(
+                ConsistencyFlag(
+                    section_a="ProjectInput.quantification",
+                    section_b="CalcResult",
+                    field_name=field_name,
+                    value_a=qi_val,
+                    value_b=calc_val,
+                    expected=calc_val,
+                    tolerance=0.01,
+                    severity="CRITICAL",
+                    message=(
+                        f"ProjectInput.quantification.{field_name} ({qi_val:,.2f}) "
+                        f"does not match CalcResult ({calc_val:,.2f}). "
+                        f"Update ProjectInput via QuantificationInputs.from_calc_result()."
+                    ),
+                )
+            )
 
 
 def summarize_consistency_report(report: ConsistencyReport) -> dict[str, Any]:

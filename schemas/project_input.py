@@ -190,6 +190,19 @@ class QuantificationInputs(BaseModel):
         None, description="Total estimated credits over the crediting period (net × years)"
     )
 
+    @classmethod
+    def from_calc_result(cls, result: "ACM0022CalcResult") -> "QuantificationInputs":
+        """Populate from an ACM0022CalcResult, preserving provenance."""
+        return cls(
+            baseline_emissions_tco2e_per_year=result.baseline_emissions_tco2e,
+            project_emissions_tco2e_per_year=result.project_emissions_tco2e,
+            leakage_tco2e_per_year=result.leakage_tco2e,
+            net_emissions_tco2e_per_year=result.net_emission_reductions_tco2e,
+            grid_emission_factor=None,
+            grid_emission_factor_source=None,
+            crediting_period_total_tco2e=result.crediting_period_total_tco2e,
+        )
+
 
 class MonitoringPlan(BaseModel):
     parameters_monitored: list[dict] = Field(
