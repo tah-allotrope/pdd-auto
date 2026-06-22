@@ -264,6 +264,76 @@ class SustainableDevelopment(BaseModel):
     )
 
 
+class EvidenceItem(BaseModel):
+    """A single evidence reference for the evidence registry."""
+
+    evidence_id: str = Field(..., description="Unique evidence ID (e.g. E001, E002)")
+    source_type: Literal[
+        "corpus", "methodology", "user_input", "calc_engine",
+        "registry", "synthetic", "expert_judgment",
+    ] = Field(..., description="Type of evidence source")
+    description: str = Field(..., description="What this evidence supports")
+    document_ref: str | None = Field(None, description="Document name or path")
+    section_ref: str | None = Field(None, description="Section ID where evidence applies")
+    confidence: Literal["HIGH", "MEDIUM", "LOW"] = Field("MEDIUM", description="Confidence level")
+
+
+class EvidenceRegistry(BaseModel):
+    """Registry of all evidence items cited in the PDD draft."""
+
+    items: list[EvidenceItem] = Field(default_factory=list)
+
+    def next_id(self) -> str:
+        return f"E{len(self.items) + 1:03d}"
+
+    def add(self, source_type: str, description: str, **kwargs) -> str:
+        eid = self.next_id()
+        self.items.append(
+            EvidenceItem(evidence_id=eid, source_type=source_type, description=description, **kwargs)
+        )
+        return eid
+
+    def by_section(self, section_id: str) -> list[EvidenceItem]:
+        return [item for item in self.items if item.section_ref == section_id]
+
+
+class GenerationControls(BaseModel):
+    """Controls for LLM-based section generation."""
+
+    provider_name: str = Field("noop", description="LLM provider to use (noop, demo, openai, ollama)")
+    model_name: str = Field("gpt-4o", description="Model name for the provider")
+    max_tokens_per_section: int = Field(4000, ge=100, le=16000, description="Max tokens per section draft")
+    temperature: float = Field(0.1, ge=0.0, le=1.0, description="LLM temperature")
+    token_budget: int = Field(500_000, ge=1000, description="Total token budget for the run")
+    token_warning_threshold: float = Field(0.8, ge=0.0, le=1.0, description="Budget warning threshold")
+    use_v2_prompt: bool = Field(True, description="Use v2 prompt template with anti-hallucination markers")
+    inject_calc_results: bool = Field(True, description="Inject ACM0022 calc results into Section 4 prompts")
+    inject_corpus_retrieval: bool = Field(True, description="Inject FTS5/BM25 corpus retrieval into prompts")
+    max_corpus_examples: int = Field(5, ge=0, le=20, description="Max corpus examples per section")
+    max_corpus_chars: int = Field(1500, ge=0, le=5000, description="Max chars per corpus example")
+
+
+class ReviewFlags(BaseModel):
+    """Flags controlling review gates and quality thresholds."""
+
+    require_evidence_for_high: bool = Field(
+        True, description="HIGH sensitivity sections require at least one evidence citation"
+    )
+    require_expert_for_critical: bool = Field(
+        True, description="CRITICAL sections require domain expert sign-off"
+    )
+    block_on_missing_markers: bool = Field(
+        True, description="Block finalization if [MISSING] markers remain"
+    )
+    max_inference_ratio: float = Field(
+        0.3, ge=0.0, le=1.0,
+        description="Max fraction of content that can be [INFERENCE]-tagged before review gate triggers",
+    )
+    auto_flag_synthetic: bool = Field(
+        True, description="Automatically flag sections using synthetic assumptions"
+    )
+
+
 class ProjectInput(BaseModel):
     """Root model — a fully populated instance represents one complete project input set."""
 
@@ -277,6 +347,15 @@ class ProjectInput(BaseModel):
     safeguards: SafeguardsEvidence
     compliance_and_ownership: ComplianceAndOwnership
     sustainable_development: SustainableDevelopment
+    generation_controls: GenerationControls | None = Field(
+        None, description="LLM generation controls (optional)"
+    )
+    review_flags: ReviewFlags | None = Field(
+        None, description="Review gate flags (optional)"
+    )
+    evidence_registry: EvidenceRegistry | None = Field(
+        None, description="Evidence registry for citation tracking (optional)"
+    )
 
     @field_validator("technology", mode="before")
     @classmethod

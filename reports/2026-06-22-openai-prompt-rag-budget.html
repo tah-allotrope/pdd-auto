@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phase 2 — OpenAI GPT-4 Provider + Prompt Discipline + RAG Injection + Token Budget</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+  :root { --blue: #2563eb; --green: #16a34a; --amber: #d97706; --red: #dc2626; --bg: #ffffff; --fg: #1a1a1a; --muted: #6b7280; --border: #e5e7eb; --card-bg: #f9fafb; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 880px; margin: 40px auto; padding: 0 20px; color: var(--fg); line-height: 1.6; background: var(--bg); }
+  h1 { border-bottom: 3px solid var(--blue); padding-bottom: 10px; font-size: 1.8em; }
+  h2 { color: var(--blue); margin-top: 36px; font-size: 1.3em; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+  h3 { color: var(--fg); margin-top: 20px; font-size: 1.05em; }
+  .meta { color: var(--muted); font-size: 14px; margin-bottom: 4px; }
+  .status { display: inline-block; background: #dcfce7; color: #166534; padding: 4px 14px; border-radius: 9999px; font-weight: 600; font-size: 14px; }
+  .status-next { display: inline-block; background: #fef3c7; color: #92400e; padding: 4px 14px; border-radius: 9999px; font-weight: 600; font-size: 14px; }
+  table { border-collapse: collapse; width: 100%; margin: 16px 0; font-size: 14px; }
+  th, td { border: 1px solid var(--border); padding: 8px 12px; text-align: left; vertical-align: top; }
+  th { background: var(--card-bg); font-weight: 600; }
+  code { background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 13px; }
+  pre { background: #1e293b; color: #e2e8f0; padding: 16px; border-radius: 8px; overflow-x: auto; font-size: 13px; }
+  pre code { background: none; color: inherit; padding: 0; }
+  .cards { display: flex; gap: 14px; flex-wrap: wrap; margin: 18px 0; }
+  .card { flex: 1; min-width: 140px; border: 1px solid var(--border); border-radius: 10px; padding: 16px; background: var(--card-bg); }
+  .card .metric { font-size: 32px; font-weight: 700; color: var(--blue); }
+  .card .label { color: var(--muted); font-size: 12px; margin-top: 2px; }
+  .formula-box { background: #f0f9ff; border-left: 4px solid var(--blue); padding: 14px 18px; margin: 14px 0; border-radius: 0 8px 8px 0; font-size: 14px; }
+  .formula-box .eq-label { font-weight: 600; color: var(--blue); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .formula-box .eq { font-family: 'Cambria Math', 'Times New Roman', serif; font-size: 15px; margin-top: 4px; }
+  .mermaid-wrap { max-height: 420px; overflow: auto; margin: 16px 0; border: 1px solid var(--border); border-radius: 8px; padding: 12px; background: var(--card-bg); }
+  .viz-frame { position: relative; height: 300px; margin: 16px 0; }
+  ul { padding-left: 22px; }
+  li { margin-bottom: 4px; }
+  .tag { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; margin-right: 4px; }
+  .tag-new { background: #dbeafe; color: #1e40af; }
+  .tag-mod { background: #fef3c7; color: #92400e; }
+  .tag-test { background: #dcfce7; color: #166534; }
+  .tag-prompt { background: #ede9fe; color: #5b21b6; }
+  @media print {
+    body { max-width: 100%; margin: 0; padding: 20px; }
+    .mermaid-wrap { max-height: none; overflow: visible; page-break-inside: avoid; }
+    .viz-frame { page-break-inside: avoid; }
+    .cards { page-break-inside: avoid; }
+    pre { page-break-inside: avoid; }
+  }
+  @media (max-width: 600px) {
+    .cards { flex-direction: column; }
+    .card { min-width: auto; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Phase 2 — OpenAI GPT-4 Provider + Prompt Discipline + RAG Injection + Token Budget</h1>
+<p class="meta">Date: 2026-06-22 &nbsp;|&nbsp; Project: pdd-auto &nbsp;|&nbsp; Repo: tah-allotrope/pdd-auto &nbsp;|&nbsp; Plan: plans/2026-06-22-pdd-pipeline-upgrade-plan.md</p>
+<p><span class="status">PHASE 2 COMPLETE — 10/10 TASKS</span> <span class="status-next">PHASE 3 NEXT: Document Intake + Screening</span></p>
+
+<p>Phase 2 wires the LLM drafting pipeline end-to-end. The 52-line OpenAI stub is replaced with a production-grade GPT-4 provider (retry logic, error handling, structured output). A token budget tracker enforces per-run cost control (500K default, 80% warning, 100% hard-stop). The prompt template is upgraded to v2 with Tinh's prompt discipline: authority ordering, anti-hallucination markers (<code>[MISSING]</code>, <code>[INFERENCE]</code>, <code>[REVIEW REQUIRED]</code>), and evidence-ID citations. FTS5/BM25 corpus retrieval and Phase-1 ACM0022 calc results are injected into prompts. Schema extensions add <code>GenerationControls</code>, <code>ReviewFlags</code>, and <code>EvidenceRegistry</code>. Optional PDF export via LibreOffice CLI is added.</p>
+
+<div class="cards">
+  <div class="card"><div class="metric">10/10</div><div class="label">Phase 2 tasks complete</div></div>
+  <div class="card"><div class="metric">64</div><div class="label">new tests (all passing)</div></div>
+  <div class="card"><div class="metric">377</div><div class="label">total tests (0 regressions)</div></div>
+  <div class="card"><div class="metric">8</div><div class="label">files created or modified</div></div>
+</div>
+
+<!-- ====== SECTION 1: INPUT / OUTPUT ====== -->
+<h2>1. Input &rarr; Output Summary</h2>
+
+<table>
+<tr><th>Input</th><th>Output</th></tr>
+<tr>
+  <td>
+    <strong>Phase 1 artifacts</strong><br>
+    &bull; ACM0022 calc engine (9 files, 805 lines)<br>
+    &bull; <code>ACM0022CalcResult</code> Pydantic model<br>
+    &bull; 313 passing tests<br><br>
+    <strong>Existing pipeline</strong><br>
+    &bull; 52-line OpenAI stub (returns <code>[OPENAI STUB]</code>)<br>
+    &bull; <code>SectionOrchestrator</code> with v1 prompt<br>
+    &bull; FTS5/BM25 retrieval module (unused in prompts)<br>
+    &bull; <code>ProjectInput</code> schema (10 sections)
+  </td>
+  <td>
+    <strong>New / modified files</strong><br>
+    <span class="tag tag-new">NEW</span> <code>src/pdd_agent/llm/budget.py</code> — TokenBudget + BudgetExhaustedError<br>
+    <span class="tag tag-mod">MOD</span> <code>src/pdd_agent/llm/openai_provider.py</code> — real GPT-4 provider (196 lines)<br>
+    <span class="tag tag-new">NEW</span> <code>prompts/section_draft_v2.md</code> — v2 prompt template<br>
+    <span class="tag tag-mod">MOD</span> <code>src/pdd_agent/agent/section_orchestrator.py</code> — wired retrieval + calc + budget + v2 prompt<br>
+    <span class="tag tag-mod">MOD</span> <code>schemas/project_input.py</code> — GenerationControls, ReviewFlags, EvidenceRegistry<br>
+    <span class="tag tag-new">NEW</span> <code>src/pdd_agent/export/pdf_export.py</code> — LibreOffice PDF conversion<br>
+    <span class="tag tag-mod">MOD</span> <code>pyproject.toml</code> — <code>[llm]</code> optional dep group<br><br>
+    <strong>Test files</strong><br>
+    <span class="tag tag-test">TEST</span> <code>tests/test_token_budget.py</code> — 16 tests<br>
+    <span class="tag tag-test">TEST</span> <code>tests/test_openai_provider.py</code> — 9 tests (mocked API)<br>
+    <span class="tag tag-test">TEST</span> <code>tests/test_prompt_assembly.py</code> — 16 tests<br>
+    <span class="tag tag-test">TEST</span> <code>tests/test_pdf_export.py</code> — 8 tests<br>
+    <span class="tag tag-test">TEST</span> <code>tests/test_e2e_inegol_draft.py</code> — 11 tests (E2E with Demo/Noop)
+  </td>
+</tr>
+</table>
+
+<!-- ====== SECTION 2: LOGIC FLOW ====== -->
+<h2>2. Logic Flow</h2>
+
+<div class="mermaid-wrap">
+  <pre class="mermaid">
+flowchart LR
+    A[ProjectInput + CalcResult] --> B[SectionOrchestrator]
+    B --> C{v2 Prompt?}
+    C -->|Yes| D[Authority Order + Anti-Hallucination]
+    C -->|No| E[v1 Instructions]
+    D --> F[FTS5/BM25 Retrieval]
+    F --> G{Section 4?}
+    G -->|Yes| H[Inject CalcResult]
+    G -->|No| I[Skip Calc]
+    H --> J[Assemble Prompt]
+    I --> J
+    E --> J
+    J --> K{Budget OK?}
+    K -->|Yes| L[OpenAI GPT-4 Call]
+    K -->|No| M[BudgetExhausted Error]
+    L --> N[Record Tokens]
+    N --> O[Assess Confidence]
+    O --> P[DraftSection]
+    M --> P
+  </pre>
+</div>
+
+<!-- ====== SECTION 3: MATH / ALGORITHM ====== -->
+<h2>3. Math / Algorithm Used</h2>
+
+<h3>Token Budget Tracking</h3>
+<div class="formula-box">
+  <div class="eq-label">Budget Utilization</div>
+  <div class="eq">utilization = (Σ input_tokens + Σ output_tokens) / max_tokens</div>
+</div>
+<div class="formula-box">
+  <div class="eq-label">Cost Estimation (GPT-4o)</div>
+  <div class="eq">cost_usd = (input_tokens / 1M) × $2.50 + (output_tokens / 1M) × $10.00</div>
+</div>
+<ul>
+  <li><strong>Warning threshold</strong>: 80% utilization &rarr; structlog warning emitted (once)</li>
+  <li><strong>Hard stop</strong>: 100% utilization &rarr; <code>BudgetExhaustedError</code> raised, section gets <code>UNSUPPORTED</code> placeholder</li>
+  <li>Default budget: 500,000 tokens per run (~$1.25 at GPT-4o input pricing for a full 20-section PDD)</li>
+</ul>
+
+<h3>Confidence Assessment</h3>
+<table>
+<tr><th>Markers Present</th><th>Citations Present</th><th>Confidence</th></tr>
+<tr><td><code>[REVIEW REQUIRED]</code> or <code>[MISSING]</code></td><td>None</td><td>LOW</td></tr>
+<tr><td><code>[REVIEW REQUIRED]</code>, <code>[INFERENCE]</code></td><td>Any</td><td>MEDIUM</td></tr>
+<tr><td>None</td><td><code>[CORPUS:]</code>, <code>[E0xx]</code>, etc.</td><td>HIGH</td></tr>
+<tr><td>None</td><td>None</td><td>MEDIUM (default)</td></tr>
+</table>
+
+<h3>Authority Order (Prompt Discipline)</h3>
+<p>When sources conflict, the prompt enforces this strict priority:</p>
+<ol>
+  <li><strong>Input YAML</strong> — ProjectInput (highest)</li>
+  <li><strong>Evidence</strong> — Retrieved corpus + methodology</li>
+  <li><strong>VCS Template</strong> — Template v4.4 structure</li>
+  <li><strong>Methodology</strong> — ACM0022/ACM0003 rules</li>
+  <li><strong>Examples</strong> — Corpus PDD patterns</li>
+  <li><strong>Domain Logic</strong> — General WTE knowledge (lowest)</li>
+</ol>
+
+<!-- ====== SECTION 4: TOOLS / METHODS ====== -->
+<h2>4. Tools / Formulas / Methods</h2>
+
+<table>
+<tr><th>Component</th><th>Technology</th><th>Purpose</th></tr>
+<tr><td>OpenAI Provider</td><td><code>openai</code> SDK v1.x, Chat Completions API</td><td>Real GPT-4 section drafting with retry (3x exponential backoff)</td></tr>
+<tr><td>Token Budget</td><td>Pure Python dataclass</td><td>Per-run cost tracking with warning + hard stop gates</td></tr>
+<tr><td>Prompt v2</td><td>Markdown template + authority order</td><td>Anti-hallucination markers, evidence-ID citations</td></tr>
+<tr><td>RAG Injection</td><td>SQLite FTS5 / BM25</td><td>Corpus retrieval with scores injected into prompts</td></tr>
+<tr><td>Calc Injection</td><td>ACM0022CalcResult</td><td>Baseline/project/leakage values injected into Section 4 prompts</td></tr>
+<tr><td>Schema Extensions</td><td>Pydantic v2</td><td>GenerationControls, ReviewFlags, EvidenceRegistry</td></tr>
+<tr><td>PDF Export</td><td>LibreOffice headless CLI</td><td>DOCX &rarr; PDF conversion (optional, graceful fallback)</td></tr>
+<tr><td>Testing</td><td>pytest + unittest.mock</td><td>Mocked OpenAI API, budget exhaustion, prompt assembly, E2E Inegol</td></tr>
+</table>
+
+<!-- ====== SECTION 5: RESULTS ====== -->
+<h2>5. Results &amp; Visualizations</h2>
+
+<h3>Task Completion Matrix</h3>
+<table>
+<tr><th>Task ID</th><th>Description</th><th>Status</th></tr>
+<tr><td>TASK-02-01</td><td>Real OpenAI provider with retry, error handling</td><td><span class="tag tag-new">DONE</span></td></tr>
+<tr><td>TASK-02-02</td><td>TokenBudget class (500K default, 80%/100% gates)</td><td><span class="tag tag-new">DONE</span></td></tr>
+<tr><td>TASK-02-03</td><td>Prompt v2 with Tinh's discipline (authority order, markers)</td><td><span class="tag tag-new">DONE</span></td></tr>
+<tr><td>TASK-02-04</td><td>Wire FTS5/BM25 retrieval into prompt assembly</td><td><span class="tag tag-mod">DONE</span></td></tr>
+<tr><td>TASK-02-05</td><td>Wire ACM0022 calc results into Section 4 prompts</td><td><span class="tag tag-mod">DONE</span></td></tr>
+<tr><td>TASK-02-06</td><td>Update SectionOrchestrator for v2 prompt + budget</td><td><span class="tag tag-mod">DONE</span></td></tr>
+<tr><td>TASK-02-07</td><td>Schema extensions (GenerationControls, ReviewFlags, EvidenceRegistry)</td><td><span class="tag tag-mod">DONE</span></td></tr>
+<tr><td>TASK-02-08</td><td>PDF export via LibreOffice CLI</td><td><span class="tag tag-new">DONE</span></td></tr>
+<tr><td>TASK-02-09</td><td>Integration tests (mocked API, prompt, budget, calc)</td><td><span class="tag tag-test">DONE</span></td></tr>
+<tr><td>TASK-02-10</td><td>E2E test for Inegol PDD generation</td><td><span class="tag tag-test">DONE</span></td></tr>
+</table>
+
+<h3>Test Suite Growth</h3>
+<div class="viz-frame">
+  <canvas id="testChart"></canvas>
+</div>
+
+<h3>New Test Breakdown</h3>
+<div class="viz-frame">
+  <canvas id="testBreakdown"></canvas>
+</div>
+
+<!-- ====== SECTION 6: LIMITATIONS ====== -->
+<h2>6. Limitations / Second-Best Alternative</h2>
+
+<table>
+<tr><th>Limitation</th><th>Mitigation / Alternative</th></tr>
+<tr>
+  <td>OpenAI provider requires an API key and network access</td>
+  <td>NoopProvider and DemoProvider remain available for offline/zero-cost usage. The Ollama stub is preserved for local model support.</td>
+</tr>
+<tr>
+  <td>PDF export depends on LibreOffice installation</td>
+  <td><code>is_libreoffice_available()</code> check + graceful <code>PDFExportError</code>. DOCX export remains the primary path.</td>
+</tr>
+<tr>
+  <td>Token budget pricing is hardcoded for GPT-4o family</td>
+  <td>Pricing dict is extensible. Unknown models fall back to GPT-4o pricing for estimation.</td>
+</tr>
+<tr>
+  <td>Retry logic uses exponential backoff (2/4/8s) — may be slow under sustained rate limits</td>
+  <td>3 retries max, then surfaces the error. Could be extended with configurable retry policies.</td>
+</tr>
+<tr>
+  <td>Anti-hallucination markers depend on GPT-4 compliance with instructions</td>
+  <td>Confidence assessment post-processes output to detect and flag markers. Human review gates enforce quality.</td>
+</tr>
+</table>
+
+<!-- ====== SECTION 7: ERRORS / WARNINGS ====== -->
+<h2>7. Errors / Warnings / Flags Encountered</h2>
+
+<table>
+<tr><th>Issue</th><th>Resolution</th></tr>
+<tr>
+  <td><code>BudgetExhaustedError</code> not caught by OpenAI provider's <code>draft_section</code> error handler</td>
+  <td>Added <code>BudgetExhaustedError</code> to the except clause in <code>draft_section()</code>. Budget exhaustion now returns an <code>UNSUPPORTED</code> placeholder instead of propagating.</td>
+</tr>
+<tr>
+  <td>1 test failure on first run (63/64 passed)</td>
+  <td>Fixed immediately — <code>test_budget_exhaustion_prevents_call</code> now passes. Full suite: 377/377.</td>
+</tr>
+</table>
+
+<!-- ====== SECTION 8: OPEN QUESTIONS ====== -->
+<h2>8. Open Questions / Next Phase Seeds</h2>
+
+<ul>
+  <li><strong>Phase 3: Document Intake</strong> — PDF/DOCX &rarr; ProjectInput extraction pipeline (currently spreadsheet-bound)</li>
+  <li><strong>Phase 4: Methodology Screening</strong> — Automated methodology selection beyond hardcoded ACM0022/ACM0003</li>
+  <li><strong>Phase 5: Registry API</strong> — Verra next-gen registry integration for project metadata and VCU tracking</li>
+  <li><strong>Streaming output</strong> — OpenAI streaming support for real-time section previews</li>
+  <li><strong>Multi-model routing</strong> — Use GPT-4o-mini for BOILERPLATE sections, GPT-4o for METHODOLOGY_DEPENDENT</li>
+  <li><strong>Real API integration test</strong> — Gated behind <code>OPENAI_API_KEY</code> env var for CI</li>
+</ul>
+
+<h3>Key Files for Phase 3</h3>
+<table>
+<tr><th>File</th><th>Phase 3 Relevance</th></tr>
+<tr><td><code>schemas/project_input.py</code></td><td>Target schema for document extraction — GenerationControls already supports provider routing</td></tr>
+<tr><td><code>src/pdd_agent/llm/openai_provider.py</code></td><td>Can be reused for document extraction with different system prompts</td></tr>
+<tr><td><code>src/pdd_agent/retrieval/search.py</code></td><td>FTS5 index could index extracted documents for cross-referencing</td></tr>
+</table>
+
+<script>
+mermaid.initialize({ startOnLoad: true, theme: 'neutral', flowchart: { useMaxWidth: true, htmlLabels: true } });
+
+Chart.defaults.devicePixelRatio = 1;
+Chart.defaults.animation = false;
+Chart.defaults.resizeDelay = 150;
+Chart.defaults.normalized = true;
+Chart.defaults.maintainAspectRatio = false;
+
+window.addEventListener('DOMContentLoaded', function() {
+  // Test suite growth chart
+  new Chart(document.getElementById('testChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Pre-project', 'Phase 1 (+95)', 'Phase 2 (+64)'],
+      datasets: [{
+        label: 'Existing Tests',
+        data: [218, 218, 218],
+        backgroundColor: '#93c5fd'
+      }, {
+        label: 'Phase 1 Tests',
+        data: [0, 95, 95],
+        backgroundColor: '#86efac'
+      }, {
+        label: 'Phase 2 Tests',
+        data: [0, 0, 64],
+        backgroundColor: '#c4b5fd'
+      }]
+    },
+    options: {
+      animation: false,
+      resizeDelay: 150,
+      normalized: true,
+      maintainAspectRatio: false,
+      scales: {
+        x: { stacked: true },
+        y: { stacked: true, title: { display: true, text: 'Test count' } }
+      },
+      plugins: {
+        title: { display: true, text: 'Test Suite Growth: 218 → 313 → 377' }
+      }
+    }
+  });
+
+  // Phase 2 test breakdown
+  new Chart(document.getElementById('testBreakdown'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Token Budget (16)', 'OpenAI Provider (9)', 'Prompt Assembly (16)', 'PDF Export (8)', 'E2E Inegol (11)', 'Schema Extensions (5)'],
+      datasets: [{
+        data: [16, 9, 16, 8, 11, 5],
+        backgroundColor: ['#3b82f6', '#8b5cf6', '#06b6d4', '#f59e0b', '#10b981', '#ef4444']
+      }]
+    },
+    options: {
+      animation: false,
+      resizeDelay: 150,
+      normalized: true,
+      maintainAspectRatio: false,
+      plugins: {
+        title: { display: true, text: 'Phase 2: 64 New Tests by Component' },
+        legend: { position: 'right' }
+      }
+    }
+  });
+});
+</script>
+
+</body>
+</html>

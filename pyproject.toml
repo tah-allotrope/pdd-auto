@@ -24,6 +24,9 @@ dev = [
 export = [
     "python-docx>=1.1.0",
 ]
+llm = [
+    "openai>=1.0.0",
+]
 
 [project.scripts]
 pdd-agent = "pdd_agent.cli:main"

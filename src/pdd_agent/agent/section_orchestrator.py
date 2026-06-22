@@ -15,6 +15,7 @@ import structlog
 import yaml
 
 from pdd_agent.domain.methodology_rules import get_methodology_rules
+from pdd_agent.llm.budget import TokenBudget, BudgetExhaustedError
 from pdd_agent.llm.provider import (
     BaseProvider,
     DemoProvider,
@@ -59,6 +60,8 @@ class SectionOrchestrator:
         run_id: str | None = None,
         schema_path: Path | None = None,
         prompts_dir: Path | None = None,
+        calc_result: Any | None = None,
+        token_budget: TokenBudget | None = None,
     ) -> None:
         self._provider = provider or NoopProvider()
         self._project = project_input
@@ -75,9 +78,100 @@ class SectionOrchestrator:
             provider=getattr(self._provider, "name", "noop"),
         )
         self._drafted: dict[str, DraftSection] = {}
+        self._calc_result = calc_result
+        self._budget = token_budget or TokenBudget()
+        self._use_v2_prompt = self._should_use_v2()
+
+        if hasattr(self._provider, "set_budget"):
+            self._provider.set_budget(self._budget)
 
     def _is_demo_run(self) -> bool:
         return getattr(self._provider, "name", "") == "demo"
+
+    def _should_use_v2(self) -> bool:
+        if self._project and self._project.generation_controls:
+            return self._project.generation_controls.use_v2_prompt
+        return getattr(self._provider, "name", "") not in ("noop", "demo")
+
+    def _max_corpus_examples(self) -> int:
+        if self._project and self._project.generation_controls:
+            return self._project.generation_controls.max_corpus_examples
+        return 5
+
+    def _max_corpus_chars(self) -> int:
+        if self._project and self._project.generation_controls:
+            return self._project.generation_controls.max_corpus_chars
+        return 1500
+
+    def _should_inject_calc(self) -> bool:
+        if self._calc_result is None:
+            return False
+        if self._project and self._project.generation_controls:
+            return self._project.generation_controls.inject_calc_results
+        return True
+
+    def _should_inject_retrieval(self) -> bool:
+        if self._project and self._project.generation_controls:
+            return self._project.generation_controls.inject_corpus_retrieval
+        return True
+
+    def _is_quantification_section(self, section_id: str, sub_section_id: str | None) -> bool:
+        return section_id == "4" or (sub_section_id or "").startswith("4.")
+
+    def _format_calc_injection(self) -> str:
+        """Format ACM0022 calc results for injection into Section 4 prompts."""
+        if not self._calc_result:
+            return ""
+        cr = self._calc_result
+        parts = [
+            "\n## ACM0022 Calculation Engine Results\n",
+            "The following values were computed by the ACM0022 pure-Python calculation engine.\n"
+            "Use these as the authoritative quantification values. Cite with `[CALC: component_name]`.\n",
+            f"- **Baseline emissions**: {cr.baseline_emissions_tco2e:,.2f} tCO2e/year [CALC: baseline_total]",
+            f"  - BE_CH4 (methane from SWDS): {cr.baseline_methane_swds_tco2e:,.2f} tCO2e/year [CALC: BE_CH4]",
+            f"  - BE_EC (displaced grid electricity): {cr.baseline_electricity_tco2e:,.2f} tCO2e/year [CALC: BE_EC]",
+            f"- **Project emissions**: {cr.project_emissions_tco2e:,.2f} tCO2e/year [CALC: project_total]",
+            f"  - PE_EC (grid consumption): {cr.project_electricity_consumption_tco2e:,.2f} tCO2e/year [CALC: PE_EC]",
+            f"  - PE_FC (fossil fuel): {cr.project_fossil_fuel_tco2e:,.2f} tCO2e/year [CALC: PE_FC]",
+            f"  - PE_CH4 (AD leakage): {cr.project_methane_leakage_tco2e:,.2f} tCO2e/year [CALC: PE_CH4]",
+            f"  - PE_FLARE (flare): {cr.project_flaring_tco2e:,.2f} tCO2e/year [CALC: PE_FLARE]",
+            f"- **Leakage**: {cr.leakage_tco2e:,.2f} tCO2e/year [CALC: leakage_total]",
+            f"  - LE_RDF (RDF combustion): {cr.leakage_rdf_combustion_tco2e:,.2f} tCO2e/year [CALC: LE_RDF]",
+            f"  - LE_AD (digestate): {cr.leakage_digestate_tco2e:,.2f} tCO2e/year [CALC: LE_AD]",
+            f"- **Net emission reductions**: {cr.net_emission_reductions_tco2e:,.2f} tCO2e/year [CALC: net_ER]",
+            f"- **Crediting period total**: {cr.crediting_period_total_tco2e:,.2f} tCO2e ({cr.crediting_period_years} years) [CALC: crediting_total]",
+            "",
+            "### Key Intermediates",
+            f"- Organic waste to AD: {cr.organic_waste_to_ad_tonnes:,.1f} tonnes/year",
+            f"- Annual biogas: {cr.annual_biogas_m3:,.0f} Nm3/year",
+            f"- Annual methane: {cr.annual_methane_m3:,.0f} Nm3/year ({cr.annual_methane_tonnes:,.1f} tonnes)",
+            f"- Electricity generated: {cr.electricity_generated_mwh:,.1f} MWh/year",
+            f"- Methodology: {cr.methodology_version}",
+            "",
+        ]
+        return "\n".join(parts)
+
+    def _format_retrieval_results(
+        self, examples: Sequence[Any], max_examples: int, max_chars: int
+    ) -> str:
+        """Format corpus retrieval results with BM25 scores for prompt injection."""
+        if not examples:
+            return "\n## Corpus Examples: NONE — human review required.\n"
+
+        parts = ["\n## Corpus Evidence (FTS5/BM25 retrieval)\n"]
+        for i, ex in enumerate(examples[:max_examples], 1):
+            doc = getattr(ex, "document_name", "unknown")
+            heading = getattr(ex, "canonical_heading", "")
+            text = getattr(ex, "text", "")
+            score = getattr(ex, "score", 0.0)
+            content_class = getattr(ex, "content_class", "")
+            parts.append(
+                f"\n### Evidence {i} [{doc}] (BM25 score: {score:.3f})\n"
+                f"**Heading:** {heading}\n"
+                f"**Content class:** {content_class}\n\n"
+                f"{text[:max_chars]}\n"
+            )
+        return "".join(parts)
 
     def _assumption_register(self) -> dict[str, Any] | None:
         register = self._run.assumption_register
@@ -144,7 +238,28 @@ class SectionOrchestrator:
             f"Guidance: {guidance}\n",
         ]
 
-        if examples:
+        if self._use_v2_prompt:
+            prompt_parts.append(
+                "\n## Authority Order\n"
+                "Resolve conflicts: Input YAML > Evidence > VCS Template > "
+                "Methodology > Examples > Domain Logic\n"
+            )
+            prompt_parts.append(
+                "\n## Anti-Hallucination Markers\n"
+                "- `[MISSING]` — required data not provided\n"
+                "- `[INFERENCE]` — logically inferred, not directly stated\n"
+                "- `[REVIEW REQUIRED]` — needs expert verification\n"
+                "Cite evidence: `[E001]`, `[CORPUS: ...]`, `[METHODOLOGY: ...]`, "
+                "`[CALC: ...]`, `[USER INPUT: ...]`\n"
+            )
+
+        if self._should_inject_retrieval():
+            prompt_parts.append(
+                self._format_retrieval_results(
+                    examples, self._max_corpus_examples(), self._max_corpus_chars()
+                )
+            )
+        elif examples:
             prompt_parts.append("\n## Corpus Examples (for structure only)\n")
             for i, ex in enumerate(examples[:3], 1):
                 doc = getattr(ex, "document_name", "unknown")
@@ -155,6 +270,9 @@ class SectionOrchestrator:
                 )
         else:
             prompt_parts.append("\n## Corpus Examples: NONE — human review required.\n")
+
+        if self._should_inject_calc() and self._is_quantification_section(section_id, sub_section_id):
+            prompt_parts.append(self._format_calc_injection())
 
         prompt_parts.append("\n## Project-Specific Facts\n")
         if project_input:
@@ -178,15 +296,29 @@ class SectionOrchestrator:
                 )
 
         prompt_parts.append("\n## Instructions\n")
-        prompt_parts.append(
-            "1. Write only supported content — cite CORPUS or METHODOLOGY sources.\n"
-            "2. Do NOT invent numbers, statistics, or case studies not in the corpus.\n"
-            "3. HIGH/CRITICAL sections require at least one cited corpus example.\n"
-            "4. Unsupported claims must be marked [REVIEW REQUIRED: ...].\n"
-            "5. If a synthetic assumption materially affects the section, label it explicitly in prose or a note.\n"
-            "6. Keep body text readable and move detailed provenance burden to notes/appendices.\n"
-            "7. Format output as Markdown.\n"
-        )
+        if self._use_v2_prompt:
+            prompt_parts.append(
+                "1. Write only supported content — cite evidence using `[E001]`, `[CORPUS: ...]`, or `[CALC: ...]`.\n"
+                "2. Do NOT invent numbers, statistics, or case studies not in the evidence.\n"
+                "3. HIGH/CRITICAL sections require at least one cited corpus example.\n"
+                "4. Mark unsupported claims: `[REVIEW REQUIRED: ...]`.\n"
+                "5. Mark missing data: `[MISSING]`. Mark inferences: `[INFERENCE]`.\n"
+                "6. If a synthetic assumption materially affects the section, label it explicitly.\n"
+                "7. For quantitative sections, use `[CALC: component]` citations for calc engine values.\n"
+                "8. Respect the authority order — never let domain logic override user input.\n"
+                "9. Keep body text readable; move provenance details to a footer.\n"
+                "10. Format output as Markdown.\n"
+            )
+        else:
+            prompt_parts.append(
+                "1. Write only supported content — cite CORPUS or METHODOLOGY sources.\n"
+                "2. Do NOT invent numbers, statistics, or case studies not in the corpus.\n"
+                "3. HIGH/CRITICAL sections require at least one cited corpus example.\n"
+                "4. Unsupported claims must be marked [REVIEW REQUIRED: ...].\n"
+                "5. If a synthetic assumption materially affects the section, label it explicitly in prose or a note.\n"
+                "6. Keep body text readable and move detailed provenance burden to notes/appendices.\n"
+                "7. Format output as Markdown.\n"
+            )
         return "".join(prompt_parts)
 
     def _summarize_project(self) -> str:
@@ -221,11 +353,37 @@ class SectionOrchestrator:
 
         logger.info("drafting_section", section_id=section_id, sub_section_id=sub_section_id)
 
+        try:
+            self._budget.check_budget()
+        except BudgetExhaustedError as exc:
+            logger.error("budget_exhausted", section_id=section_id, error=str(exc))
+            return self._store_draft(key, DraftSection(
+                section_id=section_id,
+                sub_section_id=sub_section_id or "",
+                text=f"[BUDGET EXHAUSTED — {section_id}] Token budget exceeded. "
+                     "Remaining sections require a new run or increased budget.",
+                confidence="UNSUPPORTED",
+                provenance=[],
+                issues=[f"BUDGET EXHAUSTED: {exc}"],
+                provider=getattr(self._provider, "name", "noop"),
+            ))
+
         sensitivity = self._review_sensitivity(section_id, sub_section_id)
         content_class = self._content_class(section_id, sub_section_id)
 
+        k = self._max_corpus_examples()
         if examples is None:
-            examples = get_examples_for_section(section_id, sub_section_id, k=5)
+            if self._should_inject_retrieval():
+                heading = self._section_info(section_id, sub_section_id).get("heading", "")
+                examples = get_examples_for_section(section_id, sub_section_id, k=k)
+                if len(examples) < 2 and heading:
+                    extras = get_section_heading_examples(heading, k=min(3, k))
+                    seen = {(getattr(e, "document_name", ""), getattr(e, "canonical_heading", "")) for e in examples}
+                    for ex in extras:
+                        if (getattr(ex, "document_name", ""), getattr(ex, "canonical_heading", "")) not in seen:
+                            examples.append(ex)
+            else:
+                examples = get_examples_for_section(section_id, sub_section_id, k=k)
         examples = list(examples)
         fact_entries = relevant_fact_entries(
             self._assumption_register(), section_id, sub_section_id
@@ -341,10 +499,18 @@ class SectionOrchestrator:
             "orchestrator_run_start",
             run_id=self._run_id,
             project=self._project.project.project_name if self._project else "unknown",
+            budget_max=self._budget.max_tokens,
+            use_v2_prompt=self._use_v2_prompt,
+            calc_injected=self._should_inject_calc(),
         )
         self.draft_all_sections()
+        self._run.notes.append(f"token_budget: {self._budget.summary()}")
         logger.info(
-            "orchestrator_run_complete", run_id=self._run_id, sections=len(self._run.sections)
+            "orchestrator_run_complete",
+            run_id=self._run_id,
+            sections=len(self._run.sections),
+            tokens_used=self._budget.total_tokens,
+            budget_utilization=f"{self._budget.utilization:.1%}",
         )
         return self._run
 
@@ -456,3 +622,15 @@ class SectionOrchestrator:
     @property
     def drafted_sections(self) -> dict[str, DraftSection]:
         return dict(self._drafted)
+
+    @property
+    def token_budget(self) -> TokenBudget:
+        return self._budget
+
+    @property
+    def calc_result(self) -> Any | None:
+        return self._calc_result
+
+    def set_calc_result(self, calc_result: Any) -> None:
+        """Attach calc results for injection into quantification section prompts."""
+        self._calc_result = calc_result
