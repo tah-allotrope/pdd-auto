@@ -1,0 +1,139 @@
+{
+  "_meta": {
+    "description": "CDM methodologies relevant to waste-to-energy and related project types",
+    "source": "https://cdm.unfccc.int/methodologies/",
+    "last_updated": "2026-06-22",
+    "refresh_process": "Download current methodology list from UNFCCC CDM registry; update IDs, versions, and applicability conditions"
+  },
+  "methodologies": [
+    {
+      "id": "ACM0022",
+      "name": "Alternative Waste Treatment Processes",
+      "category": "waste_handling_and_disposal",
+      "version": "v3.0",
+      "status": "active",
+      "applicability_conditions": [
+        "The project treats waste that would have been disposed at a SWDS",
+        "Uses composting, anaerobic digestion, gasification, RDF, or other alternative treatment",
+        "Not exclusively biomass residues from agricultural activities",
+        "No methane recovery in baseline scenario",
+        "Fossil fuel co-firing does not exceed 50% of total energy input"
+      ],
+      "applicable_technology_types": [
+        "anaerobic_digestion",
+        "mechanical_biological_treatment",
+        "combined_wte_ad",
+        "refuse_derived_fuel",
+        "incineration_with_energy_recovery"
+      ],
+      "waste_types": ["municipal_solid_waste", "kitchen_waste", "organic_waste", "industrial_waste"]
+    },
+    {
+      "id": "ACM0003",
+      "name": "Emissions Reduction Through Partial Substitution of Fossil Fuels with Alternative Fuels in Cement or Quicklite Manufacture",
+      "category": "energy_industries",
+      "version": "v8.0",
+      "status": "active",
+      "applicability_conditions": [
+        "Partial substitution of fossil fuels in cement/quicklite manufacturing",
+        "Alternative fuel is biomass residue, RDF, or waste-derived fuel",
+        "Alternative fuel not used in baseline at the project facility",
+        "No new cement manufacturing capacity"
+      ],
+      "applicable_technology_types": [
+        "refuse_derived_fuel",
+        "incineration_with_energy_recovery"
+      ],
+      "waste_types": ["refuse_derived_fuel", "biomass_residue", "tire_derived_fuel"]
+    },
+    {
+      "id": "ACM0006",
+      "name": "Electricity and Heat Generation from Biomass",
+      "category": "energy_industries",
+      "version": "v13.1",
+      "status": "active",
+      "applicability_conditions": [
+        "Generates electricity and/or heat using biomass as fuel",
+        "Biomass from renewable sources",
+        "Displaces fossil fuel-based generation",
+        "Not fuel switching between fossil fuels"
+      ],
+      "applicable_technology_types": [
+        "incineration_with_energy_recovery",
+        "combined_wte_ad"
+      ],
+      "waste_types": ["biomass_residue", "agricultural_residue", "forestry_residue"]
+    },
+    {
+      "id": "AM0025",
+      "name": "Avoided Emissions from Organic Waste Through Alternative Waste Treatment Processes",
+      "category": "waste_handling_and_disposal",
+      "version": "v17.0",
+      "status": "active",
+      "applicability_conditions": [
+        "Avoids methane from disposal of organic waste at SWDS",
+        "Waste would have been disposed in SWDS in baseline",
+        "Uses composting, anaerobic digestion, or biological treatment",
+        "Does not involve combustion or thermal treatment"
+      ],
+      "applicable_technology_types": [
+        "anaerobic_digestion",
+        "mechanical_biological_treatment"
+      ],
+      "waste_types": ["organic_waste", "kitchen_waste", "municipal_solid_waste"]
+    },
+    {
+      "id": "ACM0001",
+      "name": "Flaring or Use of Landfill Gas",
+      "category": "waste_handling_and_disposal",
+      "version": "v19.0",
+      "status": "active",
+      "applicability_conditions": [
+        "Captures and combusts or uses landfill gas from existing SWDS",
+        "No LFG capture in baseline",
+        "Not required by regulation to capture LFG",
+        "Captured gas combusted in flare, engine, turbine, or boiler"
+      ],
+      "applicable_technology_types": [
+        "landfill_gas_capture"
+      ],
+      "waste_types": ["landfill_gas"]
+    },
+    {
+      "id": "AM0039",
+      "name": "Methane Emissions Reduction from Organic Waste Water and Bioorganic Waste",
+      "category": "waste_handling_and_disposal",
+      "version": "v5.0",
+      "status": "active",
+      "applicability_conditions": [
+        "Reduces methane from organic wastewater or bioorganic waste treatment",
+        "Methane would have been released to atmosphere in baseline",
+        "Project introduces controlled anaerobic treatment with methane capture",
+        "Captured methane is flared or used for energy generation"
+      ],
+      "applicable_technology_types": [
+        "anaerobic_digestion"
+      ],
+      "waste_types": ["wastewater", "bioorganic_waste"]
+    },
+    {
+      "id": "AMS-III.E",
+      "name": "Avoidance of Methane Production from Decay of Biomass Through Controlled Combustion, Gasification or Mechanical/Thermal Treatment",
+      "category": "waste_handling_and_disposal",
+      "version": "v23.0",
+      "status": "active",
+      "applicability_conditions": [
+        "Avoids methane from biomass decay through controlled treatment",
+        "Small-scale (<=60,000 tCO2e/year)",
+        "Waste would have decayed uncontrolled in baseline",
+        "No fossil fuel co-firing above 50%"
+      ],
+      "applicable_technology_types": [
+        "incineration_with_energy_recovery",
+        "landfill_gas_capture",
+        "mechanical_biological_treatment"
+      ],
+      "waste_types": ["municipal_solid_waste", "biomass_residue", "agricultural_residue"]
+    }
+  ]
+}

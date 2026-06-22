@@ -1,0 +1,224 @@
+{
+  "_meta": {
+    "description": "Active Verra VCS methodologies relevant to waste-to-energy and related project types",
+    "source": "https://verra.org/methodologies/",
+    "last_updated": "2026-06-22",
+    "refresh_process": "Download current methodology list from Verra registry; update IDs, versions, and applicability conditions"
+  },
+  "methodologies": [
+    {
+      "id": "ACM0022",
+      "name": "Alternative Waste Treatment Processes",
+      "category": "waste",
+      "version": "v3.0",
+      "status": "active",
+      "applicability_conditions": [
+        "The project activity involves treatment of waste that would have been disposed in a solid waste disposal site (SWDS) in the baseline scenario",
+        "The project activity uses one or more of: composting, anaerobic digestion, gasification, RDF production, or other alternative waste treatment",
+        "The waste treated in the project activity is not exclusively composed of biomass residues from agricultural activities",
+        "Methane recovery and destruction is not included in the baseline scenario",
+        "The project activity does not include co-firing of fossil fuels above 50% of total energy input on an annual basis"
+      ],
+      "applicable_technology_types": [
+        "anaerobic_digestion",
+        "mechanical_biological_treatment",
+        "combined_wte_ad",
+        "refuse_derived_fuel",
+        "incineration_with_energy_recovery"
+      ],
+      "waste_types": ["municipal_solid_waste", "kitchen_waste", "organic_waste", "industrial_waste"],
+      "scale": "large",
+      "emission_sources": {
+        "baseline": ["methane_from_swds", "grid_electricity_displacement"],
+        "project": ["electricity_consumption", "fossil_fuel_use", "methane_leakage", "flaring"],
+        "leakage": ["rdf_combustion", "digestate_application"]
+      }
+    },
+    {
+      "id": "ACM0003",
+      "name": "Emissions Reduction Through Partial Substitution of Fossil Fuels with Alternative Fuels or Less Carbon Intensive Fuels in Cement or Quickite Manufacture",
+      "category": "energy_industries",
+      "version": "v8.0",
+      "status": "active",
+      "applicability_conditions": [
+        "The project involves partial substitution of fossil fuels used in an existing cement or quicklite manufacturing facility",
+        "The alternative fuel used is biomass residue, refuse derived fuel, or other waste-derived fuel",
+        "The alternative fuel is not used in the baseline scenario at the project facility",
+        "The project does not involve new cement manufacturing capacity"
+      ],
+      "applicable_technology_types": [
+        "refuse_derived_fuel",
+        "incineration_with_energy_recovery"
+      ],
+      "waste_types": ["refuse_derived_fuel", "biomass_residue", "tire_derived_fuel"],
+      "scale": "large",
+      "emission_sources": {
+        "baseline": ["fossil_fuel_combustion_in_kiln"],
+        "project": ["alternative_fuel_combustion", "transport_of_alternative_fuel"],
+        "leakage": ["fossil_fuel_displacement_outside_boundary"]
+      }
+    },
+    {
+      "id": "ACM0006",
+      "name": "Electricity and Heat Generation from Biomass",
+      "category": "energy_industries",
+      "version": "v13.1",
+      "status": "active",
+      "applicability_conditions": [
+        "The project generates electricity and/or heat using biomass as fuel",
+        "The biomass is from renewable sources (agricultural residues, forestry residues, or purpose-grown biomass)",
+        "The project displaces fossil fuel-based electricity and/or heat generation",
+        "The project does not involve switching from one fossil fuel to another"
+      ],
+      "applicable_technology_types": [
+        "incineration_with_energy_recovery",
+        "combined_wte_ad"
+      ],
+      "waste_types": ["biomass_residue", "agricultural_residue", "forestry_residue"],
+      "scale": "large",
+      "emission_sources": {
+        "baseline": ["grid_electricity_displacement", "fossil_fuel_heat_displacement"],
+        "project": ["biomass_combustion", "transport"],
+        "leakage": ["biomass_diversion"]
+      }
+    },
+    {
+      "id": "AM0025",
+      "name": "Avoided Emissions from Organic Waste Through Alternative Waste Treatment Processes",
+      "category": "waste",
+      "version": "v17.0",
+      "status": "active",
+      "applicability_conditions": [
+        "The project activity avoids methane emissions from disposal of organic waste at a SWDS",
+        "Waste used in the project would have been disposed in a SWDS in the absence of the project",
+        "The project uses composting, anaerobic digestion, or other biological treatment",
+        "The project does not involve combustion or thermal treatment of waste"
+      ],
+      "applicable_technology_types": [
+        "anaerobic_digestion",
+        "mechanical_biological_treatment"
+      ],
+      "waste_types": ["organic_waste", "kitchen_waste", "municipal_solid_waste"],
+      "scale": "large",
+      "emission_sources": {
+        "baseline": ["methane_from_swds"],
+        "project": ["composting_emissions", "energy_consumption"],
+        "leakage": ["organic_fertilizer_displacement"]
+      }
+    },
+    {
+      "id": "AMS-III.E",
+      "name": "Avoidance of Methane Production from Decay of Biomass Through Controlled Combustion, Gasification or Mechanical/Thermal Treatment",
+      "category": "waste",
+      "version": "v23.0",
+      "status": "active",
+      "applicability_conditions": [
+        "The project avoids methane from biomass decay through controlled combustion or thermal treatment",
+        "Project is small-scale (emission reductions <= 60,000 tCO2e/year)",
+        "Waste would have been left to decay in the absence of the project",
+        "The project does not involve fossil fuel co-firing above 50%"
+      ],
+      "applicable_technology_types": [
+        "incineration_with_energy_recovery",
+        "landfill_gas_capture",
+        "mechanical_biological_treatment"
+      ],
+      "waste_types": ["municipal_solid_waste", "biomass_residue", "agricultural_residue"],
+      "scale": "small",
+      "emission_sources": {
+        "baseline": ["methane_from_decay"],
+        "project": ["combustion_emissions"],
+        "leakage": ["none"]
+      }
+    },
+    {
+      "id": "AMS-III.F",
+      "name": "Avoidance of Methane Emissions Through Composting",
+      "category": "waste",
+      "version": "v13.0",
+      "status": "active",
+      "applicability_conditions": [
+        "The project avoids methane through aerobic composting of organic waste",
+        "Project is small-scale (emission reductions <= 60,000 tCO2e/year)",
+        "Waste would have been disposed in a SWDS in the baseline",
+        "The composting process produces stabilized compost"
+      ],
+      "applicable_technology_types": [
+        "mechanical_biological_treatment"
+      ],
+      "waste_types": ["organic_waste", "kitchen_waste", "green_waste"],
+      "scale": "small",
+      "emission_sources": {
+        "baseline": ["methane_from_swds"],
+        "project": ["composting_emissions", "transport"],
+        "leakage": ["fertilizer_displacement"]
+      }
+    },
+    {
+      "id": "AMS-III.H",
+      "name": "Methane Recovery in Wastewater Treatment",
+      "category": "waste",
+      "version": "v19.0",
+      "status": "active",
+      "applicability_conditions": [
+        "The project recovers and destroys methane from wastewater treatment",
+        "Project is small-scale (emission reductions <= 60,000 tCO2e/year)",
+        "Methane would have been released to atmosphere in the baseline",
+        "The project uses anaerobic treatment followed by methane capture"
+      ],
+      "applicable_technology_types": [
+        "anaerobic_digestion"
+      ],
+      "waste_types": ["wastewater", "sewage_sludge"],
+      "scale": "small",
+      "emission_sources": {
+        "baseline": ["methane_from_wastewater"],
+        "project": ["energy_consumption", "residual_methane"],
+        "leakage": ["none"]
+      }
+    },
+    {
+      "id": "ACM0001",
+      "name": "Flaring or Use of Landfill Gas",
+      "category": "waste",
+      "version": "v19.0",
+      "status": "active",
+      "applicability_conditions": [
+        "The project captures and combusts or uses landfill gas from an existing SWDS",
+        "No landfill gas capture and destruction exists in the baseline",
+        "The landfill is not required by regulation to capture and destroy LFG",
+        "The captured gas is combusted in a flare, engine, turbine, or boiler"
+      ],
+      "applicable_technology_types": [
+        "landfill_gas_capture"
+      ],
+      "waste_types": ["landfill_gas"],
+      "scale": "large",
+      "emission_sources": {
+        "baseline": ["methane_from_landfill"],
+        "project": ["residual_methane", "energy_consumption"],
+        "leakage": ["none"]
+      }
+    },
+    {
+      "id": "VM0006",
+      "name": "Methodology for Carbon Accounting for Mosaic and Landscape-scale REDD Projects",
+      "category": "afolu",
+      "version": "v2.2",
+      "status": "active",
+      "applicability_conditions": [
+        "The project reduces emissions from deforestation and forest degradation",
+        "The project area is in a tropical or subtropical region",
+        "Deforestation and degradation are occurring in the baseline"
+      ],
+      "applicable_technology_types": [],
+      "waste_types": [],
+      "scale": "large",
+      "emission_sources": {
+        "baseline": ["deforestation_emissions"],
+        "project": ["project_implementation"],
+        "leakage": ["activity_shifting"]
+      }
+    }
+  ]
+}

@@ -227,6 +227,32 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Target Drive folder ID for optional reviewer-facing upload",
     )
 
+    extract_parser = sub.add_parser(
+        "extract", help="Extract ProjectInput from a document (DOCX, PDF, or text)"
+    )
+    extract_parser.add_argument("file", help="Path to the document to extract from")
+    extract_parser.add_argument(
+        "--provider",
+        default="noop",
+        help="LLM provider name (default: noop)",
+    )
+    extract_parser.add_argument(
+        "--output", "-o", help="Optional output YAML path for extracted ProjectInput"
+    )
+
+    screen_parser = sub.add_parser(
+        "screen", help="Screen a document or ProjectInput for applicable methodologies"
+    )
+    screen_parser.add_argument("file", help="Path to a document or ProjectInput YAML")
+    screen_parser.add_argument(
+        "--top-k", type=int, default=5, help="Max methodology suggestions (default: 5)"
+    )
+
+    draft_parser.add_argument(
+        "--from-doc",
+        help="Path to a document to extract ProjectInput from before drafting",
+    )
+
     parser.add_argument(
         "--folder-id",
         default="1pp23yRZ8qtopw1BPXrzVewXsmmWplCse",
@@ -272,6 +298,8 @@ def main() -> int:
         "fetch-workbook": lambda: _run_fetch_workbook(args, log),
         "map-spreadsheet": lambda: _run_map_spreadsheet(args, log),
         "run-vietnam-pdd": lambda: _run_vietnam_pdd(args, log),
+        "extract": lambda: _run_extract(args, log),
+        "screen": lambda: _run_screen(args, log),
     }
 
     try:
@@ -317,31 +345,38 @@ def _run_demo_setup(args, log) -> None:
 
 
 def _run_draft(args, log) -> None:
-    input_path = Path(args.input)
-    if not input_path.exists():
-        log.error("input_file_not_found", path=str(input_path))
-        return
+    from pdd_agent.llm.provider import get_provider_registry
 
-    with open(input_path, encoding="utf-8") as f:
-        input_data = yaml.safe_load(f)
-    project_input = ProjectInput.model_validate(input_data)
-
-    from pdd_agent.llm.provider import get_provider_registry, configure_provider, ModelConfig
-
-    if args.provider != "noop":
-        log.warning(
-            "provider_not_fully_wired", provider=args.provider, note="Only noop is available"
-        )
     provider = get_provider_registry().get(args.provider)
+
+    if hasattr(args, "from_doc") and args.from_doc:
+        from pdd_agent.ingest.extract import extract_project_input
+
+        doc_path = Path(args.from_doc)
+        log.info("draft_from_doc_start", doc=str(doc_path))
+        project_input = extract_project_input(doc_path, provider)
+        log.info("extraction_complete", project=project_input.project.project_name)
+    else:
+        input_path = Path(args.input)
+        if not input_path.exists():
+            log.error("input_file_not_found", path=str(input_path))
+            return
+
+        with open(input_path, encoding="utf-8") as f:
+            input_data = yaml.safe_load(f)
+        project_input = ProjectInput.model_validate(input_data)
 
     orchestrator = SectionOrchestrator(
         provider=provider,
         project_input=project_input,
         run_id=args.run_id,
     )
-    assumptions_path = resolve_assumptions_path(input_path)
-    if assumptions_path:
-        orchestrator.attach_assumption_register(load_assumption_register(assumptions_path))
+
+    if not (hasattr(args, "from_doc") and args.from_doc):
+        input_path = Path(args.input)
+        assumptions_path = resolve_assumptions_path(input_path)
+        if assumptions_path:
+            orchestrator.attach_assumption_register(load_assumption_register(assumptions_path))
 
     run = orchestrator.run()
     draft_path = run.save()
@@ -487,6 +522,75 @@ def _run_vietnam_pdd(args, log) -> None:
         runbook=str(artifacts.runbook_path),
         upload_result=artifacts.upload_result,
     )
+
+
+def _run_extract(args, log) -> None:
+    from pdd_agent.ingest.extract import extract_project_input
+    from pdd_agent.llm.provider import get_provider_registry
+
+    doc_path = Path(args.file)
+    if not doc_path.exists():
+        log.error("file_not_found", path=str(doc_path))
+        return
+
+    provider = get_provider_registry().get(args.provider)
+    project_input = extract_project_input(doc_path, provider)
+
+    print(project_input.summary())
+
+    if project_input.extraction_provenance:
+        prov = project_input.extraction_provenance
+        print(f"\nExtraction provenance:")
+        print(f"  Extracted fields: {len(prov.extracted_fields)}")
+        print(f"  Defaulted fields: {len(prov.defaulted_fields)}")
+        print(f"  Missing fields:   {len(prov.missing_fields)}")
+        if prov.missing_fields:
+            print(f"  Missing: {', '.join(prov.missing_fields[:10])}")
+
+    if args.output:
+        output_path = Path(args.output)
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(output_path, "w", encoding="utf-8") as f:
+            yaml.dump(
+                project_input.model_dump(exclude_none=True),
+                f,
+                default_flow_style=False,
+                allow_unicode=True,
+            )
+        log.info("extracted_yaml_saved", path=str(output_path))
+
+
+def _run_screen(args, log) -> None:
+    from pdd_agent.domain.methodology_screen import screen_methodologies
+
+    file_path = Path(args.file)
+    if not file_path.exists():
+        log.error("file_not_found", path=str(file_path))
+        return
+
+    project_input = None
+    if file_path.suffix in (".yaml", ".yml"):
+        with open(file_path, encoding="utf-8") as f:
+            data = yaml.safe_load(f)
+        try:
+            project_input = ProjectInput.model_validate(data)
+            description = project_input.summary()
+        except Exception:
+            description = file_path.read_text(encoding="utf-8")
+    else:
+        description = file_path.read_text(encoding="utf-8")
+
+    suggestions = screen_methodologies(
+        description, project_input=project_input, top_k=args.top_k
+    )
+
+    print(f"\nMethodology Screening Results ({len(suggestions)} suggestions):\n")
+    for i, s in enumerate(suggestions, 1):
+        print(f"  {i}. {s.methodology_id} — {s.name}")
+        print(f"     Confidence: {s.confidence:.1%}")
+        print(f"     Rationale:  {s.rationale}")
+        print(f"     Version:    {s.version or 'unknown'}")
+        print()
 
 
 if __name__ == "__main__":

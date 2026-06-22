@@ -334,6 +334,29 @@ class ReviewFlags(BaseModel):
     )
 
 
+class SuggestedMethodology(BaseModel):
+    """A methodology suggestion from the screening module."""
+
+    methodology_id: str = Field(..., description="Methodology ID (e.g. ACM0022, AM0025)")
+    name: str = Field(..., description="Full methodology name")
+    confidence: float = Field(..., ge=0.0, le=1.0, description="Confidence score 0-1")
+    rationale: str = Field(..., description="Why this methodology was suggested")
+    active_status_source: str = Field(
+        "verra_registry", description="Source confirming methodology is active"
+    )
+    version: str | None = Field(None, description="Latest methodology version (e.g. v3.0)")
+
+
+class ExtractionProvenance(BaseModel):
+    """Tracks which fields came from extraction vs defaults vs [MISSING]."""
+
+    extracted_fields: list[str] = Field(default_factory=list, description="Fields successfully extracted from document")
+    defaulted_fields: list[str] = Field(default_factory=list, description="Fields set to defaults")
+    missing_fields: list[str] = Field(default_factory=list, description="Fields marked [MISSING]")
+    source_document: str | None = Field(None, description="Path or name of source document")
+    extraction_model: str | None = Field(None, description="LLM model used for extraction")
+
+
 class ProjectInput(BaseModel):
     """Root model — a fully populated instance represents one complete project input set."""
 
@@ -355,6 +378,12 @@ class ProjectInput(BaseModel):
     )
     evidence_registry: EvidenceRegistry | None = Field(
         None, description="Evidence registry for citation tracking (optional)"
+    )
+    suggested_methodologies: list[SuggestedMethodology] | None = Field(
+        None, description="Methodology suggestions from screening (optional)"
+    )
+    extraction_provenance: ExtractionProvenance | None = Field(
+        None, description="Provenance tracking for document extraction (optional)"
     )
 
     @field_validator("technology", mode="before")
