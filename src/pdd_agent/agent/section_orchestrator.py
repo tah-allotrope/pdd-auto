@@ -84,6 +84,8 @@ class SectionOrchestrator:
 
         if hasattr(self._provider, "set_budget"):
             self._provider.set_budget(self._budget)
+        if hasattr(self._provider, "set_project_input"):
+            self._provider.set_project_input(self._project)
 
     def _is_demo_run(self) -> bool:
         return getattr(self._provider, "name", "") == "demo"

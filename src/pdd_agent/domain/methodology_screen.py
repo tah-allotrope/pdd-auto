@@ -14,6 +14,7 @@ from typing import Any
 import structlog
 
 from schemas.project_input import ProjectInput, SuggestedMethodology
+from pdd_agent.llm.provider import BaseProvider
 
 logger = structlog.get_logger()
 
@@ -173,6 +174,7 @@ def screen_methodologies(
     db: MethodologyDatabase | None = None,
     top_k: int = 5,
     min_confidence: float = 0.1,
+    llm_provider: BaseProvider | None = None,
 ) -> list[SuggestedMethodology]:
     """Screen project against active methodologies and return ranked suggestions.
 
@@ -260,6 +262,16 @@ def screen_methodologies(
             )
         )
 
+    if llm_provider is not None and suggestions:
+        suggestions = _analyze_applicability_with_llm(
+            project_description,
+            suggestions,
+            db,
+            llm_provider,
+            top_k=top_k,
+            min_confidence=min_confidence,
+        )
+
     if user_methodology_ids and suggestions:
         top_ids = {s.methodology_id for s in suggestions[:3]}
         for user_id in user_methodology_ids:
@@ -279,3 +291,72 @@ def screen_methodologies(
     )
 
     return suggestions
+
+
+def _analyze_applicability_with_llm(
+    project_description: str,
+    candidates: list[SuggestedMethodology],
+    db: MethodologyDatabase,
+    provider: BaseProvider,
+    *,
+    top_k: int,
+    min_confidence: float,
+) -> list[SuggestedMethodology]:
+    """Use an LLM to assess candidate applicability, falling back safely.
+
+    The deterministic scorer limits the model to active database entries.  The
+    model may re-rank and explain those entries but cannot invent methodology
+    IDs or active-status claims.
+    """
+    candidate_by_id = {item.methodology_id: item for item in candidates}
+    prompt = (
+        "Assess methodology applicability for the project below. Return ONLY a JSON array "
+        "of objects with methodology_id, confidence (0..1), and rationale. Do not introduce "
+        "IDs outside CANDIDATES. Explain unmet or uncertain applicability conditions.\n\n"
+        f"PROJECT:\n{project_description[:12000]}\n\n"
+        f"CANDIDATES:\n{json.dumps([item.model_dump() for item in candidates], ensure_ascii=False)}"
+    )
+    result = provider.draft_section(
+        section_id="methodology_screen",
+        sub_section_id="applicability",
+        prompt=prompt,
+        provenance=[f"[METHODOLOGY DATABASE: {db.data_version}]"],
+        max_chars=12000,
+    )
+    try:
+        payload = _parse_json_array(result.text)
+        analyzed: list[SuggestedMethodology] = []
+        seen: set[str] = set()
+        for item in payload:
+            methodology_id = str(item["methodology_id"])
+            if methodology_id in seen or methodology_id not in candidate_by_id:
+                continue
+            confidence = max(0.0, min(1.0, float(item["confidence"])))
+            rationale = str(item["rationale"]).strip()
+            if confidence < min_confidence or not rationale:
+                continue
+            original = candidate_by_id[methodology_id]
+            analyzed.append(original.model_copy(update={
+                "confidence": round(confidence, 3),
+                "rationale": rationale,
+                "active_status_source": f"LLM analysis; methodology_db ({db.data_version})",
+            }))
+            seen.add(methodology_id)
+        if analyzed:
+            analyzed.sort(key=lambda item: item.confidence, reverse=True)
+            return analyzed[:top_k]
+    except (KeyError, TypeError, ValueError, json.JSONDecodeError) as exc:
+        logger.warning("llm_screening_parse_failed", provider=provider.name, error=str(exc))
+    return candidates[:top_k]
+
+
+def _parse_json_array(text: str) -> list[dict[str, Any]]:
+    """Parse a JSON array, accepting a single Markdown JSON code fence."""
+    value = text.strip()
+    if value.startswith("```"):
+        lines = value.splitlines()
+        value = "\n".join(lines[1:-1]).strip()
+    parsed = json.loads(value)
+    if not isinstance(parsed, list) or not all(isinstance(item, dict) for item in parsed):
+        raise ValueError("LLM screening response must be a JSON array of objects")
+    return parsed

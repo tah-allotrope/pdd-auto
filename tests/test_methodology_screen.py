@@ -14,6 +14,7 @@ from pdd_agent.domain.methodology_screen import (
     _score_methodology_id_mentioned,
 )
 from schemas.project_input import SuggestedMethodology
+from pdd_agent.llm.provider import DraftSection
 
 
 _DATA_DIR = Path(__file__).parent.parent / "data" / "methodologies"
@@ -204,3 +205,37 @@ class TestScreenMethodologies:
         )
         if suggestions:
             assert "methodology_db" in suggestions[0].active_status_source
+
+    def test_llm_provider_analyzes_and_reranks_candidates(self):
+        provider = MagicMock()
+        provider.name = "test-llm"
+        provider.draft_section.return_value = DraftSection(
+            section_id="methodology_screen",
+            sub_section_id="applicability",
+            text='[{"methodology_id":"ACM0022","confidence":0.97,"rationale":"All waste-diversion conditions align."}]',
+            confidence="HIGH",
+            provenance=[],
+            issues=[],
+            provider="test-llm",
+        )
+        suggestions = screen_methodologies(
+            "ACM0022 waste treatment using anaerobic digestion",
+            project_input=_mock_project_input(),
+            llm_provider=provider,
+        )
+        assert suggestions[0].methodology_id == "ACM0022"
+        assert suggestions[0].confidence == 0.97
+        assert "LLM analysis" in suggestions[0].active_status_source
+
+    def test_invalid_llm_output_falls_back_to_deterministic_results(self):
+        provider = MagicMock()
+        provider.name = "test-llm"
+        provider.draft_section.return_value = DraftSection(
+            section_id="methodology_screen", sub_section_id="applicability",
+            text="not json", confidence="LOW", provenance=[], issues=[], provider="test-llm",
+        )
+        suggestions = screen_methodologies(
+            "ACM0022 waste treatment", project_input=_mock_project_input(), llm_provider=provider,
+        )
+        assert suggestions
+        assert "methodology_db" in suggestions[0].active_status_source

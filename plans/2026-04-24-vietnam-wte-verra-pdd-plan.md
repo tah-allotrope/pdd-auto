@@ -1,7 +1,7 @@
 ---
 title: "Vietnam WTE Verra PDD Word Workflow"
 date: "2026-04-24"
-status: "draft"
+status: "partially_implemented"
 request: "Create a multi-phase plan for a workflow that can produce a Verra-template Word PDD using Vietnam waste-to-energy project information from the provided Drive spreadsheet, while using synthetic assumptions for missing information."
 plan_type: "multi-phase"
 research_inputs:

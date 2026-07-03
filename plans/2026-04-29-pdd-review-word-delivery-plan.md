@@ -1,7 +1,7 @@
 ---
 title: "PDD Review Word Delivery Gap Closure"
 date: "2026-04-29"
-status: "draft"
+status: "partially_implemented"
 request: "Despite implementation so far I've yet to see any Word documents on PDD for review; reconcile this gap with a multi-phase plan."
 plan_type: "multi-phase"
 research_inputs:

@@ -1,7 +1,7 @@
 ---
 title: "Demo Corpus Bundle & Test Cleanup"
 date: "2026-05-22"
-status: "draft"
+status: "partially_implemented"
 request: "Sprint 3 implementation for colleague-testable demo: bundle small demo corpus subset for provenance, add degraded-mode warnings, clean up stale test skip guards (GAP-02, GAP-07)"
 plan_type: "multi-phase"
 research_inputs:

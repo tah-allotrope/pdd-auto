@@ -1,7 +1,7 @@
 ---
 title: "Corpus-Driven PDD Generation to Reduce Synthetic Gibberish"
 date: "2026-05-05"
-status: "draft"
+status: "partially_implemented"
 request: "use existing pdd docs as input for a new word doc to reduce the % of gibberish given that wte projects both old and new will have similar writing in certain section, evoke plan skill for multiphase then git commit push"
 plan_type: "multi-phase"
 research_inputs:
@@ -80,12 +80,12 @@ Build a provider that returns adapted real corpus text instead of synthetic pros
 
 **Tasks**
 - [ ] TASK-02-01: Add a failing test that proves the current DemoProvider is 100% synthetic and that a future CorpusProvider must emit text containing a corpus citation.
-- [ ] TASK-02-02: Implement `CorpusProvider` in `src/pdd_agent/llm/provider.py` (or a new `corpus_provider.py`) that:
+- [x] TASK-02-02: Implement `CorpusProvider` in `src/pdd_agent/llm/provider.py` (or a new `corpus_provider.py`) that:
   a. Accepts the same `draft_section` interface as `BaseProvider`.
   b. Uses `get_examples_for_section(section_id, sub_section_id, k=3)` to retrieve the top corpus matches.
   c. Selects the longest/highest-quality corpus text block as the primary source.
   d. Returns the full text (not a 1000-char snippet) with provenance markers.
-- [ ] TASK-02-03: Build a lightweight fact-substitution engine (`src/pdd_agent/drafting/fact_substitution.py`) that takes corpus text + `ProjectInput` + assumption register and replaces:
+- [x] TASK-02-03: Build a lightweight fact-substitution engine (`src/pdd_agent/drafting/fact_substitution.py`) that takes corpus text + `ProjectInput` + assumption register and replaces:
   - Old project name → new project name
   - Old city/country → new city/country
   - Old capacity → new capacity (when numerically close or explicitly marked)
@@ -93,11 +93,11 @@ Build a provider that returns adapted real corpus text instead of synthetic pros
   - Old proponent name → new proponent name
   - Old dates → new dates
   The engine must label any substitution it makes with `[ADAPTED FROM CORPUS: ...]` so the provenance chain is intact.
-- [ ] TASK-02-04: Add a `content_class`-aware routing rule:
+- [x] TASK-02-04: Add a `content_class`-aware routing rule:
   - BOILERPLATE and NARRATIVE → prefer corpus text with substitution.
   - METHODOLOGY_DEPENDENT and QUANTITATIVE → prefer corpus text if methodology IDs match; otherwise fallback to DemoProvider + strong synthetic label.
   - FACTUAL → skip corpus; use ProjectInput directly.
-- [ ] TASK-02-05: Update `SectionOrchestrator._build_prompt()` so that when the provider is `corpus`, the prompt instructs the provider to perform substitution rather than generation. (The prompt change may be minimal if the substitution engine is provider-internal.)
+- [x] TASK-02-05: Update `SectionOrchestrator._build_prompt()` so that when the provider is `corpus`, the prompt instructs the provider to perform substitution rather than generation. (Implemented provider-internally.)
 - [ ] TASK-02-06: Ensure the coverage map from PHASE-01 is consulted at runtime; if a section is marked sparse, `CorpusProvider` automatically falls back to `DemoProvider` for that section.
 
 **Files / Surfaces**
@@ -125,9 +125,9 @@ Build a provider that returns adapted real corpus text instead of synthetic pros
 Wire the CorpusProvider into the demo generation pipeline so operators can produce a reduced-gibberish DOCX with one command.
 
 **Tasks**
-- [ ] TASK-03-01: Add `--provider corpus` CLI argument to `scripts/run_demo.py` and `src/pdd_agent/cli.py`.
-- [ ] TASK-03-02: Update `run_demo_benchmark()` or the equivalent demo runner to instantiate `CorpusProvider` when requested, load the coverage map, and run the full orchestrator.
-- [ ] TASK-03-03: Ensure the DOCX export (`export/docx_export.py`) renders corpus-adapted text correctly, including the `[ADAPTED FROM CORPUS: ...]` provenance footers.
+- [x] TASK-03-01: Add `--provider corpus` CLI argument to `scripts/run_demo.py` and `src/pdd_agent/cli.py`.
+- [x] TASK-03-02: Update the demo runner to instantiate `CorpusProvider` when requested and run the full orchestrator. (Coverage-map generation remains open.)
+- [x] TASK-03-03: Ensure the DOCX export (`export/docx_export.py`) renders corpus-adapted text correctly, including the `[ADAPTED FROM CORPUS: ...]` provenance markers.
 - [ ] TASK-03-04: Add a "corpus coverage summary" to the demo package: a short table showing, per section, whether the text was corpus-driven or synthetic-fallback, plus the source document name.
 - [ ] TASK-03-05: Run a full demo workflow with `--provider corpus` and publish the output to `reports/demo-packages/<project-slug>/run-<timestamp>-<hash>/` plus `latest.docx`.
 
@@ -164,7 +164,7 @@ Prove the new pipeline reduces synthetic content and measure exactly how much.
 - [ ] TASK-04-02: Run the scorer against:
   a. The old DemoProvider output (baseline: ~100% synthetic).
   b. The new CorpusProvider output (target: <30% synthetic).
-- [ ] TASK-04-03: Add automated tests (`tests/test_corpus_provider.py`, `tests/test_fact_substitution.py`) covering substitution accuracy, fallback behavior, and provenance marker presence.
+- [x] TASK-04-03: Add automated tests (`tests/test_corpus_provider.py`, `tests/test_fact_substitution.py`) covering substitution accuracy, fallback behavior, and provenance marker presence.
 - [ ] TASK-04-04: Manually inspect the generated DOCX: open it, read Sections 1.1, 3.4, 4.1, and 5.2, and confirm they read like real PDD prose rather than synthetic templates.
 - [ ] TASK-04-05: Update `reports/demo-scorecard.md` or create `reports/corpus-driven-scorecard.md` with the before/after metrics.
 
@@ -193,7 +193,7 @@ Make the corpus-driven path production-stable by handling multi-document blendin
 
 **Tasks**
 - [ ] TASK-05-01: Implement multi-document blending for sections where 2-3 corpus documents each have partial coverage: concatenate the best paragraphs from each with clear provenance transitions.
-- [ ] TASK-05-02: Add a "substitution ambiguity" review flag: if the fact-substitution engine encounters a value it cannot safely replace (e.g. an embedded regulatory reference), it emits a `[REVIEW: substitution ambiguity]` marker instead of guessing.
+- [x] TASK-05-02: Add a "substitution ambiguity" review flag: if the fact-substitution engine encounters a value it cannot safely replace (e.g. an embedded regulatory reference), it emits a `[REVIEW: substitution ambiguity]` marker instead of guessing.
 - [ ] TASK-05-03: Harden the fallback logic so that a missing coverage map, a failed retrieval query, or an empty corpus result always degrades gracefully to DemoProvider with a logged warning.
 - [ ] TASK-05-04: Update `README.md` with a new section explaining the corpus-driven demo path, how to run it, and how to interpret the coverage summary.
 - [ ] TASK-05-05: Update `AGENTS.md` or `docs/` with the fact-substitution rules so future agents know which fields are safe to substitute and which require review flags.

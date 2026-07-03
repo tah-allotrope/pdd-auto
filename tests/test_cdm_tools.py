@@ -6,7 +6,7 @@ import math
 
 import pytest
 
-from pdd_agent.calc import cdm_tool_03, cdm_tool_04, cdm_tool_05, cdm_tool_06, cdm_tool_14
+from pdd_agent.calc import cdm_tool_03, cdm_tool_04, cdm_tool_05, cdm_tool_06, cdm_tool_07, cdm_tool_12, cdm_tool_14
 from pdd_agent.calc.constants import (
     CH4_TO_CO2_RATIO,
     DENSITY_CH4,
@@ -239,6 +239,37 @@ class TestTool06Flaring:
         result = cdm_tool_06.flaring_emissions(10.0, flare_efficiency_override=0.95)
         expected = GWP_CH4 * 10.0 * 0.05
         assert result == pytest.approx(expected)
+
+
+# ===== Tool 07: Fossil fuel displacement =====
+
+
+def test_tool_07_default_factor():
+    result = cdm_tool_07.fossil_fuel_displacement_factor("diesel")
+    assert result == pytest.approx(FOSSIL_FUEL_NCV["diesel"] * FOSSIL_FUEL_EF["diesel"])
+
+
+def test_tool_07_efficiency_adjustment():
+    result = cdm_tool_07.fossil_fuel_displacement_emissions(
+        10.0, "diesel", conversion_efficiency=0.5,
+    )
+    assert result == pytest.approx(20 * FOSSIL_FUEL_NCV["diesel"] * FOSSIL_FUEL_EF["diesel"])
+
+
+# ===== Tool 12: Baseline identification =====
+
+
+def test_tool_12_landfill_baseline():
+    result = cdm_tool_12.identify_wte_baseline(waste_currently_landfilled=True)
+    assert result.eligible is True
+    assert result.scenario == "continued_landfill_disposal"
+
+
+def test_tool_12_rejects_existing_recovery():
+    result = cdm_tool_12.identify_wte_baseline(
+        waste_currently_landfilled=True, existing_energy_recovery=True,
+    )
+    assert result.eligible is False
 
 
 # ===== Tool 14: Anaerobic digester emissions =====

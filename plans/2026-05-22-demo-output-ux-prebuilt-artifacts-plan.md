@@ -1,7 +1,7 @@
 ---
 title: "Demo Output UX & Pre-built Artifacts"
 date: "2026-05-22"
-status: "draft"
+status: "partially_implemented"
 request: "Sprint 2 implementation for colleague-testable demo: improve demo script output, copy DOCX to predictable paths, commit pre-built example DOCX (GAP-04, GAP-06)"
 plan_type: "multi-phase"
 research_inputs:

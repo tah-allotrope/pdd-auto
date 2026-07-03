@@ -1,7 +1,7 @@
 ---
 title: "Codex Insights Integration and Inegol Demo Case"
 date: "2026-05-20"
-status: "draft"
+status: "partially_implemented"
 request: "Improve the pdd-auto repo by incorporating insights from the staff Codex workflow (ref/ folder), upgrade DOCX export fidelity, strengthen review layer, and produce an end-to-end Inegol demo case."
 plan_type: "multi-phase"
 research_inputs:

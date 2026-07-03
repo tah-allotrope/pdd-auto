@@ -28,6 +28,10 @@ def _open_docx(path: Path) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser(description="Run the Soc Son-like demo benchmark")
     parser.add_argument("--open", action="store_true", help="Open the generated DOCX after completion")
+    parser.add_argument(
+        "--provider", choices=("demo", "corpus"), default="demo",
+        help="Drafting provider (default: demo)",
+    )
     args = parser.parse_args()
 
     ensure_demo_index()
@@ -35,7 +39,7 @@ def main() -> int:
     config_path = create_demo_project_input(Path("configs/projects/demo_socson_like.yaml"))
     artifacts = run_demo_benchmark(
         project_input_path=config_path,
-        provider_name="demo",
+        provider_name=args.provider,
         demo_output_dir=Path("reports/demo-packages"),
     )
 

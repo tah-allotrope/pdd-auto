@@ -189,6 +189,8 @@ def get_provider_registry() -> ProviderRegistry:
         _registry = ProviderRegistry()
         _registry.register("noop", NoopProvider())
         _registry.register("demo", DemoProvider())
+        from pdd_agent.drafting.corpus_provider import CorpusProvider
+        _registry.register("corpus", CorpusProvider())
     return _registry
 
 
@@ -199,6 +201,9 @@ def configure_provider(config: ModelConfig) -> None:
         registry.register("noop", NoopProvider())
     elif config.provider_name == "demo":
         registry.register("demo", DemoProvider())
+    elif config.provider_name == "corpus":
+        from pdd_agent.drafting.corpus_provider import CorpusProvider
+        registry.register("corpus", CorpusProvider())
     elif config.provider_name == "openai":
         from pdd_agent.llm.openai_provider import OpenAIProvider
 

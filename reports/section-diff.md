@@ -227,7 +227,7 @@ Reference document: `VCS_Soc Son_Project-Description.norm`
 - Confidence: `HIGH`
 - Matched reference: `True`
 - Grounding score: `0.646`
-- Provenance count: `5`
+- Provenance count: `3`
 - Placeholder: `False`
 - Issues: `1`
 - Reference heading: `AFOLU-Specific Safeguards`
@@ -357,7 +357,7 @@ Reference document: `VCS_Soc Son_Project-Description.norm`
 - Confidence: `HIGH`
 - Matched reference: `True`
 - Grounding score: `0.636`
-- Provenance count: `5`
+- Provenance count: `2`
 - Placeholder: `False`
 - Issues: `1`
 - Reference heading: `Monitoring Plan`

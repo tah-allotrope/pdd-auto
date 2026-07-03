@@ -1,7 +1,7 @@
 ---
 title: "PDD Pipeline Upgrade to Audit-Ready Completeness"
 date: "2026-06-22"
-status: "draft"
+status: "partially_implemented"
 request: "Based on research and brainstorm reports, create a multi-phase implementation plan to upgrade pdd-auto from demo-quality to audit-ready PDD generation"
 plan_type: "multi-phase"
 research_inputs:
@@ -118,6 +118,7 @@ Build a deterministic, auditable ACM0022 emission calculation engine that derive
   - `cdm_tool_04.py` — grid emission factor calculation (combined margin = OM * w_OM + BM * w_BM)
   - `cdm_tool_07.py` — emission factor for fossil fuel displacement
   - `cdm_tool_12.py` — baseline identification for WTE projects
+  - Verified implementation inventory also retains Tools 05, 06, and 14 used by the ACM0022 calculator.
 
 - [x] TASK-01-05: Wire calc results into `QuantificationInputs` in `schemas/project_input.py`
   - Add a `from_calc_result(result: ACM0022CalcResult) -> QuantificationInputs` class method
@@ -195,7 +196,7 @@ Replace the stub `OpenAIProvider` with a real implementation, adopt Tinh's promp
 
 **Tasks**
 
-- [ ] TASK-02-01: Implement real `OpenAIProvider` in `src/pdd_agent/llm/openai_provider.py`
+- [x] TASK-02-01: Implement real `OpenAIProvider` in `src/pdd_agent/llm/openai_provider.py`
   - Replace the 52-line stub with actual OpenAI API calls
   - Use `openai` Python SDK (async-compatible)
   - Implement `draft_section()` with proper request/response handling
@@ -204,7 +205,7 @@ Replace the stub `OpenAIProvider` with a real implementation, adopt Tinh's promp
   - Handle API errors gracefully (rate limits, token limits, network errors)
   - Add retry logic with exponential backoff (max 3 retries)
 
-- [ ] TASK-02-02: Implement per-run token budget and cost tracking (DEC-013)
+- [x] TASK-02-02: Implement per-run token budget and cost tracking (DEC-013)
   - Create `src/pdd_agent/llm/budget.py` with `TokenBudget` class
   - Configurable limit (default 500K tokens per run)
   - Track input/output tokens per call
@@ -213,7 +214,7 @@ Replace the stub `OpenAIProvider` with a real implementation, adopt Tinh's promp
   - Per-run cost logging (input/output token counts, estimated cost at current pricing)
   - Budget summary in the run's metadata output
 
-- [ ] TASK-02-03: Adopt Tinh's prompt discipline — replace `prompts/section_draft.md`
+- [x] TASK-02-03: Adopt Tinh's prompt discipline — replace `prompts/section_draft.md`
   - Create new `prompts/section_draft_v2.md` based on Tinh's `PDD creation prompt.txt`
   - Authority order: (1) input YAML/ProjectInput, (2) evidence registry / corpus chunks, (3) VCS v4.4 template rules, (4) official methodology/tools, (5) comparable project examples, (6) general domain logic
   - Anti-hallucination markers: `[MISSING]` for data not provided, `[INFERENCE]` for derived claims, `[REVIEW REQUIRED]` for expert-check items
@@ -222,46 +223,46 @@ Replace the stub `OpenAIProvider` with a real implementation, adopt Tinh's promp
   - Content class annotations from existing prompt (BOILERPLATE, FACTUAL, EVIDENCE_BASED, METHODOLOGY_DEPENDENT, QUANTITATIVE, NARRATIVE, OPTIONAL)
   - Keep existing citation formats (CORPUS, METHODOLOGY, VERRA REGISTRY, USER INPUT, SYNTHETIC ASSUMPTION) and add Tinh's `[E001]` format as primary
 
-- [ ] TASK-02-04: Wire FTS5/BM25 retrieval into `draft_section()` call path (DEC-007)
+- [x] TASK-02-04: Wire FTS5/BM25 retrieval into `draft_section()` call path (DEC-007)
   - Modify `SectionOrchestrator._assemble_prompt()` to inject top-k corpus chunks
   - For each section being drafted, query `search.py` with section-specific terms
   - Use configurable k (default 5, from `DEFAULT_K` in `search.py`)
   - Format retrieved chunks with source attribution (document name, section, BM25 score)
   - Include retrieval metadata in `DraftSection.provenance`
 
-- [ ] TASK-02-05: Wire Phase-1 calc results into quantification section prompts
+- [x] TASK-02-05: Wire Phase-1 calc results into quantification section prompts
   - When drafting Section 4 (Quantification), inject `ACM0022CalcResult` into the prompt context
   - The LLM drafts the narrative around the numbers (it does not generate the numbers)
   - Prompt instructs the LLM to use exact calc values, never approximate or round
   - Include formula references from the calc engine's provenance metadata
 
-- [ ] TASK-02-06: Update `SectionOrchestrator` to use new prompt and provider
+- [x] TASK-02-06: Update `SectionOrchestrator` to use new prompt and provider
   - Modify `section_orchestrator.py` to load `section_draft_v2.md` as the prompt template
   - Pass corpus chunks and calc results as template variables
   - Parse structured output (section text + review notes + evidence register)
   - Feed review notes into the existing 5-state review workflow
 
-- [ ] TASK-02-07: Extend `schemas/project_input.py` with Tinh's schema additions (DEC-012)
+- [x] TASK-02-07: Extend `schemas/project_input.py` with Tinh's schema additions (DEC-012)
   - Add `GenerationControls` Pydantic model (inferable/non-inferable field lists, missing-info policy, citation policy)
   - Add `ReviewFlags` Pydantic model (per-field review status)
   - Add `EvidenceRegistry` Pydantic model (evidence items with IDs, sources, confidence)
   - Add these as optional nested fields on `ProjectInput`
   - Preserve backward compatibility — all new fields are `Optional` with `None` default
 
-- [ ] TASK-02-08: Add PDF export capability (DEC-011)
+- [x] TASK-02-08: Add PDF export capability (DEC-011)
   - Create `src/pdd_agent/export/pdf_export.py`
   - Use LibreOffice CLI (`soffice --convert-to pdf`) if available
   - Make PDF generation optional with clear skip message if LibreOffice not found
   - Add `--pdf` flag to CLI
 
-- [ ] TASK-02-09: Write integration tests for LLM drafting pipeline
+- [x] TASK-02-09: Write integration tests for LLM drafting pipeline
   - Test `OpenAIProvider.draft_section()` with mocked API responses
   - Test prompt assembly with corpus injection
   - Test token budget enforcement (warning at 80%, stop at 100%)
   - Test that quantification sections use calc results, not LLM-generated numbers
   - Test fallback behavior when corpus has no relevant chunks
 
-- [ ] TASK-02-10: End-to-end test: generate a complete PDD draft for Inegol
+- [x] TASK-02-10: End-to-end test: generate a complete PDD draft for Inegol
   - Run the full pipeline: calc engine + LLM drafting + review + DOCX export
   - Verify all 30+ subsections are populated (no `[PLACEHOLDER]` text)
   - Verify emission numbers in Section 4 match Phase-1 calc output exactly
@@ -312,7 +313,7 @@ Add two capabilities the pipeline currently lacks: (1) extract structured `Proje
 
 **Tasks**
 
-- [ ] TASK-03-01: Implement LLM-based document extraction pipeline
+- [x] TASK-03-01: Implement LLM-based document extraction pipeline
   - Create `src/pdd_agent/ingest/extract.py`
   - Accept input: file path (DOCX, PDF, plain text) or raw text string
   - Extract text from DOCX (python-docx) and PDF (existing ingest capabilities)
@@ -321,14 +322,14 @@ Add two capabilities the pipeline currently lacks: (1) extract structured `Proje
   - Handle encoding issues (mojibake, Turkish characters) per Tinh's prompt rules
   - Return `ProjectInput` with provenance metadata (which fields came from extraction vs defaults)
 
-- [ ] TASK-03-02: Create the extraction prompt template
+- [x] TASK-03-02: Create the extraction prompt template
   - Create `prompts/extract_project_input.md` based on Tinh's `Create_YAML_From_Project_Summary_Prompt.txt`
   - Map output schema to `ProjectInput` Pydantic model fields (not Tinh's `Schema_ver1.yaml`)
   - Include Tinh's non-invention rules and `[MISSING]` handling
   - Include methodology screening output fields (`suggested_methodologies` with confidence)
   - Include evidence registry output fields
 
-- [ ] TASK-03-03: Implement methodology screening module
+- [x] TASK-03-03: Implement methodology screening module
   - Create `src/pdd_agent/domain/methodology_screen.py`
   - Load Verra active VCS methodology list (initially hardcoded from VCS website, with clear path to API-based refresh)
   - Load CDM methodology list (ACM series relevant to WTE/waste/energy)
@@ -337,36 +338,36 @@ Add two capabilities the pipeline currently lacks: (1) extract structured `Proje
   - Return ranked `SuggestedMethodology` list: methodology_id, name, confidence (0-1), rationale, active_status_source
   - Flag when the user's selected methodology doesn't match the top suggestion
 
-- [ ] TASK-03-04: Create methodology data files
+- [x] TASK-03-04: Create methodology data files
   - `data/methodologies/verra_vcs_active.json` — VCS methodologies with IDs, names, applicability conditions, status
   - `data/methodologies/cdm_active.json` — CDM methodologies relevant to WTE (ACM0022, ACM0003, ACM0006, AM0025, etc.)
   - Include methodology version numbers and last-updated dates
   - Document the refresh process for when new methodologies are added
 
-- [ ] TASK-03-05: Add `SuggestedMethodology` Pydantic model to schema
+- [x] TASK-03-05: Add `SuggestedMethodology` Pydantic model to schema
   - Add to `schemas/project_input.py` as a new model
   - Add `suggested_methodologies: list[SuggestedMethodology] | None` to `ProjectInput`
   - Include fields: methodology_id, name, confidence, rationale, active_status_source, version
 
-- [ ] TASK-03-06: Create CLI commands for new intake paths
+- [x] TASK-03-06: Create CLI commands for new intake paths
   - Add `pdd-agent extract <file>` command — runs extraction and prints `ProjectInput` summary
   - Add `pdd-agent screen <file-or-input>` command — runs methodology screening
   - Add `pdd-agent draft --from-doc <file>` command — full pipeline from document to DOCX
 
-- [ ] TASK-03-07: Write tests for document extraction
+- [x] TASK-03-07: Write tests for document extraction
   - Test extraction from DOCX, PDF, and plain text inputs
   - Test that extracted `ProjectInput` has expected fields populated for a known document
   - Test `[MISSING]` handling for documents with incomplete information
   - Test encoding fix rules (mojibake, special characters)
   - Use mocked LLM responses for unit tests; one real API call for integration test
 
-- [ ] TASK-03-08: Write tests for methodology screening
+- [x] TASK-03-08: Write tests for methodology screening
   - Test screening against known WTE project descriptions → should rank ACM0022 highest
   - Test screening against non-WTE descriptions → should not suggest ACM0022
   - Test confidence scores are in valid range (0-1)
   - Test handling of unknown/novel project types
 
-- [ ] TASK-03-09: Integration test: document → PDD draft end-to-end
+- [x] TASK-03-09: Integration test: document → PDD draft end-to-end
   - Start from a raw project description document (use Inegol's original PDD text)
   - Extract → screen → calculate → draft → review → export DOCX
   - Verify the output PDD is comparable to the demo-generated Inegol PDD
@@ -410,24 +411,24 @@ Integrate with Verra's next-gen registry API (and potentially Gold Standard Digi
 
 **Tasks**
 
-- [ ] TASK-04-01: Monitor Verra API availability and documentation
+- [ ] [DEFERRED] TASK-04-01: Monitor Verra API availability and documentation
   - Track Verra + S&P Global registry modernization announcements
   - Track Gold Standard Digital MRV Pilot progress (through Oct 2026)
   - Document API endpoints, authentication, and rate limits when available
 
-- [ ] TASK-04-02: Implement Verra API client
+- [ ] [DEFERRED] TASK-04-02: Implement Verra API client
   - Create `src/pdd_agent/registry/verra_client.py`
   - Project registration status lookup
   - Active methodology list retrieval (replaces hardcoded JSON files from Phase 3)
   - Project data retrieval for validation
   - Authentication and rate limit handling
 
-- [ ] TASK-04-03: Implement automated methodology list refresh
+- [ ] [DEFERRED] TASK-04-03: Implement automated methodology list refresh
   - Replace `data/methodologies/verra_vcs_active.json` with API-backed refresh
   - Cache locally with TTL
   - Log version changes
 
-- [ ] TASK-04-04: Add project registration status to PDD workflow
+- [ ] [DEFERRED] TASK-04-04: Add project registration status to PDD workflow
   - Check if project is already registered/listed on Verra
   - Pull existing project data for pre-population
   - Validate against registry constraints

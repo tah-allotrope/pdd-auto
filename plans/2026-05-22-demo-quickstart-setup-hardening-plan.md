@@ -1,7 +1,7 @@
 ---
 title: "Demo Quickstart & Setup Hardening"
 date: "2026-05-22"
-status: "draft"
+status: "partially_implemented"
 request: "Sprint 1 implementation for colleague-testable demo: quickstart docs, directory creation fixes, gws error guards (GAP-01, GAP-03, GAP-05)"
 plan_type: "multi-phase"
 research_inputs:

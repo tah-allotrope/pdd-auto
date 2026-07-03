@@ -16,6 +16,7 @@ from pdd_agent.ingest.download import download_corpus
 from pdd_agent.retrieval.index import RetrievalIndex
 from pdd_agent.agent.section_orchestrator import SectionOrchestrator
 from pdd_agent.export.docx_export import export_run_to_docx
+from pdd_agent.export.pdf_export import PDFExportError, export_docx_to_pdf
 from pdd_agent.export.drive_upload import upload_docx_run, upload_review_package_docx
 from pdd_agent.export.review_package import publish_docx_run_for_review
 from pdd_agent.phase05.benchmark import create_demo_project_input, run_demo_benchmark
@@ -67,7 +68,7 @@ def _build_parser() -> argparse.ArgumentParser:
     draft_parser.add_argument(
         "--provider",
         default="noop",
-        help="LLM provider name (default: noop)",
+        help="Drafting provider name, including corpus for deterministic adaptation (default: noop)",
     )
 
     review_parser = sub.add_parser("review", help="Run review checks on a draft run")
@@ -84,6 +85,11 @@ def _build_parser() -> argparse.ArgumentParser:
     export_parser.add_argument(
         "--review-output-dir",
         help="Optional reviewer-facing publication root for the exported DOCX",
+    )
+    export_parser.add_argument(
+        "--pdf",
+        action="store_true",
+        help="Convert the exported DOCX to PDF when LibreOffice is available",
     )
 
     upload_parser = sub.add_parser("upload", help="Upload a DOCX to Google Drive")
@@ -246,6 +252,11 @@ def _build_parser() -> argparse.ArgumentParser:
     screen_parser.add_argument("file", help="Path to a document or ProjectInput YAML")
     screen_parser.add_argument(
         "--top-k", type=int, default=5, help="Max methodology suggestions (default: 5)"
+    )
+    screen_parser.add_argument(
+        "--provider",
+        default="noop",
+        help="Provider for LLM applicability analysis; noop uses deterministic screening",
     )
 
     draft_parser.add_argument(
@@ -411,17 +422,32 @@ def _run_review(args, log) -> None:
 
 def _run_export(args, log) -> None:
     if args.review_output_dir:
-        result = publish_docx_run_for_review(
+        docx_path = publish_docx_run_for_review(
             run_id=args.run_id,
             project_name=args.run_id,
             output_root=Path(args.review_output_dir),
         )
-        log.info("review_docx_published", path=str(result), review_output_dir=str(args.review_output_dir))
-        return
+        log.info("review_docx_published", path=str(docx_path), review_output_dir=str(args.review_output_dir))
+    else:
+        output_path = Path(args.output) if args.output else None
+        docx_path = export_run_to_docx(run_id=args.run_id, output_path=output_path)
+        log.info("docx_exported", path=str(docx_path))
 
-    output_path = Path(args.output) if args.output else None
-    result = export_run_to_docx(run_id=args.run_id, output_path=output_path)
-    log.info("docx_exported", path=str(result))
+    pdf_status = "not_requested"
+    pdf_path = None
+    if getattr(args, "pdf", False):
+        try:
+            pdf_path = export_docx_to_pdf(Path(docx_path))
+            pdf_status = "created"
+        except PDFExportError as exc:
+            pdf_status = "skipped"
+            log.warning("pdf_export_skipped", reason=str(exc))
+    log.info(
+        "export_complete",
+        docx_path=str(docx_path),
+        pdf_status=pdf_status,
+        pdf_path=str(pdf_path) if pdf_path else None,
+    )
 
 
 def _run_upload(args, log) -> None:
@@ -562,6 +588,7 @@ def _run_extract(args, log) -> None:
 
 def _run_screen(args, log) -> None:
     from pdd_agent.domain.methodology_screen import screen_methodologies
+    from pdd_agent.llm.provider import get_provider_registry
 
     file_path = Path(args.file)
     if not file_path.exists():
@@ -580,8 +607,12 @@ def _run_screen(args, log) -> None:
     else:
         description = file_path.read_text(encoding="utf-8")
 
+    provider = get_provider_registry().get(args.provider)
     suggestions = screen_methodologies(
-        description, project_input=project_input, top_k=args.top_k
+        description,
+        project_input=project_input,
+        top_k=args.top_k,
+        llm_provider=None if provider.name == "noop" else provider,
     )
 
     print(f"\nMethodology Screening Results ({len(suggestions)} suggestions):\n")

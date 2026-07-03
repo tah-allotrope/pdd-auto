@@ -1,7 +1,7 @@
 ---
 +title: "Agentic Low-Cost WTE PDD Tool"
 +date: "2026-04-22"
-+status: "draft"
++status: "partially_implemented"
 +request: "Draft a detailed multi-phase plan for an agentic/AI tool that creates waste-to-energy carbon credit PDDs at zero/minimal cost using local research, a fresh research brief, and Google Workspace CLI (gws) against the provided Drive folder."
 +plan_type: "multi-phase"
 +research_inputs:
