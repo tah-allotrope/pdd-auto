@@ -247,3 +247,70 @@ class TestProviderConfigure:
         configure_provider(ModelConfig(provider_name="noop", model_name="none"))
         registry = get_provider_registry()
         assert "noop" in registry.providers
+
+
+class _CitationFailingProvider:
+    """Fake provider that always returns a draft with an invalid evidence citation."""
+
+    name = "fake-citation-fail"
+
+    def draft_section(
+        self,
+        section_id: str,
+        sub_section_id: str,
+        prompt: str,
+        provenance: list,
+        max_chars: int = 4000,
+    ):
+        return DraftSection(
+            section_id=section_id,
+            sub_section_id=sub_section_id or "",
+            text="Draft text with fabricated citation [E999].",
+            confidence="HIGH",
+            provenance=provenance,
+            issues=[],
+            provider=self.name,
+        )
+
+    def close(self):
+        pass
+
+
+class TestSectionOrchestratorRedraft:
+    def test_default_max_redraft_attempts(self):
+        orch = SectionOrchestrator()
+        assert orch._max_redraft_attempts == 3
+        assert orch._enable_judge is False
+
+    def test_judge_redraft_loop_parks_failed_section(self, tmp_path: Path):
+        from pathlib import Path
+
+        import yaml
+        from schemas.project_input import EvidenceItem, EvidenceRegistry, ProjectInput
+
+        project_yaml = Path(__file__).parent.parent / "configs" / "projects" / "demo_socson_like.yaml"
+        with open(project_yaml, encoding="utf-8") as f:
+            project_input = ProjectInput.model_validate(yaml.safe_load(f))
+        project_input.evidence_registry = EvidenceRegistry(
+            items=[EvidenceItem(evidence_id="E001", source_type="user_input", description="ok")]
+        )
+
+        orch = SectionOrchestrator(
+            provider=_CitationFailingProvider(),
+            project_input=project_input,
+            run_id="redraft-fail-run",
+            enable_judge=True,
+            max_redraft_attempts=2,
+        )
+        draft = orch.draft_section("1", "1.1")
+
+        assert draft.confidence == "UNSUPPORTED"
+        assert any("JUDGE REDRAFT FAILED" in issue for issue in draft.issues)
+        assert any("attempts" in note for note in orch.draft_run.notes)
+
+    def test_manual_redraft_section_invokes_judge(self):
+        orch = SectionOrchestrator()
+        first = orch.draft_section("1", "1.1")
+        second = orch.redraft_section("1", "1.1")
+        assert second.section_id == "1"
+        assert second.sub_section_id == "1.1"

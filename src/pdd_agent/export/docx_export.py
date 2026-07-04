@@ -5,12 +5,19 @@ from __future__ import annotations
 from datetime import datetime
 import importlib
 import json
+from dataclasses import dataclass, field
 from pathlib import Path
+import re
+from types import SimpleNamespace
 from typing import Any
 
 import structlog
 import yaml
 
+from pdd_agent.llm.provider import DraftRun
+from pdd_agent.review.consistency import check_quantitative_consistency
+from pdd_agent.review.judge import _EVIDENCE_ID_RE
+from schemas.project_input import ProjectInput
 from pdd_agent.export.table_helpers import (
     add_styled_table,
     set_cell_shading,
@@ -24,6 +31,123 @@ _SCHEMA_PATH = Path(__file__).parent.parent.parent.parent / "schemas" / "pdd_sec
 _TEMPLATE_PATH = Path(__file__).parent.parent.parent.parent / "templates" / "VCS-Project-Description-Template-v4.4-FINAL2.docx"
 
 
+class ExportBlockedError(Exception):
+    """Raised when the export gate hard-blocks a run and force=False."""
+
+
+@dataclass
+class ExportGateResult:
+    """Result of the pre-export tiered gate check."""
+
+    blocked: bool
+    hard_blocks: list[str] = field(default_factory=list)
+    advisories: list[str] = field(default_factory=list)
+    force_used: bool = False
+
+    @property
+    def passed(self) -> bool:
+        return not self.blocked
+
+
+def check_export_gate(
+    run: DraftRun | dict[str, Any],
+    project_input: ProjectInput | None = None,
+    calc_result: Any | None = None,
+    force: bool = False,
+) -> ExportGateResult:
+    """Run the tiered export gate against a DraftRun or its serialized dict.
+
+    Hard-blocks:
+      - Numbers contradicting ProjectInput / calc engine (via consistency.py)
+      - Evidence citations to IDs not in the evidence registry
+      - Unresolved [MISSING] markers in Sections 3-4
+
+    Everything else exports as a watermarked DRAFT with advisory markers.
+    """
+    if isinstance(run, dict):
+        sections_raw = run.get("sections", [])
+        run_id = run.get("run_id", "unknown")
+    else:
+        sections_raw = run.sections
+        run_id = run.run_id
+
+    sections = [
+        SimpleNamespace(**s) if isinstance(s, dict) else s for s in sections_raw
+    ]
+    hard_blocks: list[str] = []
+    advisories: list[str] = []
+
+    consistency_report = check_quantitative_consistency(
+        draft_sections=sections,
+        project_input=project_input,
+        run_id=run_id,
+        calc_result=calc_result,
+    )
+    for flag in consistency_report.flags:
+        if flag.severity == "CRITICAL":
+            hard_blocks.append(f"[{flag.section_a}↔{flag.section_b}] {flag.message}")
+        elif flag.severity == "HIGH":
+            advisories.append(f"[{flag.section_a}↔{flag.section_b}] {flag.message}")
+
+    _check_evidence_registry(sections, project_input, hard_blocks)
+    _check_missing_markers(sections, hard_blocks)
+
+    return ExportGateResult(
+        blocked=bool(hard_blocks),
+        hard_blocks=hard_blocks,
+        advisories=advisories,
+        force_used=force,
+    )
+
+
+def _check_evidence_registry(
+    sections: list[Any],
+    project_input: ProjectInput | None,
+    hard_blocks: list[str],
+) -> None:
+    if project_input is None:
+        return
+    registry = getattr(project_input, "evidence_registry", None)
+    if registry is None:
+        return
+    valid_numbers = {
+        re.search(r"\d+", item.evidence_id).group()
+        for item in getattr(registry, "items", [])
+        if item.evidence_id
+    }
+    for section in sections:
+        text = getattr(section, "text", "") or ""
+        section_key = _gate_section_key(section)
+        cited = set(_EVIDENCE_ID_RE.findall(text))
+        invalid = sorted(cited - valid_numbers)
+        if invalid:
+            hard_blocks.append(
+                f"[{section_key}] Cited evidence ID(s) not in registry: "
+                f"{', '.join(f'E{e}' for e in invalid)}"
+            )
+
+
+def _check_missing_markers(sections: list[Any], hard_blocks: list[str]) -> None:
+    for section in sections:
+        text = getattr(section, "text", "") or ""
+        section_key = _gate_section_key(section)
+        if "[MISSING]" in text and _in_section_3_or_4(section_key):
+            hard_blocks.append(
+                f"[{section_key}] Unresolved [MISSING] marker in quantification/methodology section."
+            )
+
+
+def _gate_section_key(section: Any) -> str:
+    ssid = getattr(section, "sub_section_id", "")
+    if ssid:
+        return str(ssid)
+    return str(getattr(section, "section_id", ""))
+
+
+def _in_section_3_or_4(section_key: str) -> bool:
+    return section_key.startswith(("3", "4"))
+
+
 def _docx_attr(module_name: str, attr_name: str) -> Any:
     return getattr(importlib.import_module(module_name), attr_name)
 
@@ -32,8 +156,14 @@ def export_run_to_docx(
     run_id: str,
     output_path: Path | None = None,
     project_name: str = "",
+    project_input: ProjectInput | None = None,
+    force: bool = False,
 ) -> Path:
-    """Export a DraftRun JSON to a review-friendly DOCX file."""
+    """Export a DraftRun JSON to a review-friendly DOCX file.
+
+    The export gate is evaluated before writing. Hard-blocks stop export unless
+    ``force=True``; everything else exports as a watermarked DRAFT.
+    """
     run_path = _DRAFT_RUNS_DIR / f"{run_id}.json"
     if not run_path.exists():
         message = f"Draft run not found for run_id `{run_id}` at `{run_path}`"
@@ -51,6 +181,20 @@ def export_run_to_docx(
 
     with open(run_path, encoding="utf-8") as handle:
         run_data = json.load(handle)
+
+    gate = check_export_gate(run_data, project_input=project_input, force=force)
+    if gate.blocked and not force:
+        logger.error("export_gate_blocked", run_id=run_id, hard_blocks=gate.hard_blocks)
+        raise ExportBlockedError(
+            f"Export blocked for {run_id}. Hard blocks: {gate.hard_blocks}"
+        )
+    if gate.blocked and force:
+        logger.warning(
+            "export_gate_forced",
+            run_id=run_id,
+            hard_blocks=gate.hard_blocks,
+            message="Exporting with --force override; document is watermarked DRAFT.",
+        )
 
     schema = _load_schema()
     sections = run_data.get("sections", [])
@@ -70,6 +214,7 @@ def export_run_to_docx(
     resolved_project_name = project_name or run_data.get("project_name", "Unknown Project")
     _add_title_page(doc, resolved_project_name, run_id)
     _add_disclaimer(doc, is_demo=is_demo)
+    _add_draft_watermark(doc, force=force)
 
     cover_data = run_data.get("structured_cover") or _infer_cover_data(run_data)
     render_cover_metadata_table(doc, cover_data)
@@ -233,6 +378,23 @@ def _add_disclaimer(doc: Any, is_demo: bool = False) -> None:
     run.bold = True
     run.font.color.rgb = RGBColor(0x9C, 0x00, 0x06)
     _highlight_paragraph(paragraph, "FCE4D6")
+
+
+def _add_draft_watermark(doc: Any, force: bool = False) -> None:
+    """Add a prominent DRAFT stamp to every exported DOCX."""
+    WD_ALIGN_PARAGRAPH = _docx_attr("docx.enum.text", "WD_ALIGN_PARAGRAPH")
+    Pt = _docx_attr("docx.shared", "Pt")
+    RGBColor = _docx_attr("docx.shared", "RGBColor")
+
+    paragraph = doc.add_paragraph()
+    paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    message = "DRAFT — NOT FOR FILING"
+    if force:
+        message += " (EXPORT GATE OVERRIDE)"
+    run = paragraph.add_run(message)
+    run.bold = True
+    run.font.size = Pt(14)
+    run.font.color.rgb = RGBColor(0xC0, 0x00, 0x00)
 
 
 # ─────────────────────────────────────────────

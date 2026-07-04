@@ -12,7 +12,6 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
-from types import SimpleNamespace
 from typing import Any
 
 import structlog
@@ -96,8 +95,6 @@ class LLMJudge:
         calc_result: Any | None = None,
     ) -> JudgeResult:
         """Judge a single draft section."""
-        section_key = _section_key(draft_section)
-
         if self.use_llm and self.provider_name not in ("demo", "noop"):
             return self._llm_judge_section(draft_section, project_input, calc_result)
 
@@ -209,8 +206,12 @@ class LLMJudge:
             )
             return findings
 
-        valid_ids = {item.evidence_id for item in getattr(registry, "items", [])}
-        invalid = sorted(cited_ids - valid_ids)
+        valid_numbers = {
+            re.search(r"\d+", item.evidence_id).group()
+            for item in getattr(registry, "items", [])
+            if item.evidence_id
+        }
+        invalid = sorted(cited_ids - valid_numbers)
         if invalid:
             self._add_finding(
                 findings,
@@ -444,7 +445,7 @@ class LLMJudge:
 
 def _section_key(draft_section: DraftSection) -> str:
     if draft_section.sub_section_id:
-        return f"{draft_section.section_id}.{draft_section.sub_section_id}"
+        return draft_section.sub_section_id
     return draft_section.section_id
 
 

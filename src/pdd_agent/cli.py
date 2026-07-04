@@ -92,6 +92,19 @@ def _build_parser() -> argparse.ArgumentParser:
         default="noop",
         help="Drafting provider name: noop, demo, corpus, openai, anthropic (default: noop)",
     )
+    judge_group = draft_parser.add_mutually_exclusive_group()
+    judge_group.add_argument(
+        "--judge",
+        action="store_true",
+        default=False,
+        help="Run the LLM judge and capped auto-redraft loop after each section (default: no-judge)",
+    )
+    judge_group.add_argument(
+        "--no-judge",
+        action="store_false",
+        dest="judge",
+        help="Explicitly disable the judge/redraft loop (default)",
+    )
 
     review_parser = sub.add_parser("review", help="Run review checks on a draft run")
     review_parser.add_argument("--run-id", required=True, help="Run identifier to review")
@@ -99,10 +112,25 @@ def _build_parser() -> argparse.ArgumentParser:
         "--input", help="Path to ProjectInput YAML (for cross-reference checks)"
     )
 
+    judge_parser = sub.add_parser("judge", help="Run the LLM judge on an existing draft run")
+    judge_parser.add_argument("--run-id", required=True, help="Run identifier to judge")
+    judge_parser.add_argument(
+        "--input", help="Path to ProjectInput YAML (for evidence registry and calc cross-checks)"
+    )
+
     export_parser = sub.add_parser("export", help="Export a draft run to DOCX")
     export_parser.add_argument("--run-id", required=True, help="Run identifier to export")
     export_parser.add_argument(
         "--output", "-o", help="Output DOCX path (default: data/runs/{run_id}.docx)"
+    )
+    export_parser.add_argument(
+        "--input",
+        help="ProjectInput YAML for export gate cross-checks (evidence registry, calc numbers)",
+    )
+    export_parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Override export gate hard-blocks and export a watermarked DRAFT",
     )
     export_parser.add_argument(
         "--review-output-dir",
@@ -324,6 +352,7 @@ def main() -> int:
         "demo-setup": lambda: _run_demo_setup(args, log),
         "draft": lambda: _run_draft(args, log),
         "review": lambda: _run_review(args, log),
+        "judge": lambda: _run_judge(args, log),
         "export": lambda: _run_export(args, log),
         "upload": lambda: _run_upload(args, log),
         "demo-config": lambda: _run_demo_config(args, log),
@@ -404,6 +433,8 @@ def _run_draft(args, log) -> None:
         provider=provider,
         project_input=project_input,
         run_id=args.run_id,
+        enable_judge=args.judge,
+        max_redraft_attempts=3,
     )
 
     if not (hasattr(args, "from_doc") and args.from_doc):
@@ -443,7 +474,58 @@ def _run_review(args, log) -> None:
         log.warning("no_review_state_found", run_id=args.run_id)
 
 
+def _run_judge(args, log) -> None:
+    from pdd_agent.llm.provider import DraftRun
+    from pdd_agent.review.judge import LLMJudge
+
+    run = DraftRun.load(args.run_id)
+    log.info("judge_run_start", run_id=args.run_id, provider=run.provider)
+
+    project_input = None
+    if args.input:
+        with open(args.input, encoding="utf-8") as f:
+            project_input = ProjectInput.model_validate(yaml.safe_load(f))
+
+    judge = LLMJudge(provider_name=run.provider)
+    results = judge.judge_run(run, project_input)
+
+    passed = sum(1 for r in results.values() if r.passed)
+    total = len(results)
+    critical = sum(len(r.categories.get("critical", [])) for r in results.values())
+    advisory = sum(len(r.categories.get("advisory", [])) for r in results.values())
+
+    print(f"\nJudge summary for run {args.run_id}")
+    print(f"  Sections judged: {total}")
+    print(f"  Passed:          {passed}")
+    print(f"  Failed:          {total - passed}")
+    print(f"  Critical findings: {critical}")
+    print(f"  Advisory findings: {advisory}")
+    print("\nPer-section scores:")
+    for key, result in sorted(results.items()):
+        status = "PASS" if result.passed else "FAIL"
+        print(f"  {key:8} {status}  score={result.score}")
+        for cat, messages in result.categories.items():
+            for msg in messages:
+                print(f"            [{cat}] {msg}")
+
+    log.info(
+        "judge_run_complete",
+        run_id=args.run_id,
+        sections=total,
+        passed=passed,
+        critical=critical,
+        advisory=advisory,
+    )
+
+
 def _run_export(args, log) -> None:
+    from pdd_agent.export.docx_export import ExportBlockedError
+
+    project_input = None
+    if getattr(args, "input", None):
+        with open(args.input, encoding="utf-8") as f:
+            project_input = ProjectInput.model_validate(yaml.safe_load(f))
+
     if args.review_output_dir:
         docx_path = publish_docx_run_for_review(
             run_id=args.run_id,
@@ -453,8 +535,18 @@ def _run_export(args, log) -> None:
         log.info("review_docx_published", path=str(docx_path), review_output_dir=str(args.review_output_dir))
     else:
         output_path = Path(args.output) if args.output else None
-        docx_path = export_run_to_docx(run_id=args.run_id, output_path=output_path)
-        log.info("docx_exported", path=str(docx_path))
+        try:
+            docx_path = export_run_to_docx(
+                run_id=args.run_id,
+                output_path=output_path,
+                project_input=project_input,
+                force=getattr(args, "force", False),
+            )
+        except ExportBlockedError as exc:
+            log.error("export_blocked", run_id=args.run_id, error=str(exc))
+            print(f"Export blocked: {exc}")
+            return
+        log.info("docx_exported", path=str(docx_path), force=getattr(args, "force", False))
 
     pdf_status = "not_requested"
     pdf_path = None

@@ -40,6 +40,7 @@ from pdd_agent.review.consistency import (
     check_quantitative_consistency,
     summarize_consistency_report,
 )
+from pdd_agent.review.judge import LLMJudge
 from pdd_agent.review.states import ReviewStateStore, init_review_state, ReviewState
 from pdd_agent.review.tbd_tracker import TBDTracker
 from schemas.project_input import ProjectInput
@@ -62,6 +63,8 @@ class SectionOrchestrator:
         prompts_dir: Path | None = None,
         calc_result: Any | None = None,
         token_budget: TokenBudget | None = None,
+        enable_judge: bool = False,
+        max_redraft_attempts: int = 3,
     ) -> None:
         self._provider = provider or NoopProvider()
         self._project = project_input
@@ -81,6 +84,8 @@ class SectionOrchestrator:
         self._calc_result = calc_result
         self._budget = token_budget or self._default_budget()
         self._use_v2_prompt = self._should_use_v2()
+        self._enable_judge = enable_judge
+        self._max_redraft_attempts = max(0, max_redraft_attempts)
 
         if hasattr(self._provider, "set_budget"):
             self._provider.set_budget(self._budget)
@@ -424,6 +429,53 @@ class SectionOrchestrator:
             provenance=provenance,
         )
 
+        draft = self._enrich_draft(
+            draft,
+            section_id=section_id,
+            sub_section_id=sub_section_id,
+            sensitivity=sensitivity,
+            content_class=content_class,
+            fact_entries=fact_entries,
+            synthetic=synthetic,
+            provenance=provenance,
+            examples=examples,
+        )
+
+        if self._enable_judge:
+            draft = self._run_judge_redraft_loop(
+                draft=draft,
+                original_prompt=prompt,
+                provenance=provenance,
+                section_id=section_id,
+                sub_section_id=sub_section_id,
+                sensitivity=sensitivity,
+                content_class=content_class,
+                fact_entries=fact_entries,
+                synthetic=synthetic,
+            )
+
+        if self._is_demo_run() and not self._enable_judge:
+            draft.confidence = "HIGH"
+            draft.issues = [
+                issue for issue in draft.issues if not issue.startswith("REVIEW REQUIRED:")
+            ]
+            return self._store_draft(key, draft)
+
+        return self._store_draft(key, draft)
+
+    def _enrich_draft(
+        self,
+        draft: DraftSection,
+        section_id: str,
+        sub_section_id: str | None,
+        sensitivity: str,
+        content_class: str,
+        fact_entries: list[dict[str, Any]],
+        synthetic: list[dict[str, Any]],
+        provenance: list[str],
+        examples: Sequence[Any],
+    ) -> DraftSection:
+        """Attach schema metadata, provenance, and synthetic-guard checks to a draft."""
         draft.section_id = section_id
         draft.sub_section_id = sub_section_id or ""
         output_reference = {
@@ -468,13 +520,6 @@ class SectionOrchestrator:
             if draft.confidence == "HIGH":
                 draft.confidence = "MEDIUM"
 
-        if self._is_demo_run():
-            draft.confidence = "HIGH"
-            draft.issues = [
-                issue for issue in draft.issues if not issue.startswith("REVIEW REQUIRED:")
-            ]
-            return self._store_draft(key, draft)
-
         if blocked_synthetic and sensitivity in ("HIGH", "CRITICAL"):
             draft.confidence = "LOW" if sensitivity == "HIGH" else "UNSUPPORTED"
             paths = ", ".join(item["field_path"] for item in blocked_synthetic)
@@ -486,7 +531,145 @@ class SectionOrchestrator:
                 f"REVIEW REQUIRED: {section_id}{'.' + sub_section_id if sub_section_id else ''} uses synthetic or demo defaults and must stay review-gated."
             )
 
-        return self._store_draft(key, draft)
+        return draft
+
+    def _run_judge_redraft_loop(
+        self,
+        draft: DraftSection,
+        original_prompt: str,
+        provenance: list[str],
+        section_id: str,
+        sub_section_id: str | None,
+        sensitivity: str,
+        content_class: str,
+        fact_entries: list[dict[str, Any]],
+        synthetic: list[dict[str, Any]],
+    ) -> DraftSection:
+        """Judge a draft and auto-redraft up to max attempts if critical findings exist."""
+        judge = LLMJudge(provider_name=getattr(self._provider, "name", "demo"))
+        section_key = f"{section_id}/{sub_section_id or ''}"
+        current_draft = draft
+
+        for attempt in range(1, self._max_redraft_attempts + 1):
+            result = judge.judge_section(current_draft, self._project, self._calc_result)
+            if result.passed:
+                self._run.notes.append(
+                    f"judge: {section_key} passed on attempt {attempt} "
+                    f"(score={result.score}, provider={judge.provider_name})"
+                )
+                return current_draft
+
+            critical = result.categories.get("critical", [])
+            if not critical:
+                self._run.notes.append(
+                    f"judge: {section_key} has advisory findings only on attempt {attempt} "
+                    f"(score={result.score})"
+                )
+                return current_draft
+
+            if attempt == self._max_redraft_attempts:
+                current_draft.confidence = "UNSUPPORTED"
+                current_draft.issues.append(
+                    f"JUDGE REDRAFT FAILED after {self._max_redraft_attempts} attempts: "
+                    f"{'; '.join(critical)}"
+                )
+                self._run.notes.append(
+                    f"judge: {section_key} failed after {self._max_redraft_attempts} attempts; "
+                    f"parked for domain review (tokens_used={self._budget.total_tokens}, "
+                    f"estimated_cost_usd={round(self._budget.estimated_cost_usd, 4)})"
+                )
+                self._park_section_for_domain_review(section_id, sub_section_id or "", critical)
+                return current_draft
+
+            redraft_prompt = self._build_redraft_prompt(original_prompt, result)
+            logger.info(
+                "judge_redraft_attempt",
+                section_key=section_key,
+                attempt=attempt,
+                critical_count=len(critical),
+            )
+            current_draft = self._provider.draft_section(
+                section_id=section_id,
+                sub_section_id=sub_section_id or "",
+                prompt=redraft_prompt,
+                provenance=provenance + [f"[JUDGE: redraft attempt {attempt}]"],
+            )
+            current_draft = self._enrich_draft(
+                current_draft,
+                section_id=section_id,
+                sub_section_id=sub_section_id,
+                sensitivity=sensitivity,
+                content_class=content_class,
+                fact_entries=fact_entries,
+                synthetic=synthetic,
+                provenance=provenance + [f"[JUDGE: redraft attempt {attempt}]"],
+                examples=[],
+            )
+
+        return current_draft
+
+    def _build_redraft_prompt(self, original_prompt: str, judge_result: Any) -> str:
+        """Append judge feedback to the original prompt for a redraft."""
+        feedback_lines: list[str] = []
+        for category in ("critical", "advisory"):
+            for message in judge_result.categories.get(category, []):
+                feedback_lines.append(f"- [{category.upper()}] {message}")
+        feedback = "\n".join(feedback_lines)
+        return (
+            f"{original_prompt}\n\n"
+            "## Prior Judge Feedback — address every CRITICAL item before redrafting\n"
+            f"{feedback}\n\n"
+            "Revise the section to resolve all critical findings. Keep the same section scope, "
+            "preserve required evidence citations, and maintain the anti-hallucination marker style."
+        )
+
+    def _park_section_for_domain_review(
+        self,
+        section_id: str,
+        sub_section_id: str,
+        reasons: list[str],
+    ) -> None:
+        """Log a section state transition to needs-domain-review after judge failure."""
+        try:
+            project_name = (
+                self._project.project.project_name if self._project else "unknown"
+            )
+            store = init_review_state(
+                run_id=self._run_id,
+                project_name=project_name,
+                section_ids=[(section_id, sub_section_id)],
+            )
+            store.set_state(
+                section_id=section_id,
+                sub_section_id=sub_section_id,
+                new_state=ReviewState.NEEDS_DOMAIN_REVIEW,
+                reviewer_notes="Judge critical findings: " + "; ".join(reasons),
+                updated_by="judge",
+            )
+            store.save()
+            logger.info(
+                "judge_parked_section",
+                run_id=self._run_id,
+                section_id=section_id,
+                sub_section_id=sub_section_id,
+            )
+        except Exception as exc:
+            logger.warning(
+                "judge_park_section_failed",
+                run_id=self._run_id,
+                section_id=section_id,
+                sub_section_id=sub_section_id,
+                error=str(exc),
+            )
+
+    def redraft_section(self, section_id: str, sub_section_id: str | None = None) -> DraftSection:
+        """Manually trigger a judge-enabled redraft of an existing section."""
+        previous = self._enable_judge
+        self._enable_judge = True
+        try:
+            return self.draft_section(section_id, sub_section_id, force_regenerate=True)
+        finally:
+            self._enable_judge = previous
 
     def _store_draft(self, key: str, draft: DraftSection) -> DraftSection:
         self._drafted[key] = draft

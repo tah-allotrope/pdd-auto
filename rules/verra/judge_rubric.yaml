@@ -18,15 +18,15 @@ failure_categories:
   critical:
     description: Hard failures that block export or require expert redraft.
     examples:
-      - Evidence citation does not resolve in the evidence registry.
-      - A quantitative claim contradicts the calc engine or ProjectInput.
-      - Unresolved [MISSING] markers in Sections 3-4.
+      - "Evidence citation does not resolve in the evidence registry."
+      - "A quantitative claim contradicts the calc engine or ProjectInput."
+      - "Unresolved [MISSING] markers in Sections 3-4."
   advisory:
     description: Quality issues that do not block export but are surfaced in the reviewer appendix.
     examples:
-      - Section is shorter than schema guidance suggests.
-      - Methodology-dependent section lacks an explicit methodology citation.
-      - [REVIEW REQUIRED] or [INFERENCE] markers are present and disclosed.
+      - "Section is shorter than schema guidance suggests."
+      - "Methodology-dependent section lacks an explicit methodology citation."
+      - "[REVIEW REQUIRED] or [INFERENCE] markers are present and disclosed."
 
 criteria:
   - id: COMPLETENESS
