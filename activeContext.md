@@ -1,8 +1,8 @@
 # PDD Next Level — Internal Service, Section-Review UI, Tinh Onboarding
 
 **Plan:** `plans/2026-07-05-pdd-next-level-plan.md`
-**Status:** PHASE-03 IMPLEMENTATION COMPLETE
-**Last commit:** current working tree
+**Status:** PHASE-05 CONVERGENCE DOC COMPLETE — awaiting API keys + greenfield prospect
+**Last commit:** PHASE-05 convergence doc and activeContext closure (pending)
 
 ## Locked decisions (Grill Me defaults)
 
@@ -26,8 +26,8 @@
   - [x] TASK-03-06: Fix background-run persistence, section-key routing, and retrieval thread-safety issues
   - [x] TASK-03-07: Run `pytest tests/test_service.py -v`
   - [x] TASK-03-08: Run `pytest -m "not corpus" -q` and report result
-- [ ] PHASE-04: Rice / biochar / cookstove corpora, rules, calc engines
-- [ ] PHASE-05: Greenfield proof (Seraphin or substitute) + convergence closure
+- [x] PHASE-04: Rice / biochar / cookstove corpora, rules, calc engines (implementation complete; real registry corpus deferred)
+- [x] PHASE-05: Convergence documentation and status hygiene (Seraphin blocked; Vietnam rice substitute documented in `docs/2026-07-05-convergence.md`)
 
 ## Constraints
 
@@ -36,35 +36,49 @@
 - Minimal server-rendered Jinja2 UI; no build pipeline.
 - Follow existing code style (structlog, Pydantic, dataclasses).
 
-## Blocker
+## Blockers
 
-No `OPENAI_API_KEY` or `ANTHROPIC_API_KEY` available in the environment. Real-LLM draft runs and the provider scorecard cannot proceed without them. Service uses `demo`/`noop` providers only.
+1. No `OPENAI_API_KEY` or `ANTHROPIC_API_KEY` available in the environment. Real-LLM draft runs and the provider scorecard cannot proceed without them. Service uses `demo`/`noop` providers only.
+2. Seraphin greenfield data is externally blocked; the substitute Vietnam rice prospect is documented but not yet run.
+3. Real registered-PDD corpus ingestion (`ingest/registry_download.py`) is a stub; golden tests use synthetic values.
 
 ## Test results
 
 - `pytest tests/test_service.py -v`: **12 passed**
-- `pytest -m "not corpus" -q`: **531 passed, 7 deselected**
+- `pytest -m "not corpus" -q`: **534 passed, 7 deselected**
 
 ## Changed files
 
 - `pyproject.toml` — added `service` optional dependency group (FastAPI, Uvicorn, Jinja2)
+- `src/pdd_agent/llm/anthropic_provider.py` — new Anthropic provider
+- `src/pdd_agent/llm/budget.py` — per-run cost ceiling
+- `src/pdd_agent/review/judge.py` — new LLM-judge module
+- `rules/verra/judge_rubric.yaml` — judge rubric config
+- `src/pdd_agent/agent/section_orchestrator.py` — redraft loop and judge integration
+- `src/pdd_agent/export/docx_export.py` — tiered export gate
+- `src/pdd_agent/cli.py` — `judge` subcommand + provider env wiring
 - `src/pdd_agent/service/main.py` — new FastAPI app, route handlers, background execution, persistence redirection
 - `src/pdd_agent/service/__init__.py` — package marker
 - `src/pdd_agent/service/templates/*.html` — Jinja2 UI templates
 - `src/pdd_agent/service/static/style.css` — minimal service styles
 - `scripts/setup_service.py` — one-command service setup script
 - `src/pdd_agent/service/README.md` — service usage docs
-- `tests/test_service.py` — new API contract tests
+- `src/pdd_agent/calc/methodology.py` — pluggable methodology interface
+- `src/pdd_agent/calc/cookstove_amsiig.py`, `rice_vm0051.py`, `biochar_vm0044.py` — new calc engines
+- `rules/verra/cookstove_amsiig_rules.yaml`, `rice_vm0051_rules.yaml`, `biochar_vm0044_rules.yaml` — per-family rules
+- `tests/test_judge.py`, `tests/test_export_gate.py`, `tests/test_service.py`, `tests/test_cookstove_amsiig.py`, `tests/test_rice_vm0051.py`, `tests/test_biochar_vm0044.py` — new/updated tests
+- `docs/2026-07-05-convergence.md` — PHASE-05 convergence closure doc
 - `activeContext.md` — status updated
 
 ## Review / results
 
-PHASE-03 delivers a runnable local FastAPI service with server-rendered section review and DOCX export, all exercised via `demo` provider tests. Key integration hurdles:
+PHASE-01 through PHASE-04 implementation is complete in code and tests; PHASE-05 is closed out with documentation because the greenfield data is externally blocked.
 
-1. **Persistence paths:** `DraftRun.save` and `ReviewStateStore.save`/`load` hardcode paths relative to their own modules. The service monkeypatches them at import time to use the configurable `PDD_SERVICE_RUNS_DIR` directory (`data/runs` under repo root by default).
-2. **Retrieval thread-safety:** The SQLite-backed retrieval index binds its connection to the creating thread. Because drafting runs in a FastAPI `BackgroundTask`, corpus retrieval is disabled in the service process by patching retrieval helpers to return empty lists and by setting `inject_corpus_retrieval=False`.
-3. **Section-key routing:** Section keys like `1/1.1` contain `/`. FastAPI requires the `:path` converter to capture them correctly.
-4. **State-machine self-transitions:** The section-edit endpoint targets `ready-for-human-edit` even when the section is already in that state. The service skips the transition when current and target states match, persisting the edited text and provenance note without error.
+- **PHASE-01:** Anthropic provider mirrors OpenAI provider structure; per-run cost ceiling enforces `PDD_MAX_COST_USD`. Real-LLM runs are blocked on API keys.
+- **PHASE-02:** Judge rubric, deterministic demo judge, capped redraft loop, and tiered export gate are wired into the orchestrator and exporter.
+- **PHASE-03:** FastAPI service with server-rendered section review and DOCX export runs locally; key integration hurdles were persistence-path redirection, SQLite retrieval thread-safety (corpus retrieval disabled in service), `/:path` section-key routing, and state-machine self-transitions.
+- **PHASE-04:** Pluggable methodology interface added; ACM0022 remains green; AMS-II.G, VM0051, and VM0044 calc engines + rules + golden tests added.
+- **PHASE-05:** Convergence doc written with Seraphin blocked and Vietnam rice prospect named as substitute; `compare_codex_vs_pipeline.py` not run for lack of a shared project.
 
 The service can be started with:
 
