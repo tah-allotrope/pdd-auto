@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard · PDD Agent Service{% endblock %}
+
+{% block content %}
+<h1>PDD Draft Runs</h1>
+
+<section class="card">
+  <h2>Intake</h2>
+  <form action="/api/intake/document" method="post" enctype="multipart/form-data" class="intake-form">
+    <label>
+      Upload document (DOCX/PDF/text)
+      <input type="file" name="file" accept=".docx,.pdf,.txt,.md,.yaml,.yml" required>
+    </label>
+    <input type="hidden" name="provider_name" value="demo">
+    <button type="submit">Extract ProjectInput</button>
+  </form>
+
+  <form action="/api/intake/spreadsheet" method="post" enctype="multipart/form-data" class="intake-form">
+    <label>
+      Upload spreadsheet (optional)
+      <input type="file" name="file" accept=".xlsx,.xls,.csv">
+    </label>
+    <label>
+      Candidate key
+      <input type="text" name="candidate_key" value="soc-son">
+    </label>
+    <button type="submit">Map Spreadsheet</button>
+  </form>
+
+  <form action="/api/runs" method="post" enctype="multipart/form-data" class="intake-form">
+    <label>
+      Start draft from ProjectInput YAML
+      <input type="file" name="project_input_yaml" accept=".yaml,.yml" required>
+    </label>
+    <input type="hidden" name="provider_name" value="demo">
+    <button type="submit">Create Run</button>
+  </form>
+</section>
+
+<section class="card">
+  <h2>Runs</h2>
+  {% if runs %}
+  <table class="run-table">
+    <thead>
+      <tr>
+        <th>Run ID</th>
+        <th>Status</th>
+        <th>Sections approved</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for run in runs %}
+      <tr>
+        <td><code>{{ run.run_id }}</code></td>
+        <td><span class="badge badge-{{ run.status }}">{{ run.status }}</span></td>
+        <td>{{ run.sections_approved }} / {{ run.sections_total }}</td>
+        <td><a href="/runs/{{ run.run_id }}" class="button">Review</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="muted">No runs yet. Upload a ProjectInput YAML to start one.</p>
+  {% endif %}
+</section>
+{% endblock %}

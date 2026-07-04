@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Run {{ run_id }} · PDD Agent Service{% endblock %}
+
+{% block content %}
+<h1>Run <code>{{ run_id }}</code></h1>
+
+<div class="meta-bar">
+  <span><strong>Project:</strong> {{ project_name }}</span>
+  <span><strong>Provider:</strong> {{ provider }}</span>
+  <span><strong>All approved:</strong> {{ "Yes" if all_approved else "No" }}</span>
+</div>
+
+<section class="card">
+  <h2>Sections</h2>
+  {% if sections %}
+  <table class="section-table">
+    <thead>
+      <tr>
+        <th>Section</th>
+        <th>State</th>
+        <th>Confidence</th>
+        <th>Issues</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for s in sections %}
+      <tr>
+        <td><code>{{ s.heading }}</code></td>
+        <td><span class="badge badge-{{ s.state }}">{{ s.state_label }}</span></td>
+        <td>{{ s.confidence }}</td>
+        <td>{{ s.issue_count }}</td>
+        <td><a href="/runs/{{ run_id }}/sections/{{ s.key }}" class="button">Review</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="muted">No sections yet. The run may still be drafting.</p>
+  {% endif %}
+</section>
+
+<section class="card">
+  <h2>Export</h2>
+  <p>
+    <a class="button" href="/api/runs/{{ run_id }}/docx?force=1">Download DOCX (force)</a>
+    <a class="button button-secondary" href="/api/runs/{{ run_id }}/docx">Download DOCX (gated)</a>
+  </p>
+  <p class="muted">Gated export requires all sections to be approved.</p>
+</section>
+{% endblock %}

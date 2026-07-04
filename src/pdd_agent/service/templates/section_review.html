@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Section {{ section_key }} · Run {{ run_id }}{% endblock %}
+
+{% block content %}
+<h1>Section <code>{{ section_key }}</code></h1>
+
+<div class="meta-bar">
+  <span><strong>Run:</strong> <a href="/runs/{{ run_id }}">{{ run_id }}</a></span>
+  <span><strong>State:</strong> <span class="badge badge-{{ state.value }}">{{ state_label }}</span></span>
+  <span><strong>Confidence:</strong> {{ section.confidence }}</span>
+</div>
+
+<section class="card">
+  <h2>Section Text</h2>
+  <form action="/api/runs/{{ run_id }}/sections/{{ section_key }}/edit" method="post" class="edit-form">
+    <textarea name="text" rows="16">{{ section.text }}</textarea>
+    <div class="form-actions">
+      <label>
+        <input type="checkbox" name="approve" value="true">
+        Approve after saving
+      </label>
+      <button type="submit">Save edit</button>
+    </div>
+  </form>
+</section>
+
+<section class="card">
+  <h2>Review Actions</h2>
+  <form action="/api/runs/{{ run_id }}/sections/{{ section_key }}/approve" method="post" class="inline-form">
+    <button type="submit">Approve section</button>
+  </form>
+  <form action="/api/runs/{{ run_id }}/sections/{{ section_key }}/redraft" method="post" class="inline-form">
+    <button type="submit" class="button-secondary">Request redraft</button>
+  </form>
+</section>
+
+{% if section.issues %}
+<section class="card">
+  <h2>Judge / Review Findings</h2>
+  <ul class="issue-list">
+    {% for issue in section.issues %}
+    <li>{{ issue }}</li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+
+{% if reviewer_notes %}
+<section class="card">
+  <h2>Reviewer Notes</h2>
+  <ul class="note-list">
+    {% for note in reviewer_notes %}
+    <li>{{ note }}</li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+
+{% if section.provenance %}
+<section class="card">
+  <h2>Provenance</h2>
+  <ul class="provenance-list">
+    {% for entry in section.provenance %}
+    <li><code>{{ entry }}</code></li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+
+{% if section.synthetic_uses %}
+<section class="card">
+  <h2>Synthetic Uses</h2>
+  <ul class="issue-list">
+    {% for use in section.synthetic_uses %}
+    <li>
+      <code>{{ use.field_path }}</code>
+      {% if use.blocked_review %}(blocked review){% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+{% endblock %}

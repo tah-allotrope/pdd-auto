@@ -12,8 +12,11 @@ Key equations:
 
 from __future__ import annotations
 
+from typing import Any
+
 from pdd_agent.calc import cdm_tool_03, cdm_tool_04, cdm_tool_05, cdm_tool_06, cdm_tool_14
 from pdd_agent.calc.constants import DENSITY_CH4, GWP_CH4
+from pdd_agent.calc.methodology import ComputationResult, ValidationResult
 from pdd_agent.calc.models import ACM0022CalcInput, ACM0022CalcResult, EmissionComponent
 
 
@@ -196,3 +199,87 @@ class ACM0022Calculator:
             calculation_year=self._inp.calculation_year,
             crediting_period_years=self._inp.crediting_period_years,
         )
+
+    # ------------------------------------------------------------------
+    # MethodologyEngine protocol implementation
+    # ------------------------------------------------------------------
+
+    def methodology_id(self) -> str:
+        return "ACM0022"
+
+    def validate_inputs(self, inputs: dict[str, Any]) -> ValidationResult:
+        try:
+            ACM0022CalcInput(**inputs)
+            return ValidationResult(ok=True, errors=[])
+        except Exception as exc:  # noqa: BLE001
+            return ValidationResult(ok=False, errors=[str(exc)])
+
+    def _parse_inputs(self, inputs: dict[str, Any]) -> ACM0022CalcInput:
+        return ACM0022CalcInput(**inputs)
+
+    def _run_calc(self, inputs: dict[str, Any]) -> ACM0022CalcResult:
+        return ACM0022Calculator(self._parse_inputs(inputs)).calculate()
+
+    def compute_baseline(self, inputs: dict[str, Any]) -> ComputationResult:
+        result = self._run_calc(inputs)
+        return ComputationResult(
+            value=result.baseline_emissions_tco2e,
+            unit="tCO2e/year",
+            formula="BE_y = (BE_CH4 + BE_EC) * (1 - RATE_compliance)",
+            provenance=[
+                {"param": "waste_streams", "source": "user_input"},
+                {"param": "biomethanization_fraction", "source": "user_input"},
+                {"param": "grid_emission_factor_tco2_per_mwh", "source": "user_input"},
+            ],
+            notes="FOD methane + displaced grid electricity, discounted for compliance",
+        )
+
+    def compute_project(self, inputs: dict[str, Any]) -> ComputationResult:
+        result = self._run_calc(inputs)
+        return ComputationResult(
+            value=result.project_emissions_tco2e,
+            unit="tCO2e/year",
+            formula="PE_y = PE_EC + PE_FC + PE_CH4 + PE_FLARE",
+            provenance=[
+                {"param": "electricity_consumed_from_grid_mwh_per_year", "source": "user_input"},
+                {"param": "fossil_fuels", "source": "user_input"},
+                {"param": "methane_leakage_fraction", "source": "user_input"},
+                {"param": "fraction_biogas_to_flare", "source": "user_input"},
+            ],
+            notes="Grid consumption, fossil fuel combustion, AD leakage, and incomplete flaring",
+        )
+
+    def compute_leakage(self, inputs: dict[str, Any]) -> ComputationResult:
+        result = self._run_calc(inputs)
+        return ComputationResult(
+            value=result.leakage_tco2e,
+            unit="tCO2e/year",
+            formula="LE_y = LE_RDF + LE_AD",
+            provenance=[
+                {"param": "rdf_exported_tonnes_per_year", "source": "user_input"},
+                {"param": "digestate_stored_anaerobically", "source": "user_input"},
+            ],
+            notes="RDF end-use and digestate storage leakage",
+        )
+
+    def compute_net(self, inputs: dict[str, Any]) -> ComputationResult:
+        result = self._run_calc(inputs)
+        return ComputationResult(
+            value=result.net_emission_reductions_tco2e,
+            unit="tCO2e/year",
+            formula="ER_y = BE_y - PE_y - LE_y",
+            provenance=[
+                {"param": "baseline_emissions", "source": "calc_engine", "value": result.baseline_emissions_tco2e},
+                {"param": "project_emissions", "source": "calc_engine", "value": result.project_emissions_tco2e},
+                {"param": "leakage_emissions", "source": "calc_engine", "value": result.leakage_tco2e},
+            ],
+            notes="Net annual emission reductions before crediting-period scaling",
+        )
+
+    def required_monitoring_params(self, inputs: dict[str, Any]) -> list[dict]:
+        return [
+            {"id": "ACM0022-PARAM-01", "name": "Annual waste throughput", "unit": "tonnes/year", "frequency": "Continuously", "source": "Project records / weighbridge", "section_ref": "5.2"},
+            {"id": "ACM0022-PARAM-02", "name": "Biogas methane concentration", "unit": "% CH4", "frequency": "Monthly or per batch", "source": "Gas composition analysis", "section_ref": "5.2"},
+            {"id": "ACM0022-PARAM-03", "name": "Recovered electricity", "unit": "MWh/year", "frequency": "Continuously", "source": "Electricity metering", "section_ref": "5.2"},
+            {"id": "ACM0022-PARAM-04", "name": "Grid emission factor", "unit": "tCO2e/MWh", "frequency": "Annual update", "source": "ACM0022 default or national grid authority", "section_ref": "4.1"},
+        ]
