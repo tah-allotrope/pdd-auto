@@ -1,0 +1,133 @@
+# Rice cultivation methodology rules for VM0051
+# Version: 0.1.0
+# Scope: VM0051 — Sustainable Agricultural Land Management, rice cultivation
+
+version: "0.1.0"
+bucket: "verra-rice-initial"
+methodologies:
+  VM0051:
+    full_name: "Sustainable Agricultural Land Management"
+    url: "https://verra.org/methodologies/vm0051-sustainable-agricultural-land-management-v2-0/"
+    applicability_conditions:
+      - id: "VM0051-AC-01"
+        text: "The project must implement one or more eligible sustainable agricultural land management practices on rice paddies."
+        evidence_required: ["Farm management records", "Practice adoption documentation"]
+        section_ref: "1.4, 3.2"
+        risk: "HIGH"
+      - id: "VM0051-AC-02"
+        text: "The baseline water regime must be continuously flooded or another documented default regime."
+        evidence_required: ["Historical irrigation records", "Remote sensing / field records"]
+        section_ref: "4.1"
+        risk: "HIGH"
+      - id: "VM0051-AC-03"
+        text: "Project practices must be shown to reduce methane emissions relative to the baseline regime."
+        evidence_required: ["Peer-reviewed scaling factors", "Field measurements"]
+        section_ref: "4.2"
+        risk: "HIGH"
+      - id: "VM0051-AC-04"
+        text: "Project activities must not cause net increase in nitrous oxide or other GHG emissions."
+        evidence_required: ["N2O assessment", "Fertilizer records"]
+        section_ref: "4.3"
+        risk: "MEDIUM"
+    double_counting_risks:
+      - scenario: "Same rice field credited under both VM0051 and another agricultural carbon program"
+        description: >
+          A single parcel of rice land may not generate credits under multiple
+          programs for the same methane reduction.
+        mitigation: >
+          Disclose all program participation and allocate reductions to a single
+          claim.
+        sections_affected: ["1.15", "1.16"]
+    additionality_rules:
+      - rule_id: "VM0051-ADD-01"
+        text: "The project practices must exceed regulatory requirements and common practice in the region."
+        required_evidence: ["Regulatory survey", "Common practice analysis"]
+        section_ref: "3.5"
+    parameters:
+      - id: "VM0051-PARAM-01"
+        name: "Rice cultivated area"
+        unit: "ha"
+        source: "Field records / remote sensing"
+        frequency: "Annual"
+        section_ref: "5.2"
+      - id: "VM0051-PARAM-02"
+        name: "Cultivation period"
+        unit: "days"
+        source: "Agronomic records"
+        frequency: "Per season"
+        section_ref: "5.2"
+      - id: "VM0051-PARAM-03"
+        name: "Water regime practice"
+        unit: "practice"
+        source: "Field monitoring"
+        frequency: "Per season"
+        section_ref: "5.2"
+      - id: "VM0051-PARAM-04"
+        name: "Organic matter management"
+        unit: "practice"
+        source: "Agronomic records"
+        frequency: "Per season"
+        section_ref: "5.2"
+      - id: "VM0051-PARAM-05"
+        name: "Baseline CH4 emission factor"
+        unit: "kg CH4/ha/day"
+        source: "IPCC default / field measurement"
+        frequency: "Per assessment"
+        section_ref: "4.1"
+    formula_references:
+      baseline:
+        - id: "VM0051-BE-01"
+          name: "Baseline methane emissions from flooded rice"
+          equation: "BE = EF_baseline × Area × Days × GWP_CH4 / 1000"
+          formula_ref: "VM0051 baseline + IPCC default EF"
+          calc_module: "pdd_agent.calc.rice_vm0051.RiceVm0051Engine.compute_baseline"
+          section_ref: "4.1"
+      project:
+        - id: "VM0051-PE-01"
+          name: "Project methane emissions after practices"
+          equation: "PE = BE × Π(scaling_factor_i)"
+          formula_ref: "VM0051 project emissions"
+          calc_module: "pdd_agent.calc.rice_vm0051.RiceVm0051Engine.compute_project"
+          section_ref: "4.2"
+      leakage:
+        - id: "VM0051-LE-01"
+          name: "Leakage"
+          equation: "LE = 0"
+          formula_ref: "VM0051 simplified"
+          calc_module: "pdd_agent.calc.rice_vm0051.RiceVm0051Engine.compute_leakage"
+          section_ref: "4.3"
+      net:
+        - id: "VM0051-NET-01"
+          name: "Net emission reductions"
+          equation: "ER = (BE_CH4 - PE_CH4) × GWP_CH4 / 1000"
+          formula_ref: "VM0051 net"
+          calc_module: "pdd_agent.calc.rice_vm0051.RiceVm0051Engine.compute_net"
+          section_ref: "4.4"
+
+safeguards:
+  rice_specific:
+    - safeguard_id: "VM0051-SAFE-01"
+      text: "No unintended increase in N2O emissions from altered water management"
+      assessment_method: "N2O emission factor assessment or measurement"
+      sections_affected: ["4.3"]
+      risk_level: "MEDIUM"
+    - safeguard_id: "VM0051-SAFE-02"
+      text: "No adverse impact on farmer livelihoods or yields"
+      assessment_method: "Yield monitoring and stakeholder consultation"
+      sections_affected: ["2.2", "2.3"]
+      risk_level: "MEDIUM"
+
+compliance_checks:
+  pre_draft:
+    - check_id: "PRE-RICE-001"
+      description: "Confirm baseline water regime is documented for each parcel"
+      severity: "CRITICAL"
+      applies_to: ["VM0051"]
+    - check_id: "PRE-RICE-002"
+      description: "Confirm project practices have documented CH4 reduction factors"
+      severity: "HIGH"
+      applies_to: ["VM0051"]
+  post_draft:
+    - check_id: "POST-RICE-001"
+      description: "Section 4.4 net tCO2e must equal the calc engine output"
+      severity: "CRITICAL"

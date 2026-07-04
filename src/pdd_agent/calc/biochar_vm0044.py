@@ -28,7 +28,7 @@ from pdd_agent.calc.methodology import ComputationResult, ValidationResult
 
 
 # Default stability factors by pyrolysis temperature range.  Higher pyrolysis
-temperatures generally produce more stable (aromatic) carbon.
+# temperatures generally produce more stable (aromatic) carbon.
 _STABILITY_BY_TEMPERATURE: dict[str, float] = {
     "low": 0.60,    # < 400 °C
     "medium": 0.75, # 400–500 °C

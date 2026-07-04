@@ -290,6 +290,27 @@ class DraftRun:
         logger.info("draft_run_saved", run_id=self.run_id, path=str(path))
         return path
 
+    @classmethod
+    def load(cls, run_id: str, output_dir: Path | None = None) -> "DraftRun":
+        if output_dir is None:
+            output_dir = Path(__file__).parent.parent.parent.parent / "data" / "runs"
+        output_dir = Path(output_dir)
+        path = output_dir / f"{run_id}.json"
+        if not path.exists():
+            raise FileNotFoundError(f"Draft run not found for run_id `{run_id}` at `{path}`")
+        with open(path, encoding="utf-8") as f:
+            data = json.load(f)
+
+        sections = [DraftSection(**sec) for sec in data.get("sections", [])]
+        return cls(
+            run_id=data["run_id"],
+            project_name=data.get("project_name", "unknown"),
+            sections=sections,
+            provider=data.get("provider", "noop"),
+            notes=data.get("notes", []),
+            assumption_register=data.get("assumption_register"),
+        )
+
     def summary(self) -> dict[str, Any]:
         total = len(self.sections)
         by_confidence: dict[str, int] = {}

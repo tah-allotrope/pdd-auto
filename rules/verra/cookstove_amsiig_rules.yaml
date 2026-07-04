@@ -1,0 +1,139 @@
+# Cookstove methodology rules for AMS-II.G / Gold Standard
+# Version: 0.1.0
+# Scope: AMS-II.G — Energy efficiency measures in thermal applications of non-renewable biomass
+
+version: "0.1.0"
+bucket: "verra-cookstove-initial"
+methodologies:
+  AMS-II.G:
+    full_name: "Energy efficiency measures in thermal applications of non-renewable biomass"
+    url: "https://cdm.unfccc.int/methodologies/DB/MPY6R2RKD6W8CZKCU2AOMBUQ6BJGCRW2"
+    applicability_conditions:
+      - id: "AMSIIG-AC-01"
+        text: "The project must improve the energy efficiency of thermal energy generation devices used by households or small commercial users."
+        evidence_required: ["Stove performance test report", "Baseline stove description"]
+        section_ref: "1.4, 3.2"
+        risk: "HIGH"
+      - id: "AMSIIG-AC-02"
+        text: "The baseline fuel must be non-renewable biomass (or the non-renewable fraction must be quantified)."
+        evidence_required: ["Non-renewable biomass assessment", "Fuel survey"]
+        section_ref: "4.1"
+        risk: "HIGH"
+      - id: "AMSIIG-AC-03"
+        text: "Project stoves must be shown to achieve lower fuel consumption per unit of useful thermal output than baseline stoves."
+        evidence_required: ["Controlled cooking test / water boiling test", "Usage survey"]
+        section_ref: "4.2"
+        risk: "HIGH"
+      - id: "AMSIIG-AC-04"
+        text: "The project must monitor or survey stove usage to account for actual operating days and continued use."
+        evidence_required: ["Usage monitoring plan", "Spot-check survey records"]
+        section_ref: "5.2"
+        risk: "MEDIUM"
+    double_counting_risks:
+      - scenario: "Same stove efficiency claim under multiple methodologies or programs"
+        description: >
+          A single improved stove may not generate credits under both AMS-II.G and a
+          voluntary program for the same emission reduction.
+        mitigation: >
+          Disclose all carbon programs and ensure exclusive claim to the verified
+          emission reductions.
+        sections_affected: ["1.15", "1.16"]
+    additionality_rules:
+      - rule_id: "AMSIIG-ADD-01"
+        text: "The improved stove must not be mandated by regulation or common practice in the project region."
+        required_evidence: ["Regulatory survey", "Common practice analysis", "Investment analysis if required"]
+        section_ref: "3.5"
+    parameters:
+      - id: "AMSIIG-PARAM-01"
+        name: "Number of operating stoves"
+        unit: "stoves"
+        source: "Distribution records / survey"
+        frequency: "Annual"
+        section_ref: "5.2"
+      - id: "AMSIIG-PARAM-02"
+        name: "Baseline fuel consumption"
+        unit: "kg/day/stove"
+        source: "Baseline household survey"
+        frequency: "Spot-check"
+        section_ref: "4.1"
+      - id: "AMSIIG-PARAM-03"
+        name: "Project fuel consumption"
+        unit: "kg/day/stove"
+        source: "Project household survey / CCT"
+        frequency: "Spot-check"
+        section_ref: "4.2"
+      - id: "AMSIIG-PARAM-04"
+        name: "Fuel net calorific value"
+        unit: "MJ/kg"
+        source: "Laboratory analysis"
+        frequency: "Per batch or annual"
+        section_ref: "4.1"
+      - id: "AMSIIG-PARAM-05"
+        name: "Fuel CO2 emission factor"
+        unit: "kg CO2/MJ"
+        source: "IPCC / methodology default"
+        frequency: "Annual update"
+        section_ref: "4.1"
+      - id: "AMSIIG-PARAM-06"
+        name: "Non-renewable biomass fraction"
+        unit: "fraction"
+        source: "Wood fuel assessment"
+        frequency: "Per assessment"
+        section_ref: "4.1"
+    formula_references:
+      baseline:
+        - id: "AMSIIG-BE-01"
+          name: "Baseline emissions from non-renewable biomass"
+          equation: "BE = Σ(N × baseline_kg/day × days/1000 × NCV × EF × fNRB)"
+          formula_ref: "AMS-II.G Eq.1"
+          calc_module: "pdd_agent.calc.cookstove_amsiig.CookstoveAmsiigEngine.compute_baseline"
+          section_ref: "4.1"
+      project:
+        - id: "AMSIIG-PE-01"
+          name: "Project emissions from remaining non-renewable biomass"
+          equation: "PE = Σ(N × project_kg/day × days/1000 × NCV × EF × fNRB)"
+          formula_ref: "AMS-II.G Eq.2"
+          calc_module: "pdd_agent.calc.cookstove_amsiig.CookstoveAmsiigEngine.compute_project"
+          section_ref: "4.2"
+      leakage:
+        - id: "AMSIIG-LE-01"
+          name: "Leakage"
+          equation: "LE = 0"
+          formula_ref: "AMS-II.G simplified"
+          calc_module: "pdd_agent.calc.cookstove_amsiig.CookstoveAmsiigEngine.compute_leakage"
+          section_ref: "4.3"
+      net:
+        - id: "AMSIIG-NET-01"
+          name: "Net emission reductions"
+          equation: "ER = Σ(fuel_saved_tonnes × NCV × EF_fuel × fNRB) / 1000"
+          formula_ref: "AMS-II.G Eq.3"
+          calc_module: "pdd_agent.calc.cookstove_amsiig.CookstoveAmsiigEngine.compute_net"
+          section_ref: "4.4"
+
+safeguards:
+  cookstove_specific:
+    - safeguard_id: "AMSIIG-SAFE-01"
+      text: "No adverse health or safety effects from improved stove design"
+      assessment_method: "Laboratory emissions and safety test report"
+      sections_affected: ["2.3"]
+      risk_level: "HIGH"
+    - safeguard_id: "AMSIIG-SAFE-02"
+      text: "Stove usage rates are representative and not overstated"
+      assessment_method: "Statistically representative usage survey"
+      sections_affected: ["4.2", "5.2"]
+      risk_level: "HIGH"
+
+compliance_checks:
+  pre_draft:
+    - check_id: "PRE-COOK-001"
+      description: "Confirm non-renewable biomass fraction is documented"
+      severity: "CRITICAL"
+      applies_to: ["AMS-II.G"]
+    - check_id: "PRE-COOK-002"
+      description: "Confirm baseline and project stove performance data exist"
+      severity: "HIGH"
+      applies_to: ["AMS-II.G"]
+  post_draft:
+    - check_id: "POST-COOK-001"
+      description: "Section 4.4 net tCO2e must equal the calc engine output"
+      severity: "CRITICAL"

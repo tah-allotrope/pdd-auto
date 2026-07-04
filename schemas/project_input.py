@@ -98,6 +98,54 @@ class RDFCapacity(BaseModel):
     planned_2035_tpd: float | None = Field(None, ge=0, description="Planned RDF production in 2035 in tonnes per day")
 
 
+class CookstoveFleetEntry(BaseModel):
+    """A single improved-cookstove cohort for AMS-II.G quantification."""
+
+    fuel_type: str = Field(..., description="Baseline fuel type (e.g. wood, charcoal)")
+    stove_count: int = Field(..., gt=0, description="Number of stoves / households")
+    baseline_fuel_kg_per_day_per_stove: float = Field(
+        ..., gt=0, description="Baseline fuel consumption per stove per day (kg/day)"
+    )
+    project_fuel_kg_per_day_per_stove: float = Field(
+        ..., gt=0, description="Improved-stove fuel consumption per stove per day (kg/day)"
+    )
+    operating_days_per_year: int = Field(365, ge=1, le=366)
+    ncv_mj_per_kg: float = Field(..., gt=0, description="Net calorific value (MJ/kg)")
+    ef_kg_co2_per_mj: float = Field(..., gt=0, description="Fuel CO2 emission factor (kg CO2/MJ)")
+    fnrb: float = Field(..., ge=0.0, le=1.0, description="Non-renewable biomass fraction")
+
+
+class RiceCultivationParams(BaseModel):
+    """Rice-cultivation inputs for VM0051 quantification."""
+
+    area_ha: float = Field(..., gt=0, description="Cultivated rice area (ha)")
+    cultivation_days: int = Field(..., ge=1, le=366, description="Flooded/cultivated days per year")
+    baseline_water_regime: str = Field("continuously_flooded", description="Baseline water regime")
+    baseline_ef_kg_ch4_per_ha_per_day: float = Field(
+        1.30, gt=0, description="Baseline CH4 emission factor (kg CH4/ha/day)"
+    )
+    project_practices: list[dict] = Field(
+        default_factory=list,
+        description="Project practices with keys: practice, scaling_factor (optional)",
+    )
+    gwp_ch4: float = Field(28.0, gt=0, description="Methane GWP")
+
+
+class BiocharProductionParams(BaseModel):
+    """Biochar production inputs for VM0044 quantification."""
+
+    feedstock_type: str = Field(..., description="Feedstock type (e.g. wood_chip, rice_husk)")
+    dry_mass_tonnes: float = Field(..., gt=0, description="Dry feedstock mass per year (tonnes)")
+    carbon_fraction: float = Field(..., gt=0, le=1, description="Carbon fraction of dry feedstock")
+    pyrolysis_temperature_c: float = Field(..., gt=0, description="Pyrolysis peak temperature (°C)")
+    stability_factor: float | None = Field(
+        None, gt=0, le=1, description="Optional measured stability fraction"
+    )
+    permanence_factor: float = Field(
+        1.0, ge=0, le=1, description="Discount for uncertainty / reversibility risk"
+    )
+
+
 class ProjectTechnology(BaseModel):
     methodology_ids: list[str] = Field(
         ..., min_length=1, description="VCS methodology IDs (e.g. [ACM0022, ACM0003])"
@@ -109,8 +157,11 @@ class ProjectTechnology(BaseModel):
         "refuse_derived_fuel",
         "mechanical_biological_treatment",
         "combined_wte_ad",
+        "improved_cookstoves",
+        "rice_awd",
+        "biochar_production",
         "other",
-    ] = Field(..., description="Primary waste treatment / energy recovery technology")
+    ] = Field(..., description="Primary project technology")
     waste_type: list[str] = Field(
         ...,
         min_length=1,
@@ -143,6 +194,15 @@ class ProjectTechnology(BaseModel):
     )
     biomethanization_suitable_fraction: float | None = Field(
         None, ge=0, le=1, description="Fraction of waste suitable for biomethanization (0-1)"
+    )
+    cookstove_fleet: list[CookstoveFleetEntry] | None = Field(
+        None, description="Cookstove cohorts for AMS-II.G projects"
+    )
+    rice_cultivation: RiceCultivationParams | None = Field(
+        None, description="Rice cultivation params for VM0051 projects"
+    )
+    biochar_production: BiocharProductionParams | None = Field(
+        None, description="Biochar production params for VM0044 projects"
     )
 
 

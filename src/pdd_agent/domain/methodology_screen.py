@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Any
 
 import structlog
+import yaml
 
 from schemas.project_input import ProjectInput, SuggestedMethodology
 from pdd_agent.llm.provider import BaseProvider
@@ -21,6 +22,7 @@ logger = structlog.get_logger()
 _DATA_DIR = Path(__file__).parent.parent.parent.parent / "data" / "methodologies"
 _VCS_PATH = _DATA_DIR / "verra_vcs_active.json"
 _CDM_PATH = _DATA_DIR / "cdm_active.json"
+_RULES_DIR = Path(__file__).parent.parent.parent.parent / "rules" / "verra"
 
 
 class ScreeningError(Exception):
@@ -28,20 +30,44 @@ class ScreeningError(Exception):
 
 
 class MethodologyDatabase:
-    """Loads and queries methodology data files."""
+    """Loads and queries methodology data files and per-family rule files."""
 
     def __init__(
         self,
         vcs_path: Path | None = None,
         cdm_path: Path | None = None,
+        rules_dir: Path | None = None,
     ) -> None:
         self._vcs_path = vcs_path or _VCS_PATH
         self._cdm_path = cdm_path or _CDM_PATH
+        self._rules_dir = rules_dir or _RULES_DIR
         self._vcs: list[dict[str, Any]] = []
         self._cdm: list[dict[str, Any]] = []
+        self._rules_by_id: dict[str, dict[str, Any]] = {}
+        self._all: list[dict[str, Any]] = []
         self._load()
 
+    def _load_rules(self) -> None:
+        if not self._rules_dir.exists():
+            logger.warning("rules_dir_not_found", path=str(self._rules_dir))
+            return
+        for path in sorted(self._rules_dir.glob("*_rules.yaml")):
+            try:
+                with open(path, encoding="utf-8") as f:
+                    data = yaml.safe_load(f) or {}
+                for mid, mdata in (data.get("methodologies") or {}).items():
+                    self._rules_by_id[mid] = {
+                        **mdata,
+                        "_rules_file": path.name,
+                        "_rules_version": data.get("version", "unknown"),
+                    }
+                logger.info("methodology_rules_loaded", file=path.name, count=len(data.get("methodologies") or {}))
+            except Exception as exc:  # noqa: BLE001
+                logger.warning("methodology_rules_load_failed", file=path.name, error=str(exc))
+
     def _load(self) -> None:
+        self._load_rules()
+
         if self._vcs_path.exists():
             with open(self._vcs_path, encoding="utf-8") as f:
                 data = json.load(f)
@@ -58,15 +84,38 @@ class MethodologyDatabase:
         else:
             logger.warning("cdm_data_not_found", path=str(self._cdm_path))
 
+        # Build a unified, de-duplicated methodology list enriched with rules.
+        seen_ids: set[str] = set()
+        unified: list[dict[str, Any]] = []
+        for m in self._vcs + self._cdm:
+            mid = m["id"]
+            if mid in seen_ids:
+                continue
+            seen_ids.add(mid)
+            enriched = dict(m)
+            rules = self._rules_by_id.get(mid)
+            if rules:
+                enriched.update(rules)
+            unified.append(enriched)
+
+        # Add methodologies that exist only in rules (new families).
+        for mid, rules in self._rules_by_id.items():
+            if mid in seen_ids:
+                continue
+            seen_ids.add(mid)
+            unified.append({
+                "id": mid,
+                "name": rules.get("full_name", mid),
+                "version": rules.get("version"),
+                "category": rules.get("category", "other"),
+                **rules,
+            })
+
+        self._all = unified
+
     @property
     def all_methodologies(self) -> list[dict[str, Any]]:
-        seen_ids: set[str] = set()
-        result: list[dict[str, Any]] = []
-        for m in self._vcs + self._cdm:
-            if m["id"] not in seen_ids:
-                seen_ids.add(m["id"])
-                result.append(m)
-        return result
+        return list(self._all)
 
     @property
     def data_version(self) -> str:
@@ -80,7 +129,10 @@ class MethodologyDatabase:
                 cdm_meta = json.load(f).get("_meta", {})
         vcs_date = vcs_meta.get("last_updated", "unknown")
         cdm_date = cdm_meta.get("last_updated", "unknown")
-        return f"VCS:{vcs_date}, CDM:{cdm_date}"
+        rules_date = ",".join(
+            sorted({r.get("_rules_version", "unknown") for r in self._rules_by_id.values()})
+        ) or "no_rules"
+        return f"VCS:{vcs_date}, CDM:{cdm_date}, RULES:{rules_date}"
 
 
 def _score_technology_match(
@@ -139,7 +191,8 @@ def _score_applicability_conditions(
 
     matches = 0
     for condition in conditions:
-        condition_words = set(condition.lower().split())
+        condition_text = condition["text"] if isinstance(condition, dict) else condition
+        condition_words = set(condition_text.lower().split())
         key_words = {w for w in condition_words if len(w) > 4}
         if not key_words:
             continue

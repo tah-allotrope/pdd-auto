@@ -1,0 +1,132 @@
+# Biochar methodology rules for VM0044
+# Version: 0.1.0
+# Scope: VM0044 — Biochar Utilization in Soil and Non-Soil Applications
+
+version: "0.1.0"
+bucket: "verra-biochar-initial"
+methodologies:
+  VM0044:
+    full_name: "Methodology for Biochar Utilization in Soil and Non-Soil Applications"
+    url: "https://verra.org/methodologies/vm0044-methodology-for-biochar-utilization-in-soil-and-non-soil-applications/"
+    applicability_conditions:
+      - id: "VM0044-AC-01"
+        text: "The project must produce biochar from eligible biomass feedstock via pyrolysis or gasification."
+        evidence_required: ["Feedstock sourcing records", "Pyrolysis technology description"]
+        section_ref: "1.4, 3.2"
+        risk: "HIGH"
+      - id: "VM0044-AC-02"
+        text: "The feedstock must not be diverted from higher-value uses that would cause leakage."
+        evidence_required: ["Feedstock market assessment", "Baseline use documentation"]
+        section_ref: "4.3"
+        risk: "HIGH"
+      - id: "VM0044-AC-03"
+        text: "The stable carbon fraction must be quantified by laboratory analysis or methodology default."
+        evidence_required: ["Biochar analysis report", "Stability assessment"]
+        section_ref: "4.1"
+        risk: "HIGH"
+      - id: "VM0044-AC-04"
+        text: "The biochar must be applied to soil or an eligible non-soil use with long-term storage."
+        evidence_required: ["Application records", "Storage/use contracts"]
+        section_ref: "1.4"
+        risk: "MEDIUM"
+    double_counting_risks:
+      - scenario: "Same biochar carbon removal claimed under multiple registries"
+        description: >
+          A tonne of biochar stable carbon may not generate credits under more than
+          one GHG program.
+        mitigation: >
+          Maintain a credit-ownership registry and disclose all program participation.
+        sections_affected: ["1.15", "1.16"]
+    additionality_rules:
+      - rule_id: "VM0044-ADD-01"
+        text: "The biochar production and use must not be required by law or common practice."
+        required_evidence: ["Regulatory survey", "Common practice analysis", "Investment analysis"]
+        section_ref: "3.5"
+    parameters:
+      - id: "VM0044-PARAM-01"
+        name: "Dry feedstock mass"
+        unit: "tonnes/year"
+        source: "Weighbridge / moisture records"
+        frequency: "Per batch / annual"
+        section_ref: "5.2"
+      - id: "VM0044-PARAM-02"
+        name: "Feedstock carbon fraction"
+        unit: "fraction"
+        source: "Laboratory analysis"
+        frequency: "Per batch / annual"
+        section_ref: "4.1"
+      - id: "VM0044-PARAM-03"
+        name: "Pyrolysis temperature"
+        unit: "°C"
+        source: "Kiln instrumentation"
+        frequency: "Continuous"
+        section_ref: "5.2"
+      - id: "VM0044-PARAM-04"
+        name: "Biochar stability factor"
+        unit: "fraction"
+        source: "Laboratory analysis / methodology default"
+        frequency: "Per assessment"
+        section_ref: "4.1"
+      - id: "VM0044-PARAM-05"
+        name: "Permanence factor"
+        unit: "fraction"
+        source: "Risk assessment"
+        frequency: "Per assessment"
+        section_ref: "4.4"
+    formula_references:
+      baseline:
+        - id: "VM0044-BE-01"
+          name: "Baseline emissions"
+          equation: "BE = 0"
+          formula_ref: "VM0044 carbon removal"
+          calc_module: "pdd_agent.calc.biochar_vm0044.BiocharVm0044Engine.compute_baseline"
+          section_ref: "4.1"
+      project:
+        - id: "VM0044-PE-01"
+          name: "Project emissions"
+          equation: "PE = 0"
+          formula_ref: "VM0044 simplified"
+          calc_module: "pdd_agent.calc.biochar_vm0044.BiocharVm0044Engine.compute_project"
+          section_ref: "4.2"
+      leakage:
+        - id: "VM0044-LE-01"
+          name: "Leakage"
+          equation: "LE = 0"
+          formula_ref: "VM0044 simplified"
+          calc_module: "pdd_agent.calc.biochar_vm0044.BiocharVm0044Engine.compute_leakage"
+          section_ref: "4.3"
+      net:
+        - id: "VM0044-NET-01"
+          name: "Net carbon dioxide removal"
+          equation: "Stable CO2e = Dry_mass × Carbon_fraction × Stability_factor × (44/12) × Permanence_factor"
+          formula_ref: "VM0044 net"
+          calc_module: "pdd_agent.calc.biochar_vm0044.BiocharVm0044Engine.compute_net"
+          section_ref: "4.4"
+
+safeguards:
+  biochar_specific:
+    - safeguard_id: "VM0044-SAFE-01"
+      text: "No increase in feedstock harvesting that degrades ecosystems"
+      assessment_method: "Feedstock sustainability assessment"
+      sections_affected: ["2.3", "4.3"]
+      risk_level: "HIGH"
+    - safeguard_id: "VM0044-SAFE-02"
+      text: "Biochar does not contain contaminants above acceptable thresholds"
+      assessment_method: "Biochar contaminant testing"
+      sections_affected: ["2.3"]
+      risk_level: "MEDIUM"
+
+compliance_checks:
+  pre_draft:
+    - check_id: "PRE-BIO-001"
+      description: "Confirm feedstock baseline use and leakage assessment are documented"
+      severity: "CRITICAL"
+      applies_to: ["VM0044"]
+    - check_id: "PRE-BIO-002"
+      description: "Confirm stable carbon factor is supported by lab data or methodology default"
+      severity: "HIGH"
+      applies_to: ["VM0044"]
+  post_draft:
+    - check_id: "POST-BIO-001"
+      description: "Section 4.4 net tCO2e must equal the calc engine output"
+      severity: "CRITICAL"
