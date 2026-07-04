@@ -27,13 +27,64 @@ from pdd_agent.agent.section_orchestrator import SectionOrchestrator
 from pdd_agent.export.docx_export import export_run_to_docx
 from pdd_agent.ingest.extract import extract_project_input
 from pdd_agent.llm.provider import DemoProvider, get_provider_registry
+from pdd_agent.agent import section_orchestrator as orchestrator_module
+from pdd_agent.llm.provider import DraftRun
 from pdd_agent.phase06.spreadsheet_mapper import generate_project_artifacts
+from pdd_agent.retrieval import search as retrieval_search
 from pdd_agent.review.states import ReviewState, ReviewStateStore, init_review_state
 from schemas.project_input import ProjectInput
 
 logger = structlog.get_logger()
 
+# The service runs drafting in background threads. The retrieval index
+# singleton binds its SQLite connection to the creating thread, so we
+# disable corpus retrieval entirely in the service process (demo/noop
+# providers do not require it anyway).
+for _module in (retrieval_search, orchestrator_module):
+    _module.get_examples_for_section = lambda *args, **kwargs: []
+    _module.get_section_heading_examples = lambda *args, **kwargs: []
+
 REPO_ROOT = Path(__file__).resolve().parents[3]
+
+
+# Redirect DraftRun / ReviewStateStore persistence to the service runs dir
+# so that the ``PDD_SERVICE_RUNS_DIR`` override is respected everywhere.
+def _service_runs_dir() -> Path:
+    return Path(os.environ.get("PDD_SERVICE_RUNS_DIR", REPO_ROOT / "data" / "runs"))
+
+
+_original_draft_run_save = DraftRun.save
+
+
+def _draft_run_save(self: DraftRun, output_dir: Path | None = None) -> Path:
+    return _original_draft_run_save(self, output_dir=output_dir or _service_runs_dir())
+
+
+DraftRun.save = _draft_run_save  # type: ignore[method-assign]
+
+_original_review_state_save = ReviewStateStore.save
+
+
+def _review_state_save(self: ReviewStateStore, output_dir: Path | None = None) -> Path:
+    return _original_review_state_save(self, output_dir=output_dir or _service_runs_dir())
+
+
+ReviewStateStore.save = _review_state_save  # type: ignore[method-assign]
+
+_original_review_state_load = ReviewStateStore.load
+
+
+def _review_state_load(
+    cls: type[ReviewStateStore], run_id: str, output_dir: Path | None = None
+) -> ReviewStateStore:
+    # ``_original_review_state_load`` is already a bound classmethod, so do
+    # not pass ``cls`` explicitly.
+    return _original_review_state_load(
+        run_id, output_dir=output_dir or _service_runs_dir()
+    )
+
+
+ReviewStateStore.load = classmethod(_review_state_load)  # type: ignore[method-assign]
 RUNS_DIR = REPO_ROOT / "data" / "runs"
 TEMPLATES_DIR = Path(__file__).parent / "templates"
 STATIC_DIR = Path(__file__).parent / "static"
@@ -199,6 +250,14 @@ def _execute_run(run_id: str, project_input_path: Path, provider_name: str) -> N
     try:
         logger.info("service_run_start", run_id=run_id, provider=provider_name)
         project_input = _load_project_input(project_input_path)
+        # Disable corpus retrieval so background threads do not reuse a
+        # SQLite connection created in the request thread.
+        if project_input.generation_controls is None:
+            from schemas.project_input import GenerationControls
+
+            project_input.generation_controls = GenerationControls()
+        project_input.generation_controls.inject_corpus_retrieval = False
+
         provider = _get_provider(provider_name)
         orchestrator = SectionOrchestrator(
             provider=provider,
@@ -247,7 +306,7 @@ def dashboard(request: Request):
                 runs.append(status)
             except HTTPException:
                 continue
-    return templates.TemplateResponse("dashboard.html", {"request": request, "runs": runs})
+    return templates.TemplateResponse(request, "dashboard.html", {"runs": runs})
 
 
 @app.get("/runs/{run_id}", response_class=HTMLResponse)
@@ -273,9 +332,9 @@ def run_detail(request: Request, run_id: str):
         )
 
     return templates.TemplateResponse(
+        request,
         "run_detail.html",
         {
-            "request": request,
             "run_id": run_id,
             "project_name": run_data.get("project_name", "Unknown Project"),
             "provider": run_data.get("provider", "unknown"),
@@ -285,7 +344,7 @@ def run_detail(request: Request, run_id: str):
     )
 
 
-@app.get("/runs/{run_id}/sections/{section_key}", response_class=HTMLResponse)
+@app.get("/runs/{run_id}/sections/{section_key:path}", response_class=HTMLResponse)
 def section_review_page(request: Request, run_id: str, section_key: str):
     run_data = _load_run_json(run_id)
     section = _section_summary(run_data, section_key)
@@ -293,9 +352,9 @@ def section_review_page(request: Request, run_id: str, section_key: str):
     state_obj = store.sections.get(section_key)
 
     return templates.TemplateResponse(
+        request,
         "section_review.html",
         {
-            "request": request,
             "run_id": run_id,
             "section_key": section_key,
             "section": section,
@@ -365,12 +424,16 @@ def api_intake_spreadsheet(
             )
         workbook_path = workbooks[0]
 
-    mapping_path = Path(mapping_config) if mapping_config else None
-    artifacts = generate_project_artifacts(
-        workbook_path=workbook_path,
-        mapping_config_path=mapping_path,
-        candidate_key=candidate_key,
-    )
+    output_dir = REPO_ROOT / "data" / "source_inputs" / "spreadsheet_service"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    kwargs: dict[str, Any] = {
+        "workbook_path": workbook_path,
+        "candidate_key": candidate_key,
+        "output_dir": output_dir,
+    }
+    if mapping_config:
+        kwargs["mapping_config_path"] = Path(mapping_config)
+    artifacts = generate_project_artifacts(**kwargs)
     return {
         "project_yaml_path": str(artifacts.project_yaml_path),
         "assumptions_yaml_path": str(artifacts.assumptions_yaml_path),
@@ -457,7 +520,7 @@ def api_get_run(run_id: str):
     }
 
 
-@app.get("/api/runs/{run_id}/sections/{section_key}")
+@app.get("/api/runs/{run_id}/sections/{section_key:path}")
 def api_get_section(run_id: str, section_key: str):
     """Get section detail: state, judge findings, provenance, text."""
     run_data = _load_run_json(run_id)
@@ -481,7 +544,7 @@ def api_get_section(run_id: str, section_key: str):
     }
 
 
-@app.post("/api/runs/{run_id}/sections/{section_key}/approve")
+@app.post("/api/runs/{run_id}/sections/{section_key:path}/approve")
 def api_approve_section(run_id: str, section_key: str):
     """Approve a section."""
     run_data = _load_run_json(run_id)
@@ -499,7 +562,7 @@ def api_approve_section(run_id: str, section_key: str):
     return {"run_id": run_id, "section_key": section_key, "state": "approved"}
 
 
-@app.post("/api/runs/{run_id}/sections/{section_key}/edit")
+@app.post("/api/runs/{run_id}/sections/{section_key:path}/edit")
 def api_edit_section(
     run_id: str,
     section_key: str,
@@ -532,10 +595,14 @@ def api_edit_section(
 
     target_state = ReviewState.APPROVED if approve else ReviewState.READY_FOR_HUMAN_EDIT
     note = "Edited via web UI" + (" and approved" if approve else "")
-    ok, msg = store.set_state(section_id, sub_section_id, target_state, reviewer_notes=note)
-    if not ok:
-        # Still persist text even if state transition failed.
-        raise HTTPException(status_code=400, detail=msg)
+    state_obj = store.get_or_create(section_id, sub_section_id)
+    if state_obj.state != target_state:
+        ok, msg = store.set_state(section_id, sub_section_id, target_state, reviewer_notes=note)
+        if not ok:
+            # Still persist text even if state transition failed.
+            raise HTTPException(status_code=400, detail=msg)
+    else:
+        store.add_note(section_id, sub_section_id, note)
     _save_review_state(store)
 
     return {
@@ -547,7 +614,7 @@ def api_edit_section(
     }
 
 
-@app.post("/api/runs/{run_id}/sections/{section_key}/redraft")
+@app.post("/api/runs/{run_id}/sections/{section_key:path}/redraft")
 def api_redraft_section(
     run_id: str,
     section_key: str,
