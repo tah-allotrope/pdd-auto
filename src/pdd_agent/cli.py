@@ -26,6 +26,28 @@ from pdd_agent.phase06.vietnam_workflow import run_vietnam_pdd_workflow
 from schemas.project_input import ProjectInput
 
 
+def _configure_api_provider(provider_name: str) -> None:
+    """Configure an API-backed provider from environment variables if needed."""
+    if provider_name not in {"openai", "anthropic"}:
+        return
+
+    import os
+
+    api_key = os.environ.get(f"{provider_name.upper()}_API_KEY")
+    if not api_key:
+        return
+
+    config = ModelConfig(
+        provider_name=provider_name,
+        model_name=os.environ.get(f"{provider_name.upper()}_MODEL"),
+        api_key=api_key,
+        base_url=os.environ.get(f"{provider_name.upper()}_BASE_URL"),
+        max_tokens=int(os.environ.get(f"{provider_name.upper()}_MAX_TOKENS", "4000")),
+        temperature=float(os.environ.get(f"{provider_name.upper()}_TEMPERATURE", "0.1")),
+    )
+    configure_provider(config)
+
+
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="pdd-agent",
@@ -68,7 +90,7 @@ def _build_parser() -> argparse.ArgumentParser:
     draft_parser.add_argument(
         "--provider",
         default="noop",
-        help="Drafting provider name, including corpus for deterministic adaptation (default: noop)",
+        help="Drafting provider name: noop, demo, corpus, openai, anthropic (default: noop)",
     )
 
     review_parser = sub.add_parser("review", help="Run review checks on a draft run")
@@ -145,7 +167,7 @@ def _build_parser() -> argparse.ArgumentParser:
     benchmark_parser.add_argument(
         "--provider",
         default="demo",
-        help="LLM provider name for benchmark drafting (default: demo)",
+        help="LLM provider name for benchmark drafting: demo, openai, anthropic (default: demo)",
     )
     benchmark_parser.add_argument(
         "--demo-output-dir",
@@ -216,7 +238,7 @@ def _build_parser() -> argparse.ArgumentParser:
     vietnam_run_parser.add_argument(
         "--provider",
         default="noop",
-        help="LLM provider name for drafting (default: noop)",
+        help="LLM provider name for drafting: noop, demo, corpus, openai, anthropic (default: noop)",
     )
     vietnam_run_parser.add_argument(
         "--review-output-dir",
@@ -240,7 +262,7 @@ def _build_parser() -> argparse.ArgumentParser:
     extract_parser.add_argument(
         "--provider",
         default="noop",
-        help="LLM provider name (default: noop)",
+        help="LLM provider name: noop, openai, anthropic (default: noop)",
     )
     extract_parser.add_argument(
         "--output", "-o", help="Optional output YAML path for extracted ProjectInput"
@@ -256,7 +278,7 @@ def _build_parser() -> argparse.ArgumentParser:
     screen_parser.add_argument(
         "--provider",
         default="noop",
-        help="Provider for LLM applicability analysis; noop uses deterministic screening",
+        help="Provider for LLM applicability analysis: noop, openai, anthropic (noop = deterministic)",
     )
 
     draft_parser.add_argument(
@@ -356,8 +378,9 @@ def _run_demo_setup(args, log) -> None:
 
 
 def _run_draft(args, log) -> None:
-    from pdd_agent.llm.provider import get_provider_registry
+    from pdd_agent.llm.provider import configure_provider, get_provider_registry, ModelConfig
 
+    _configure_api_provider(args.provider)
     provider = get_provider_registry().get(args.provider)
 
     if hasattr(args, "from_doc") and args.from_doc:
@@ -472,6 +495,7 @@ def _run_demo_config(args, log) -> None:
 
 
 def _run_benchmark(args, log) -> None:
+    _configure_api_provider(args.provider)
     artifacts = run_demo_benchmark(
         project_input_path=Path(args.input),
         reference_norm_path=Path(args.reference) if args.reference else None,
@@ -524,6 +548,7 @@ def _run_map_spreadsheet(args, log) -> None:
 
 
 def _run_vietnam_pdd(args, log) -> None:
+    _configure_api_provider(args.provider)
     artifacts = run_vietnam_pdd_workflow(
         mapping_config_path=Path(args.mapping_config),
         cache_dir=Path(args.cache_dir),
@@ -553,6 +578,8 @@ def _run_vietnam_pdd(args, log) -> None:
 def _run_extract(args, log) -> None:
     from pdd_agent.ingest.extract import extract_project_input
     from pdd_agent.llm.provider import get_provider_registry
+
+    _configure_api_provider(args.provider)
 
     doc_path = Path(args.file)
     if not doc_path.exists():
@@ -589,6 +616,8 @@ def _run_extract(args, log) -> None:
 def _run_screen(args, log) -> None:
     from pdd_agent.domain.methodology_screen import screen_methodologies
     from pdd_agent.llm.provider import get_provider_registry
+
+    _configure_api_provider(args.provider)
 
     file_path = Path(args.file)
     if not file_path.exists():

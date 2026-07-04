@@ -28,24 +28,29 @@ class CallRecord:
     cost_usd: float = 0.0
 
 
-# Pricing per 1M tokens (GPT-4o as of 2025)
+# Pricing per 1M tokens (approximate as of 2025)
 _DEFAULT_PRICING = {
     "gpt-4o": {"input": 2.50, "output": 10.00},
     "gpt-4o-mini": {"input": 0.15, "output": 0.60},
     "gpt-4-turbo": {"input": 10.00, "output": 30.00},
+    "claude-sonnet-5": {"input": 3.00, "output": 15.00},
+    "claude-opus-4-8": {"input": 15.00, "output": 75.00},
+    "claude-haiku-4-5-20251001": {"input": 0.25, "output": 1.25},
 }
 
 
 @dataclass
 class TokenBudget:
-    """Tracks token usage against a per-run budget.
+    """Tracks token usage and cost against a per-run budget.
 
     Args:
         max_tokens: Hard limit for total tokens (input + output).
+        max_cost_usd: Hard limit for total estimated cost.
         warning_threshold: Fraction at which a warning is logged (default 0.8).
     """
 
     max_tokens: int = 500_000
+    max_cost_usd: float | None = None
     warning_threshold: float = 0.8
     calls: list[CallRecord] = field(default_factory=list)
     _warning_emitted: bool = field(default=False, repr=False)
@@ -86,6 +91,12 @@ class TokenBudget:
             raise BudgetExhaustedError(
                 f"Token budget exhausted: {self.total_tokens:,} / {self.max_tokens:,} "
                 f"({len(self.calls)} calls, ${self.estimated_cost_usd:.4f})"
+            )
+        if self.max_cost_usd is not None and self.estimated_cost_usd >= self.max_cost_usd:
+            raise BudgetExhaustedError(
+                f"Cost budget exhausted: ${self.estimated_cost_usd:.4f} / "
+                f"${self.max_cost_usd:.4f} ({len(self.calls)} calls, "
+                f"{self.total_tokens:,} tokens)"
             )
         if not self._warning_emitted and self.utilization >= self.warning_threshold:
             self._warning_emitted = True
@@ -137,6 +148,7 @@ class TokenBudget:
         """Return a summary dict suitable for run metadata."""
         return {
             "max_tokens": self.max_tokens,
+            "max_cost_usd": self.max_cost_usd,
             "total_input_tokens": self.total_input_tokens,
             "total_output_tokens": self.total_output_tokens,
             "total_tokens": self.total_tokens,
@@ -145,4 +157,8 @@ class TokenBudget:
             "estimated_cost_usd": round(self.estimated_cost_usd, 6),
             "num_calls": len(self.calls),
             "exhausted": self.is_exhausted,
+            "cost_ceiling_hit": (
+                self.max_cost_usd is not None
+                and self.estimated_cost_usd >= self.max_cost_usd
+            ),
         }

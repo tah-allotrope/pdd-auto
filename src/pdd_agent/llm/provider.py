@@ -208,6 +208,10 @@ def configure_provider(config: ModelConfig) -> None:
         from pdd_agent.llm.openai_provider import OpenAIProvider
 
         registry.register("openai", OpenAIProvider(config))
+    elif config.provider_name == "anthropic":
+        from pdd_agent.llm.anthropic_provider import AnthropicProvider
+
+        registry.register("anthropic", AnthropicProvider(config))
     elif config.provider_name == "ollama":
         from pdd_agent.llm.ollama_provider import OllamaProvider
 

@@ -79,13 +79,31 @@ class SectionOrchestrator:
         )
         self._drafted: dict[str, DraftSection] = {}
         self._calc_result = calc_result
-        self._budget = token_budget or TokenBudget()
+        self._budget = token_budget or self._default_budget()
         self._use_v2_prompt = self._should_use_v2()
 
         if hasattr(self._provider, "set_budget"):
             self._provider.set_budget(self._budget)
         if hasattr(self._provider, "set_project_input"):
             self._provider.set_project_input(self._project)
+
+    def _default_budget(self) -> TokenBudget:
+        import os
+
+        max_tokens = os.environ.get("PDD_MAX_TOKENS")
+        max_cost = os.environ.get("PDD_MAX_COST_USD")
+        kwargs: dict[str, Any] = {}
+        if max_tokens:
+            try:
+                kwargs["max_tokens"] = int(max_tokens)
+            except ValueError:
+                logger.warning("invalid_pdd_max_tokens", value=max_tokens)
+        if max_cost:
+            try:
+                kwargs["max_cost_usd"] = float(max_cost)
+            except ValueError:
+                logger.warning("invalid_pdd_max_cost_usd", value=max_cost)
+        return TokenBudget(**kwargs)
 
     def _is_demo_run(self) -> bool:
         return getattr(self._provider, "name", "") == "demo"
@@ -502,6 +520,7 @@ class SectionOrchestrator:
             run_id=self._run_id,
             project=self._project.project.project_name if self._project else "unknown",
             budget_max=self._budget.max_tokens,
+            budget_max_cost_usd=self._budget.max_cost_usd,
             use_v2_prompt=self._use_v2_prompt,
             calc_injected=self._should_inject_calc(),
         )
@@ -513,6 +532,7 @@ class SectionOrchestrator:
             sections=len(self._run.sections),
             tokens_used=self._budget.total_tokens,
             budget_utilization=f"{self._budget.utilization:.1%}",
+            estimated_cost_usd=round(self._budget.estimated_cost_usd, 4),
         )
         return self._run
 
