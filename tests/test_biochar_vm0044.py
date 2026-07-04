@@ -1,4 +1,16 @@
-"""Golden tests for the VM0044 biochar calc engine."""
+"""Golden tests for the VM0044 biochar calc engine.
+
+Formula reference: Verra VM0044 "Methodology for Biochar Utilization in Soil and
+Non-Soil Applications". Net carbon dioxide removal is computed as:
+
+    stable_C_tonnes  = dry_mass_tonnes × carbon_fraction × stability_factor
+    net_tCO2e_year   = stable_C_tonnes × (44/12) × permanence_factor
+
+The stability factor is a function of pyrolysis temperature and feedstock;
+the values used here fall within the VM0044 default ranges. The golden numbers
+below are synthetic-but-documented; replacing them with a registered VM0044
+PDD's published removals is deferred until registry corpus ingestion is complete.
+"""
 
 from __future__ import annotations
 
@@ -83,3 +95,23 @@ class TestBiocharGolden:
         assert len(params) >= 4
         ids = {p["id"] for p in params}
         assert "VM0044-PARAM-01" in ids
+
+    def test_registered_pdd_reference_shape(self, engine):
+        """Shape check for a real registered VM0044 PDD once data is available.
+
+        When a registered biochar project is ingested, this test should be
+        replaced with an assertion against the PDD's published annual removals.
+        For now it verifies the engine handles a realistic multi-feedstock project.
+        """
+        multi_feedstock_input = {
+            "feedstock_type": "agricultural_residue",
+            "dry_mass_tonnes": 2_500.0,
+            "carbon_fraction": 0.50,
+            "pyrolysis_temperature_c": 550.0,
+            "stability_factor": 0.85,
+            "permanence_factor": 1.0,
+            "crediting_period_years": 5,
+        }
+        net = engine.compute_net(multi_feedstock_input)
+        assert net.value > 0
+        assert net.unit == "tCO2e/year"

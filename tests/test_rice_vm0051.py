@@ -96,3 +96,28 @@ class TestRiceGolden:
         assert len(params) >= 4
         ids = {p["id"] for p in params}
         assert "VM0051-PARAM-01" in ids
+
+    def test_registered_pdd_reference_shape(self, engine):
+        """Shape check for a real registered PDD once registry data is available.
+
+        When a registered VM0051 rice project is ingested, this test should be
+        replaced with an assertion against the PDD's published annual ERs.
+        For now it verifies the engine handles a realistic multi-practice project.
+        """
+        multi_practice_input = {
+            "area_ha": 500.0,
+            "cultivation_days": 110,
+            "baseline_water_regime": "continuously_flooded",
+            "baseline_ef_kg_ch4_per_ha_per_day": 1.20,
+            "project_practices": [
+                {"practice": "alternate_wetting_drying"},
+                {"practice": "dry_seeding"},
+                {"practice": "organic_matter_management"},
+            ],
+            "gwp_ch4": 28.0,
+            "crediting_period_years": 7,
+        }
+        net = engine.compute_net(multi_practice_input)
+        assert net.value > 0
+        assert net.unit == "tCO2e/year"
+
