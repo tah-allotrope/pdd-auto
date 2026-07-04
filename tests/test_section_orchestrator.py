@@ -310,7 +310,7 @@ class TestSectionOrchestratorRedraft:
 
     def test_manual_redraft_section_invokes_judge(self):
         orch = SectionOrchestrator()
-        first = orch.draft_section("1", "1.1")
+        _first = orch.draft_section("1", "1.1")
         second = orch.redraft_section("1", "1.1")
         assert second.section_id == "1"
         assert second.sub_section_id == "1.1"

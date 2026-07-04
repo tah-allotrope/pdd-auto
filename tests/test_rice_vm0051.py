@@ -1,4 +1,18 @@
-"""Golden tests for the VM0051 rice cultivation calc engine."""
+"""Golden tests for the VM0051 rice cultivation calc engine.
+
+Formula reference: Verra VM0051 "Methodology for Improved Agricultural Land Management"
+and IPCC 2019 Refinement Wetlands Supplement default EF for flooded rice.
+
+    Baseline CH4 = area_ha × cultivation_days × EF_kg_CH4_per_ha_per_day
+    Project CH4  = Baseline CH4 × scaling_factor(practices)
+    ER tCO2e     = (Baseline CH4 - Project CH4) × GWP_CH4 / 1000
+
+Scaling factors for alternate wetting and drying (AWD) and dry seeding are
+taken from the VM0051 guidance range. The golden numbers below are
+synthetic-but-documented; replacing them with a registered VM0051 PDD's
+published emission reductions is deferred until registry corpus ingestion
+is complete.
+"""
 
 from __future__ import annotations
 
