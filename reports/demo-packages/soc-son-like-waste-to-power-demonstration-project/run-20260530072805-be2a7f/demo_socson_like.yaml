@@ -1,0 +1,87 @@
+project:
+  project_name: Soc Son-like Waste-to-Power Demonstration Project
+  project_id_vcs: null
+  proponent_name: Soc Son Demo Project Company
+  proponent_contact_email: climate-demo@example.com
+  other_entities:
+  - Municipal waste collection authority
+  ownership: The project proponent owns and operates the WTE facility and the resulting
+    carbon credits.
+location:
+  country: Vietnam
+  region: Hanoi
+  city: Soc Son
+  latitude: 21.259
+  longitude: 105.848
+  landfill_latitude: 21.275
+  landfill_longitude: 105.86
+dates:
+  start_date: '2024-01-01'
+  crediting_period_start: '2026-01-01'
+  crediting_period_years: 10
+  project_scale_small: false
+technology:
+  methodology_ids:
+  - ACM0022
+  technology_type: incineration_with_energy_recovery
+  waste_type:
+  - municipal_solid_waste
+  annual_waste_throughput: 182500.0
+  installed_capacity_mw: 9.0
+  energy_generation_mwh_year: 54000.0
+  tip_fee_usd_per_tonne: 18.0
+  landfill_diversion_claim: true
+  fuel_substitution_claim: false
+methodology_applicability:
+  eligibility_checklist:
+    waste would otherwise be landfilled: true
+    project treats municipal solid waste: true
+    electricity displacement is eligible: true
+  deviation_from_methodology: null
+quantification:
+  baseline_emissions_tco2e_per_year: 98000.0
+  project_emissions_tco2e_per_year: 21000.0
+  leakage_tco2e_per_year: 2000.0
+  net_emissions_tco2e_per_year: 75000.0
+  grid_emission_factor: 0.92
+  grid_emission_factor_source: national grid authority 2025 emission factor report
+  methane_capture_rate: 0.2
+  methane_generation_factor: 0.06
+  crediting_period_total_tco2e: 750000.0
+monitoring:
+  parameters_monitored:
+  - name: Waste throughput
+    unit: tonnes/day
+    frequency: daily
+    method: weighbridge
+    data_source: facility operations log
+  - name: Net electricity exported
+    unit: MWh
+    frequency: monthly
+    method: revenue meter
+    data_source: grid export statement
+  monitoring_equipment:
+  - Calibrated weighbridge
+  - Revenue-grade electricity meter
+  data_management: Operations and monitoring data are logged digitally, reviewed monthly,
+    and archived for verification.
+safeguards:
+  no_net_harm_statement: A no-net-harm assessment has been completed for the demonstration
+    case.
+  stakeholder_consultation_completed: true
+  stakeholder_consultation_date: '2025-09-15'
+  environmental_impact_assessment: true
+  eia_reference: Hanoi WTE EIA permit 2025-SS-17
+compliance_and_ownership:
+  no_participation_other_programs: true
+  no_other_forms_of_credit: true
+  other_ghg_programs: []
+  credit_ownership_statement: The project proponent retains exclusive ownership of
+    the environmental attributes and carbon credits.
+  double_counting_risk: false
+sustainable_development:
+  sd_contributions:
+  - Improves municipal waste handling
+  - Reduces landfill methane emissions
+  - Supplies lower-carbon electricity to the grid
+  sd_comments: This demonstration input is intentionally conservative and reviewable.

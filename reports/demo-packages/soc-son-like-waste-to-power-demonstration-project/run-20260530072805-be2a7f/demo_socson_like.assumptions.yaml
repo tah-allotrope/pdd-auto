@@ -1,0 +1,209 @@
+candidate_key: soc-son-demo
+source_snapshot:
+  source_type: curated_demo_fixture
+  project_input: configs/projects/demo_socson_like.yaml
+assumptions:
+- field_path: project.project_name
+  value: Soc Son-like Waste-to-Power Demonstration Project
+  source_type: demo_curated
+  rationale: Curated Soc Son-like synthetic project name for client-demo output.
+  confidence: high
+- field_path: project.project_id_vcs
+  value: null
+  source_type: demo_curated
+  rationale: Demo fixture intentionally omits a live registry identifier.
+  confidence: medium
+- field_path: project.proponent_name
+  value: Soc Son Demo Project Company
+  source_type: demo_curated
+  rationale: Curated synthetic project company for the demo fixture.
+  confidence: high
+- field_path: project.proponent_contact_email
+  value: climate-demo@example.com
+  source_type: demo_curated
+  rationale: Synthetic contact endpoint reserved for demo use only.
+  confidence: high
+- field_path: project.other_entities
+  value:
+  - Municipal waste collection authority
+  source_type: demo_curated
+  rationale: Curated synthetic partner list for the demo fixture.
+  confidence: high
+- field_path: project.ownership
+  value: The project proponent owns and operates the WTE facility and the resulting
+    carbon credits.
+  source_type: demo_curated
+  rationale: Curated ownership statement aligned to the demo-only project narrative.
+  confidence: high
+- field_path: location.country
+  value: Vietnam
+  source_type: demo_curated
+  rationale: Curated location used for the Soc Son-like demo fixture.
+  confidence: high
+- field_path: location.region
+  value: Hanoi
+  source_type: demo_curated
+  rationale: Curated region used consistently across the demo fixture.
+  confidence: high
+- field_path: location.city
+  value: Soc Son
+  source_type: demo_curated
+  rationale: Curated city used consistently across the demo fixture.
+  confidence: high
+- field_path: location.latitude
+  value: 21.259
+  source_type: demo_curated
+  rationale: Curated decimal latitude for the synthetic demo site.
+  confidence: high
+- field_path: location.longitude
+  value: 105.848
+  source_type: demo_curated
+  rationale: Curated decimal longitude for the synthetic demo site.
+  confidence: high
+- field_path: location.landfill_latitude
+  value: 21.275
+  source_type: demo_curated
+  rationale: Curated baseline landfill latitude for the synthetic demo site.
+  confidence: high
+- field_path: location.landfill_longitude
+  value: 105.86
+  source_type: demo_curated
+  rationale: Curated baseline landfill longitude for the synthetic demo site.
+  confidence: high
+- field_path: dates.start_date
+  value: '2024-01-01'
+  source_type: demo_curated
+  rationale: Curated start date for the synthetic demo schedule.
+  confidence: high
+- field_path: dates.crediting_period_start
+  value: '2026-01-01'
+  source_type: demo_curated
+  rationale: Curated crediting period start for the synthetic demo schedule.
+  confidence: high
+- field_path: dates.crediting_period_years
+  value: 10
+  source_type: demo_curated
+  rationale: Curated crediting period length for the demo fixture.
+  confidence: high
+- field_path: technology.methodology_ids
+  value:
+  - ACM0022
+  source_type: demo_curated
+  rationale: Curated methodology selection for the Soc Son-like demo fixture.
+  confidence: high
+- field_path: technology.annual_waste_throughput
+  value: 182500.0
+  source_type: demo_curated
+  rationale: Curated annual throughput aligned to the demo technical narrative.
+  confidence: high
+- field_path: technology.installed_capacity_mw
+  value: 9.0
+  source_type: demo_curated
+  rationale: Curated installed capacity aligned to the demo technical narrative.
+  confidence: high
+- field_path: technology.energy_generation_mwh_year
+  value: 54000.0
+  source_type: demo_curated
+  rationale: Curated annual generation aligned to the demo technical narrative.
+  confidence: high
+- field_path: technology.tip_fee_usd_per_tonne
+  value: 18.0
+  source_type: demo_curated
+  rationale: Curated commercial placeholder used consistently for the demo fixture.
+  confidence: high
+- field_path: quantification.baseline_emissions_tco2e_per_year
+  value: 98000.0
+  source_type: demo_curated
+  rationale: Curated deterministic baseline emissions input for the demo fixture.
+  confidence: high
+- field_path: quantification.project_emissions_tco2e_per_year
+  value: 21000.0
+  source_type: demo_curated
+  rationale: Curated deterministic project emissions input for the demo fixture.
+  confidence: high
+- field_path: quantification.leakage_tco2e_per_year
+  value: 2000.0
+  source_type: demo_curated
+  rationale: Curated deterministic leakage input for the demo fixture.
+  confidence: high
+- field_path: quantification.net_emissions_tco2e_per_year
+  value: 75000.0
+  source_type: demo_curated
+  rationale: Curated deterministic net reductions input for the demo fixture.
+  confidence: high
+- field_path: quantification.grid_emission_factor
+  value: 0.92
+  source_type: demo_curated
+  rationale: Curated grid factor placeholder for the synthetic demo fixture.
+  confidence: high
+- field_path: quantification.grid_emission_factor_source
+  value: national grid authority 2025 emission factor report
+  source_type: demo_curated
+  rationale: Curated source label used consistently across the synthetic demo fixture.
+  confidence: high
+- field_path: quantification.crediting_period_total_tco2e
+  value: 750000.0
+  source_type: demo_curated
+  rationale: Derived deterministically from the demo net annual reductions and crediting
+    years.
+  confidence: high
+- field_path: monitoring.parameters_monitored
+  value:
+  - name: Waste throughput
+    unit: tonnes/day
+    frequency: daily
+    method: weighbridge
+    data_source: facility operations log
+  - name: Net electricity exported
+    unit: MWh
+    frequency: monthly
+    method: revenue meter
+    data_source: grid export statement
+  source_type: demo_curated
+  rationale: Curated monitoring parameter set for the synthetic demo fixture.
+  confidence: high
+- field_path: monitoring.data_management
+  value: Operations and monitoring data are logged digitally, reviewed monthly, and
+    archived for verification.
+  source_type: demo_curated
+  rationale: Curated data-management narrative for the synthetic demo fixture.
+  confidence: high
+- field_path: safeguards.no_net_harm_statement
+  value: A no-net-harm assessment has been completed for the demonstration case.
+  source_type: demo_curated
+  rationale: Curated no-net-harm statement for the synthetic demo fixture.
+  confidence: high
+- field_path: safeguards.stakeholder_consultation_completed
+  value: true
+  source_type: demo_curated
+  rationale: Curated stakeholder consultation status for the synthetic demo fixture.
+  confidence: high
+- field_path: safeguards.stakeholder_consultation_date
+  value: '2025-09-15'
+  source_type: demo_curated
+  rationale: Curated stakeholder consultation date for the synthetic demo fixture.
+  confidence: high
+- field_path: safeguards.environmental_impact_assessment
+  value: true
+  source_type: demo_curated
+  rationale: Curated environmental review status for the synthetic demo fixture.
+  confidence: high
+- field_path: safeguards.eia_reference
+  value: Hanoi WTE EIA permit 2025-SS-17
+  source_type: demo_curated
+  rationale: Curated EIA reference label for the synthetic demo fixture.
+  confidence: high
+- field_path: compliance_and_ownership.credit_ownership_statement
+  value: The project proponent retains exclusive ownership of the environmental attributes
+    and carbon credits.
+  source_type: demo_curated
+  rationale: Curated ownership statement for the synthetic demo fixture.
+  confidence: high
+guardrails:
+  blocked_review_paths: []
+  blocked_review_items: []
+  notes:
+  - This assumptions file supports the synthetic client-demo path and intentionally
+    avoids review-gated missing-data placeholders.
+  - All values remain synthetic demo inputs and must not be treated as verified project
+    evidence.
