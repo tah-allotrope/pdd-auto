@@ -214,7 +214,10 @@ class TestSectionOrchestratorDrafting:
         assert any("review-gated synthetic inputs" in issue for issue in result.issues)
 
     def test_run_review_records_synthetic_gate_in_review_state(self, tmp_path: Path):
-        orch = SectionOrchestrator(run_id="synthetic-review-run")
+        orch = SectionOrchestrator(
+            run_id="synthetic-review-run",
+            assumption_burden_path=tmp_path / "assumption-burden.md",
+        )
         orch.attach_assumption_register(
             {
                 "assumptions": [

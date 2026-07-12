@@ -266,6 +266,7 @@ def _execute_run(run_id: str, project_input_path: Path, provider_name: str) -> N
             provider=provider,
             project_input=project_input,
             run_id=run_id,
+            assumption_burden_path=_service_runs_dir() / f"assumption-burden-{run_id}.md",
         )
         orchestrator.run()
         orchestrator.run_review()

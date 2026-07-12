@@ -65,8 +65,10 @@ class SectionOrchestrator:
         token_budget: TokenBudget | None = None,
         enable_judge: bool = False,
         max_redraft_attempts: int = 3,
+        assumption_burden_path: Path | str | None = None,
     ) -> None:
         self._provider = provider or NoopProvider()
+        self._assumption_burden_path = assumption_burden_path
         self._project = project_input
         self._schema_path = schema_path or _SCHEMA_PATH
         self._prompts_dir = prompts_dir or _PROMPTS_DIR
@@ -798,7 +800,9 @@ class SectionOrchestrator:
             blocking_issues=len(review_result.blocking_issues),
         )
 
-        assumption_burden_path = write_assumption_burden_report(self._run.to_dict())
+        assumption_burden_path = write_assumption_burden_report(
+            self._run.to_dict(), output_path=self._assumption_burden_path
+        )
 
         return {
             "run_id": self._run_id,

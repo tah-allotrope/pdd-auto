@@ -222,7 +222,7 @@ class TestDocToDraftE2E:
         assert pi.suggested_methodologies is not None
         assert pi.suggested_methodologies[0].methodology_id == "ACM0022"
 
-    def test_extract_draft_review_completes(self):
+    def test_extract_draft_review_completes(self, tmp_path):
         """Full pipeline: extract -> draft -> review."""
         extraction_provider = _mock_extraction_provider(_MOCK_EXTRACTION_YAML)
         pi = extract_project_input(_INEGOL_DESCRIPTION, extraction_provider)
@@ -232,6 +232,7 @@ class TestDocToDraftE2E:
             project_input=pi,
             schema_path=_SCHEMA_PATH,
             prompts_dir=_PROMPTS_DIR,
+            assumption_burden_path=tmp_path / "assumption-burden.md",
         )
         orch.run()
         review = orch.run_review()

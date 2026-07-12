@@ -143,13 +143,14 @@ class TestE2EInegolDraft:
         prompt = orch._build_prompt("1", "1.1", examples, inegol_input)
         assert "ACM0022 Calculation Engine Results" not in prompt
 
-    def test_review_run_completes(self, inegol_input):
+    def test_review_run_completes(self, inegol_input, tmp_path):
         """Review pipeline should complete without errors."""
         orch = SectionOrchestrator(
             provider=DemoProvider(),
             project_input=inegol_input,
             schema_path=_SCHEMA_PATH,
             prompts_dir=_PROMPTS_DIR,
+            assumption_burden_path=tmp_path / "assumption-burden.md",
         )
         orch.run()
         result = orch.run_review()

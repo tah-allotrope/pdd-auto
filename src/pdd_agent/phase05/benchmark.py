@@ -535,7 +535,14 @@ def run_demo_benchmark(
             project_input = ProjectInput.model_validate(yaml.safe_load(handle))
 
         provider = get_provider_registry().get(provider_name)
-        orchestrator = SectionOrchestrator(provider=provider, project_input=project_input)
+        assumption_burden_path = (
+            Path(reports_dir) / "assumption-burden.md" if reports_dir is not None else None
+        )
+        orchestrator = SectionOrchestrator(
+            provider=provider,
+            project_input=project_input,
+            assumption_burden_path=assumption_burden_path,
+        )
         assumptions_path = resolve_assumptions_path(project_input_path)
         if assumptions_path:
             orchestrator.attach_assumption_register(load_assumption_register(assumptions_path))
