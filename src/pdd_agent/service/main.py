@@ -12,6 +12,7 @@ import os
 import shutil
 import tempfile
 import uuid
+from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -29,70 +30,32 @@ load_dotenv(find_dotenv(usecwd=True))
 from pdd_agent.agent.section_orchestrator import SectionOrchestrator
 from pdd_agent.export.docx_export import export_run_to_docx
 from pdd_agent.ingest.extract import extract_project_input
+from pdd_agent.llm.env_config import configure_provider_from_env
 from pdd_agent.llm.provider import DemoProvider, get_provider_registry
-from pdd_agent.agent import section_orchestrator as orchestrator_module
-from pdd_agent.llm.provider import DraftRun
 from pdd_agent.phase06.spreadsheet_mapper import generate_project_artifacts
-from pdd_agent.retrieval import search as retrieval_search
 from pdd_agent.review.states import ReviewState, ReviewStateStore, init_review_state
 from schemas.project_input import ProjectInput
 
 logger = structlog.get_logger()
 
-# The service runs drafting in background threads. The retrieval index
-# singleton binds its SQLite connection to the creating thread, so we
-# disable corpus retrieval entirely in the service process (demo/noop
-# providers do not require it anyway).
-for _module in (retrieval_search, orchestrator_module):
-    _module.get_examples_for_section = lambda *args, **kwargs: []
-    _module.get_section_heading_examples = lambda *args, **kwargs: []
-
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
 
-# Redirect DraftRun / ReviewStateStore persistence to the service runs dir
-# so that the ``PDD_SERVICE_RUNS_DIR`` override is respected everywhere.
 def _service_runs_dir() -> Path:
     return Path(os.environ.get("PDD_SERVICE_RUNS_DIR", REPO_ROOT / "data" / "runs"))
 
 
-_original_draft_run_save = DraftRun.save
-
-
-def _draft_run_save(self: DraftRun, output_dir: Path | None = None) -> Path:
-    return _original_draft_run_save(self, output_dir=output_dir or _service_runs_dir())
-
-
-DraftRun.save = _draft_run_save  # type: ignore[method-assign]
-
-_original_review_state_save = ReviewStateStore.save
-
-
-def _review_state_save(self: ReviewStateStore, output_dir: Path | None = None) -> Path:
-    return _original_review_state_save(self, output_dir=output_dir or _service_runs_dir())
-
-
-ReviewStateStore.save = _review_state_save  # type: ignore[method-assign]
-
-_original_review_state_load = ReviewStateStore.load
-
-
-def _review_state_load(
-    cls: type[ReviewStateStore], run_id: str, output_dir: Path | None = None
-) -> ReviewStateStore:
-    # ``_original_review_state_load`` is already a bound classmethod, so do
-    # not pass ``cls`` explicitly.
-    return _original_review_state_load(
-        run_id, output_dir=output_dir or _service_runs_dir()
-    )
-
-
-ReviewStateStore.load = classmethod(_review_state_load)  # type: ignore[method-assign]
 RUNS_DIR = REPO_ROOT / "data" / "runs"
 TEMPLATES_DIR = Path(__file__).parent / "templates"
 STATIC_DIR = Path(__file__).parent / "static"
 
-app = FastAPI(title="PDD Agent Service", version="0.1.0")
+@asynccontextmanager
+async def _lifespan(_app: FastAPI):
+    sweep_orphaned_runs()
+    yield
+
+
+app = FastAPI(title="PDD Agent Service", version="0.1.0", lifespan=_lifespan)
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
 
@@ -110,13 +73,69 @@ def _provider_name() -> str:
     return os.environ.get("PDD_SERVICE_PROVIDER", "demo").lower()
 
 
+_last_provider_status: dict[str, str | None] = {
+    "requested": "demo",
+    "effective": "demo",
+    "reason": None,
+}
+
+
+def provider_status() -> dict[str, str | None]:
+    """Return the most recent _get_provider() resolution for UI display."""
+    return dict(_last_provider_status)
+
+
+def _parse_positive_float(value: str | None) -> float | None:
+    if not value:
+        return None
+    try:
+        parsed = float(value)
+    except ValueError:
+        return None
+    return parsed if parsed > 0 else None
+
+
 def _get_provider(provider_name: str | None = None):
-    name = provider_name or _provider_name()
+    """Resolve the drafting provider for a run.
+
+    - ``demo`` / ``noop``: always allowed, no key or cost ceiling required.
+    - ``ollama``: always allowed (local inference, no key required).
+    - ``openai`` / ``anthropic``: requires both ``{PROVIDER}_API_KEY`` and a
+      positive ``PDD_MAX_COST_USD``; falls back to ``demo`` with a logged
+      reason otherwise.
+    - anything else: falls back to ``demo`` with reason ``unknown_provider``.
+
+    Never raises for a bad name — the service must stay usable even when
+    misconfigured.
+    """
+    global _last_provider_status
+    name = (provider_name or _provider_name()).lower()
     registry = get_provider_registry()
-    if name not in ("demo", "noop"):
-        logger.warning("service_forces_demo_provider", requested=name)
-        name = "demo"
-    return registry.get(name)
+    reason: str | None = None
+    effective = name
+
+    if name in ("demo", "noop"):
+        pass
+    elif name == "ollama":
+        configure_provider_from_env("ollama")
+    elif name in ("openai", "anthropic"):
+        if not os.environ.get(f"{name.upper()}_API_KEY"):
+            reason = "missing_api_key"
+            effective = "demo"
+        elif _parse_positive_float(os.environ.get("PDD_MAX_COST_USD")) is None:
+            reason = "missing_cost_ceiling"
+            effective = "demo"
+        else:
+            configure_provider_from_env(name)
+    else:
+        reason = "unknown_provider"
+        effective = "demo"
+
+    if reason:
+        logger.warning("service_provider_fallback", requested=name, reason=reason)
+
+    _last_provider_status = {"requested": name, "effective": effective, "reason": reason}
+    return registry.get(effective)
 
 
 def _runs_dir() -> Path:
@@ -184,11 +203,24 @@ def _run_status(run_id: str) -> dict[str, Any]:
     run_path = _run_json_path(run_id)
     review_path = _review_state_path(run_id)
     pending_path = _pending_marker_path(run_id)
+    status_payload = _read_status(run_id)
 
     if not run_path.exists() and pending_path.exists():
         return {"run_id": run_id, "status": "pending", "sections_total": 0, "sections_approved": 0}
     if not run_path.exists():
         raise HTTPException(status_code=404, detail=f"Run {run_id} not found")
+
+    # The durable status file is authoritative for "failed" — a background
+    # task that died mid-run leaves no review state to infer from, and a
+    # process restart (sweep_orphaned_runs) can only mark this via the file.
+    if status_payload and status_payload.get("status") == "failed":
+        return {
+            "run_id": run_id,
+            "status": "failed",
+            "sections_total": 0,
+            "sections_approved": 0,
+            "error": status_payload.get("error"),
+        }
 
     status = "running"
     sections_total = 0
@@ -247,19 +279,59 @@ def _ensure_review_state_for_run(run_id: str, run_data: dict[str, Any]) -> Revie
 # ─────────────────────────────────────────────
 
 
+def _status_path(run_id: str) -> Path:
+    return _runs_dir() / f"{run_id}.status.json"
+
+
+def _write_status(run_id: str, status: str, error: str | None = None) -> None:
+    path = _status_path(run_id)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload: dict[str, Any] = {"status": status, "error": error}
+    if status == "running":
+        payload["started_at"] = datetime.now(timezone.utc).isoformat()
+    else:
+        payload["finished_at"] = datetime.now(timezone.utc).isoformat()
+    path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+
+def _read_status(run_id: str) -> dict[str, Any] | None:
+    path = _status_path(run_id)
+    if not path.exists():
+        return None
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return None
+
+
+def sweep_orphaned_runs() -> None:
+    """Rewrite any "running" status file as failed on service startup.
+
+    A run whose status file still says "running" after a fresh process start
+    can only mean the previous process died mid-run — there is no other way
+    for that status to persist across restarts.
+    """
+    runs_dir = _runs_dir()
+    if not runs_dir.exists():
+        return
+    for path in runs_dir.glob("*.status.json"):
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            continue
+        if payload.get("status") == "running":
+            run_id = path.name[: -len(".status.json")]
+            logger.warning("service_run_orphaned_by_restart", run_id=run_id)
+            _write_status(run_id, "failed", error="orphaned by service restart")
+
+
 def _execute_run(run_id: str, project_input_path: Path, provider_name: str) -> None:
     """Run the full drafting + review pipeline in a background task."""
     pending_path = _pending_marker_path(run_id)
+    _write_status(run_id, "running")
     try:
         logger.info("service_run_start", run_id=run_id, provider=provider_name)
         project_input = _load_project_input(project_input_path)
-        # Disable corpus retrieval so background threads do not reuse a
-        # SQLite connection created in the request thread.
-        if project_input.generation_controls is None:
-            from schemas.project_input import GenerationControls
-
-            project_input.generation_controls = GenerationControls()
-        project_input.generation_controls.inject_corpus_retrieval = False
 
         provider = _get_provider(provider_name)
         orchestrator = SectionOrchestrator(
@@ -267,10 +339,12 @@ def _execute_run(run_id: str, project_input_path: Path, provider_name: str) -> N
             project_input=project_input,
             run_id=run_id,
             assumption_burden_path=_service_runs_dir() / f"assumption-burden-{run_id}.md",
+            runs_dir=_service_runs_dir(),
         )
         orchestrator.run()
         orchestrator.run_review()
         logger.info("service_run_complete", run_id=run_id)
+        _write_status(run_id, "complete")
     except Exception as exc:
         logger.error("service_run_failed", run_id=run_id, error=str(exc))
         # Persist a minimal failure record so the UI can surface it.
@@ -283,6 +357,7 @@ def _execute_run(run_id: str, project_input_path: Path, provider_name: str) -> N
             "assumption_register": None,
         }
         _save_run_json(run_id, failure)
+        _write_status(run_id, "failed", error=str(exc))
     finally:
         if pending_path.exists():
             pending_path.unlink()
@@ -310,7 +385,13 @@ def dashboard(request: Request):
                 runs.append(status)
             except HTTPException:
                 continue
-    return templates.TemplateResponse(request, "dashboard.html", {"runs": runs})
+    # Refresh provider_status() to reflect the currently configured
+    # PDD_SERVICE_PROVIDER so the banner is accurate even before any run
+    # has been created in this process.
+    _get_provider()
+    return templates.TemplateResponse(
+        request, "dashboard.html", {"runs": runs, "provider_status": provider_status()}
+    )
 
 
 @app.get("/runs/{run_id}", response_class=HTMLResponse)
@@ -380,9 +461,6 @@ def api_intake_document(
     provider_name: str = Form("demo"),
 ):
     """Upload a DOCX/PDF/text file and extract a ProjectInput YAML."""
-    if provider_name not in ("demo", "noop"):
-        provider_name = "demo"
-
     suffix = Path(file.filename or "upload.txt").suffix or ".txt"
     with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as tmp:
         tmp_path = Path(tmp.name)
@@ -459,8 +537,6 @@ def api_create_run(
     with the run_id and status.
     """
     actual_provider = provider_name or _provider_name()
-    if actual_provider not in ("demo", "noop"):
-        actual_provider = "demo"
 
     new_run_id = run_id or _generate_run_id()
     suffix = Path(project_input_yaml.filename or "project.yaml").suffix or ".yaml"
@@ -675,6 +751,8 @@ def _redraft_section_task(
             provider=provider,
             project_input=project_input,
             run_id=run_id,
+            assumption_burden_path=_service_runs_dir() / f"assumption-burden-{run_id}.md",
+            runs_dir=_service_runs_dir(),
         )
         draft = orchestrator.draft_section(
             section_id=section_id,
@@ -752,6 +830,8 @@ def api_download_docx(run_id: str, force: int = 0):
         run_id=run_id,
         output_path=output_path,
         project_name=run_data.get("project_name", "Unknown Project"),
+        force=bool(force),
+        runs_dir=_runs_dir(),
     )
     return FileResponse(
         path=str(output_path),

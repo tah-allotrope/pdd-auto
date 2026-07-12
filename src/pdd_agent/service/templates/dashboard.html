@@ -5,6 +5,19 @@
 {% block content %}
 <h1>PDD Draft Runs</h1>
 
+{% if provider_status and provider_status.requested != provider_status.effective %}
+<div class="provider-banner">
+  Requested provider <strong>{{ provider_status.requested }}</strong> is not active —
+  drafting with <strong>{{ provider_status.effective }}</strong> instead
+  ({{ provider_status.reason }}).
+  {% if provider_status.reason == "missing_api_key" %}
+  Set the matching <code>{{ provider_status.requested|upper }}_API_KEY</code> environment variable.
+  {% elif provider_status.reason == "missing_cost_ceiling" %}
+  Set <code>PDD_MAX_COST_USD</code> to a positive value.
+  {% endif %}
+</div>
+{% endif %}
+
 <section class="card">
   <h2>Intake</h2>
   <form action="/api/intake/document" method="post" enctype="multipart/form-data" class="intake-form">

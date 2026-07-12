@@ -180,3 +180,124 @@ class TestJudgeInterface:
         section = _section("1", "1.1", "Clean draft.")
         result = judge.judge_section(section)
         assert result.passed is True
+
+
+class TestParseJudgeJson:
+    def test_parses_clean_json(self):
+        from pdd_agent.review.judge import _parse_judge_json
+
+        text = '{"score": 82, "passed": true, "critical": [], "advisory": ["cite E002"]}'
+        payload = _parse_judge_json(text)
+        assert payload == {"score": 82, "passed": True, "critical": [], "advisory": ["cite E002"]}
+
+    def test_parses_json_wrapped_in_markdown_fence(self):
+        from pdd_agent.review.judge import _parse_judge_json
+
+        text = (
+            'Here you go:\n```json\n'
+            '{"score": 82, "passed": true, "critical": [], "advisory": ["cite E002"]}\n'
+            '```'
+        )
+        payload = _parse_judge_json(text)
+        assert payload["score"] == 82
+        assert payload["advisory"] == ["cite E002"]
+
+    def test_no_json_returns_none(self):
+        from pdd_agent.review.judge import _parse_judge_json
+
+        assert _parse_judge_json("no json here, score: 75") is None
+
+    def test_empty_text_returns_none(self):
+        from pdd_agent.review.judge import _parse_judge_json
+
+        assert _parse_judge_json("") is None
+
+    def test_json_without_score_key_returns_none(self):
+        from pdd_agent.review.judge import _parse_judge_json
+
+        assert _parse_judge_json('{"foo": "bar"}') is None
+
+
+class TestJudgeModelTier:
+    def test_explicit_model_name_wins(self, monkeypatch):
+        monkeypatch.delenv("PDD_JUDGE_MODEL", raising=False)
+        judge = LLMJudge(provider_name="anthropic", model_name="claude-opus-4-8")
+        assert judge.model_name == "claude-opus-4-8"
+
+    def test_env_override_used_when_no_explicit_model(self, monkeypatch):
+        monkeypatch.setenv("PDD_JUDGE_MODEL", "claude-haiku-4-5-20251001")
+        judge = LLMJudge(provider_name="anthropic")
+        assert judge.model_name == "claude-haiku-4-5-20251001"
+
+    def test_tier_default_for_anthropic(self, monkeypatch):
+        monkeypatch.delenv("PDD_JUDGE_MODEL", raising=False)
+        judge = LLMJudge(provider_name="anthropic")
+        assert judge.model_name == "claude-haiku-4-5-20251001"
+
+    def test_tier_default_for_openai(self, monkeypatch):
+        monkeypatch.delenv("PDD_JUDGE_MODEL", raising=False)
+        judge = LLMJudge(provider_name="openai")
+        assert judge.model_name == "gpt-4o-mini"
+
+    def test_no_tier_default_for_demo(self, monkeypatch):
+        monkeypatch.delenv("PDD_JUDGE_MODEL", raising=False)
+        judge = LLMJudge(provider_name="demo")
+        assert judge.model_name is None
+
+
+class TestLlmJudgeStructuredFindings:
+    def test_llm_judge_section_populates_categories_from_json(self):
+        judge = LLMJudge(provider_name="demo", use_llm=True)
+        judge.provider_name = "openai"  # bypass the demo/noop use_llm guard
+
+        class _FakeProvider:
+            def draft_section(self, **kwargs):
+                from pdd_agent.llm.provider import DraftSection
+
+                return DraftSection(
+                    section_id="judge",
+                    sub_section_id=kwargs["sub_section_id"],
+                    text='{"score": 40, "passed": false, "critical": ["fabricated number"], "advisory": []}',
+                    confidence="HIGH",
+                    provenance=[],
+                    issues=[],
+                    provider="openai",
+                )
+
+        judge._provider = _FakeProvider()
+        section = _section("4", "4.1", "Baseline emissions: 999999 tCO2e.")
+
+        result = judge._llm_judge_section(section, None, None)
+
+        assert result.score == 40
+        assert result.passed is False
+        assert result.categories["critical"] == ["fabricated number"]
+        assert len(result.findings) == 1
+        assert result.findings[0]["category"] == "critical"
+
+    def test_llm_judge_section_falls_back_on_unparseable_response(self):
+        judge = LLMJudge(provider_name="demo", use_llm=True)
+        judge.provider_name = "openai"
+
+        class _FakeProvider:
+            def draft_section(self, **kwargs):
+                from pdd_agent.llm.provider import DraftSection
+
+                return DraftSection(
+                    section_id="judge",
+                    sub_section_id=kwargs["sub_section_id"],
+                    text="I cannot evaluate this section.",
+                    confidence="HIGH",
+                    provenance=[],
+                    issues=[],
+                    provider="openai",
+                )
+
+        judge._provider = _FakeProvider()
+        section = _section("1", "1.1", "Clean draft.")
+
+        result = judge._llm_judge_section(section, None, None)
+        deterministic = judge._deterministic_judge_section(section, None, None)
+
+        assert result.score == deterministic.score
+        assert result.passed == deterministic.passed

@@ -9,6 +9,8 @@ is kept intact so a real LLM judge can be swapped in later by setting
 
 from __future__ import annotations
 
+import json
+import os
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -28,6 +30,15 @@ _RUBRIC_PATH = (
 _EVIDENCE_ID_RE = re.compile(r"\[E(\d{3})\]")
 
 _QUANTITATIVE_SECTIONS = {"1.10", "4.1", "4.2", "4.4"}
+
+# Judge model tiers (ASM-008): cheap tier for iteration, frontier tier for
+# sign-off runs, chosen by provider. Override with PDD_JUDGE_MODEL.
+_JUDGE_MODEL_TIER_DEFAULTS = {
+    "anthropic": "claude-haiku-4-5-20251001",
+    "openai": "gpt-4o-mini",
+}
+
+_JSON_OBJECT_RE = re.compile(r"\{.*\}", re.DOTALL)
 
 
 @dataclass
@@ -72,14 +83,26 @@ class LLMJudge:
         rubric_path: Path | None = None,
         pass_threshold: int | None = None,
         use_llm: bool = False,
+        model_name: str | None = None,
     ) -> None:
         self.provider_name = provider_name
         self.rubric_path = rubric_path or _RUBRIC_PATH
         self.rubric = self._load_rubric()
         self.pass_threshold = pass_threshold or int(self.rubric["scoring"]["pass_threshold"])
         self.use_llm = use_llm
+        self.model_name = self._resolve_model_name(model_name, provider_name)
         self._criteria = {c["id"]: c for c in self.rubric["criteria"]}
         self._provider = get_provider_registry().get(provider_name)
+
+    @staticmethod
+    def _resolve_model_name(model_name: str | None, provider_name: str) -> str | None:
+        """Resolution order: explicit arg -> PDD_JUDGE_MODEL env -> tier default."""
+        if model_name:
+            return model_name
+        env_model = os.environ.get("PDD_JUDGE_MODEL")
+        if env_model:
+            return env_model
+        return _JUDGE_MODEL_TIER_DEFAULTS.get(provider_name)
 
     def _load_rubric(self) -> dict[str, Any]:
         with open(self.rubric_path, encoding="utf-8") as f:
@@ -355,11 +378,13 @@ class LLMJudge:
         project_input: Any | None,
         calc_result: Any | None,
     ) -> JudgeResult:
-        """Call the configured provider as a judge.
+        """Call the configured provider as a judge and parse structured findings.
 
-        This is a thin interface stub. The returned DraftSection text is parsed for a
-        numeric score; if parsing fails we fall back to deterministic scoring so the
-        pipeline stays usable without a tuned judge prompt.
+        Expects the provider to return a JSON object with keys: score (0-100),
+        passed (bool), critical (list of strings), advisory (list of strings).
+        Tolerates markdown code fences around the JSON. Falls back to
+        deterministic scoring on any provider error or unparseable response so
+        the pipeline stays usable without a tuned judge prompt.
         """
         section_key = _section_key(draft_section)
         prompt = self._build_llm_judge_prompt(draft_section, project_input, calc_result)
@@ -381,24 +406,47 @@ class LLMJudge:
             )
             return self._deterministic_judge_section(draft_section, project_input, calc_result)
 
-        score = self._extract_score(response.text)
-        if score is None:
-            logger.warning(
-                "llm_judge_unparseable",
+        payload = _parse_judge_json(response.text)
+        if payload is None:
+            score = self._extract_score(response.text)
+            if score is None:
+                logger.warning(
+                    "llm_judge_unparseable",
+                    section_key=section_key,
+                    fallback="deterministic",
+                )
+                return self._deterministic_judge_section(draft_section, project_input, calc_result)
+            passed = score >= self.pass_threshold
+            return JudgeResult(
                 section_key=section_key,
-                fallback="deterministic",
+                score=score,
+                passed=passed,
+                categories={"critical": [], "advisory": []},
+                findings=[],
+                provider=self.provider_name,
+                model=getattr(response, "model", None) or self.model_name,
             )
-            return self._deterministic_judge_section(draft_section, project_input, calc_result)
 
-        passed = score >= self.pass_threshold
+        score = int(payload.get("score", 0))
+        critical = [str(item) for item in payload.get("critical", [])]
+        advisory = [str(item) for item in payload.get("advisory", [])]
+        passed = bool(payload.get("passed", score >= self.pass_threshold)) and not critical
+        findings = [
+            {"criterion_id": "LLM_JUDGE", "category": "critical", "message": m, "deduction": 0}
+            for m in critical
+        ] + [
+            {"criterion_id": "LLM_JUDGE", "category": "advisory", "message": m, "deduction": 0}
+            for m in advisory
+        ]
+
         return JudgeResult(
             section_key=section_key,
             score=score,
             passed=passed,
-            categories={"critical": [], "advisory": []},
-            findings=[],
+            categories={"critical": critical, "advisory": advisory},
+            findings=findings,
             provider=self.provider_name,
-            model=getattr(response, "model", None),
+            model=getattr(response, "model", None) or self.model_name,
         )
 
     def _build_llm_judge_prompt(
@@ -441,6 +489,26 @@ class LLMJudge:
         if match:
             return int(match.group(1))
         return None
+
+
+def _parse_judge_json(text: str) -> dict[str, Any] | None:
+    """Extract and parse the first JSON object found in judge response text.
+
+    Tolerates markdown code fences and leading/trailing prose. Returns None
+    when no valid JSON object with a "score" key is found.
+    """
+    if not text:
+        return None
+    match = _JSON_OBJECT_RE.search(text)
+    if not match:
+        return None
+    try:
+        payload = json.loads(match.group(0))
+    except json.JSONDecodeError:
+        return None
+    if not isinstance(payload, dict) or "score" not in payload:
+        return None
+    return payload
 
 
 def _section_key(draft_section: DraftSection) -> str:

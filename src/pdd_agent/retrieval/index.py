@@ -9,6 +9,7 @@ from __future__ import annotations
 import json
 import re
 import structlog
+import threading
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -42,15 +43,24 @@ class RetrievalIndex:
                 Path(__file__).parent.parent.parent.parent / "data" / "index" / "corpus.fts.db"
             )
         self._db_path = Path(db_path)
-        self._conn: sqlite3.Connection | None = None
+        # SQLite connections are bound to the thread that created them. The
+        # service drafts sections from FastAPI BackgroundTasks worker threads,
+        # so a single shared connection would raise sqlite3.ProgrammingError
+        # ("SQLite objects created in a thread can only be used in that same
+        # thread") for any thread other than the one that first called
+        # _open(). threading.local() gives every calling thread its own
+        # connection, created lazily on first use.
+        self._local = threading.local()
 
     def _open(self) -> sqlite3.Connection:
-        if self._conn is None:
+        conn = getattr(self._local, "conn", None)
+        if conn is None:
             self._db_path.parent.mkdir(parents=True, exist_ok=True)
-            self._conn = sqlite3.connect(str(self._db_path))
-            self._conn.execute("PRAGMA journal_mode = WAL")
-            self._conn.execute("PRAGMA synchronous = NORMAL")
-        return self._conn
+            conn = sqlite3.connect(str(self._db_path))
+            conn.execute("PRAGMA journal_mode = WAL")
+            conn.execute("PRAGMA synchronous = NORMAL")
+            self._local.conn = conn
+        return conn
 
     def build(
         self, normalized_dir: Path | None = None, schema_path: Path | None = None
@@ -67,9 +77,7 @@ class RetrievalIndex:
                 Path(__file__).parent.parent.parent.parent / "schemas" / "pdd_section_schema.yaml"
             )
 
-        self._open()
-        conn = self._conn
-        assert conn is not None
+        conn = self._open()
 
         conn.execute("DROP TABLE IF EXISTS sections_fts")
         conn.execute(
@@ -139,9 +147,7 @@ class RetrievalIndex:
         Returns top-k chunks sorted by BM25 relevance, with document name,
         section heading, text preview, and relevance score.
         """
-        self._open()
-        conn = self._conn
-        assert conn is not None
+        conn = self._open()
 
         if not query or not query.strip():
             return []
@@ -178,9 +184,7 @@ class RetrievalIndex:
         k: int = 3,
     ) -> list[dict[str, Any]]:
         """Find corpus chunks by near-exact heading match (no full-text needed)."""
-        self._open()
-        conn = self._conn
-        assert conn is not None
+        conn = self._open()
 
         pattern = f"%{heading}%"
         rows = conn.execute(
@@ -203,9 +207,7 @@ class RetrievalIndex:
         k: int = 5,
     ) -> list[dict[str, Any]]:
         """Retrieve example text for a given section/sub-section across corpus docs."""
-        self._open()
-        conn = self._conn
-        assert conn is not None
+        conn = self._open()
 
         if sub_section_id:
             rows = conn.execute(
@@ -235,9 +237,7 @@ class RetrievalIndex:
 
     def stats(self) -> dict[str, Any]:
         """Return index statistics."""
-        self._open()
-        conn = self._conn
-        assert conn is not None
+        conn = self._open()
         row = conn.execute("SELECT COUNT(*) FROM sections_fts").fetchone()
         total = row[0] if row else 0
         row2 = conn.execute("SELECT COUNT(DISTINCT document_name) FROM sections_fts").fetchone()
@@ -250,9 +250,11 @@ class RetrievalIndex:
         }
 
     def close(self) -> None:
-        if self._conn:
-            self._conn.close()
-            self._conn = None
+        """Close the calling thread's connection, if one was opened."""
+        conn = getattr(self._local, "conn", None)
+        if conn is not None:
+            conn.close()
+            self._local.conn = None
 
     def __enter__(self) -> "RetrievalIndex":
         return self
@@ -262,9 +264,7 @@ class RetrievalIndex:
 
     def is_built(self) -> bool:
         """Return True if the FTS table exists in the database."""
-        self._open()
-        conn = self._conn
-        assert conn is not None
+        conn = self._open()
         try:
             cur = conn.execute("SELECT COUNT(*) FROM sections_fts")
             cur.fetchone()

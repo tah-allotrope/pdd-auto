@@ -166,6 +166,21 @@ button:hover,
   color: var(--primary);
 }
 
+.badge-failed {
+  background: #fee2e2;
+  color: var(--danger);
+}
+
+.provider-banner {
+  background: #fef3c7;
+  color: var(--warning);
+  border: 1px solid var(--warning);
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
 .badge-review,
 .badge-needs-domain-review {
   background: #fef3c7;

@@ -7,10 +7,12 @@ server-rendered web UI for section review.
 
 - Upload DOCX/PDF/text documents to extract a `ProjectInput` YAML.
 - Upload spreadsheets (or use the cached workbook) to generate a `ProjectInput`.
-- Create draft runs that execute in FastAPI `BackgroundTasks`.
+- Create draft runs that execute in FastAPI `BackgroundTasks`, drafting with
+  corpus retrieval enabled whenever a built retrieval index is present.
 - Review sections: approve, inline edit (with human-edit provenance), or request redraft.
 - Download gated DOCX exports; override with `?force=1`.
-- Demo/noop providers only — no API keys required by default.
+- Demo/noop by default — no API keys required. Real providers (Ollama,
+  OpenAI, Anthropic) are opt-in; see the provider matrix below.
 
 ## Setup
 
@@ -57,12 +59,34 @@ Then open http://localhost:8000/dashboard.
 
 ## Environment Variables
 
-- `PDD_SERVICE_PROVIDER` — provider used by the service (`demo` or `noop`; default `demo`).
+- `PDD_SERVICE_PROVIDER` — provider used by the service (default `demo`).
 - `PDD_SERVICE_RUNS_DIR` — override the run persistence directory (default `data/runs`).
+
+### Provider opt-in matrix
+
+| `PDD_SERVICE_PROVIDER` | Requirements | Falls back to `demo` when... |
+|---|---|---|
+| `demo` / `noop` (default) | none | n/a |
+| `ollama` | a local Ollama instance reachable at `OLLAMA_BASE_URL` (default `http://localhost:11434`) | never — local inference needs no key or cost ceiling |
+| `openai` | `OPENAI_API_KEY` **and** a positive `PDD_MAX_COST_USD` | key missing (`missing_api_key`) or cost ceiling missing/non-positive (`missing_cost_ceiling`) |
+| `anthropic` | `ANTHROPIC_API_KEY` **and** a positive `PDD_MAX_COST_USD` | same as above |
+| anything else | — | always (`unknown_provider`) |
+
+When a request falls back, the dashboard shows a banner naming the requested
+provider, the effective provider, and the reason. The same resolution is
+exposed programmatically via `provider_status()` in `main.py`.
 
 ## Notes
 
-- The service persists state to `data/runs/{run_id}.json` and
-  `data/runs/review-state-{run_id}.json`, matching the CLI.
+- The service persists state to `data/runs/{run_id}.json`,
+  `data/runs/review-state-{run_id}.json`, and `data/runs/{run_id}.status.json`,
+  matching the CLI's persistence layout (all overridable via
+  `PDD_SERVICE_RUNS_DIR`). Persistence is dependency-injected through
+  `SectionOrchestrator(runs_dir=...)` — importing this module does not alter
+  `DraftRun`/`ReviewStateStore` behavior for any other code in the process.
+- **Run status**: `{run_id}.status.json` is the source of truth for
+  `running` / `complete` / `failed`. On service startup, any run still
+  marked `running` is rewritten to `failed` with `"orphaned by service
+  restart"` — this can only mean the previous process died mid-run.
 - Optional dependencies (`gws`, LibreOffice) are not required; the service
   degrades gracefully when they are absent.

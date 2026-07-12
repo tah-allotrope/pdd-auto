@@ -25,29 +25,12 @@ from pdd_agent.phase06.assumptions import load_assumption_register, resolve_assu
 from pdd_agent.phase06.spreadsheet_mapper import fetch_workbook, generate_project_artifacts
 from pdd_agent.phase06.vietnam_workflow import run_vietnam_pdd_workflow
 from pdd_agent.doctor import run_doctor
+from pdd_agent.llm.env_config import configure_provider_from_env
 from schemas.project_input import ProjectInput
 
-
-def _configure_api_provider(provider_name: str) -> None:
-    """Configure an API-backed provider from environment variables if needed."""
-    if provider_name not in {"openai", "anthropic"}:
-        return
-
-    import os
-
-    api_key = os.environ.get(f"{provider_name.upper()}_API_KEY")
-    if not api_key:
-        return
-
-    config = ModelConfig(
-        provider_name=provider_name,
-        model_name=os.environ.get(f"{provider_name.upper()}_MODEL"),
-        api_key=api_key,
-        base_url=os.environ.get(f"{provider_name.upper()}_BASE_URL"),
-        max_tokens=int(os.environ.get(f"{provider_name.upper()}_MAX_TOKENS", "4000")),
-        temperature=float(os.environ.get(f"{provider_name.upper()}_TEMPERATURE", "0.1")),
-    )
-    configure_provider(config)
+# Alias retained for any external callers; use configure_provider_from_env directly
+# in new code.
+_configure_api_provider = configure_provider_from_env
 
 
 def _build_parser() -> argparse.ArgumentParser:
@@ -98,7 +81,7 @@ def _build_parser() -> argparse.ArgumentParser:
     draft_parser.add_argument(
         "--provider",
         default="noop",
-        help="Drafting provider name: noop, demo, corpus, openai, anthropic (default: noop)",
+        help="Drafting provider name: noop, demo, corpus, openai, anthropic, ollama (default: noop)",
     )
     judge_group = draft_parser.add_mutually_exclusive_group()
     judge_group.add_argument(
@@ -163,6 +146,39 @@ def _build_parser() -> argparse.ArgumentParser:
         "--folder-id",
         default="1pp23yRZ8qtopw1BPXrzVewXsmmWplCse",
         help="Target Drive folder ID",
+    )
+
+    fetch_registry_parser = sub.add_parser(
+        "fetch-registry", help="Download registered PDD PDFs from the public Verra registry"
+    )
+    fetch_registry_parser.add_argument(
+        "--methodology", required=True, help="Methodology ID, e.g. VM0051, VM0044, AMS-II.G"
+    )
+    fetch_registry_parser.add_argument(
+        "--limit", type=int, default=10, help="Maximum number of PDDs to fetch (default: 10)"
+    )
+    fetch_registry_parser.add_argument(
+        "--output-dir", required=True, help="Directory to write downloaded PDFs and manifest.json into"
+    )
+
+    scorecard_parser = sub.add_parser(
+        "scorecard", help="Run the same ProjectInput through multiple providers and compare"
+    )
+    scorecard_parser.add_argument("--input", "-i", required=True, help="Path to ProjectInput YAML file")
+    scorecard_parser.add_argument(
+        "--providers",
+        default="demo",
+        help="Comma-separated provider names, e.g. ollama,openai,anthropic (default: demo)",
+    )
+    scorecard_parser.add_argument(
+        "--output",
+        default="reports/provider-scorecard.md",
+        help="Output markdown path (default: reports/provider-scorecard.md)",
+    )
+    scorecard_parser.add_argument(
+        "--no-judge",
+        action="store_true",
+        help="Skip judge scoring (drafting-only comparison)",
     )
 
     demo_config_parser = sub.add_parser(
@@ -365,6 +381,8 @@ def main() -> int:
         "export": lambda: _run_export(args, log),
         "upload": lambda: _run_upload(args, log),
         "demo-config": lambda: _run_demo_config(args, log),
+        "fetch-registry": lambda: _run_fetch_registry(args, log),
+        "scorecard": lambda: _run_scorecard(args, log),
         "benchmark": lambda: _run_benchmark(args, log),
         "fetch-workbook": lambda: _run_fetch_workbook(args, log),
         "map-spreadsheet": lambda: _run_map_spreadsheet(args, log),
@@ -417,7 +435,7 @@ def _run_demo_setup(args, log) -> None:
 
 
 def _run_draft(args, log) -> None:
-    from pdd_agent.llm.provider import configure_provider, get_provider_registry, ModelConfig
+    from pdd_agent.llm.provider import get_provider_registry
 
     _configure_api_provider(args.provider)
     provider = get_provider_registry().get(args.provider)
@@ -594,6 +612,43 @@ def _run_upload(args, log) -> None:
 def _run_demo_config(args, log) -> None:
     path = create_demo_project_input(Path(args.output))
     log.info("demo_config_written", path=str(path))
+
+
+def _run_scorecard(args, log) -> None:
+    from pdd_agent.phase05.provider_scorecard import run_provider_scorecard
+
+    providers = [p.strip() for p in args.providers.split(",") if p.strip()]
+    output_path = run_provider_scorecard(
+        input_path=Path(args.input),
+        providers=providers,
+        output_path=Path(args.output),
+        enable_judge=not args.no_judge,
+    )
+    log.info("scorecard_complete", output=str(output_path), providers=providers)
+
+
+def _run_fetch_registry(args, log) -> None:
+    from pdd_agent.ingest.registry_download import download_registered_pdds
+
+    records = download_registered_pdds(
+        methodology_id=args.methodology,
+        output_dir=Path(args.output_dir),
+        limit=args.limit,
+    )
+    if records:
+        log.info(
+            "fetch_registry_complete",
+            methodology=args.methodology,
+            downloaded=len(records),
+            output_dir=args.output_dir,
+        )
+    else:
+        log.info(
+            "fetch_registry_manual_mode",
+            methodology=args.methodology,
+            output_dir=args.output_dir,
+            note="See manifest.json for manual-download instructions.",
+        )
 
 
 def _run_benchmark(args, log) -> None:

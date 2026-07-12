@@ -366,7 +366,13 @@ class TestDocxExport:
         self, minimal_project_yaml, service_runs_dir, tmp_path: Path, monkeypatch
     ):
         monkeypatch.setattr(service_main, "REPO_ROOT", tmp_path)
-        monkeypatch.setattr("pdd_agent.export.docx_export._DRAFT_RUNS_DIR", service_runs_dir)
+        # Deliberately do NOT monkeypatch docx_export._DRAFT_RUNS_DIR here: the
+        # service must locate the run JSON via the real runs_dir it threads
+        # into export_run_to_docx(), not via a redirected module constant.
+        # This is a regression test for a bug found during the PHASE-06 rice
+        # pilot manual round-trip: export_run_to_docx() ignored a passed
+        # runs_dir entirely and always looked in the default data/runs,
+        # raising FileNotFoundError for any service run persisted elsewhere.
         upload_dir = tmp_path / "data" / "source_inputs" / "service_uploads"
         upload_dir.mkdir(parents=True, exist_ok=True)
 
@@ -395,6 +401,119 @@ class TestDocxExport:
         assert response.headers["content-type"] == (
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
+
+class TestProviderSelection:
+    def test_anthropic_without_key_falls_back_to_demo(self, monkeypatch):
+        monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+        monkeypatch.delenv("PDD_MAX_COST_USD", raising=False)
+
+        provider = service_main._get_provider("anthropic")
+
+        assert provider.name == "demo"
+        assert service_main.provider_status()["reason"] == "missing_api_key"
+
+    def test_anthropic_with_key_but_no_cost_ceiling_falls_back_to_demo(self, monkeypatch):
+        monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-ant-test")
+        monkeypatch.delenv("PDD_MAX_COST_USD", raising=False)
+
+        provider = service_main._get_provider("anthropic")
+
+        assert provider.name == "demo"
+        assert service_main.provider_status()["reason"] == "missing_cost_ceiling"
+
+    def test_ollama_needs_no_key_or_ceiling(self, monkeypatch):
+        monkeypatch.delenv("PDD_MAX_COST_USD", raising=False)
+
+        provider = service_main._get_provider("ollama")
+
+        assert provider.name == "ollama"
+        assert service_main.provider_status()["reason"] is None
+
+    def test_unset_provider_defaults_to_demo_with_no_reason(self, monkeypatch):
+        monkeypatch.delenv("PDD_SERVICE_PROVIDER", raising=False)
+
+        provider = service_main._get_provider()
+
+        assert provider.name == "demo"
+        assert service_main.provider_status()["reason"] is None
+
+    def test_unknown_provider_name_falls_back_to_demo(self):
+        provider = service_main._get_provider("totally-unknown")
+
+        assert provider.name == "demo"
+        assert service_main.provider_status()["reason"] == "unknown_provider"
+
+
+class TestPersistenceDependencyInjection:
+    def test_importing_service_does_not_monkeypatch_draft_run_save(self):
+        from pdd_agent.llm.provider import DraftRun
+        import inspect
+
+        # DraftRun.save must be the class's own method, not a module-level
+        # rebinding performed at service import time.
+        source_file = inspect.getsourcefile(DraftRun.save)
+        assert source_file is not None
+        assert "service" not in source_file.replace("\\", "/")
+
+    def test_importing_service_does_not_monkeypatch_review_state_store(self):
+        from pdd_agent.review.states import ReviewStateStore
+        import inspect
+
+        source_file = inspect.getsourcefile(ReviewStateStore.save)
+        assert source_file is not None
+        assert "service" not in source_file.replace("\\", "/")
+
+    def test_run_creates_status_json_in_service_runs_dir(
+        self, minimal_project_yaml, service_runs_dir, tmp_path: Path, monkeypatch
+    ):
+        monkeypatch.setattr(service_main, "REPO_ROOT", tmp_path)
+        upload_dir = tmp_path / "data" / "source_inputs" / "service_uploads"
+        upload_dir.mkdir(parents=True, exist_ok=True)
+
+        with open(minimal_project_yaml, "rb") as f:
+            create_response = CLIENT.post(
+                "/api/runs",
+                files={"project_input_yaml": ("project.yaml", f, "application/x-yaml")},
+                data={"provider_name": "demo"},
+            )
+        run_id = create_response.json()["run_id"]
+
+        for _ in range(50):
+            if _run_json_exists(service_runs_dir, run_id):
+                break
+            time.sleep(0.1)
+        else:
+            pytest.fail("Run JSON was not created")
+
+        status_path = service_runs_dir / f"{run_id}.status.json"
+        assert status_path.exists()
+        payload = json.loads(status_path.read_text(encoding="utf-8"))
+        assert payload["status"] == "complete"
+
+
+class TestStatusLifecycle:
+    def test_orphaned_running_status_is_swept_to_failed(self, service_runs_dir):
+        run_id = "run-orphan-test"
+        (service_runs_dir / f"{run_id}.json").write_text("{}", encoding="utf-8")
+        status_path = service_runs_dir / f"{run_id}.status.json"
+        status_path.write_text(json.dumps({"status": "running"}), encoding="utf-8")
+
+        service_main.sweep_orphaned_runs()
+
+        payload = json.loads(status_path.read_text(encoding="utf-8"))
+        assert payload["status"] == "failed"
+        assert "orphaned" in payload["error"].lower()
+
+    def test_non_running_status_is_untouched_by_sweep(self, service_runs_dir):
+        run_id = "run-complete-test"
+        status_path = service_runs_dir / f"{run_id}.status.json"
+        status_path.write_text(json.dumps({"status": "complete"}), encoding="utf-8")
+
+        service_main.sweep_orphaned_runs()
+
+        payload = json.loads(status_path.read_text(encoding="utf-8"))
+        assert payload["status"] == "complete"
 
 
 def _run_json_exists(runs_dir: Path, run_id: str) -> bool:

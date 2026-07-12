@@ -66,9 +66,11 @@ class SectionOrchestrator:
         enable_judge: bool = False,
         max_redraft_attempts: int = 3,
         assumption_burden_path: Path | str | None = None,
+        runs_dir: Path | str | None = None,
     ) -> None:
         self._provider = provider or NoopProvider()
         self._assumption_burden_path = assumption_burden_path
+        self._runs_dir = Path(runs_dir) if runs_dir is not None else None
         self._project = project_input
         self._schema_path = schema_path or _SCHEMA_PATH
         self._prompts_dir = prompts_dir or _PROMPTS_DIR
@@ -548,7 +550,14 @@ class SectionOrchestrator:
         synthetic: list[dict[str, Any]],
     ) -> DraftSection:
         """Judge a draft and auto-redraft up to max attempts if critical findings exist."""
-        judge = LLMJudge(provider_name=getattr(self._provider, "name", "demo"))
+        import os
+
+        drafting_provider_name = getattr(self._provider, "name", "demo")
+        judge_provider_name = os.environ.get("PDD_JUDGE_PROVIDER", drafting_provider_name)
+        judge = LLMJudge(
+            provider_name=judge_provider_name,
+            use_llm=judge_provider_name not in ("demo", "noop"),
+        )
         section_key = f"{section_id}/{sub_section_id or ''}"
         current_draft = draft
 
@@ -648,7 +657,7 @@ class SectionOrchestrator:
                 reviewer_notes="Judge critical findings: " + "; ".join(reasons),
                 updated_by="judge",
             )
-            store.save()
+            store.save(output_dir=self._runs_dir)
             logger.info(
                 "judge_parked_section",
                 run_id=self._run_id,
@@ -729,7 +738,7 @@ class SectionOrchestrator:
         """
         logger.info("review_run_start", run_id=self._run_id)
 
-        self._run.save()
+        self._run.save(output_dir=self._runs_dir)
 
         review_result = run_review_checks(
             draft_run=self._run,
@@ -777,7 +786,7 @@ class SectionOrchestrator:
                         if not note.startswith("Synthetic review gate:")
                     ]
 
-        state_store.save()
+        state_store.save(output_dir=self._runs_dir)
 
         consistency_report = check_quantitative_consistency(
             draft_sections=self._run.sections,
@@ -809,8 +818,8 @@ class SectionOrchestrator:
             "review": summarize_review_result(review_result),
             "consistency": summarize_consistency_report(consistency_report),
             "tbd": tbd_report.to_dict(),
-            "review_state_path": str(state_store.save()),
-            "draft_run_path": str(self._run.save()),
+            "review_state_path": str(state_store.save(output_dir=self._runs_dir)),
+            "draft_run_path": str(self._run.save(output_dir=self._runs_dir)),
             "assumption_burden_path": str(assumption_burden_path),
         }
 
