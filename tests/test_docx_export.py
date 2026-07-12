@@ -173,6 +173,24 @@ def test_export_run_to_docx_demo_mode_suppresses_reviewer_noise(tmp_path: Path, 
     assert "Review notes:" not in xml
 
 
+def test_export_run_to_docx_honors_explicit_runs_dir(tmp_path: Path):
+    """runs_dir must be used for both locating the run JSON and, absent an
+    explicit output_path, placing the exported DOCX — without needing to
+    monkeypatch the module-level _DRAFT_RUNS_DIR default at all."""
+    redirected_dir = tmp_path / "redirected" / "runs"
+    run_path = _write_run(tmp_path, run_id="redirected-run")
+    redirected_dir.mkdir(parents=True, exist_ok=True)
+    redirected_run_path = redirected_dir / run_path.name
+    redirected_run_path.write_text(run_path.read_text(encoding="utf-8"), encoding="utf-8")
+
+    output_path = export_run_to_docx(
+        "redirected-run", runs_dir=redirected_dir, force=True
+    )
+
+    assert output_path == redirected_dir / "redirected-run.docx"
+    assert output_path.exists()
+
+
 def test_export_run_to_docx_raises_clear_error_when_run_missing(tmp_path: Path, monkeypatch):
     monkeypatch.setattr("pdd_agent.export.docx_export._DRAFT_RUNS_DIR", tmp_path / "runs")
 

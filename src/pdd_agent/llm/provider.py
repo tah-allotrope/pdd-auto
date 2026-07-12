@@ -119,6 +119,13 @@ class DemoProvider(BaseProvider):
 
     name: str = "demo"
 
+    def __init__(self) -> None:
+        self._project_input: Any | None = None
+
+    def set_project_input(self, project_input: Any | None) -> None:
+        """Attach the ProjectInput so section text can vary by technology type."""
+        self._project_input = project_input
+
     def draft_section(
         self,
         section_id: str,
@@ -128,7 +135,12 @@ class DemoProvider(BaseProvider):
         max_chars: int = 4000,
     ) -> DraftSection:
         section_key = sub_section_id or section_id
-        text = _demo_section_text(section_key)
+        technology_type = None
+        if self._project_input is not None:
+            technology_type = getattr(
+                getattr(self._project_input, "technology", None), "technology_type", None
+            )
+        text = _demo_section_text(section_key, technology_type)
         return DraftSection(
             section_id=section_id,
             sub_section_id=sub_section_id,
@@ -220,18 +232,37 @@ def configure_provider(config: ModelConfig) -> None:
         logger.warning("unknown_provider", name=config.provider_name)
 
 
-def _demo_section_text(section_key: str) -> str:
-    defaults = {
-        "1.1": "This synthetic client-demo case illustrates a municipal solid waste facility that diverts waste from landfill disposal, recovers energy through treatment with power export, and demonstrates a Verra-style drafting workflow using deterministic demo inputs.",
-        "1.10": "The synthetic demo project is modeled with installed capacity, annual waste throughput, and electricity generation parameters drawn from the curated demo assumptions register. The draft carries estimated net emission reductions across the defined crediting period.",
-        "3.3": "The project boundary includes the project site and associated waste treatment facilities. Included emission sources cover waste handling, energy generation, and biogas combustion. Excluded emission sources are limited to off-site transport beyond the project gate. The geographic boundary is defined by GPS coordinates of the facility perimeter. The temporal boundary covers the crediting period from start date to end date. The project type is a single project (not a Programme of Activities).",
-        "3.4": "In this synthetic demo baseline, the municipal waste stream would otherwise continue to be disposed of at landfill sites. The demo assumes landfill disposal as the baseline management practice and uses deterministic baseline, project, and leakage values so the narrative remains aligned with the quantification sections.",
-        "3.5": "This synthetic demo presents additionality as a client-readable narrative rather than a validator-ready claim. The sample assumes the project requires dedicated waste-to-energy investment, specialized operating capability, and municipal coordination that would not be represented by the baseline landfill pathway alone.",
-        "4.1": "Baseline emissions in the synthetic demo are set based on the curated assumptions register. This value is carried consistently across the assumptions companion and the quantification narrative so the client-demo artifact remains internally aligned.",
-        "4.2": "Project emissions in the synthetic demo are set based on the curated assumptions register, representing the modeled emissions associated with facility operation and energy recovery. The value is deterministic and used consistently throughout the sample.",
-        "4.4": "Net greenhouse gas emission reductions in the synthetic demo are calculated after accounting for baseline emissions, project emissions, and leakage. Across the crediting period, the synthetic sample totals are derived deterministically from annual values.",
-        "5.2": "The synthetic demo monitoring plan tracks waste throughput through a calibrated weighbridge and net electricity export through a revenue-grade meter. Monthly review and digital record retention are assumed for the sample so the monitoring narrative stays coherent with the curated assumptions register.",
-    }
+_DEMO_SECTION_TEXT_WTE = {
+    "1.1": "This synthetic client-demo case illustrates a municipal solid waste facility that diverts waste from landfill disposal, recovers energy through treatment with power export, and demonstrates a Verra-style drafting workflow using deterministic demo inputs.",
+    "1.10": "The synthetic demo project is modeled with installed capacity, annual waste throughput, and electricity generation parameters drawn from the curated demo assumptions register. The draft carries estimated net emission reductions across the defined crediting period.",
+    "3.3": "The project boundary includes the project site and associated waste treatment facilities. Included emission sources cover waste handling, energy generation, and biogas combustion. Excluded emission sources are limited to off-site transport beyond the project gate. The geographic boundary is defined by GPS coordinates of the facility perimeter. The temporal boundary covers the crediting period from start date to end date. The project type is a single project (not a Programme of Activities).",
+    "3.4": "In this synthetic demo baseline, the municipal waste stream would otherwise continue to be disposed of at landfill sites. The demo assumes landfill disposal as the baseline management practice and uses deterministic baseline, project, and leakage values so the narrative remains aligned with the quantification sections.",
+    "3.5": "This synthetic demo presents additionality as a client-readable narrative rather than a validator-ready claim. The sample assumes the project requires dedicated waste-to-energy investment, specialized operating capability, and municipal coordination that would not be represented by the baseline landfill pathway alone.",
+    "4.1": "Baseline emissions in the synthetic demo are set based on the curated assumptions register. This value is carried consistently across the assumptions companion and the quantification narrative so the client-demo artifact remains internally aligned.",
+    "4.2": "Project emissions in the synthetic demo are set based on the curated assumptions register, representing the modeled emissions associated with facility operation and energy recovery. The value is deterministic and used consistently throughout the sample.",
+    "4.4": "Net greenhouse gas emission reductions in the synthetic demo are calculated after accounting for baseline emissions, project emissions, and leakage. Across the crediting period, the synthetic sample totals are derived deterministically from annual values.",
+    "5.2": "The synthetic demo monitoring plan tracks waste throughput through a calibrated weighbridge and net electricity export through a revenue-grade meter. Monthly review and digital record retention are assumed for the sample so the monitoring narrative stays coherent with the curated assumptions register.",
+}
+
+_DEMO_SECTION_TEXT_RICE_AWD = {
+    "1.1": "This synthetic client-demo case illustrates an alternate wetting and drying (AWD) rice cultivation project that reduces methane emissions from flooded paddy fields, and demonstrates a Verra-style drafting workflow using deterministic demo inputs.",
+    "1.10": "The synthetic demo project is modeled with cultivated area, cultivation days, and AWD practice adoption parameters drawn from the curated demo assumptions register. The draft carries estimated net emission reductions across the defined crediting period.",
+    "3.3": "The project boundary includes the enrolled rice paddy area under alternate wetting and drying management. Included emission sources cover methane from flooded soil during the cultivation period. Excluded emission sources are limited to off-site transport and processing beyond the field boundary. The geographic boundary is defined by GPS coordinates of the enrolled parcels. The temporal boundary covers the crediting period from start date to end date. The project type is a single project (not a Programme of Activities).",
+    "3.4": "In this synthetic demo baseline, the enrolled rice paddies would otherwise continue under continuously flooded water management. The demo assumes continuous flooding as the baseline water regime and uses deterministic baseline, project, and leakage values so the narrative remains aligned with the quantification sections.",
+    "3.5": "This synthetic demo presents additionality as a client-readable narrative rather than a validator-ready claim. The sample assumes the project requires dedicated farmer training, water-level monitoring infrastructure, and cooperative coordination that would not be represented by the continuously flooded baseline pathway alone.",
+    "4.1": "Baseline methane emissions in the synthetic demo are set based on the curated assumptions register, using the IPCC default emission factor for continuously flooded rice. This value is carried consistently across the assumptions companion and the quantification narrative so the client-demo artifact remains internally aligned.",
+    "4.2": "Project methane emissions in the synthetic demo are set based on the curated assumptions register, representing the modeled emissions associated with alternate wetting and drying practice adoption. The value is deterministic and used consistently throughout the sample.",
+    "4.4": "Net greenhouse gas emission reductions in the synthetic demo are calculated after accounting for baseline methane emissions, project methane emissions, and leakage. Across the crediting period, the synthetic sample totals are derived deterministically from annual values.",
+    "5.2": "The synthetic demo monitoring plan tracks cultivated area through field records and remote sensing, and water regime practice through field water-level tube gauges. Per-season review and digital record retention are assumed for the sample so the monitoring narrative stays coherent with the curated assumptions register.",
+}
+
+_DEMO_SECTION_TEXT_BY_TECHNOLOGY = {
+    "rice_awd": _DEMO_SECTION_TEXT_RICE_AWD,
+}
+
+
+def _demo_section_text(section_key: str, technology_type: str | None = None) -> str:
+    defaults = _DEMO_SECTION_TEXT_BY_TECHNOLOGY.get(technology_type or "", _DEMO_SECTION_TEXT_WTE)
     return defaults.get(
         section_key,
         f"Section {section_key} for the client demo is drafted as readable synthetic prose using the curated demo assumptions register. This text is intentionally concise, internally consistent with the demo inputs, and suitable for client-facing illustration rather than audit use.",

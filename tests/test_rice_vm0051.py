@@ -97,6 +97,24 @@ class TestRiceGolden:
         ids = {p["id"] for p in params}
         assert "VM0051-PARAM-01" in ids
 
+    def test_rice_pilot_yaml_quantification_matches_calc_engine(self, engine):
+        """The rice_vm0051_pilot.yaml quantification block must match what the
+        calc engine independently computes from the same rice_cultivation
+        inputs (PHASE-06 TASK-06-02)."""
+        import yaml
+
+        from schemas.project_input import ProjectInput
+
+        with open("configs/projects/rice_vm0051_pilot.yaml", encoding="utf-8") as f:
+            data = yaml.safe_load(f)
+        project_input = ProjectInput.model_validate(data)
+
+        calc_inputs = project_input.technology.rice_cultivation.model_dump()
+        net = engine.compute_net(calc_inputs)
+
+        expected = project_input.quantification.net_emissions_tco2e_per_year
+        assert net.value == pytest.approx(expected, rel=0.005)
+
     def test_registered_pdd_reference_shape(self, engine):
         """Shape check for a real registered PDD once registry data is available.
 

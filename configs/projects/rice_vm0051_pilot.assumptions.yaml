@@ -1,0 +1,64 @@
+candidate_key: mekong-awd-rice-pilot
+source_snapshot:
+  source_type: curated_demo_fixture
+  project_input: configs/projects/rice_vm0051_pilot.yaml
+assumptions:
+- field_path: project.project_name
+  value: Mekong Delta AWD Rice Cultivation Pilot Project
+  source_type: demo_curated
+  rationale: Curated synthetic project name for the VM0051 rice methodology pilot
+    (Seraphin substitute per plans/2026-07-12-pdd-reality-gap-plan.md ASM-009).
+  confidence: high
+- field_path: project.proponent_name
+  value: Mekong Delta Rice Sustainability Company
+  source_type: demo_curated
+  rationale: Curated synthetic proponent for the rice pilot fixture.
+  confidence: high
+- field_path: location.country
+  value: Vietnam
+  source_type: demo_curated
+  rationale: Curated Mekong Delta location, consistent with the named Vietnam rice
+    substitute for the blocked Seraphin greenfield project.
+  confidence: high
+- field_path: location.region
+  value: An Giang
+  source_type: demo_curated
+  rationale: An Giang province is a real AWD rice adoption region in the Mekong
+    Delta; used for narrative plausibility only, not a real project site.
+  confidence: medium
+- field_path: technology.rice_cultivation.area_ha
+  value: 5000.0
+  source_type: demo_curated
+  rationale: 5,000 ha curated per ASM-009 binding default, consistent in order
+    of magnitude with existing calc/rice_vm0051.py golden-test inputs.
+  confidence: high
+- field_path: technology.rice_cultivation.cultivation_days
+  value: 220
+  source_type: demo_curated
+  rationale: Two cropping seasons of 110 flooded days each, consistent with the
+    golden-test multi-practice fixture in tests/test_rice_vm0051.py.
+  confidence: high
+- field_path: technology.rice_cultivation.baseline_ef_kg_ch4_per_ha_per_day
+  value: 1.30
+  source_type: methodology
+  rationale: IPCC 2006/2019 default emission factor for continuously flooded rice,
+    matching calc/rice_vm0051.py's DEFAULT_EF_KG_CH4_PER_HA_PER_DAY.
+  confidence: high
+- field_path: quantification.net_emissions_tco2e_per_year
+  value: 20020.0
+  source_type: calc_engine
+  rationale: Computed by calc/rice_vm0051.py RiceVm0051Engine.compute_net() from
+    the rice_cultivation inputs above (AWD scaling factor 0.5).
+  confidence: high
+guardrails:
+  blocked_review_paths: []
+  blocked_review_items: []
+  notes:
+  - This assumptions file supports the PHASE-06 rice pilot (methodology-breadth
+    proof) and intentionally avoids review-gated missing-data placeholders, matching
+    the demo_curated convention used by configs/projects/demo_socson_like.assumptions.yaml.
+  - All values are synthetic pilot inputs, not real project evidence. Replace with
+    a real Vietnam rice prospect's data when one is identified.
+  - technology.waste_type / annual_waste_throughput / installed_capacity_mw are
+    WTE-shaped required schema fields populated with best-effort interpretations
+    for a rice methodology; see docs/2026-07-12-rice-pilot-findings.md.

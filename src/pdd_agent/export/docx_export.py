@@ -158,13 +158,20 @@ def export_run_to_docx(
     project_name: str = "",
     project_input: ProjectInput | None = None,
     force: bool = False,
+    runs_dir: Path | None = None,
 ) -> Path:
     """Export a DraftRun JSON to a review-friendly DOCX file.
 
     The export gate is evaluated before writing. Hard-blocks stop export unless
     ``force=True``; everything else exports as a watermarked DRAFT.
+
+    ``runs_dir`` overrides the default ``data/runs`` directory used both to
+    locate the run JSON and, when ``output_path`` is not given, to place the
+    exported DOCX — callers with a redirected run persistence directory (e.g.
+    the service's ``PDD_SERVICE_RUNS_DIR``) must pass it explicitly.
     """
-    run_path = _DRAFT_RUNS_DIR / f"{run_id}.json"
+    effective_runs_dir = runs_dir or _DRAFT_RUNS_DIR
+    run_path = effective_runs_dir / f"{run_id}.json"
     if not run_path.exists():
         message = f"Draft run not found for run_id `{run_id}` at `{run_path}`"
         logger.error("draft_run_not_found", run_id=run_id, path=str(run_path))
@@ -280,7 +287,7 @@ def export_run_to_docx(
 
     _add_page_numbers(doc)
 
-    final_output = Path(output_path) if output_path else _DRAFT_RUNS_DIR / f"{run_id}.docx"
+    final_output = Path(output_path) if output_path else effective_runs_dir / f"{run_id}.docx"
     final_output.parent.mkdir(parents=True, exist_ok=True)
     doc.save(str(final_output))
     logger.info("docx_exported", run_id=run_id, path=str(final_output))
