@@ -1,0 +1,42 @@
+bucket_name: verra-biochar-vm0044
+description: "Homogeneous bucket: Verra-style VM0044 biochar production and application PDDs (pyrolysis feedstock conversion, soil carbon sink storage)."
+version: 0.1.0
+bucket_rules:
+  include:
+    name_patterns:
+      - vcs_.*biochar
+      - vcs_.*pyrolysis
+      - vcs_.*feedstock
+      - vcs_.*vm0044
+      - vcs_.*carbon.*sink
+    mime_types:
+      - application/pdf
+      - application/vnd.openxmlformats-officedocument.wordprocessingml.document
+      - application/msword
+    min_word_count: 500
+    methodology_family:
+      - VM0044
+    registry:
+      - VCS
+      - Verra
+    geography:
+      - India
+      - Kenya
+      - Southeast Asia
+      - Sub-Saharan Africa
+  exclude:
+    name_patterns:
+      - draft.*internal
+      - note|todo|meeting
+      - methodology.*pdf
+      - template.*docx
+    mime_types:
+      - application/vnd.google-apps.folder
+      - application/vnd.google-apps.document
+      - application/vnd.google-apps.spreadsheet
+      - text/plain
+      - text/html
+notes: >
+  Keyword scope: biochar, pyrolysis, feedstock, carbon sink, soil
+  amendment, VM0044. Populate via
+  `pdd-agent fetch-registry --methodology VM0044`.

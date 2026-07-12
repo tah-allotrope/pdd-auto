@@ -48,3 +48,19 @@
 2. **Confirm reference materials** — download official Verra template and methodology documents into `data/reference/verra/` and `data/reference/methodologies/`.
 3. **Validate parseability** — for any file flagged NOT parseable, check whether it is a scanned PDF requiring OCR.
 4. **Lock bucket before PHASE-02** — once the in-bucket set is stable, update `configs/corpus_buckets/verra-wte-initial.yaml` and commit the manifest.
+
+## New Family Corpora — Registry Fetch Status (2026-07-12)
+
+Per `plans/2026-07-12-pdd-reality-gap-plan.md` PHASE-05, `pdd-agent fetch-registry` was run live against the public Verra registry for the three new methodology families. Bucket configs (`configs/corpus_buckets/verra-{rice-vm0051,biochar-vm0044,cookstove-amsiig}.yaml`) are in place; corpus population is blocked on the registry's exact search API shape.
+
+| Methodology | Command run | Result | Documents downloaded |
+|---|---|---|---|
+| VM0051 (rice) | `pdd-agent fetch-registry --methodology VM0051 --limit 3 --output-dir data/corpus/registry/vm0051` | Manual-download mode | 0 |
+| VM0044 (biochar) | `pdd-agent fetch-registry --methodology VM0044 --limit 3 --output-dir data/corpus/registry/vm0044` | Manual-download mode | 0 |
+| AMS-II.G (cookstoves) | `pdd-agent fetch-registry --methodology AMS-II.G --limit 3 --output-dir data/corpus/registry/amsiig` | Manual-download mode | 0 |
+
+**Why manual mode:** the registry search endpoint (`POST https://registry.verra.org/uiapi/asset/asset/search`, confirmed live and reachable) requires an exact OData request shape (`$filter`/`$top`/`$skip` plus specific field names) that could not be fully reconstructed from the minified Angular bundle alone — full reconstruction needs browser devtools network inspection of a real search interaction, which was not available in this environment. See the `download_registered_pdds()` module docstring in `src/pdd_agent/ingest/registry_download.py` for the exact verification evidence (endpoint reachability, `basePath` confirmation, a 406 response to a malformed request proving the endpoint validates input).
+
+**This is a designed, first-class outcome, not a failure** — `manifest.json` in each output directory documents the manual-download instructions. Each family's corpus can be populated by placing PDDs downloaded by hand from https://registry.verra.org/app/search/VCS into the corresponding `data/corpus/registry/<family>/` directory, then calling `refresh_manifest(output_dir)`.
+
+**Next step to unblock:** either (a) inspect the registry's real search XHR payload via browser devtools once available and update `_search_projects()`'s request body to match, or (b) proceed directly to manual downloads — filtering the registry UI by methodology and saving PDD PDFs by hand is a bounded, one-time task per family (~10 documents each).

@@ -36,6 +36,7 @@ _DEFAULT_PRICING = {
     "claude-sonnet-5": {"input": 3.00, "output": 15.00},
     "claude-opus-4-8": {"input": 15.00, "output": 75.00},
     "claude-haiku-4-5-20251001": {"input": 0.25, "output": 1.25},
+    "ollama-local": {"input": 0.0, "output": 0.0},
 }
 
 
@@ -115,9 +116,10 @@ class TokenBudget:
         input_tokens: int,
         output_tokens: int,
         model: str = "",
+        provider: str = "",
     ) -> CallRecord:
         """Record a completed LLM call and return the call record."""
-        cost = self._estimate_cost(input_tokens, output_tokens, model)
+        cost = self._estimate_cost(input_tokens, output_tokens, model, provider)
         record = CallRecord(
             section_id=section_id,
             input_tokens=input_tokens,
@@ -136,8 +138,11 @@ class TokenBudget:
         )
         return record
 
-    def _estimate_cost(self, input_tokens: int, output_tokens: int, model: str) -> float:
-        pricing = _DEFAULT_PRICING.get(model, _DEFAULT_PRICING.get("gpt-4o", {}))
+    def _estimate_cost(
+        self, input_tokens: int, output_tokens: int, model: str, provider: str = ""
+    ) -> float:
+        fallback_key = "ollama-local" if provider == "ollama" else "gpt-4o"
+        pricing = _DEFAULT_PRICING.get(model, _DEFAULT_PRICING.get(fallback_key, {}))
         if not pricing:
             return 0.0
         input_cost = (input_tokens / 1_000_000) * pricing.get("input", 0)

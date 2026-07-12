@@ -1,0 +1,45 @@
+bucket_name: verra-cookstove-amsiig
+description: "Homogeneous bucket: Verra/CDM-style AMS-II.G improved cookstove PDDs (fuelwood displacement, fraction of non-renewable biomass, thermal efficiency programmes)."
+version: 0.1.0
+bucket_rules:
+  include:
+    name_patterns:
+      - vcs_.*cookstove
+      - vcs_.*stove
+      - vcs_.*amsiig
+      - vcs_.*ams-ii\.g
+      - vcs_.*fuelwood
+      - vcs_.*kpt
+    mime_types:
+      - application/pdf
+      - application/vnd.openxmlformats-officedocument.wordprocessingml.document
+      - application/msword
+    min_word_count: 500
+    methodology_family:
+      - AMS-II.G
+    registry:
+      - VCS
+      - Verra
+      - CDM
+    geography:
+      - Sub-Saharan Africa
+      - India
+      - Central America
+      - Southeast Asia
+  exclude:
+    name_patterns:
+      - draft.*internal
+      - note|todo|meeting
+      - methodology.*pdf
+      - template.*docx
+    mime_types:
+      - application/vnd.google-apps.folder
+      - application/vnd.google-apps.document
+      - application/vnd.google-apps.spreadsheet
+      - text/plain
+      - text/html
+notes: >
+  Keyword scope: cookstove, improved stove, fuelwood, fraction of
+  non-renewable biomass (fNRB), thermal efficiency, AMS-II.G, Kitchen
+  Performance Test (KPT). Populate via
+  `pdd-agent fetch-registry --methodology AMS-II.G`.
