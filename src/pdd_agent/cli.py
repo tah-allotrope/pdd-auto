@@ -8,6 +8,7 @@ from pathlib import Path
 
 import structlog
 import yaml
+from dotenv import find_dotenv, load_dotenv
 
 from pdd_agent.ingest.drive import drive_inventory
 from pdd_agent.ingest.normalize import normalize_corpus
@@ -23,6 +24,7 @@ from pdd_agent.phase05.benchmark import create_demo_project_input, run_demo_benc
 from pdd_agent.phase06.assumptions import load_assumption_register, resolve_assumptions_path
 from pdd_agent.phase06.spreadsheet_mapper import fetch_workbook, generate_project_artifacts
 from pdd_agent.phase06.vietnam_workflow import run_vietnam_pdd_workflow
+from pdd_agent.doctor import run_doctor
 from schemas.project_input import ProjectInput
 
 
@@ -80,6 +82,12 @@ def _build_parser() -> argparse.ArgumentParser:
     sub.add_parser(
         "demo-setup",
         help="Build the demo FTS5 index from the bundled demo/corpus subset",
+    )
+
+    sub.add_parser(
+        "doctor",
+        help="Diagnose the local environment: Python version, optional packages, "
+        "API keys, Ollama, external tools, retrieval index, model pricing",
     )
 
     draft_parser = sub.add_parser("draft", help="Draft all PDD sections for a project")
@@ -334,6 +342,7 @@ def _build_parser() -> argparse.ArgumentParser:
 
 
 def main() -> int:
+    load_dotenv(find_dotenv(usecwd=True))
     parser = _build_parser()
     args = parser.parse_args()
 
@@ -362,11 +371,12 @@ def main() -> int:
         "run-vietnam-pdd": lambda: _run_vietnam_pdd(args, log),
         "extract": lambda: _run_extract(args, log),
         "screen": lambda: _run_screen(args, log),
+        "doctor": run_doctor,
     }
 
     try:
-        commands[args.command]()
-        return 0
+        result = commands[args.command]()
+        return result if isinstance(result, int) else 0
     except Exception as exc:
         log.error("command_failed", command=args.command, error=str(exc))
         if args.verbose:

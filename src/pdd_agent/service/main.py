@@ -18,10 +18,13 @@ from typing import Any
 
 import structlog
 import yaml
+from dotenv import find_dotenv, load_dotenv
 from fastapi import BackgroundTasks, FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+
+load_dotenv(find_dotenv(usecwd=True))
 
 from pdd_agent.agent.section_orchestrator import SectionOrchestrator
 from pdd_agent.export.docx_export import export_run_to_docx

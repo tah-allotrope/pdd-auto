@@ -1,8 +1,18 @@
 # PDD Agent — Agentic Low-Cost WTE Carbon-Credit PDD Drafting Tool
 
-**Status:** Codex Insights Integration & Inegol Demo Case — ALL PHASES COMPLETE (2026-05-21). 204 tests pass. Inegol end-to-end demo produces 36-section DOCX with zero review flags. Pipeline proven superior to standalone Codex script per quantitative comparison.
+**Status:** 544 tests pass. Pipeline skeleton is mature: corpus RAG, rule-based review, VCS v4.4 DOCX export, LLM-judge + capped redraft loop, a local FastAPI section-review service, and calc engines for ACM0022, AMS-II.G, VM0051, and VM0044. Real LLM providers (OpenAI, Anthropic, Ollama) are implemented; live drafting runs are pending API keys (Ollama runs today with no key required — see `pdd-agent doctor`). All demo/benchmark output to date uses the deterministic `demo`/`noop` providers.
 
 **Demo Quickstart:** Want to see it working in 5 minutes? → [QUICKSTART.md](QUICKSTART.md)
+
+**Service Quickstart:** Want the section-review web UI?
+
+```bash
+python scripts/setup_service.py
+uvicorn pdd_agent.service.main:app --reload
+# then open http://localhost:8000/dashboard
+```
+
+See `src/pdd_agent/service/README.md` for the full API and environment variable reference.
 
 ## What This Tool Does
 
@@ -22,7 +32,10 @@ ProjectInput YAML ──→ SectionOrchestrator ──→ DraftRun
 
 ```bash
 # Install
-pip install -e ".[dev]"
+pip install -e ".[dev,service,export,llm]"
+
+# Diagnose the local environment (Python version, optional packages, API keys, Ollama, external tools)
+pdd-agent doctor
 
 # Ingest corpus from VERRA Drive folder
 pdd-agent ingest --folder-id 1pp23yRZ8qtopw1BPXrzVewXsmmWplCse
@@ -59,10 +72,12 @@ pdd-agent upload --run-id <run-id>
 
 | Command | Description |
 |---|---|
+| `pdd-agent doctor` | Diagnose the local environment: Python version, optional packages, API keys, Ollama, external tools, retrieval index, model pricing |
 | `pdd-agent ingest` | Full pipeline: inventory → download → normalize → bucket |
 | `pdd-agent build-index` | Build SQLite FTS5 BM25 index from normalized corpus |
-| `pdd-agent draft` | Draft all PDD sections for a project |
+| `pdd-agent draft` | Draft all PDD sections for a project (`--provider noop\|demo\|corpus\|openai\|anthropic`, `--judge` to enable the LLM-judge/redraft loop) |
 | `pdd-agent review` | Display review state for a run |
+| `pdd-agent judge` | Run the LLM judge on an existing draft run |
 | `pdd-agent export` | Export DraftRun to DOCX |
 | `pdd-agent upload` | Upload DOCX to Google Drive via gws |
 | `pdd-agent demo-config` | Write the reproducible Soc Son-like benchmark input |
@@ -288,8 +303,9 @@ src/pdd_agent/
 ├── retrieval/index.py              # PHASE-03: SQLite FTS5 BM25 index
 ├── retrieval/search.py             # PHASE-03: Retrieval query API
 ├── llm/provider.py                 # PHASE-03: Provider abstraction + NoopProvider
-├── llm/openai_provider.py          # PHASE-03: OpenAI stub (not wired)
-├── llm/ollama_provider.py         # PHASE-03: Ollama stub (not wired)
+├── llm/openai_provider.py          # PHASE-03: OpenAI provider (implemented; live runs pending API key)
+├── llm/anthropic_provider.py       # PHASE-03: Anthropic provider (implemented; live runs pending API key)
+├── llm/ollama_provider.py          # PHASE-03: Ollama provider stub — registered but not yet a real HTTP client
 ├── agent/section_orchestrator.py   # PHASE-03+04: Drafting + review pipeline
 ├── review/checks.py               # PHASE-04: Rule-based compliance checks
 ├── review/consistency.py          # PHASE-04: Cross-section numeric consistency
@@ -300,10 +316,13 @@ src/pdd_agent/
 ## Known Gaps
 
 - `python-docx` is declared in `pyproject.toml`, but local environments still need it installed before DOCX export works at runtime; the exporter now fails with a clear install message instead of skipping silently
-- No real LLM provider wired — benchmark runs use the deterministic `DemoProvider` for client-demo output or the `NoopProvider` for reviewer-facing placeholder draft
-- The `reports/demo-packages/` client-demo path is now implemented — `python scripts/run_demo.py` publishes a readable synthetic DOCX with zero placeholders, aligned quantification, and a strong synthetic disclosure
+- Real LLM providers (OpenAI, Anthropic) are implemented but have never executed a live drafting run — `OPENAI_API_KEY`/`ANTHROPIC_API_KEY` are not available in the current environment. Every demo/benchmark artifact produced so far uses the deterministic `DemoProvider` (client-demo output) or `NoopProvider` (reviewer-facing placeholder draft). The `OllamaProvider` is currently a stub (registered but returns placeholder text, not a real local-model call) — see `plans/2026-07-12-pdd-reality-gap-plan.md` PHASE-02 for the fix in progress.
+- The LLM-judge (`review/judge.py`) defaults to deterministic rule-based scoring; the `use_llm=True` path is a thin interface stub, not a tuned judge prompt.
+- The `reports/demo-packages/` client-demo path is implemented — `python scripts/run_demo.py` publishes a readable synthetic DOCX with zero placeholders, aligned quantification, and a strong synthetic disclosure
 - The first benchmark is a workflow proof on one Soc Son-like case; a second project is still needed before claiming broader WTE coverage
 - The Soc Son spreadsheet mapper intentionally blocks review-sensitive quantitative splits, coordinates, and safeguards fields when they rely on synthetic assumptions
+- `ingest/registry_download.py` (public Verra/CDM registry PDD downloader) is a stub — the rice/AMS-II.G/biochar calc engines have golden tests against synthetic-but-documented values, not real registered-PDD corpora
+- The FastAPI service (`src/pdd_agent/service/`) currently forces the `demo` provider and disables corpus retrieval regardless of configuration, to sidestep SQLite thread-affinity — see `plans/2026-07-12-pdd-reality-gap-plan.md` PHASE-03
 
 ## Key References
 
