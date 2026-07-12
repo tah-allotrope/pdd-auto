@@ -32,6 +32,12 @@ Thumbs.db
 # Generated demo output (not tracked)
 output/
 
+# Reference material snapshots — kept in Google Drive, not git
+ref/
+
+# Local secrets
+.env
+
 # IDE
 .vscode/
 .idea/
