@@ -158,13 +158,17 @@ def _build_parser() -> argparse.ArgumentParser:
         "--limit", type=int, default=10, help="Maximum number of PDDs to fetch (default: 10)"
     )
     fetch_registry_parser.add_argument(
-        "--output-dir", required=True, help="Directory to write downloaded PDFs and manifest.json into"
+        "--output-dir",
+        required=True,
+        help="Directory to write downloaded PDFs and manifest.json into",
     )
 
     scorecard_parser = sub.add_parser(
         "scorecard", help="Run the same ProjectInput through multiple providers and compare"
     )
-    scorecard_parser.add_argument("--input", "-i", required=True, help="Path to ProjectInput YAML file")
+    scorecard_parser.add_argument(
+        "--input", "-i", required=True, help="Path to ProjectInput YAML file"
+    )
     scorecard_parser.add_argument(
         "--providers",
         default="demo",
@@ -488,10 +492,9 @@ def _run_draft(args, log) -> None:
 def _run_review(args, log) -> None:
     from pdd_agent.review.states import ReviewStateStore
 
-    project_input = None
     if args.input:
         with open(args.input, encoding="utf-8") as f:
-            project_input = ProjectInput.model_validate(yaml.safe_load(f))
+            ProjectInput.model_validate(yaml.safe_load(f))
 
     try:
         store = ReviewStateStore.load(args.run_id)
@@ -560,7 +563,11 @@ def _run_export(args, log) -> None:
             project_name=args.run_id,
             output_root=Path(args.review_output_dir),
         )
-        log.info("review_docx_published", path=str(docx_path), review_output_dir=str(args.review_output_dir))
+        log.info(
+            "review_docx_published",
+            path=str(docx_path),
+            review_output_dir=str(args.review_output_dir),
+        )
     else:
         output_path = Path(args.output) if args.output else None
         try:
@@ -667,7 +674,9 @@ def _run_benchmark(args, log) -> None:
         run_id=artifacts.run_id,
         scorecard=str(artifacts.demo_scorecard),
         diff=str(artifacts.section_diff),
-        demo_package_manifest=str(artifacts.demo_package_manifest) if artifacts.demo_package_manifest else None,
+        demo_package_manifest=str(artifacts.demo_package_manifest)
+        if artifacts.demo_package_manifest
+        else None,
         demo_latest_docx=str(artifacts.demo_latest_docx) if artifacts.demo_latest_docx else None,
         runtime_seconds=artifacts.runtime_seconds,
         matched_sections=artifacts.comparison_summary.get("matched_sections"),
@@ -750,7 +759,7 @@ def _run_extract(args, log) -> None:
 
     if project_input.extraction_provenance:
         prov = project_input.extraction_provenance
-        print(f"\nExtraction provenance:")
+        print("\nExtraction provenance:")
         print(f"  Extracted fields: {len(prov.extracted_fields)}")
         print(f"  Defaulted fields: {len(prov.defaulted_fields)}")
         print(f"  Missing fields:   {len(prov.missing_fields)}")

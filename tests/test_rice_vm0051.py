@@ -138,4 +138,3 @@ class TestRiceGolden:
         net = engine.compute_net(multi_practice_input)
         assert net.value > 0
         assert net.unit == "tCO2e/year"
-

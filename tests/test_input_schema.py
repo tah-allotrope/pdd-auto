@@ -12,16 +12,6 @@ sys.path.insert(0, str(ROOT_DIR))
 
 from schemas.project_input import (
     ProjectInput,
-    ProjectIdentity,
-    ProjectLocation,
-    ProjectDates,
-    ProjectTechnology,
-    MethodologyApplicability,
-    QuantificationInputs,
-    MonitoringPlan,
-    SafeguardsEvidence,
-    ComplianceAndOwnership,
-    SustainableDevelopment,
 )
 
 

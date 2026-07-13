@@ -25,7 +25,10 @@ def test_export_converts_docx_and_reports_status(mock_docx, mock_pdf, tmp_path):
 
     mock_pdf.assert_called_once_with(docx)
     log.info.assert_any_call(
-        "export_complete", docx_path=str(docx), pdf_status="created", pdf_path=str(pdf),
+        "export_complete",
+        docx_path=str(docx),
+        pdf_status="created",
+        pdf_path=str(pdf),
     )
 
 

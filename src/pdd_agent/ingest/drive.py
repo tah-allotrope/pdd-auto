@@ -100,7 +100,7 @@ def get_file_metadata(file_id: str) -> dict[str, Any]:
 
 def download_blob(file_id: str, output_path: Path, mime_type: str) -> Path:
     """Download a blob file (PDF, DOCX, etc.) via gws alt=media."""
-    output = _run(
+    _run(
         [
             "drive",
             "files",
@@ -131,7 +131,7 @@ def export_workspace_native(file_id: str, output_path: Path, mime_type: str) -> 
     if not export_mime:
         raise ValueError(f"No export format known for MIME type: {mime_type}")
 
-    output = _run(
+    _run(
         [
             "drive",
             "files",

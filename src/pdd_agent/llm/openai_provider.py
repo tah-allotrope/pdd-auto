@@ -134,13 +134,9 @@ class OpenAIProvider(BaseProvider):
                 )
                 time.sleep(wait)
             except openai.AuthenticationError as exc:
-                raise OpenAIProviderError(
-                    f"OpenAI authentication failed: {exc}"
-                ) from exc
+                raise OpenAIProviderError(f"OpenAI authentication failed: {exc}") from exc
             except openai.BadRequestError as exc:
-                raise OpenAIProviderError(
-                    f"OpenAI bad request: {exc}"
-                ) from exc
+                raise OpenAIProviderError(f"OpenAI bad request: {exc}") from exc
 
         raise OpenAIProviderError(
             f"OpenAI API call failed after {_MAX_RETRIES} retries: {last_error}"
@@ -176,9 +172,7 @@ class OpenAIProvider(BaseProvider):
                 provenance=provenance,
                 issues=[f"OPENAI ERROR: {exc}"],
                 provider=self.name,
-                output_references=[
-                    {"type": "section_body", "description": "openai error output"}
-                ],
+                output_references=[{"type": "section_body", "description": "openai error output"}],
             )
 
         if self._budget and response.raw:
@@ -200,17 +194,14 @@ class OpenAIProvider(BaseProvider):
             provenance=provenance,
             issues=self._extract_issues(text, section_id, sub_section_id),
             provider=self.name,
-            output_references=[
-                {"type": "section_body", "description": "openai generated output"}
-            ],
+            output_references=[{"type": "section_body", "description": "openai generated output"}],
         )
 
     def _assess_confidence(self, text: str, provenance: list[str]) -> str:
         has_review_markers = "[REVIEW REQUIRED" in text or "[MISSING]" in text
         has_inference = "[INFERENCE]" in text
         has_citations = any(
-            marker in text
-            for marker in ("[CORPUS:", "[METHODOLOGY:", "[E0", "[USER INPUT:")
+            marker in text for marker in ("[CORPUS:", "[METHODOLOGY:", "[E0", "[USER INPUT:")
         )
 
         if has_review_markers and not has_citations:
@@ -221,9 +212,7 @@ class OpenAIProvider(BaseProvider):
             return "HIGH"
         return "MEDIUM"
 
-    def _extract_issues(
-        self, text: str, section_id: str, sub_section_id: str
-    ) -> list[str]:
+    def _extract_issues(self, text: str, section_id: str, sub_section_id: str) -> list[str]:
         issues = []
         if "[REVIEW REQUIRED" in text:
             issues.append(

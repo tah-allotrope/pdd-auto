@@ -6,7 +6,7 @@ from unittest.mock import patch
 
 import pytest
 
-from pdd_agent.ingest.drive import GWS_ERROR_MESSAGE, _check_gws_available
+from pdd_agent.ingest.drive import _check_gws_available
 
 
 class TestGwsGuard:

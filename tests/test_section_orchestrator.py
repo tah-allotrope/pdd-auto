@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import pytest
 
 from pathlib import Path
 
@@ -291,7 +290,9 @@ class TestSectionOrchestratorRedraft:
         import yaml
         from schemas.project_input import EvidenceItem, EvidenceRegistry, ProjectInput
 
-        project_yaml = Path(__file__).parent.parent / "configs" / "projects" / "demo_socson_like.yaml"
+        project_yaml = (
+            Path(__file__).parent.parent / "configs" / "projects" / "demo_socson_like.yaml"
+        )
         with open(project_yaml, encoding="utf-8") as f:
             project_input = ProjectInput.model_validate(yaml.safe_load(f))
         project_input.evidence_registry = EvidenceRegistry(

@@ -136,16 +136,10 @@ class AnthropicProvider(BaseProvider):
                     time.sleep(wait)
                     continue
                 if self._is_auth_error(exc):
-                    raise AnthropicProviderError(
-                        f"Anthropic authentication failed: {exc}"
-                    ) from exc
+                    raise AnthropicProviderError(f"Anthropic authentication failed: {exc}") from exc
                 if self._is_bad_request_error(exc):
-                    raise AnthropicProviderError(
-                        f"Anthropic bad request: {exc}"
-                    ) from exc
-                raise AnthropicProviderError(
-                    f"Anthropic API call failed: {exc}"
-                ) from exc
+                    raise AnthropicProviderError(f"Anthropic bad request: {exc}") from exc
+                raise AnthropicProviderError(f"Anthropic API call failed: {exc}") from exc
 
         raise AnthropicProviderError(
             f"Anthropic API call failed after {_MAX_RETRIES} retries: {last_error}"
@@ -214,8 +208,7 @@ class AnthropicProvider(BaseProvider):
         has_review_markers = "[REVIEW REQUIRED" in text or "[MISSING]" in text
         has_inference = "[INFERENCE]" in text
         has_citations = any(
-            marker in text
-            for marker in ("[CORPUS:", "[METHODOLOGY:", "[E0", "[USER INPUT:")
+            marker in text for marker in ("[CORPUS:", "[METHODOLOGY:", "[E0", "[USER INPUT:")
         )
 
         if has_review_markers and not has_citations:
@@ -226,9 +219,7 @@ class AnthropicProvider(BaseProvider):
             return "HIGH"
         return "MEDIUM"
 
-    def _extract_issues(
-        self, text: str, section_id: str, sub_section_id: str
-    ) -> list[str]:
+    def _extract_issues(self, text: str, section_id: str, sub_section_id: str) -> list[str]:
         issues = []
         if "[REVIEW REQUIRED" in text:
             issues.append(

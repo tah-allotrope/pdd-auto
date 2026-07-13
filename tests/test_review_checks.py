@@ -2,11 +2,9 @@
 
 from __future__ import annotations
 
-import json
 import tempfile
 from pathlib import Path
 
-import pytest
 
 from pdd_agent.llm.provider import DraftRun, DraftSection
 from pdd_agent.review.checks import (
@@ -26,7 +24,6 @@ from pdd_agent.review.consistency import (
 from pdd_agent.review.states import (
     ReviewState,
     ReviewStateStore,
-    SectionState,
     init_review_state,
 )
 
@@ -273,7 +270,7 @@ class TestReviewStateStore:
         store.set_state("1", "1", ReviewState.APPROVED)
         store.set_state("3", "5", ReviewState.NEEDS_DOMAIN_REVIEW)
         with tempfile.TemporaryDirectory() as tmpdir:
-            saved_path = store.save(output_dir=Path(tmpdir))
+            store.save(output_dir=Path(tmpdir))
             loaded = ReviewStateStore.load("run-roundtrip", output_dir=Path(tmpdir))
             assert loaded.run_id == "run-roundtrip"
             assert loaded.sections["1/1"].state == ReviewState.APPROVED

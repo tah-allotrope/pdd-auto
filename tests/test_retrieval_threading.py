@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import sqlite3
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
@@ -59,7 +58,6 @@ class TestThreadSafety:
         assert all(r == first for r in results)
 
     def test_each_thread_gets_its_own_connection(self, built_index: RetrievalIndex):
-        seen_conn_ids = set()
         lock_free_ids: list[int] = []
 
         def record_conn_id() -> None:

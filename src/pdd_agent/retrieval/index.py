@@ -6,8 +6,6 @@ Index is stored at `data/index/corpus.fts.db` alongside the corpus.
 
 from __future__ import annotations
 
-import json
-import re
 import structlog
 import threading
 from datetime import datetime, timezone
@@ -81,7 +79,7 @@ class RetrievalIndex:
 
         conn.execute("DROP TABLE IF EXISTS sections_fts")
         conn.execute(
-            f"""
+            """
             CREATE VIRTUAL TABLE sections_fts USING fts5(
                 section_id,
                 sub_section_id,
@@ -188,7 +186,7 @@ class RetrievalIndex:
 
         pattern = f"%{heading}%"
         rows = conn.execute(
-            f"""
+            """
             SELECT rowid, section_id, sub_section_id, document_name,
                    canonical_heading, text, content_class, review_sensitivity
               FROM sections_fts

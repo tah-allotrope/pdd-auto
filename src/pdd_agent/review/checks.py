@@ -89,7 +89,6 @@ def run_review_checks(
     """
     result = ReviewCheckResult(run_id=run_id, passed=True)
     rules = _load_review_rules()
-    methodology_rules = get_methodology_rules()
 
     section_texts: dict[str, str] = {}
     for s in draft_run.sections:
@@ -145,7 +144,9 @@ def run_review_checks(
 
     if project_input:
         rules_engine = get_methodology_rules()
-        post_results = rules_engine.run_post_draft_checks(section_texts)
+        post_results = rules_engine.run_post_draft_checks(
+            section_texts, methodology_ids=project_input.technology.methodology_ids
+        )
         for pr in post_results:
             check = ReviewCheck(
                 check_id=pr.get("check_id", "POST-UNKNOWN"),
@@ -198,7 +199,6 @@ def _run_double_counting_guard(
 ) -> ReviewCheck:
     guard_id = guard_def.get("guard_id", "DC-UNKNOWN")
     desc = guard_def.get("description", "")
-    trigger = guard_def.get("trigger_condition", "")
     blocking = guard_def.get("blocking", False)
 
     flag = False

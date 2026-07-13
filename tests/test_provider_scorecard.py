@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pytest
 
 from pdd_agent.phase05.benchmark import create_demo_project_input
 from pdd_agent.phase05.provider_scorecard import (
@@ -50,9 +49,7 @@ class TestRunProviderScorecard:
         text = output_path.read_text(encoding="utf-8")
         assert "| demo |" in text
         assert "| noop |" in text
-        header = [
-            line for line in text.splitlines() if line.startswith("| Provider |")
-        ][0]
+        header = [line for line in text.splitlines() if line.startswith("| Provider |")][0]
         # Provider column + 7 metric columns.
         assert header.count("|") == 9
 

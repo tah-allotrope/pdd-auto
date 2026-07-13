@@ -15,8 +15,10 @@ def test_substitutes_explicit_project_facts(tmp_path):
         "Old Plant in Old City is operated by Old Co under ACM0001.",
         source_name="reference-pdd",
         source_facts={
-            "project_name": "Old Plant", "city": "Old City",
-            "proponent_name": "Old Co", "methodology_ids": "ACM0001",
+            "project_name": "Old Plant",
+            "city": "Old City",
+            "proponent_name": "Old Co",
+            "methodology_ids": "ACM0001",
         },
     )
     assert project.project.project_name in result.text
@@ -26,6 +28,7 @@ def test_substitutes_explicit_project_facts(tmp_path):
 
 def test_flags_retained_regulatory_references(tmp_path):
     result = FactSubstitutionEngine(_project(tmp_path)).adapt(
-        "The environmental permit was approved in 2020.", source_name="reference-pdd",
+        "The environmental permit was approved in 2020.",
+        source_name="reference-pdd",
     )
     assert "[REVIEW: substitution ambiguity" in result.text

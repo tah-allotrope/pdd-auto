@@ -48,6 +48,12 @@ packages = ["src/pdd_agent", "schemas"]
 [tool.ruff]
 line-length = 100
 target-version = "py311"
+exclude = [".claude"]
+
+[tool.ruff.lint]
+# E402: several scripts and the FastAPI service deliberately run sys.path setup
+# or load_dotenv() before local imports so those imports see the right path/env.
+ignore = ["E402"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

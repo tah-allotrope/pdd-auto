@@ -18,11 +18,9 @@ from pdd_agent.domain.methodology_rules import get_methodology_rules
 from pdd_agent.llm.budget import TokenBudget, BudgetExhaustedError
 from pdd_agent.llm.provider import (
     BaseProvider,
-    DemoProvider,
     DraftRun,
     DraftSection,
     NoopProvider,
-    get_provider_registry,
 )
 from pdd_agent.phase06.assumptions import (
     output_ref_for_section,
@@ -33,7 +31,6 @@ from pdd_agent.phase06.assumptions import (
 from pdd_agent.retrieval.search import (
     get_examples_for_section,
     get_section_heading_examples,
-    search as retrieval_search,
 )
 from pdd_agent.review.checks import run_review_checks, summarize_review_result
 from pdd_agent.review.consistency import (
@@ -41,7 +38,7 @@ from pdd_agent.review.consistency import (
     summarize_consistency_report,
 )
 from pdd_agent.review.judge import LLMJudge
-from pdd_agent.review.states import ReviewStateStore, init_review_state, ReviewState
+from pdd_agent.review.states import init_review_state, ReviewState
 from pdd_agent.review.tbd_tracker import TBDTracker
 from schemas.project_input import ProjectInput
 
@@ -259,7 +256,7 @@ class SectionOrchestrator:
         synthetic = synthetic_entries(fact_entries)
 
         prompt_parts = [
-            f"# PDD Section Draft Request\n",
+            "# PDD Section Draft Request\n",
             f"## Section: {heading} ({section_id}"
             f"{'.' + sub_section_id if sub_section_id else ''})\n",
             f"Content class: {content_class}\n",
@@ -300,7 +297,9 @@ class SectionOrchestrator:
         else:
             prompt_parts.append("\n## Corpus Examples: NONE — human review required.\n")
 
-        if self._should_inject_calc() and self._is_quantification_section(section_id, sub_section_id):
+        if self._should_inject_calc() and self._is_quantification_section(
+            section_id, sub_section_id
+        ):
             prompt_parts.append(self._format_calc_injection())
 
         prompt_parts.append("\n## Project-Specific Facts\n")
@@ -386,16 +385,19 @@ class SectionOrchestrator:
             self._budget.check_budget()
         except BudgetExhaustedError as exc:
             logger.error("budget_exhausted", section_id=section_id, error=str(exc))
-            return self._store_draft(key, DraftSection(
-                section_id=section_id,
-                sub_section_id=sub_section_id or "",
-                text=f"[BUDGET EXHAUSTED — {section_id}] Token budget exceeded. "
-                     "Remaining sections require a new run or increased budget.",
-                confidence="UNSUPPORTED",
-                provenance=[],
-                issues=[f"BUDGET EXHAUSTED: {exc}"],
-                provider=getattr(self._provider, "name", "noop"),
-            ))
+            return self._store_draft(
+                key,
+                DraftSection(
+                    section_id=section_id,
+                    sub_section_id=sub_section_id or "",
+                    text=f"[BUDGET EXHAUSTED — {section_id}] Token budget exceeded. "
+                    "Remaining sections require a new run or increased budget.",
+                    confidence="UNSUPPORTED",
+                    provenance=[],
+                    issues=[f"BUDGET EXHAUSTED: {exc}"],
+                    provider=getattr(self._provider, "name", "noop"),
+                ),
+            )
 
         sensitivity = self._review_sensitivity(section_id, sub_section_id)
         content_class = self._content_class(section_id, sub_section_id)
@@ -407,9 +409,15 @@ class SectionOrchestrator:
                 examples = get_examples_for_section(section_id, sub_section_id, k=k)
                 if len(examples) < 2 and heading:
                     extras = get_section_heading_examples(heading, k=min(3, k))
-                    seen = {(getattr(e, "document_name", ""), getattr(e, "canonical_heading", "")) for e in examples}
+                    seen = {
+                        (getattr(e, "document_name", ""), getattr(e, "canonical_heading", ""))
+                        for e in examples
+                    }
                     for ex in extras:
-                        if (getattr(ex, "document_name", ""), getattr(ex, "canonical_heading", "")) not in seen:
+                        if (
+                            getattr(ex, "document_name", ""),
+                            getattr(ex, "canonical_heading", ""),
+                        ) not in seen:
                             examples.append(ex)
             else:
                 examples = get_examples_for_section(section_id, sub_section_id, k=k)
@@ -642,9 +650,7 @@ class SectionOrchestrator:
     ) -> None:
         """Log a section state transition to needs-domain-review after judge failure."""
         try:
-            project_name = (
-                self._project.project.project_name if self._project else "unknown"
-            )
+            project_name = self._project.project.project_name if self._project else "unknown"
             store = init_review_state(
                 run_id=self._run_id,
                 project_name=project_name,

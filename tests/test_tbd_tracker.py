@@ -1,8 +1,5 @@
 """Tests for TBD tracker — placeholder detection and evidence mapping."""
 
-import pytest
-from pathlib import Path
-
 from pdd_agent.review.tbd_tracker import TBDTracker, TBDReport, TBDItem
 from pdd_agent.llm.provider import DraftSection
 
@@ -120,9 +117,11 @@ Geographic boundary: [INSERT coordinates].
 
     def test_no_text_attribute(self):
         tracker = TBDTracker()
+
         class FakeSection:
             section_id = "1"
             sub_section_id = ""
+
         report = tracker.scan([FakeSection()], run_id="test-run")
         assert report.count == 0
 

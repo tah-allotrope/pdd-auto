@@ -6,8 +6,11 @@ A completed and validated instance of ProjectInput is the prerequisite for secti
 
 from __future__ import annotations
 
-from typing import Annotated, Literal
+from typing import TYPE_CHECKING, Literal
 from pydantic import BaseModel, Field, field_validator
+
+if TYPE_CHECKING:
+    from pdd_agent.calc.models import ACM0022CalcResult
 
 
 class AuditHistoryEntry(BaseModel):
@@ -64,9 +67,7 @@ class ProjectLocation(BaseModel):
     landfill_longitude: float | None = Field(
         None, ge=-180.0, le=180.0, description="Baseline landfill GPS longitude if applicable"
     )
-    site_area_m2: float | None = Field(
-        None, gt=0, description="Site area in square meters"
-    )
+    site_area_m2: float | None = Field(None, gt=0, description="Site area in square meters")
     grid_connection_point: str | None = Field(
         None, description="Grid connection substation or point"
     )
@@ -93,9 +94,15 @@ class EngineEntry(BaseModel):
 
 
 class RDFCapacity(BaseModel):
-    max_capacity_tph: float | None = Field(None, ge=0, description="Maximum RDF production capacity in tonnes per hour")
-    planned_2024_tpd: float | None = Field(None, ge=0, description="Planned RDF production in 2024 in tonnes per day")
-    planned_2035_tpd: float | None = Field(None, ge=0, description="Planned RDF production in 2035 in tonnes per day")
+    max_capacity_tph: float | None = Field(
+        None, ge=0, description="Maximum RDF production capacity in tonnes per hour"
+    )
+    planned_2024_tpd: float | None = Field(
+        None, ge=0, description="Planned RDF production in 2024 in tonnes per day"
+    )
+    planned_2035_tpd: float | None = Field(
+        None, ge=0, description="Planned RDF production in 2035 in tonnes per day"
+    )
 
 
 class CookstoveFleetEntry(BaseModel):
@@ -329,8 +336,13 @@ class EvidenceItem(BaseModel):
 
     evidence_id: str = Field(..., description="Unique evidence ID (e.g. E001, E002)")
     source_type: Literal[
-        "corpus", "methodology", "user_input", "calc_engine",
-        "registry", "synthetic", "expert_judgment",
+        "corpus",
+        "methodology",
+        "user_input",
+        "calc_engine",
+        "registry",
+        "synthetic",
+        "expert_judgment",
     ] = Field(..., description="Type of evidence source")
     description: str = Field(..., description="What this evidence supports")
     document_ref: str | None = Field(None, description="Document name or path")
@@ -349,7 +361,9 @@ class EvidenceRegistry(BaseModel):
     def add(self, source_type: str, description: str, **kwargs) -> str:
         eid = self.next_id()
         self.items.append(
-            EvidenceItem(evidence_id=eid, source_type=source_type, description=description, **kwargs)
+            EvidenceItem(
+                evidence_id=eid, source_type=source_type, description=description, **kwargs
+            )
         )
         return eid
 
@@ -360,15 +374,27 @@ class EvidenceRegistry(BaseModel):
 class GenerationControls(BaseModel):
     """Controls for LLM-based section generation."""
 
-    provider_name: str = Field("noop", description="LLM provider to use (noop, demo, openai, ollama)")
+    provider_name: str = Field(
+        "noop", description="LLM provider to use (noop, demo, openai, ollama)"
+    )
     model_name: str = Field("gpt-4o", description="Model name for the provider")
-    max_tokens_per_section: int = Field(4000, ge=100, le=16000, description="Max tokens per section draft")
+    max_tokens_per_section: int = Field(
+        4000, ge=100, le=16000, description="Max tokens per section draft"
+    )
     temperature: float = Field(0.1, ge=0.0, le=1.0, description="LLM temperature")
     token_budget: int = Field(500_000, ge=1000, description="Total token budget for the run")
-    token_warning_threshold: float = Field(0.8, ge=0.0, le=1.0, description="Budget warning threshold")
-    use_v2_prompt: bool = Field(True, description="Use v2 prompt template with anti-hallucination markers")
-    inject_calc_results: bool = Field(True, description="Inject ACM0022 calc results into Section 4 prompts")
-    inject_corpus_retrieval: bool = Field(True, description="Inject FTS5/BM25 corpus retrieval into prompts")
+    token_warning_threshold: float = Field(
+        0.8, ge=0.0, le=1.0, description="Budget warning threshold"
+    )
+    use_v2_prompt: bool = Field(
+        True, description="Use v2 prompt template with anti-hallucination markers"
+    )
+    inject_calc_results: bool = Field(
+        True, description="Inject ACM0022 calc results into Section 4 prompts"
+    )
+    inject_corpus_retrieval: bool = Field(
+        True, description="Inject FTS5/BM25 corpus retrieval into prompts"
+    )
     max_corpus_examples: int = Field(5, ge=0, le=20, description="Max corpus examples per section")
     max_corpus_chars: int = Field(1500, ge=0, le=5000, description="Max chars per corpus example")
 
@@ -386,7 +412,9 @@ class ReviewFlags(BaseModel):
         True, description="Block finalization if [MISSING] markers remain"
     )
     max_inference_ratio: float = Field(
-        0.3, ge=0.0, le=1.0,
+        0.3,
+        ge=0.0,
+        le=1.0,
         description="Max fraction of content that can be [INFERENCE]-tagged before review gate triggers",
     )
     auto_flag_synthetic: bool = Field(
@@ -410,7 +438,9 @@ class SuggestedMethodology(BaseModel):
 class ExtractionProvenance(BaseModel):
     """Tracks which fields came from extraction vs defaults vs [MISSING]."""
 
-    extracted_fields: list[str] = Field(default_factory=list, description="Fields successfully extracted from document")
+    extracted_fields: list[str] = Field(
+        default_factory=list, description="Fields successfully extracted from document"
+    )
     defaulted_fields: list[str] = Field(default_factory=list, description="Fields set to defaults")
     missing_fields: list[str] = Field(default_factory=list, description="Fields marked [MISSING]")
     source_document: str | None = Field(None, description="Path or name of source document")
@@ -433,9 +463,7 @@ class ProjectInput(BaseModel):
     generation_controls: GenerationControls | None = Field(
         None, description="LLM generation controls (optional)"
     )
-    review_flags: ReviewFlags | None = Field(
-        None, description="Review gate flags (optional)"
-    )
+    review_flags: ReviewFlags | None = Field(None, description="Review gate flags (optional)")
     evidence_registry: EvidenceRegistry | None = Field(
         None, description="Evidence registry for citation tracking (optional)"
     )

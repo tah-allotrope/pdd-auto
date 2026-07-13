@@ -12,16 +12,13 @@ from pdd_agent.parse.section_parser import (
     _load_schema,
     _normalize_heading,
     parse_corpus,
-    parse_document,
     build_corpus_section_index,
     get_section_texts,
 )
 
 
 import sys
-from pathlib import Path
 
-import pytest
 
 ROOT_DIR = Path(__file__).parent.parent.resolve()
 SCHEMA_PATH = ROOT_DIR / "schemas" / "pdd_section_schema.yaml"
@@ -109,14 +106,11 @@ class TestParseCorpus:
         # report, a methodology) and drafts that legitimately lack a mappable
         # Section 1, so require most documents rather than every one.
         missing = [
-            r["document_name"]
-            for r in results
-            if r["coverage"].get("1") not in ("FULL", "PARTIAL")
+            r["document_name"] for r in results if r["coverage"].get("1") not in ("FULL", "PARTIAL")
         ]
         covered = len(results) - len(missing)
         assert covered / len(results) >= 0.7, (
-            f"Section 1 coverage below 70% ({covered}/{len(results)}); "
-            f"missing in {missing}"
+            f"Section 1 coverage below 70% ({covered}/{len(results)}); missing in {missing}"
         )
 
     def test_all_documents_have_safeguards_section(self, corpus_dir):
@@ -144,14 +138,11 @@ class TestParseCorpus:
             missing = [
                 r["document_name"]
                 for r in results
-                if not any(
-                    m["canonical_sub_section_id"] == cs for m in r["sections_mapped"]
-                )
+                if not any(m["canonical_sub_section_id"] == cs for m in r["sections_mapped"])
             ]
             present = len(results) - len(missing)
             assert present / len(results) >= 0.7, (
-                f"Section {cs} present in only {present}/{len(results)} docs; "
-                f"missing in {missing}"
+                f"Section {cs} present in only {present}/{len(results)} docs; missing in {missing}"
             )
 
 
@@ -180,7 +171,6 @@ class TestCorpusSectionIndex:
 class TestCoverageLevels:
     def test_full_coverage(self):
         sections = _load_schema(SCHEMA_PATH)
-        coverage = {}
         sid = "2"
         sub_count = len(sections[sid]["sub_sections"])
         matched_subs = 5

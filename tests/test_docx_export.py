@@ -7,7 +7,6 @@ import zipfile
 from pathlib import Path
 from unittest.mock import patch
 
-import pytest
 
 from pdd_agent.export.docx_export import export_run_to_docx
 
@@ -48,8 +47,19 @@ def test_publish_review_package_creates_run_archive_and_latest_alias(tmp_path: P
         output_root=tmp_path / "reports" / "review-packages",
     )
 
-    assert package.docx_path == tmp_path / "reports" / "review-packages" / "soc-son-test-project" / "run-123" / "run-123.docx"
-    assert package.latest_docx_path == tmp_path / "reports" / "review-packages" / "soc-son-test-project" / "latest.docx"
+    assert (
+        package.docx_path
+        == tmp_path
+        / "reports"
+        / "review-packages"
+        / "soc-son-test-project"
+        / "run-123"
+        / "run-123.docx"
+    )
+    assert (
+        package.latest_docx_path
+        == tmp_path / "reports" / "review-packages" / "soc-son-test-project" / "latest.docx"
+    )
     assert package.manifest_path.exists()
     assert package.docx_path.read_bytes() == b"docx-binary"
     assert package.latest_docx_path.read_bytes() == b"docx-binary"
@@ -156,7 +166,9 @@ def test_export_run_to_docx_demo_mode_suppresses_reviewer_noise(tmp_path: Path, 
     payload["provider"] = "demo"
     payload["assumption_register"]["assumptions"][0]["source_type"] = "demo_curated"
     payload["assumption_register"]["guardrails"]["blocked_review_items"] = []
-    payload["sections"][0]["text"] = "This synthetic client-demo summary describes the Soc Son-like project in readable prose."
+    payload["sections"][0]["text"] = (
+        "This synthetic client-demo summary describes the Soc Son-like project in readable prose."
+    )
     payload["sections"][0]["issues"] = ["ASSUMPTION DISCLOSURE: demo fixture only."]
     payload["sections"][0]["synthetic_uses"][0]["source_type"] = "demo_curated"
     payload["sections"][0]["synthetic_uses"][0]["blocked_review"] = False
@@ -183,9 +195,7 @@ def test_export_run_to_docx_honors_explicit_runs_dir(tmp_path: Path):
     redirected_run_path = redirected_dir / run_path.name
     redirected_run_path.write_text(run_path.read_text(encoding="utf-8"), encoding="utf-8")
 
-    output_path = export_run_to_docx(
-        "redirected-run", runs_dir=redirected_dir, force=True
-    )
+    output_path = export_run_to_docx("redirected-run", runs_dir=redirected_dir, force=True)
 
     assert output_path == redirected_dir / "redirected-run.docx"
     assert output_path.exists()
@@ -210,7 +220,12 @@ def test_upload_review_package_docx_prefers_published_artifact(tmp_path: Path):
     latest_docx.write_bytes(b"docx")
 
     with patch("pdd_agent.export.drive_upload.upload_file") as mock_upload:
-        mock_upload.return_value = {"success": True, "drive_url": "https://drive.google.com/file/d/abc", "file_id": "abc", "error": None}
+        mock_upload.return_value = {
+            "success": True,
+            "drive_url": "https://drive.google.com/file/d/abc",
+            "file_id": "abc",
+            "error": None,
+        }
         result = upload_review_package_docx(
             review_docx_path=latest_docx,
             drive_folder_id="folder-123",

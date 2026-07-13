@@ -76,7 +76,9 @@ def run_vietnam_pdd_workflow(
     with open(spreadsheet_artifacts.project_yaml_path, encoding="utf-8") as handle:
         project_input = ProjectInput.model_validate(yaml.safe_load(handle))
 
-    assumption_register = load_assumption_register(spreadsheet_artifacts.assumptions_yaml_path) or {}
+    assumption_register = (
+        load_assumption_register(spreadsheet_artifacts.assumptions_yaml_path) or {}
+    )
     provider = get_provider_registry().get(provider_name)
     orchestrator = SectionOrchestrator(provider=provider, project_input=project_input)
     orchestrator.attach_assumption_register(assumption_register)
@@ -90,7 +92,9 @@ def run_vietnam_pdd_workflow(
 
     run_data = draft_run.to_dict()
     review_state_data = ReviewStateStore.load(orchestrator.run_id).to_dict()
-    review_output_root = Path(review_package_dir) if review_package_dir else DEFAULT_REVIEW_PACKAGE_DIR
+    review_output_root = (
+        Path(review_package_dir) if review_package_dir else DEFAULT_REVIEW_PACKAGE_DIR
+    )
 
     validation_report_path = write_validation_report(
         run_data=run_data,

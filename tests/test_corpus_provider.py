@@ -4,8 +4,15 @@ from pdd_agent.retrieval.search import RetrievalResult
 
 def _result(text="A" * 200):
     return RetrievalResult(
-        "3", "3.4", "reference-pdd", "Baseline Scenario", text,
-        "NARRATIVE", "MEDIUM", 1.0, [],
+        "3",
+        "3.4",
+        "reference-pdd",
+        "Baseline Scenario",
+        text,
+        "NARRATIVE",
+        "MEDIUM",
+        1.0,
+        [],
     )
 
 

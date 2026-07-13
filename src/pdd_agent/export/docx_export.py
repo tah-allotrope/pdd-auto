@@ -20,15 +20,17 @@ from pdd_agent.review.judge import _EVIDENCE_ID_RE
 from schemas.project_input import ProjectInput
 from pdd_agent.export.table_helpers import (
     add_styled_table,
-    set_cell_shading,
-    set_cell_text,
 )
 
 logger = structlog.get_logger()
 
 _DRAFT_RUNS_DIR = Path(__file__).parent.parent.parent.parent / "data" / "runs"
 _SCHEMA_PATH = Path(__file__).parent.parent.parent.parent / "schemas" / "pdd_section_schema.yaml"
-_TEMPLATE_PATH = Path(__file__).parent.parent.parent.parent / "templates" / "VCS-Project-Description-Template-v4.4-FINAL2.docx"
+_TEMPLATE_PATH = (
+    Path(__file__).parent.parent.parent.parent
+    / "templates"
+    / "VCS-Project-Description-Template-v4.4-FINAL2.docx"
+)
 
 
 class ExportBlockedError(Exception):
@@ -71,9 +73,7 @@ def check_export_gate(
         sections_raw = run.sections
         run_id = run.run_id
 
-    sections = [
-        SimpleNamespace(**s) if isinstance(s, dict) else s for s in sections_raw
-    ]
+    sections = [SimpleNamespace(**s) if isinstance(s, dict) else s for s in sections_raw]
     hard_blocks: list[str] = []
     advisories: list[str] = []
 
@@ -192,9 +192,7 @@ def export_run_to_docx(
     gate = check_export_gate(run_data, project_input=project_input, force=force)
     if gate.blocked and not force:
         logger.error("export_gate_blocked", run_id=run_id, hard_blocks=gate.hard_blocks)
-        raise ExportBlockedError(
-            f"Export blocked for {run_id}. Hard blocks: {gate.hard_blocks}"
-        )
+        raise ExportBlockedError(f"Export blocked for {run_id}. Hard blocks: {gate.hard_blocks}")
     if gate.blocked and force:
         logger.warning(
             "export_gate_forced",
@@ -256,7 +254,9 @@ def export_run_to_docx(
                             if not is_demo and section.get("confidence") in {"LOW", "UNSUPPORTED"}:
                                 _highlight_paragraph(paragraph, "FFF2CC")
                     else:
-                        _safe_paragraph_style(doc.add_paragraph("[No content drafted yet]"), "Intense Quote")
+                        _safe_paragraph_style(
+                            doc.add_paragraph("[No content drafted yet]"), "Intense Quote"
+                        )
             else:
                 text = section.get("text", "")
                 if text:
@@ -265,7 +265,9 @@ def export_run_to_docx(
                         if not is_demo and section.get("confidence") in {"LOW", "UNSUPPORTED"}:
                             _highlight_paragraph(paragraph, "FFF2CC")
                 else:
-                    _safe_paragraph_style(doc.add_paragraph("[No content drafted yet]"), "Intense Quote")
+                    _safe_paragraph_style(
+                        doc.add_paragraph("[No content drafted yet]"), "Intense Quote"
+                    )
 
             issues = section.get("issues", [])
             if issues and not is_demo:
@@ -298,6 +300,7 @@ def export_run_to_docx(
 # Template helpers
 # ─────────────────────────────────────────────
 
+
 def _clear_body(doc: Any) -> None:
     """Remove all body paragraphs/tables but keep section properties (headers/footers)."""
     qn = _docx_attr("docx.oxml.ns", "qn")
@@ -311,6 +314,7 @@ def _clear_body(doc: Any) -> None:
 # ─────────────────────────────────────────────
 # Style setup
 # ─────────────────────────────────────────────
+
 
 def _set_base_styles(doc: Any) -> None:
     Pt = _docx_attr("docx.shared", "Pt")
@@ -340,6 +344,7 @@ def _set_base_styles(doc: Any) -> None:
 # ─────────────────────────────────────────────
 # Title / cover
 # ─────────────────────────────────────────────
+
 
 def _add_title_page(doc: Any, project_name: str, run_id: str) -> None:
     WD_ALIGN_PARAGRAPH = _docx_attr("docx.enum.text", "WD_ALIGN_PARAGRAPH")
@@ -408,6 +413,7 @@ def _add_draft_watermark(doc: Any, force: bool = False) -> None:
 # Table renderers
 # ─────────────────────────────────────────────
 
+
 def render_cover_metadata_table(doc: Any, data: dict[str, Any]) -> Any:
     Inches = _docx_attr("docx.shared", "Inches")
     rows = [
@@ -420,21 +426,30 @@ def render_cover_metadata_table(doc: Any, data: dict[str, Any]) -> Any:
         ["VCS Standard Version", data.get("vcs_standard_version", "-")],
         ["Prepared by", data.get("prepared_by", "-")],
     ]
-    return add_styled_table(doc, rows, widths=[Inches(2.2), Inches(4.8)], header=False, font_size=9.3)
+    return add_styled_table(
+        doc, rows, widths=[Inches(2.2), Inches(4.8)], header=False, font_size=9.3
+    )
 
 
 def render_audit_history_table(doc: Any, data: dict[str, Any]) -> Any:
     Inches = _docx_attr("docx.shared", "Inches")
     rows = [["Audit type", "Period", "Program", "Validation/verification body name", "Years"]]
     for entry in data.get("audits", []):
-        rows.append([
-            str(entry.get("audit_type", "-")),
-            str(entry.get("period", "-")),
-            str(entry.get("program", "-")),
-            str(entry.get("vvb_name", "-")),
-            str(entry.get("number_of_years", "-")),
-        ])
-    return add_styled_table(doc, rows, widths=[Inches(1.1), Inches(1.7), Inches(0.8), Inches(1.7), Inches(0.6)], header=True)
+        rows.append(
+            [
+                str(entry.get("audit_type", "-")),
+                str(entry.get("period", "-")),
+                str(entry.get("program", "-")),
+                str(entry.get("vvb_name", "-")),
+                str(entry.get("number_of_years", "-")),
+            ]
+        )
+    return add_styled_table(
+        doc,
+        rows,
+        widths=[Inches(1.1), Inches(1.7), Inches(0.8), Inches(1.7), Inches(0.6)],
+        header=True,
+    )
 
 
 def render_proponent_table(doc: Any, data: dict[str, Any]) -> Any:
@@ -447,112 +462,163 @@ def render_proponent_table(doc: Any, data: dict[str, Any]) -> Any:
         ["Telephone", data.get("telephone", "-")],
         ["Email", data.get("email", "-")],
     ]
-    return add_styled_table(doc, rows, widths=[Inches(1.7), Inches(5.4)], header=False, font_size=9.0)
+    return add_styled_table(
+        doc, rows, widths=[Inches(1.7), Inches(5.4)], header=False, font_size=9.0
+    )
 
 
 def render_ghg_boundary_table(doc: Any, data: dict[str, Any]) -> Any:
     Inches = _docx_attr("docx.shared", "Inches")
     rows = [["Scenario", "Source", "Gas", "Included?", "Justification"]]
     for entry in data.get("entries", []):
-        rows.append([
-            str(entry.get("scenario", "-")),
-            str(entry.get("source", "-")),
-            str(entry.get("gas", "-")),
-            str(entry.get("included", "-")),
-            str(entry.get("justification", "-")),
-        ])
-    return add_styled_table(doc, rows, widths=[Inches(0.8), Inches(2.2), Inches(0.7), Inches(0.8), Inches(2.6)], header=True, font_size=7.2)
+        rows.append(
+            [
+                str(entry.get("scenario", "-")),
+                str(entry.get("source", "-")),
+                str(entry.get("gas", "-")),
+                str(entry.get("included", "-")),
+                str(entry.get("justification", "-")),
+            ]
+        )
+    return add_styled_table(
+        doc,
+        rows,
+        widths=[Inches(0.8), Inches(2.2), Inches(0.7), Inches(0.8), Inches(2.6)],
+        header=True,
+        font_size=7.2,
+    )
 
 
 def render_applicability_table(doc: Any, data: dict[str, Any]) -> Any:
     Inches = _docx_attr("docx.shared", "Inches")
     rows = [["Methodology/tool", "Applicability condition", "Justification of compliance"]]
     for entry in data.get("entries", []):
-        rows.append([
-            str(entry.get("methodology", "-")),
-            str(entry.get("condition", "-")),
-            str(entry.get("justification", "-")),
-        ])
-    return add_styled_table(doc, rows, widths=[Inches(1.0), Inches(3.1), Inches(3.0)], header=True, font_size=7.6)
+        rows.append(
+            [
+                str(entry.get("methodology", "-")),
+                str(entry.get("condition", "-")),
+                str(entry.get("justification", "-")),
+            ]
+        )
+    return add_styled_table(
+        doc, rows, widths=[Inches(1.0), Inches(3.1), Inches(3.0)], header=True, font_size=7.6
+    )
 
 
 def render_monitoring_fixed_params_table(doc: Any, data: dict[str, Any]) -> Any:
     Inches = _docx_attr("docx.shared", "Inches")
     rows = [["Data/parameter", "Unit", "Description", "Value", "Source", "Comments"]]
     for entry in data.get("entries", []):
-        rows.append([
-            str(entry.get("parameter", "-")),
-            str(entry.get("unit", "-")),
-            str(entry.get("description", "-")),
-            str(entry.get("value", "-")),
-            str(entry.get("source", "-")),
-            str(entry.get("comments", "-")),
-        ])
-    return add_styled_table(doc, rows, widths=[Inches(1.4), Inches(0.8), Inches(2.2), Inches(1.0), Inches(1.2), Inches(1.0)], header=True, font_size=8.0)
+        rows.append(
+            [
+                str(entry.get("parameter", "-")),
+                str(entry.get("unit", "-")),
+                str(entry.get("description", "-")),
+                str(entry.get("value", "-")),
+                str(entry.get("source", "-")),
+                str(entry.get("comments", "-")),
+            ]
+        )
+    return add_styled_table(
+        doc,
+        rows,
+        widths=[Inches(1.4), Inches(0.8), Inches(2.2), Inches(1.0), Inches(1.2), Inches(1.0)],
+        header=True,
+        font_size=8.0,
+    )
 
 
 def render_monitoring_tracked_params_table(doc: Any, data: dict[str, Any]) -> Any:
     Inches = _docx_attr("docx.shared", "Inches")
     rows = [["Data/parameter", "Unit", "Description", "Frequency", "Equipment", "QA/QC"]]
     for entry in data.get("entries", []):
-        rows.append([
-            str(entry.get("parameter", "-")),
-            str(entry.get("unit", "-")),
-            str(entry.get("description", "-")),
-            str(entry.get("frequency", "-")),
-            str(entry.get("equipment", "-")),
-            str(entry.get("qa_qc", "-")),
-        ])
-    return add_styled_table(doc, rows, widths=[Inches(1.4), Inches(0.8), Inches(2.2), Inches(1.0), Inches(1.2), Inches(1.0)], header=True, font_size=8.0)
+        rows.append(
+            [
+                str(entry.get("parameter", "-")),
+                str(entry.get("unit", "-")),
+                str(entry.get("description", "-")),
+                str(entry.get("frequency", "-")),
+                str(entry.get("equipment", "-")),
+                str(entry.get("qa_qc", "-")),
+            ]
+        )
+    return add_styled_table(
+        doc,
+        rows,
+        widths=[Inches(1.4), Inches(0.8), Inches(2.2), Inches(1.0), Inches(1.2), Inches(1.0)],
+        header=True,
+        font_size=8.0,
+    )
 
 
 def render_risk_assessment_table(doc: Any, data: dict[str, Any]) -> Any:
     Inches = _docx_attr("docx.shared", "Inches")
     rows = [["Risk category", "Risks identified", "Mitigation or preventative measure(s) taken"]]
     for entry in data.get("entries", []):
-        rows.append([
-            str(entry.get("category", "-")),
-            str(entry.get("risks", "-")),
-            str(entry.get("mitigation", "-")),
-        ])
-    return add_styled_table(doc, rows, widths=[Inches(1.6), Inches(2.5), Inches(3.0)], header=True, font_size=8.0)
+        rows.append(
+            [
+                str(entry.get("category", "-")),
+                str(entry.get("risks", "-")),
+                str(entry.get("mitigation", "-")),
+            ]
+        )
+    return add_styled_table(
+        doc, rows, widths=[Inches(1.6), Inches(2.5), Inches(3.0)], header=True, font_size=8.0
+    )
 
 
 def render_emissions_summary_table(doc: Any, data: dict[str, Any]) -> Any:
     Inches = _docx_attr("docx.shared", "Inches")
-    rows = [["Calendar year of crediting period", "Estimated GHG emission reductions or removals (tCO2e)"]]
+    rows = [
+        [
+            "Calendar year of crediting period",
+            "Estimated GHG emission reductions or removals (tCO2e)",
+        ]
+    ]
     for entry in data.get("entries", []):
-        rows.append([
-            str(entry.get("period", "-")),
-            str(entry.get("value", "-")),
-        ])
+        rows.append(
+            [
+                str(entry.get("period", "-")),
+                str(entry.get("value", "-")),
+            ]
+        )
     if data.get("total"):
         rows.append(["Total", str(data["total"])])
-    return add_styled_table(doc, rows, widths=[Inches(3.1), Inches(3.0)], header=True, font_size=8.5)
+    return add_styled_table(
+        doc, rows, widths=[Inches(3.1), Inches(3.0)], header=True, font_size=8.5
+    )
 
 
 def render_sustainable_development_table(doc: Any, data: dict[str, Any]) -> Any:
     Inches = _docx_attr("docx.shared", "Inches")
     rows = [["Sustainable development area", "Project contribution", "Monitoring approach"]]
     for entry in data.get("entries", []):
-        rows.append([
-            str(entry.get("area", "-")),
-            str(entry.get("contribution", "-")),
-            str(entry.get("monitoring", "-")),
-        ])
-    return add_styled_table(doc, rows, widths=[Inches(1.7), Inches(3.0), Inches(2.4)], header=True, font_size=8.0)
+        rows.append(
+            [
+                str(entry.get("area", "-")),
+                str(entry.get("contribution", "-")),
+                str(entry.get("monitoring", "-")),
+            ]
+        )
+    return add_styled_table(
+        doc, rows, widths=[Inches(1.7), Inches(3.0), Inches(2.4)], header=True, font_size=8.0
+    )
 
 
 def render_data_gaps_table(doc: Any, data: dict[str, Any]) -> Any:
     Inches = _docx_attr("docx.shared", "Inches")
     rows = [["Topic", "Gap/assumption", "Needed evidence"]]
     for entry in data.get("entries", []):
-        rows.append([
-            str(entry.get("topic", "-")),
-            str(entry.get("gap", "-")),
-            str(entry.get("evidence", "-")),
-        ])
-    return add_styled_table(doc, rows, widths=[Inches(1.5), Inches(3.0), Inches(2.6)], header=True, font_size=8.0)
+        rows.append(
+            [
+                str(entry.get("topic", "-")),
+                str(entry.get("gap", "-")),
+                str(entry.get("evidence", "-")),
+            ]
+        )
+    return add_styled_table(
+        doc, rows, widths=[Inches(1.5), Inches(3.0), Inches(2.6)], header=True, font_size=8.0
+    )
 
 
 def render_tbd_appendix(doc: Any, tbd_report: dict[str, Any]) -> Any:
@@ -568,13 +634,21 @@ def render_tbd_appendix(doc: Any, tbd_report: dict[str, Any]) -> Any:
         sid = item.get("section_id", "")
         ssid = item.get("sub_section_id", "")
         section_label = f"{sid}.{ssid}" if ssid else sid
-        rows.append([
-            section_label,
-            str(item.get("marker", "-")),
-            str(item.get("context", "-")),
-            str(item.get("evidence_type", "-")),
-        ])
-    return add_styled_table(doc, rows, widths=[Inches(1.0), Inches(1.5), Inches(2.5), Inches(2.1)], header=True, font_size=8.0)
+        rows.append(
+            [
+                section_label,
+                str(item.get("marker", "-")),
+                str(item.get("context", "-")),
+                str(item.get("evidence_type", "-")),
+            ]
+        )
+    return add_styled_table(
+        doc,
+        rows,
+        widths=[Inches(1.0), Inches(1.5), Inches(2.5), Inches(2.1)],
+        header=True,
+        font_size=8.0,
+    )
 
 
 _TABLE_RENDERERS: dict[str, Any] = {
@@ -596,7 +670,10 @@ _TABLE_RENDERERS: dict[str, Any] = {
 # Legacy / metadata helpers
 # ─────────────────────────────────────────────
 
-def _safe_set_table_style(table: Any, preferred: str = "Light Grid Accent 1", fallback: str = "Table Grid") -> None:
+
+def _safe_set_table_style(
+    table: Any, preferred: str = "Light Grid Accent 1", fallback: str = "Table Grid"
+) -> None:
     """Set table style, falling back if the preferred style is missing."""
     try:
         table.style = preferred
@@ -691,7 +768,10 @@ def _add_assumption_appendix(
     is_demo: bool = False,
 ) -> None:
     doc.add_page_break()
-    doc.add_heading("Appendix A - Assumption Summary" if is_demo else "Appendix A - Assumption Register", level=1)
+    doc.add_heading(
+        "Appendix A - Assumption Summary" if is_demo else "Appendix A - Assumption Register",
+        level=1,
+    )
 
     assumptions = assumption_register.get("assumptions", []) if assumption_register else []
     if not assumptions:
@@ -701,7 +781,11 @@ def _add_assumption_appendix(
     usage_map = _build_usage_map(sections)
     table = doc.add_table(rows=1, cols=4 if is_demo else 6)
     _safe_set_table_style(table)
-    headers = ["Field", "Source Type", "Confidence", "Value"] if is_demo else ["Field", "Source Type", "Confidence", "Value", "Affects", "Review Gate"]
+    headers = (
+        ["Field", "Source Type", "Confidence", "Value"]
+        if is_demo
+        else ["Field", "Source Type", "Confidence", "Value", "Affects", "Review Gate"]
+    )
     for index, header in enumerate(headers):
         table.rows[0].cells[index].text = header
         table.rows[0].cells[index].paragraphs[0].runs[0].bold = True

@@ -23,9 +23,7 @@ from pdd_agent.llm.provider import DraftRun, DraftSection, get_provider_registry
 
 logger = structlog.get_logger()
 
-_RUBRIC_PATH = (
-    Path(__file__).parent.parent.parent.parent / "rules" / "verra" / "judge_rubric.yaml"
-)
+_RUBRIC_PATH = Path(__file__).parent.parent.parent.parent / "rules" / "verra" / "judge_rubric.yaml"
 
 _EVIDENCE_ID_RE = re.compile(r"\[E(\d{3})\]")
 
@@ -48,7 +46,9 @@ class JudgeResult:
     section_key: str
     score: int  # 0-100
     passed: bool
-    categories: dict[str, list[str]] = field(default_factory=lambda: {"critical": [], "advisory": []})
+    categories: dict[str, list[str]] = field(
+        default_factory=lambda: {"critical": [], "advisory": []}
+    )
     findings: list[dict[str, Any]] = field(default_factory=list)
     provider: str = "demo"
     model: str | None = None
@@ -213,7 +213,9 @@ class LLMJudge:
             )
         return findings
 
-    def _check_evidence_citations(self, text: str, project_input: Any | None) -> list[dict[str, Any]]:
+    def _check_evidence_citations(
+        self, text: str, project_input: Any | None
+    ) -> list[dict[str, Any]]:
         findings: list[dict[str, Any]] = []
         cited_ids = set(_EVIDENCE_ID_RE.findall(text))
         if not cited_ids:
@@ -257,8 +259,7 @@ class LLMJudge:
 
         if is_methodology_section:
             has_citation = any(
-                marker in text
-                for marker in ("[METHODOLOGY:", "[CALC:", "[E", "[CORPUS:")
+                marker in text for marker in ("[METHODOLOGY:", "[CALC:", "[E", "[CORPUS:")
             )
             if not has_citation:
                 self._add_finding(

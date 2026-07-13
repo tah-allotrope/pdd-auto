@@ -2,12 +2,10 @@
 
 from __future__ import annotations
 
-from pathlib import Path
 
 import pytest
 
 from pdd_agent.demo_setup import DEMO_CORPUS_DIR, build_demo_index
-from pdd_agent.retrieval.index import RetrievalIndex
 
 
 def test_demo_corpus_dir_is_bundled():

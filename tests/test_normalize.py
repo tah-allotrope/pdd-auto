@@ -2,13 +2,8 @@
 
 from __future__ import annotations
 
-import json
-from pathlib import Path
-from unittest.mock import patch, MagicMock
 
-import pytest
-
-from pdd_agent.ingest.normalize import _extract_pdf, _extract_text, NORM_DIR
+from pdd_agent.ingest.normalize import _extract_pdf, _extract_text
 
 
 class TestExtractPdf:

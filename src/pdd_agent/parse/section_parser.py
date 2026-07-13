@@ -98,7 +98,6 @@ def parse_document(
 
     doc_name = norm_json_path.stem
     headings: list[dict[str, Any]] = doc.get("headings", [])
-    text_blocks: list[dict[str, Any]] = doc.get("text_blocks", [])
     pages: list[dict[str, Any]] = doc.get("pages", [])
 
     sections_mapped: list[dict[str, Any]] = []

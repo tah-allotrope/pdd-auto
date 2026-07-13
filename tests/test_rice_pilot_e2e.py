@@ -67,8 +67,11 @@ class TestRicePilotEndToEnd:
         """baseline - project - leakage == net must hold for non-WTE numbers too
         (review/consistency.py must be methodology-neutral)."""
         q = rice_project_input.quantification
-        assert q.baseline_emissions_tco2e_per_year - q.project_emissions_tco2e_per_year - q.leakage_tco2e_per_year == pytest.approx(
-            q.net_emissions_tco2e_per_year
+        assert (
+            q.baseline_emissions_tco2e_per_year
+            - q.project_emissions_tco2e_per_year
+            - q.leakage_tco2e_per_year
+            == pytest.approx(q.net_emissions_tco2e_per_year)
         )
 
         orchestrator = SectionOrchestrator(

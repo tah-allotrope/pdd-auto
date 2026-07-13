@@ -3,7 +3,6 @@
 import pytest
 from pathlib import Path
 import yaml
-from pydantic import ValidationError
 
 from schemas.project_input import ProjectInput
 
@@ -19,13 +18,19 @@ def inegol_input():
 
 class TestInegolIdentity:
     def test_project_name(self, inegol_input):
-        assert inegol_input.project.project_name == "INEGOL INTEGRATED SOLID WASTE STORAGE AND DISPOSAL FACILITY"
+        assert (
+            inegol_input.project.project_name
+            == "INEGOL INTEGRATED SOLID WASTE STORAGE AND DISPOSAL FACILITY"
+        )
 
     def test_project_id_vcs(self, inegol_input):
         assert inegol_input.project.project_id_vcs == "3908"
 
     def test_proponent(self, inegol_input):
-        assert inegol_input.project.proponent_name == "BIOTREND Çevre ve Enerji Yatırımları Anonim Şirketi"
+        assert (
+            inegol_input.project.proponent_name
+            == "BIOTREND Çevre ve Enerji Yatırımları Anonim Şirketi"
+        )
         assert inegol_input.project.proponent_contact_email == "akif.demir@biotrendenerji.com.tr"
 
     def test_other_entities(self, inegol_input):
@@ -40,7 +45,10 @@ class TestInegolIdentity:
         assert inegol_input.project.vcs_standard_version == "v4.7"
 
     def test_prepared_by(self, inegol_input):
-        assert inegol_input.project.prepared_by == "Gaia Climate Finansal Danışmanlık Hizmetleri ve Ticaret A.Ş."
+        assert (
+            inegol_input.project.prepared_by
+            == "Gaia Climate Finansal Danışmanlık Hizmetleri ve Ticaret A.Ş."
+        )
 
     def test_audit_history(self, inegol_input):
         assert len(inegol_input.project.audit_history) == 1
@@ -162,7 +170,10 @@ class TestInegolSafeguards:
 
 class TestInegolCompliance:
     def test_ownership(self, inegol_input):
-        assert "MUNDO VERDE CLIMATE SA" in inegol_input.compliance_and_ownership.credit_ownership_statement
+        assert (
+            "MUNDO VERDE CLIMATE SA"
+            in inegol_input.compliance_and_ownership.credit_ownership_statement
+        )
         assert inegol_input.compliance_and_ownership.no_participation_other_programs is True
         assert inegol_input.compliance_and_ownership.no_other_forms_of_credit is True
         assert inegol_input.compliance_and_ownership.double_counting_risk is False

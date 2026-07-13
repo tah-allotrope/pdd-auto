@@ -161,9 +161,7 @@ class TestAnthropicProviderBudgetTracking:
     @patch("pdd_agent.llm.anthropic_provider.AnthropicProvider._get_client")
     def test_records_to_budget(self, mock_get_client):
         client = MagicMock()
-        client.messages.create.return_value = _mock_response(
-            input_tokens=500, output_tokens=200
-        )
+        client.messages.create.return_value = _mock_response(input_tokens=500, output_tokens=200)
         mock_get_client.return_value = client
 
         budget = TokenBudget(max_tokens=100000)

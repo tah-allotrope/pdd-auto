@@ -30,9 +30,9 @@ from pdd_agent.calc.methodology import ComputationResult, ValidationResult
 # Default stability factors by pyrolysis temperature range.  Higher pyrolysis
 # temperatures generally produce more stable (aromatic) carbon.
 _STABILITY_BY_TEMPERATURE: dict[str, float] = {
-    "low": 0.60,    # < 400 °C
-    "medium": 0.75, # 400–500 °C
-    "high": 0.85,   # > 500 °C
+    "low": 0.60,  # < 400 °C
+    "medium": 0.75,  # 400–500 °C
+    "high": 0.85,  # > 500 °C
 }
 
 _C_TO_CO2: float = 44.0 / 12.0
@@ -50,9 +50,7 @@ class BiocharInput(BaseModel):
     carbon_fraction: float = Field(
         ..., gt=0, le=1, description="Mass fraction of carbon in dry feedstock"
     )
-    pyrolysis_temperature_c: float = Field(
-        ..., gt=0, description="Pyrolysis peak temperature (°C)"
-    )
+    pyrolysis_temperature_c: float = Field(..., gt=0, description="Pyrolysis peak temperature (°C)")
     stability_factor: float | None = Field(
         None,
         gt=0,
@@ -65,9 +63,7 @@ class BiocharInput(BaseModel):
         le=1,
         description="Discount for uncertainty / reversibility risk",
     )
-    crediting_period_years: int = Field(
-        7, ge=1, le=40, description="Crediting period in years"
-    )
+    crediting_period_years: int = Field(7, ge=1, le=40, description="Crediting period in years")
 
     @field_validator("stability_factor")
     @classmethod
@@ -146,17 +142,60 @@ class BiocharVm0044Engine:
             provenance=[
                 {"param": "dry_mass_tonnes", "source": "user_input", "value": inp.dry_mass_tonnes},
                 {"param": "carbon_fraction", "source": "user_input", "value": inp.carbon_fraction},
-                {"param": "stability_factor", "source": "calc_engine", "value": inp.effective_stability_factor},
-                {"param": "permanence_factor", "source": "user_input", "value": inp.permanence_factor},
+                {
+                    "param": "stability_factor",
+                    "source": "calc_engine",
+                    "value": inp.effective_stability_factor,
+                },
+                {
+                    "param": "permanence_factor",
+                    "source": "user_input",
+                    "value": inp.permanence_factor,
+                },
             ],
             notes="Long-term carbon dioxide removal from stable biochar carbon",
         )
 
     def required_monitoring_params(self, inputs: dict[str, Any]) -> list[dict]:
         return [
-            {"id": "VM0044-PARAM-01", "name": "Dry feedstock mass", "unit": "tonnes/year", "frequency": "Per batch / annual", "source": "Weighbridge / moisture records", "section_ref": "5.2"},
-            {"id": "VM0044-PARAM-02", "name": "Feedstock carbon fraction", "unit": "fraction", "frequency": "Per batch / annual lab test", "source": "Laboratory analysis", "section_ref": "4.1"},
-            {"id": "VM0044-PARAM-03", "name": "Pyrolysis temperature", "unit": "°C", "frequency": "Continuous", "source": "Kiln instrumentation", "section_ref": "5.2"},
-            {"id": "VM0044-PARAM-04", "name": "Biochar stability factor", "unit": "fraction", "frequency": "Per assessment", "source": "Laboratory analysis / methodology default", "section_ref": "4.1"},
-            {"id": "VM0044-PARAM-05", "name": "Permanence factor", "unit": "fraction", "frequency": "Per assessment", "source": "Risk assessment", "section_ref": "4.4"},
+            {
+                "id": "VM0044-PARAM-01",
+                "name": "Dry feedstock mass",
+                "unit": "tonnes/year",
+                "frequency": "Per batch / annual",
+                "source": "Weighbridge / moisture records",
+                "section_ref": "5.2",
+            },
+            {
+                "id": "VM0044-PARAM-02",
+                "name": "Feedstock carbon fraction",
+                "unit": "fraction",
+                "frequency": "Per batch / annual lab test",
+                "source": "Laboratory analysis",
+                "section_ref": "4.1",
+            },
+            {
+                "id": "VM0044-PARAM-03",
+                "name": "Pyrolysis temperature",
+                "unit": "°C",
+                "frequency": "Continuous",
+                "source": "Kiln instrumentation",
+                "section_ref": "5.2",
+            },
+            {
+                "id": "VM0044-PARAM-04",
+                "name": "Biochar stability factor",
+                "unit": "fraction",
+                "frequency": "Per assessment",
+                "source": "Laboratory analysis / methodology default",
+                "section_ref": "4.1",
+            },
+            {
+                "id": "VM0044-PARAM-05",
+                "name": "Permanence factor",
+                "unit": "fraction",
+                "frequency": "Per assessment",
+                "source": "Risk assessment",
+                "section_ref": "4.4",
+            },
         ]

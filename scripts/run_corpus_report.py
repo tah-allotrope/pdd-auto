@@ -59,14 +59,14 @@ def _build_report(entries: list[dict], config: dict) -> str:
     now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
 
     lines = [
-        f"# Corpus Readiness Report — VERRA WTE Bucket",
+        "# Corpus Readiness Report — VERRA WTE Bucket",
         f"**Generated:** {now}",
-        f"**Source folder:** `1pp23yRZ8qtopw1BPXrzVewXsmmWplCse` (VERRA)",
+        "**Source folder:** `1pp23yRZ8qtopw1BPXrzVewXsmmWplCse` (VERRA)",
         "",
         "## Summary",
         "",
-        f"| Metric | Value |",
-        f"| --- | --- |",
+        "| Metric | Value |",
+        "| --- | --- |",
         f"| Total files inventoried | {total} |",
         f"| Parseable (PDF/DOCX) | {parseable} |",
         f"| In initial bucket | {in_bucket} |",
@@ -86,8 +86,8 @@ def _build_report(entries: list[dict], config: dict) -> str:
         "",
         "## Per-File Detail",
         "",
-        f"| File | MIME | Bucket | Words | Headings | Parseable |",
-        f"| --- | --- | --- | ---: | ---: | ---: |",
+        "| File | MIME | Bucket | Words | Headings | Parseable |",
+        "| --- | --- | --- | ---: | ---: | ---: |",
     ]
 
     for e in sorted(entries, key=lambda x: x.get("name", "")):

@@ -75,7 +75,9 @@ class TestACM0022CalculatorBasic:
 
     def test_net_equals_baseline_minus_project_minus_leakage(self, basic_input):
         result = ACM0022Calculator(basic_input).calculate()
-        expected = result.baseline_emissions_tco2e - result.project_emissions_tco2e - result.leakage_tco2e
+        expected = (
+            result.baseline_emissions_tco2e - result.project_emissions_tco2e - result.leakage_tco2e
+        )
         assert result.net_emission_reductions_tco2e == pytest.approx(expected, abs=0.01)
 
     def test_crediting_total_equals_net_times_years(self, basic_input):
@@ -147,7 +149,10 @@ class TestACM0022BaselineComponents:
         result_no_compliance = ACM0022Calculator(basic_input).calculate()
         basic_input.rate_compliance = 0.3
         result_with_compliance = ACM0022Calculator(basic_input).calculate()
-        assert result_with_compliance.baseline_emissions_tco2e < result_no_compliance.baseline_emissions_tco2e
+        assert (
+            result_with_compliance.baseline_emissions_tco2e
+            < result_no_compliance.baseline_emissions_tco2e
+        )
 
     def test_higher_grid_ef_increases_baseline(self, basic_input):
         result_low = ACM0022Calculator(basic_input).calculate()

@@ -18,7 +18,7 @@ import yaml
 
 from pdd_agent.agent.section_orchestrator import SectionOrchestrator
 from pdd_agent.export.docx_export import export_run_to_docx
-from pdd_agent.export.review_package import DemoPackagePaths, publish_demo_package
+from pdd_agent.export.review_package import publish_demo_package
 from pdd_agent.llm.provider import DraftRun, DraftSection, get_provider_registry
 from pdd_agent.phase06.assumptions import load_assumption_register, resolve_assumptions_path
 from pdd_agent.parse.section_parser import parse_document

@@ -54,9 +54,4 @@ def digestate_storage_leakage(
         return 0.0
 
     # Simplified estimate per Tool 14 Option 2
-    return (
-        solid_digestate_tonnes
-        * volatile_solids_fraction
-        * methane_conversion_factor
-        * GWP_CH4
-    )
+    return solid_digestate_tonnes * volatile_solids_fraction * methane_conversion_factor * GWP_CH4

@@ -1,7 +1,7 @@
 """Tests for the OpenAI provider (mocked API — no real API calls)."""
 
 import pytest
-from unittest.mock import MagicMock, patch, PropertyMock
+from unittest.mock import MagicMock, patch
 from pdd_agent.llm.openai_provider import OpenAIProvider, OpenAIProviderError
 from pdd_agent.llm.provider import ModelConfig, DraftSection
 from pdd_agent.llm.budget import TokenBudget

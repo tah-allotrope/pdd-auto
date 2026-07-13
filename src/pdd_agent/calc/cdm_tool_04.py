@@ -65,7 +65,11 @@ def methane_from_swds(
         Methane emissions in tCO2e for the given year.
     """
     doc_j = doc_override if doc_override is not None else DOC_BY_WASTE_TYPE.get(waste_type)
-    k_j = decay_rate_override if decay_rate_override is not None else DECAY_RATE_BY_WASTE_TYPE.get(waste_type)
+    k_j = (
+        decay_rate_override
+        if decay_rate_override is not None
+        else DECAY_RATE_BY_WASTE_TYPE.get(waste_type)
+    )
 
     if doc_j is None or k_j is None:
         raise ValueError(f"Unknown waste type '{waste_type}'. Known: {list(DOC_BY_WASTE_TYPE)}")

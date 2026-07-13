@@ -87,7 +87,6 @@ class MethodologyRules:
         failures: list[dict[str, Any]] = []
         tech = project_input.technology
         quant = project_input.quantification
-        comp = project_input.compliance_and_ownership
 
         for check in self.pre_draft_checks():
             cid = check["check_id"]
@@ -141,10 +140,16 @@ class MethodologyRules:
 
         return failures
 
-    def run_post_draft_checks(self, pdd_sections: dict[str, Any]) -> list[dict[str, Any]]:
+    def run_post_draft_checks(
+        self, pdd_sections: dict[str, Any], methodology_ids: list[str] | None = None
+    ) -> list[dict[str, Any]]:
         """Run post-draft compliance checks against a drafted PDD section dict.
 
         pdd_sections: dict mapping canonical section_id -> section text content.
+        methodology_ids: the project's methodology IDs (e.g. ["ACM0022"]). Checks
+            with an `applies_to` list are skipped when none of these match, mirroring
+            `run_pre_draft_checks`'s filtering. When None, no filtering is applied
+            (all checks run) for backward compatibility with existing callers.
         Returns list of failed checks.
         """
         failures: list[dict[str, Any]] = []
@@ -154,6 +159,13 @@ class MethodologyRules:
             severity = check["severity"]
             desc = check["description"]
             applies = check.get("applies_to", [])
+
+            if (
+                applies
+                and methodology_ids is not None
+                and not any(m in methodology_ids for m in applies)
+            ):
+                continue
 
             passed = True
             reason = ""

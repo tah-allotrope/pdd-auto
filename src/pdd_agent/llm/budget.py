@@ -7,7 +7,10 @@ a warning at 80%.
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import structlog
+import yaml
 from dataclasses import dataclass, field
 
 logger = structlog.get_logger()
@@ -28,8 +31,9 @@ class CallRecord:
     cost_usd: float = 0.0
 
 
-# Pricing per 1M tokens (approximate as of 2025)
-_DEFAULT_PRICING = {
+# Pricing per 1M tokens (approximate as of 2025). Embedded fallback used only
+# when configs/model_pricing.yaml is missing or unparseable.
+_FALLBACK_PRICING = {
     "gpt-4o": {"input": 2.50, "output": 10.00},
     "gpt-4o-mini": {"input": 0.15, "output": 0.60},
     "gpt-4-turbo": {"input": 10.00, "output": 30.00},
@@ -38,6 +42,28 @@ _DEFAULT_PRICING = {
     "claude-haiku-4-5-20251001": {"input": 0.25, "output": 1.25},
     "ollama-local": {"input": 0.0, "output": 0.0},
 }
+
+_PRICING_PATH = Path(__file__).parent.parent.parent.parent / "configs" / "model_pricing.yaml"
+
+
+def _load_pricing(path: Path | None = None) -> dict[str, dict[str, float]]:
+    """Load model pricing from configs/model_pricing.yaml.
+
+    Falls back to the embedded _FALLBACK_PRICING dict if the file is missing
+    or fails to parse, so pricing lookups never hard-fail.
+    """
+    pricing_path = path or _PRICING_PATH
+    try:
+        with open(pricing_path, encoding="utf-8") as f:
+            data = yaml.safe_load(f)
+        if isinstance(data, dict) and data:
+            return data
+    except (OSError, yaml.YAMLError):
+        pass
+    return _FALLBACK_PRICING
+
+
+_DEFAULT_PRICING = _load_pricing()
 
 
 @dataclass
@@ -163,7 +189,6 @@ class TokenBudget:
             "num_calls": len(self.calls),
             "exhausted": self.is_exhausted,
             "cost_ceiling_hit": (
-                self.max_cost_usd is not None
-                and self.estimated_cost_usd >= self.max_cost_usd
+                self.max_cost_usd is not None and self.estimated_cost_usd >= self.max_cost_usd
             ),
         }

@@ -15,7 +15,7 @@ from __future__ import annotations
 from typing import Any
 
 from pdd_agent.calc import cdm_tool_03, cdm_tool_04, cdm_tool_05, cdm_tool_06, cdm_tool_14
-from pdd_agent.calc.constants import DENSITY_CH4, GWP_CH4
+from pdd_agent.calc.constants import DENSITY_CH4
 from pdd_agent.calc.methodology import ComputationResult, ValidationResult
 from pdd_agent.calc.models import ACM0022CalcInput, ACM0022CalcResult, EmissionComponent
 
@@ -42,7 +42,9 @@ class ACM0022Calculator:
         if self._inp.electricity_exported_mwh_per_year is not None:
             electricity_generated_mwh = self._inp.electricity_exported_mwh_per_year
         else:
-            gross_kwh = annual_methane_m3 * methane_lhv_kwh_per_m3 * self._inp.engine_electrical_efficiency
+            gross_kwh = (
+                annual_methane_m3 * methane_lhv_kwh_per_m3 * self._inp.engine_electrical_efficiency
+            )
             electricity_generated_mwh = gross_kwh / 1000.0
 
         # ========== BASELINE EMISSIONS ==========
@@ -66,12 +68,14 @@ class ACM0022Calculator:
             )
             be_ch4_total += be_ch4_ws
 
-        components.append(EmissionComponent(
-            name="BE_CH4 (methane from SWDS)",
-            value_tco2e=be_ch4_total,
-            formula_ref="ACM0022 Eq.1 + Tool 04 Eq.2",
-            notes=f"FOD model, year {self._inp.calculation_year}",
-        ))
+        components.append(
+            EmissionComponent(
+                name="BE_CH4 (methane from SWDS)",
+                value_tco2e=be_ch4_total,
+                formula_ref="ACM0022 Eq.1 + Tool 04 Eq.2",
+                notes=f"FOD model, year {self._inp.calculation_year}",
+            )
+        )
 
         # BE_EC: baseline electricity displacement
         be_ec = cdm_tool_05.baseline_electricity_emissions(
@@ -79,12 +83,14 @@ class ACM0022Calculator:
             grid_ef_tco2_per_mwh=self._inp.grid_emission_factor_tco2_per_mwh,
             tdl_factor=self._inp.tdl_factor,
         )
-        components.append(EmissionComponent(
-            name="BE_EC (displaced grid electricity)",
-            value_tco2e=be_ec,
-            formula_ref="ACM0022 Eq.13 + Tool 05 Eq.2",
-            notes=f"EF={self._inp.grid_emission_factor_tco2_per_mwh} tCO2/MWh ({self._inp.grid_emission_factor_source})",
-        ))
+        components.append(
+            EmissionComponent(
+                name="BE_EC (displaced grid electricity)",
+                value_tco2e=be_ec,
+                formula_ref="ACM0022 Eq.13 + Tool 05 Eq.2",
+                notes=f"EF={self._inp.grid_emission_factor_tco2_per_mwh} tCO2/MWh ({self._inp.grid_emission_factor_source})",
+            )
+        )
 
         baseline_total = (be_ch4_total + be_ec) * (1 - self._inp.rate_compliance)
 
@@ -96,11 +102,13 @@ class ACM0022Calculator:
             grid_ef_tco2_per_mwh=self._inp.grid_emission_factor_tco2_per_mwh,
             tdl_factor=self._inp.tdl_factor,
         )
-        components.append(EmissionComponent(
-            name="PE_EC (grid electricity consumed)",
-            value_tco2e=pe_ec,
-            formula_ref="Tool 05 Eq.1",
-        ))
+        components.append(
+            EmissionComponent(
+                name="PE_EC (grid electricity consumed)",
+                value_tco2e=pe_ec,
+                formula_ref="Tool 05 Eq.1",
+            )
+        )
 
         # PE_FC: fossil fuel combustion
         pe_fc = 0.0
@@ -111,23 +119,27 @@ class ACM0022Calculator:
                 ncv_override=ff.ncv_override,
                 ef_override=ff.ef_override,
             )
-        components.append(EmissionComponent(
-            name="PE_FC (fossil fuel combustion)",
-            value_tco2e=pe_fc,
-            formula_ref="Tool 03 Eq.1",
-        ))
+        components.append(
+            EmissionComponent(
+                name="PE_FC (fossil fuel combustion)",
+                value_tco2e=pe_fc,
+                formula_ref="Tool 03 Eq.1",
+            )
+        )
 
         # PE_CH4: methane leakage from AD
         pe_ch4 = cdm_tool_14.digester_methane_leakage(
             methane_produced_tonnes=annual_methane_tonnes,
             leakage_fraction=self._inp.methane_leakage_fraction,
         )
-        components.append(EmissionComponent(
-            name="PE_CH4 (AD methane leakage)",
-            value_tco2e=pe_ch4,
-            formula_ref="Tool 14 Eq.4",
-            notes=f"leakage fraction={self._inp.methane_leakage_fraction}",
-        ))
+        components.append(
+            EmissionComponent(
+                name="PE_CH4 (AD methane leakage)",
+                value_tco2e=pe_ch4,
+                formula_ref="Tool 14 Eq.4",
+                notes=f"leakage fraction={self._inp.methane_leakage_fraction}",
+            )
+        )
 
         # PE_FLARE: incomplete flare destruction
         methane_to_flare_tonnes = annual_methane_tonnes * self._inp.fraction_biogas_to_flare
@@ -135,11 +147,13 @@ class ACM0022Calculator:
             methane_to_flare_tonnes=methane_to_flare_tonnes,
             flare_type=self._inp.flare_type,
         )
-        components.append(EmissionComponent(
-            name="PE_FLARE (incomplete flaring)",
-            value_tco2e=pe_flare,
-            formula_ref="Tool 06 Eq.15",
-        ))
+        components.append(
+            EmissionComponent(
+                name="PE_FLARE (incomplete flaring)",
+                value_tco2e=pe_flare,
+                formula_ref="Tool 06 Eq.15",
+            )
+        )
 
         project_total = pe_ec + pe_fc + pe_ch4 + pe_flare
 
@@ -153,22 +167,26 @@ class ACM0022Calculator:
                 * self._inp.rdf_ncv_gj_per_tonne
                 * self._inp.rdf_fossil_carbon_ef_tco2_per_gj
             )
-        components.append(EmissionComponent(
-            name="LE_RDF (RDF end-use)",
-            value_tco2e=le_rdf,
-            formula_ref="ACM0022 Eq.34",
-            notes="documented end-use" if self._inp.rdf_end_use_documented else "undocumented",
-        ))
+        components.append(
+            EmissionComponent(
+                name="LE_RDF (RDF end-use)",
+                value_tco2e=le_rdf,
+                formula_ref="ACM0022 Eq.34",
+                notes="documented end-use" if self._inp.rdf_end_use_documented else "undocumented",
+            )
+        )
 
         # LE_AD: digestate storage
         le_digestate = cdm_tool_14.digestate_storage_leakage(
             digestate_stored_anaerobically=self._inp.digestate_stored_anaerobically,
         )
-        components.append(EmissionComponent(
-            name="LE_AD (digestate storage)",
-            value_tco2e=le_digestate,
-            formula_ref="Tool 14 Eq.5",
-        ))
+        components.append(
+            EmissionComponent(
+                name="LE_AD (digestate storage)",
+                value_tco2e=le_digestate,
+                formula_ref="Tool 14 Eq.5",
+            )
+        )
 
         leakage_total = le_rdf + le_digestate
 
@@ -269,17 +287,57 @@ class ACM0022Calculator:
             unit="tCO2e/year",
             formula="ER_y = BE_y - PE_y - LE_y",
             provenance=[
-                {"param": "baseline_emissions", "source": "calc_engine", "value": result.baseline_emissions_tco2e},
-                {"param": "project_emissions", "source": "calc_engine", "value": result.project_emissions_tco2e},
-                {"param": "leakage_emissions", "source": "calc_engine", "value": result.leakage_tco2e},
+                {
+                    "param": "baseline_emissions",
+                    "source": "calc_engine",
+                    "value": result.baseline_emissions_tco2e,
+                },
+                {
+                    "param": "project_emissions",
+                    "source": "calc_engine",
+                    "value": result.project_emissions_tco2e,
+                },
+                {
+                    "param": "leakage_emissions",
+                    "source": "calc_engine",
+                    "value": result.leakage_tco2e,
+                },
             ],
             notes="Net annual emission reductions before crediting-period scaling",
         )
 
     def required_monitoring_params(self, inputs: dict[str, Any]) -> list[dict]:
         return [
-            {"id": "ACM0022-PARAM-01", "name": "Annual waste throughput", "unit": "tonnes/year", "frequency": "Continuously", "source": "Project records / weighbridge", "section_ref": "5.2"},
-            {"id": "ACM0022-PARAM-02", "name": "Biogas methane concentration", "unit": "% CH4", "frequency": "Monthly or per batch", "source": "Gas composition analysis", "section_ref": "5.2"},
-            {"id": "ACM0022-PARAM-03", "name": "Recovered electricity", "unit": "MWh/year", "frequency": "Continuously", "source": "Electricity metering", "section_ref": "5.2"},
-            {"id": "ACM0022-PARAM-04", "name": "Grid emission factor", "unit": "tCO2e/MWh", "frequency": "Annual update", "source": "ACM0022 default or national grid authority", "section_ref": "4.1"},
+            {
+                "id": "ACM0022-PARAM-01",
+                "name": "Annual waste throughput",
+                "unit": "tonnes/year",
+                "frequency": "Continuously",
+                "source": "Project records / weighbridge",
+                "section_ref": "5.2",
+            },
+            {
+                "id": "ACM0022-PARAM-02",
+                "name": "Biogas methane concentration",
+                "unit": "% CH4",
+                "frequency": "Monthly or per batch",
+                "source": "Gas composition analysis",
+                "section_ref": "5.2",
+            },
+            {
+                "id": "ACM0022-PARAM-03",
+                "name": "Recovered electricity",
+                "unit": "MWh/year",
+                "frequency": "Continuously",
+                "source": "Electricity metering",
+                "section_ref": "5.2",
+            },
+            {
+                "id": "ACM0022-PARAM-04",
+                "name": "Grid emission factor",
+                "unit": "tCO2e/MWh",
+                "frequency": "Annual update",
+                "source": "ACM0022 default or national grid authority",
+                "section_ref": "4.1",
+            },
         ]

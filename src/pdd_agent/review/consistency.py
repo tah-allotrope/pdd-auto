@@ -264,7 +264,6 @@ def _check_crediting_period_total(
     project_input: ProjectInput | None,
     report: ConsistencyReport,
 ) -> None:
-    sec_4_4 = sections.get("4.4", "")
     if project_input is None:
         return
 
@@ -486,11 +485,27 @@ def _check_calc_vs_project_input(
     qi = project_input.quantification
 
     pairs: list[tuple[str, float | None, float | None]] = [
-        ("baseline_emissions", qi.baseline_emissions_tco2e_per_year, calc_result.baseline_emissions_tco2e),
-        ("project_emissions", qi.project_emissions_tco2e_per_year, calc_result.project_emissions_tco2e),
+        (
+            "baseline_emissions",
+            qi.baseline_emissions_tco2e_per_year,
+            calc_result.baseline_emissions_tco2e,
+        ),
+        (
+            "project_emissions",
+            qi.project_emissions_tco2e_per_year,
+            calc_result.project_emissions_tco2e,
+        ),
         ("leakage", qi.leakage_tco2e_per_year, calc_result.leakage_tco2e),
-        ("net_emissions", qi.net_emissions_tco2e_per_year, calc_result.net_emission_reductions_tco2e),
-        ("crediting_total", qi.crediting_period_total_tco2e, calc_result.crediting_period_total_tco2e),
+        (
+            "net_emissions",
+            qi.net_emissions_tco2e_per_year,
+            calc_result.net_emission_reductions_tco2e,
+        ),
+        (
+            "crediting_total",
+            qi.crediting_period_total_tco2e,
+            calc_result.crediting_period_total_tco2e,
+        ),
     ]
 
     for field_name, qi_val, calc_val in pairs:

@@ -14,7 +14,7 @@ from typing import Any
 import structlog
 import yaml
 
-from pdd_agent.llm.provider import BaseProvider, LLMResponse, ModelConfig
+from pdd_agent.llm.provider import BaseProvider
 from schemas.project_input import ProjectInput, ExtractionProvenance
 
 logger = structlog.get_logger()
@@ -70,9 +70,7 @@ def _extract_pdf_text(path: Path) -> str:
     try:
         from pypdf import PdfReader
     except ImportError as exc:
-        raise ExtractionError(
-            "pypdf not installed. Install via: pip install pypdf"
-        ) from exc
+        raise ExtractionError("pypdf not installed. Install via: pip install pypdf") from exc
 
     reader = PdfReader(str(path))
     pages = []
@@ -273,21 +271,17 @@ def extract_project_input(
 
     raw_data = _parse_yaml_from_response(response.text)
     cleaned_data, missing_fields = _clean_missing_markers(raw_data)
-    model_name = getattr(provider, '_model', None)
+    model_name = getattr(provider, "_model", None)
     if model_name is not None and not isinstance(model_name, str):
         model_name = None
-    provenance = _build_provenance(
-        cleaned_data, missing_fields, source_path, model_name
-    )
+    provenance = _build_provenance(cleaned_data, missing_fields, source_path, model_name)
 
     cleaned_data = _apply_schema_defaults(cleaned_data)
 
     try:
         project_input = ProjectInput.model_validate(cleaned_data)
     except Exception as exc:
-        raise ExtractionError(
-            f"Extracted data failed ProjectInput validation: {exc}"
-        ) from exc
+        raise ExtractionError(f"Extracted data failed ProjectInput validation: {exc}") from exc
 
     project_input.extraction_provenance = provenance
     return project_input

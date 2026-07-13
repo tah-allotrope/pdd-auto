@@ -234,6 +234,7 @@ class TestBuildExtractionPrompt:
 class TestExtractProjectInput:
     def _mock_provider(self, yaml_response: str):
         from pdd_agent.llm.provider import DraftSection
+
         provider = MagicMock()
         provider.draft_section.return_value = DraftSection(
             section_id="extract",
@@ -280,6 +281,7 @@ class TestExtractProjectInput:
 
     def test_extract_provider_error(self):
         from pdd_agent.llm.provider import DraftSection
+
         provider = MagicMock()
         provider.draft_section.return_value = DraftSection(
             section_id="extract",
@@ -346,6 +348,7 @@ class TestExtractionProvenanceModel:
 
     def test_project_input_with_provenance(self):
         from tests.test_prompt_assembly import _minimal_project_dict
+
         data = _minimal_project_dict()
         pi = ProjectInput(**data)
         assert pi.extraction_provenance is None

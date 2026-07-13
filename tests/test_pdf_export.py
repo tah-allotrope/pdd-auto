@@ -2,7 +2,6 @@
 
 import pytest
 from unittest.mock import patch, MagicMock
-from pathlib import Path
 
 from pdd_agent.export.pdf_export import (
     export_docx_to_pdf,

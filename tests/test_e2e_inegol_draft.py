@@ -13,7 +13,7 @@ import yaml
 from pdd_agent.agent.section_orchestrator import SectionOrchestrator
 from pdd_agent.llm.provider import DemoProvider, NoopProvider
 from pdd_agent.llm.budget import TokenBudget
-from schemas.project_input import ProjectInput, GenerationControls, ReviewFlags
+from schemas.project_input import ProjectInput
 
 
 _INEGOL_YAML = Path("configs/demo/inegol_project_input.yaml")

@@ -9,7 +9,7 @@ from __future__ import annotations
 import pytest
 
 from pdd_agent.calc.acm0022 import ACM0022Calculator
-from pdd_agent.calc.models import ACM0022CalcInput, ACM0022CalcResult, FossilFuelInput, WasteStream
+from pdd_agent.calc.models import ACM0022CalcInput, ACM0022CalcResult, WasteStream
 from schemas.project_input import QuantificationInputs
 
 
@@ -174,7 +174,8 @@ class TestEdgeCaseMultipleWasteStreams:
         r_single = ACM0022Calculator(single).calculate()
         r_multi = ACM0022Calculator(multi).calculate()
         assert r_single.baseline_methane_swds_tco2e != pytest.approx(
-            r_multi.baseline_methane_swds_tco2e, rel=0.01,
+            r_multi.baseline_methane_swds_tco2e,
+            rel=0.01,
         )
 
 

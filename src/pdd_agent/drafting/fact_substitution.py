@@ -82,5 +82,7 @@ def substitute_facts(
     source_facts: dict[str, Any] | None = None,
 ) -> SubstitutionResult:
     return FactSubstitutionEngine(project_input).adapt(
-        text, source_name=source_name, source_facts=source_facts,
+        text,
+        source_name=source_name,
+        source_facts=source_facts,
     )

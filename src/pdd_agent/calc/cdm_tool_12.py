@@ -25,24 +25,35 @@ def identify_wte_baseline(
     alternatives = list(plausible_alternatives or [])
     if existing_energy_recovery:
         return BaselineIdentificationResult(
-            "existing_energy_recovery", False,
+            "existing_energy_recovery",
+            False,
             "The project would replace existing energy recovery; landfill disposal is not the baseline.",
             alternatives,
         )
     if mandatory_treatment_or_energy_recovery:
         return BaselineIdentificationResult(
-            "mandatory_treatment", False,
-            "Applicable regulation already requires treatment or energy recovery.", alternatives,
+            "mandatory_treatment",
+            False,
+            "Applicable regulation already requires treatment or energy recovery.",
+            alternatives,
         )
     if not waste_currently_landfilled:
         return BaselineIdentificationResult(
-            "non_landfill_current_practice", False,
-            "Landfill disposal is not demonstrated as current practice.", alternatives,
+            "non_landfill_current_practice",
+            False,
+            "Landfill disposal is not demonstrated as current practice.",
+            alternatives,
         )
-    capture = "with partial landfill-gas capture" if landfill_gas_captured else "without landfill-gas capture"
+    capture = (
+        "with partial landfill-gas capture"
+        if landfill_gas_captured
+        else "without landfill-gas capture"
+    )
     return BaselineIdentificationResult(
-        "continued_landfill_disposal", True,
-        f"Continued landfill disposal {capture} is the identified baseline.", alternatives,
+        "continued_landfill_disposal",
+        True,
+        f"Continued landfill disposal {capture} is the identified baseline.",
+        alternatives,
     )
 
 

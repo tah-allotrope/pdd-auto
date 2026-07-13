@@ -96,7 +96,9 @@ def test_render_gap_analysis_prioritizes_blocked_quant_fields():
 
     assert "# Vietnam PDD Gap Analysis" in report
     assert "quantification.baseline_emissions_tco2e_per_year" in report
-    assert "Detailed GHG calculation workbook plus cited Vietnam grid-emission-factor source" in report
+    assert (
+        "Detailed GHG calculation workbook plus cited Vietnam grid-emission-factor source" in report
+    )
     assert "Monitoring plan, metering SOPs, and equipment calibration records" in report
     assert "4.4: Needs Domain Review" in report
 
@@ -271,19 +273,20 @@ def test_run_vietnam_pdd_workflow_writes_phase05_reports(tmp_path: Path):
         )
     )
 
-    with patch("pdd_agent.phase06.vietnam_workflow.fetch_workbook", return_value=workbook), patch(
-        "pdd_agent.phase06.vietnam_workflow.generate_project_artifacts",
-        return_value=spreadsheet_artifacts,
-    ), patch(
-        "pdd_agent.phase06.vietnam_workflow.get_provider_registry"
-    ) as mock_registry, patch(
-        "pdd_agent.phase06.vietnam_workflow.SectionOrchestrator"
-    ) as mock_orchestrator_cls, patch(
-        "pdd_agent.phase06.vietnam_workflow.export_run_to_docx",
-        return_value=internal_docx,
-    ), patch(
-        "pdd_agent.phase06.vietnam_workflow.ReviewStateStore.load"
-    ) as mock_review_state_load:
+    with (
+        patch("pdd_agent.phase06.vietnam_workflow.fetch_workbook", return_value=workbook),
+        patch(
+            "pdd_agent.phase06.vietnam_workflow.generate_project_artifacts",
+            return_value=spreadsheet_artifacts,
+        ),
+        patch("pdd_agent.phase06.vietnam_workflow.get_provider_registry") as mock_registry,
+        patch("pdd_agent.phase06.vietnam_workflow.SectionOrchestrator") as mock_orchestrator_cls,
+        patch(
+            "pdd_agent.phase06.vietnam_workflow.export_run_to_docx",
+            return_value=internal_docx,
+        ),
+        patch("pdd_agent.phase06.vietnam_workflow.ReviewStateStore.load") as mock_review_state_load,
+    ):
         mock_registry.return_value.get.return_value = object()
         mock_orchestrator = mock_orchestrator_cls.return_value
         mock_orchestrator.run_id = "viet-run"
@@ -292,7 +295,9 @@ def test_run_vietnam_pdd_workflow_writes_phase05_reports(tmp_path: Path):
             "run_id": "viet-run",
             "review": {
                 "passed": False,
-                "blocking_issues": ["REVIEW REQUIRED: 4.4 depends on review-gated synthetic inputs"],
+                "blocking_issues": [
+                    "REVIEW REQUIRED: 4.4 depends on review-gated synthetic inputs"
+                ],
                 "auto_approved_sections": [],
             },
             "consistency": {"passed": True, "issues": []},
@@ -318,9 +323,28 @@ def test_run_vietnam_pdd_workflow_writes_phase05_reports(tmp_path: Path):
 
     assert isinstance(artifacts, VietnamWorkflowArtifacts)
     assert artifacts.run_id == "viet-run"
-    assert artifacts.docx_path == tmp_path / "reports" / "review-packages" / "soc-son-test-project" / "viet-run" / "viet-run.docx"
-    assert artifacts.review_package_manifest_path == tmp_path / "reports" / "review-packages" / "soc-son-test-project" / "viet-run" / "manifest.json"
-    assert artifacts.latest_docx_path == tmp_path / "reports" / "review-packages" / "soc-son-test-project" / "latest.docx"
+    assert (
+        artifacts.docx_path
+        == tmp_path
+        / "reports"
+        / "review-packages"
+        / "soc-son-test-project"
+        / "viet-run"
+        / "viet-run.docx"
+    )
+    assert (
+        artifacts.review_package_manifest_path
+        == tmp_path
+        / "reports"
+        / "review-packages"
+        / "soc-son-test-project"
+        / "viet-run"
+        / "manifest.json"
+    )
+    assert (
+        artifacts.latest_docx_path
+        == tmp_path / "reports" / "review-packages" / "soc-son-test-project" / "latest.docx"
+    )
     assert artifacts.gap_analysis_path.exists()
     assert artifacts.runbook_path.exists()
     assert artifacts.validation_report_path.exists()
@@ -328,12 +352,15 @@ def test_run_vietnam_pdd_workflow_writes_phase05_reports(tmp_path: Path):
     assert artifacts.review_package_manifest_path.exists()
     assert artifacts.latest_docx_path.exists()
     assert artifacts.upload_result is None
-    assert "quantification.baseline_emissions_tco2e_per_year" in artifacts.gap_analysis_path.read_text(
-        encoding="utf-8"
+    assert (
+        "quantification.baseline_emissions_tco2e_per_year"
+        in artifacts.gap_analysis_path.read_text(encoding="utf-8")
     )
     validation_text = artifacts.validation_report_path.read_text(encoding="utf-8")
     assert "Workflow Outcome" in validation_text
-    assert "reports\\review-packages\\soc-son-test-project\\viet-run\\viet-run.docx" in validation_text
+    assert (
+        "reports\\review-packages\\soc-son-test-project\\viet-run\\viet-run.docx" in validation_text
+    )
     assert "python scripts/run_vietnam_pdd.py" in artifacts.runbook_path.read_text(encoding="utf-8")
 
 
@@ -434,7 +461,9 @@ def test_run_vietnam_pdd_workflow_can_upload_published_review_docx(tmp_path: Pat
     )
 
     assumptions_yaml = tmp_path / "configs" / "vietnam_socson_from_sheet.assumptions.yaml"
-    assumptions_yaml.write_text(yaml.safe_dump({"assumptions": [], "guardrails": {}}, sort_keys=False), encoding="utf-8")
+    assumptions_yaml.write_text(
+        yaml.safe_dump({"assumptions": [], "guardrails": {}}, sort_keys=False), encoding="utf-8"
+    )
 
     source_report = tmp_path / "reports" / "source-profile-vietnam-wte.md"
     source_report.parent.mkdir(parents=True, exist_ok=True)
@@ -453,24 +482,26 @@ def test_run_vietnam_pdd_workflow_can_upload_published_review_docx(tmp_path: Pat
     internal_docx.parent.mkdir(parents=True, exist_ok=True)
     internal_docx.write_bytes(b"docx-binary")
 
-    draft_run = DraftRun(run_id="viet-upload", project_name="Soc Son Upload Project", provider="noop")
+    draft_run = DraftRun(
+        run_id="viet-upload", project_name="Soc Son Upload Project", provider="noop"
+    )
     draft_run.add(_section("4", "4.4", "LOW", [], []))
 
-    with patch("pdd_agent.phase06.vietnam_workflow.fetch_workbook", return_value=workbook), patch(
-        "pdd_agent.phase06.vietnam_workflow.generate_project_artifacts",
-        return_value=spreadsheet_artifacts,
-    ), patch(
-        "pdd_agent.phase06.vietnam_workflow.get_provider_registry"
-    ) as mock_registry, patch(
-        "pdd_agent.phase06.vietnam_workflow.SectionOrchestrator"
-    ) as mock_orchestrator_cls, patch(
-        "pdd_agent.phase06.vietnam_workflow.export_run_to_docx",
-        return_value=internal_docx,
-    ), patch(
-        "pdd_agent.phase06.vietnam_workflow.ReviewStateStore.load"
-    ) as mock_review_state_load, patch(
-        "pdd_agent.phase06.vietnam_workflow.upload_review_package_docx"
-    ) as mock_upload:
+    with (
+        patch("pdd_agent.phase06.vietnam_workflow.fetch_workbook", return_value=workbook),
+        patch(
+            "pdd_agent.phase06.vietnam_workflow.generate_project_artifacts",
+            return_value=spreadsheet_artifacts,
+        ),
+        patch("pdd_agent.phase06.vietnam_workflow.get_provider_registry") as mock_registry,
+        patch("pdd_agent.phase06.vietnam_workflow.SectionOrchestrator") as mock_orchestrator_cls,
+        patch(
+            "pdd_agent.phase06.vietnam_workflow.export_run_to_docx",
+            return_value=internal_docx,
+        ),
+        patch("pdd_agent.phase06.vietnam_workflow.ReviewStateStore.load") as mock_review_state_load,
+        patch("pdd_agent.phase06.vietnam_workflow.upload_review_package_docx") as mock_upload,
+    ):
         mock_registry.return_value.get.return_value = object()
         mock_orchestrator = mock_orchestrator_cls.return_value
         mock_orchestrator.run_id = "viet-upload"

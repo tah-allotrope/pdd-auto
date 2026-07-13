@@ -125,9 +125,7 @@ class TestIntakeRoutes:
             encoding="utf-8",
         )
 
-        with patch(
-            "pdd_agent.service.main.extract_project_input"
-        ) as mock_extract:
+        with patch("pdd_agent.service.main.extract_project_input") as mock_extract:
             project_input = ProjectInput.model_validate(
                 {
                     "project": {
@@ -176,9 +174,7 @@ class TestIntakeRoutes:
                         "data_management": "Digital records",
                     },
                     "safeguards": {"no_net_harm_statement": "No net harm."},
-                    "compliance_and_ownership": {
-                        "credit_ownership_statement": "Mock owns credits"
-                    },
+                    "compliance_and_ownership": {"credit_ownership_statement": "Mock owns credits"},
                     "sustainable_development": {},
                 }
             )
@@ -193,7 +189,9 @@ class TestIntakeRoutes:
         assert data["provider"] == "demo"
         assert "yaml" in data
 
-    def test_intake_spreadsheet_without_upload_uses_default_cache(self, tmp_path: Path, monkeypatch):
+    def test_intake_spreadsheet_without_upload_uses_default_cache(
+        self, tmp_path: Path, monkeypatch
+    ):
         from pdd_agent import phase06
 
         cache_dir = tmp_path / "spreadsheets"
@@ -216,7 +214,9 @@ class TestIntakeRoutes:
 
 
 class TestRunLifecycle:
-    def test_create_run_returns_run_id(self, minimal_project_yaml, service_runs_dir, tmp_path: Path, monkeypatch):
+    def test_create_run_returns_run_id(
+        self, minimal_project_yaml, service_runs_dir, tmp_path: Path, monkeypatch
+    ):
         monkeypatch.setattr(service_main, "REPO_ROOT", tmp_path)
         upload_dir = tmp_path / "data" / "source_inputs" / "service_uploads"
         upload_dir.mkdir(parents=True, exist_ok=True)

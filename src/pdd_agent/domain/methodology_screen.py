@@ -61,7 +61,11 @@ class MethodologyDatabase:
                         "_rules_file": path.name,
                         "_rules_version": data.get("version", "unknown"),
                     }
-                logger.info("methodology_rules_loaded", file=path.name, count=len(data.get("methodologies") or {}))
+                logger.info(
+                    "methodology_rules_loaded",
+                    file=path.name,
+                    count=len(data.get("methodologies") or {}),
+                )
             except Exception as exc:  # noqa: BLE001
                 logger.warning("methodology_rules_load_failed", file=path.name, error=str(exc))
 
@@ -103,13 +107,15 @@ class MethodologyDatabase:
             if mid in seen_ids:
                 continue
             seen_ids.add(mid)
-            unified.append({
-                "id": mid,
-                "name": rules.get("full_name", mid),
-                "version": rules.get("version"),
-                "category": rules.get("category", "other"),
-                **rules,
-            })
+            unified.append(
+                {
+                    "id": mid,
+                    "name": rules.get("full_name", mid),
+                    "version": rules.get("version"),
+                    "category": rules.get("category", "other"),
+                    **rules,
+                }
+            )
 
         self._all = unified
 
@@ -129,9 +135,12 @@ class MethodologyDatabase:
                 cdm_meta = json.load(f).get("_meta", {})
         vcs_date = vcs_meta.get("last_updated", "unknown")
         cdm_date = cdm_meta.get("last_updated", "unknown")
-        rules_date = ",".join(
-            sorted({r.get("_rules_version", "unknown") for r in self._rules_by_id.values()})
-        ) or "no_rules"
+        rules_date = (
+            ",".join(
+                sorted({r.get("_rules_version", "unknown") for r in self._rules_by_id.values()})
+            )
+            or "no_rules"
+        )
         return f"VCS:{vcs_date}, CDM:{cdm_date}, RULES:{rules_date}"
 
 
@@ -389,11 +398,15 @@ def _analyze_applicability_with_llm(
             if confidence < min_confidence or not rationale:
                 continue
             original = candidate_by_id[methodology_id]
-            analyzed.append(original.model_copy(update={
-                "confidence": round(confidence, 3),
-                "rationale": rationale,
-                "active_status_source": f"LLM analysis; methodology_db ({db.data_version})",
-            }))
+            analyzed.append(
+                original.model_copy(
+                    update={
+                        "confidence": round(confidence, 3),
+                        "rationale": rationale,
+                        "active_status_source": f"LLM analysis; methodology_db ({db.data_version})",
+                    }
+                )
+            )
             seen.add(methodology_id)
         if analyzed:
             analyzed.sort(key=lambda item: item.confidence, reverse=True)

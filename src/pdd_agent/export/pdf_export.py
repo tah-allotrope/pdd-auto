@@ -58,8 +58,7 @@ def export_docx_to_pdf(
     lo_path = _find_libreoffice()
     if lo_path is None:
         raise PDFExportError(
-            "LibreOffice not found. Install LibreOffice for PDF export, "
-            "or use DOCX output instead."
+            "LibreOffice not found. Install LibreOffice for PDF export, or use DOCX output instead."
         )
 
     if output_dir is None:
@@ -70,8 +69,10 @@ def export_docx_to_pdf(
     cmd = [
         lo_path,
         "--headless",
-        "--convert-to", "pdf",
-        "--outdir", str(output_dir),
+        "--convert-to",
+        "pdf",
+        "--outdir",
+        str(output_dir),
         str(docx_path),
     ]
 
@@ -89,16 +90,13 @@ def export_docx_to_pdf(
             timeout=timeout_seconds,
         )
     except subprocess.TimeoutExpired:
-        raise PDFExportError(
-            f"LibreOffice conversion timed out after {timeout_seconds}s"
-        )
+        raise PDFExportError(f"LibreOffice conversion timed out after {timeout_seconds}s")
     except OSError as exc:
         raise PDFExportError(f"Failed to run LibreOffice: {exc}") from exc
 
     if result.returncode != 0:
         raise PDFExportError(
-            f"LibreOffice conversion failed (exit {result.returncode}): "
-            f"{result.stderr.strip()}"
+            f"LibreOffice conversion failed (exit {result.returncode}): {result.stderr.strip()}"
         )
 
     pdf_path = output_dir / docx_path.with_suffix(".pdf").name

@@ -27,9 +27,13 @@ def _open_docx(path: Path) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Run the Soc Son-like demo benchmark")
-    parser.add_argument("--open", action="store_true", help="Open the generated DOCX after completion")
     parser.add_argument(
-        "--provider", choices=("demo", "corpus"), default="demo",
+        "--open", action="store_true", help="Open the generated DOCX after completion"
+    )
+    parser.add_argument(
+        "--provider",
+        choices=("demo", "corpus"),
+        default="demo",
         help="Drafting provider (default: demo)",
     )
     args = parser.parse_args()

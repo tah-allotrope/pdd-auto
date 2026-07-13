@@ -31,7 +31,7 @@ from pdd_agent.agent.section_orchestrator import SectionOrchestrator
 from pdd_agent.export.docx_export import export_run_to_docx
 from pdd_agent.ingest.extract import extract_project_input
 from pdd_agent.llm.env_config import configure_provider_from_env
-from pdd_agent.llm.provider import DemoProvider, get_provider_registry
+from pdd_agent.llm.provider import get_provider_registry
 from pdd_agent.phase06.spreadsheet_mapper import generate_project_artifacts
 from pdd_agent.review.states import ReviewState, ReviewStateStore, init_review_state
 from schemas.project_input import ProjectInput
@@ -48,6 +48,7 @@ def _service_runs_dir() -> Path:
 RUNS_DIR = REPO_ROOT / "data" / "runs"
 TEMPLATES_DIR = Path(__file__).parent / "templates"
 STATIC_DIR = Path(__file__).parent / "static"
+
 
 @asynccontextmanager
 async def _lifespan(_app: FastAPI):
@@ -378,7 +379,9 @@ def dashboard(request: Request):
     runs: list[dict[str, Any]] = []
     runs_dir = _runs_dir()
     if runs_dir.exists():
-        for path in sorted(runs_dir.glob("run-*.json"), key=lambda p: p.stat().st_mtime, reverse=True):
+        for path in sorted(
+            runs_dir.glob("run-*.json"), key=lambda p: p.stat().st_mtime, reverse=True
+        ):
             run_id = path.stem
             try:
                 status = _run_status(run_id)
@@ -558,7 +561,9 @@ def api_list_runs():
     runs: list[dict[str, Any]] = []
     runs_dir = _runs_dir()
     if runs_dir.exists():
-        for path in sorted(runs_dir.glob("run-*.json"), key=lambda p: p.stat().st_mtime, reverse=True):
+        for path in sorted(
+            runs_dir.glob("run-*.json"), key=lambda p: p.stat().st_mtime, reverse=True
+        ):
             try:
                 runs.append(_run_status(path.stem))
             except HTTPException:
@@ -799,9 +804,16 @@ def _redraft_section_task(
             reviewer_notes="Redrafted via service",
         )
         _save_review_state(store)
-        logger.info("service_redraft_complete", run_id=run_id, section_key=f"{section_id}/{sub_section_id}")
+        logger.info(
+            "service_redraft_complete", run_id=run_id, section_key=f"{section_id}/{sub_section_id}"
+        )
     except Exception as exc:
-        logger.error("service_redraft_failed", run_id=run_id, section_key=f"{section_id}/{sub_section_id}", error=str(exc))
+        logger.error(
+            "service_redraft_failed",
+            run_id=run_id,
+            section_key=f"{section_id}/{sub_section_id}",
+            error=str(exc),
+        )
 
 
 @app.get("/api/runs/{run_id}/docx")

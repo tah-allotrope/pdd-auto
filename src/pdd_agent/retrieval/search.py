@@ -8,7 +8,6 @@ from __future__ import annotations
 
 import re
 import structlog
-from pathlib import Path
 from typing import Any
 
 from pdd_agent.retrieval.index import RetrievalIndex, get_retrieval_index

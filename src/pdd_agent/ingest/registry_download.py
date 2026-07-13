@@ -101,9 +101,7 @@ def _search_projects(methodology_id: str, limit: int) -> list[dict[str, Any]]:
                 },
                 method="POST",
             )
-            with urllib.request.urlopen(
-                request, timeout=_REQUEST_TIMEOUT_SECONDS
-            ) as response:
+            with urllib.request.urlopen(request, timeout=_REQUEST_TIMEOUT_SECONDS) as response:
                 if response.status >= 400:
                     raise urllib.error.HTTPError(
                         _SEARCH_URL, response.status, "search failed", None, None
@@ -139,13 +137,13 @@ def _download_pdf(url: str, dest: Path) -> bool:
         return False
 
 
-def _write_manifest(output_dir: Path, records: list[dict[str, Any]], note: str | None = None) -> None:
+def _write_manifest(
+    output_dir: Path, records: list[dict[str, Any]], note: str | None = None
+) -> None:
     manifest: dict[str, Any] = {"records": records}
     if note:
         manifest["note"] = note
-    (output_dir / "manifest.json").write_text(
-        json.dumps(manifest, indent=2), encoding="utf-8"
-    )
+    (output_dir / "manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
 
 
 def download_registered_pdds(

@@ -88,9 +88,7 @@ class OllamaProvider(BaseProvider):
                     headers={"Content-Type": "application/json"},
                     method="POST",
                 )
-                with urllib.request.urlopen(
-                    request, timeout=_REQUEST_TIMEOUT_SECONDS
-                ) as response:
+                with urllib.request.urlopen(request, timeout=_REQUEST_TIMEOUT_SECONDS) as response:
                     payload = json.loads(response.read().decode("utf-8"))
 
                 text = payload.get("message", {}).get("content", "")
@@ -163,9 +161,7 @@ class OllamaProvider(BaseProvider):
                 provenance=provenance,
                 issues=[f"OLLAMA ERROR: {exc}"],
                 provider=self.name,
-                output_references=[
-                    {"type": "section_body", "description": "ollama error output"}
-                ],
+                output_references=[{"type": "section_body", "description": "ollama error output"}],
             )
 
         if self._budget and response.raw:
@@ -188,17 +184,14 @@ class OllamaProvider(BaseProvider):
             provenance=provenance,
             issues=self._extract_issues(text, section_id, sub_section_id),
             provider=self.name,
-            output_references=[
-                {"type": "section_body", "description": "ollama generated output"}
-            ],
+            output_references=[{"type": "section_body", "description": "ollama generated output"}],
         )
 
     def _assess_confidence(self, text: str, provenance: list[str]) -> str:
         has_review_markers = "[REVIEW REQUIRED" in text or "[MISSING]" in text
         has_inference = "[INFERENCE]" in text
         has_citations = any(
-            marker in text
-            for marker in ("[CORPUS:", "[METHODOLOGY:", "[E0", "[USER INPUT:")
+            marker in text for marker in ("[CORPUS:", "[METHODOLOGY:", "[E0", "[USER INPUT:")
         )
 
         if has_review_markers and not has_citations:
@@ -209,9 +202,7 @@ class OllamaProvider(BaseProvider):
             return "HIGH"
         return "MEDIUM"
 
-    def _extract_issues(
-        self, text: str, section_id: str, sub_section_id: str
-    ) -> list[str]:
+    def _extract_issues(self, text: str, section_id: str, sub_section_id: str) -> list[str]:
         issues = []
         if "[REVIEW REQUIRED" in text:
             issues.append(

@@ -21,7 +21,7 @@ from pdd_agent.llm.budget import _DEFAULT_PRICING
 
 _OPTIONAL_PACKAGES = ["openai", "anthropic", "fastapi", "docx", "dotenv"]
 _API_KEY_ENV_VARS = ["OPENAI_API_KEY", "ANTHROPIC_API_KEY"]
-_MODEL_ENV_VARS = ["OPENAI_MODEL", "ANTHROPIC_MODEL"]
+_MODEL_ENV_VARS = ["OPENAI_MODEL", "ANTHROPIC_MODEL", "PDD_JUDGE_MODEL"]
 
 
 def check_python_version() -> tuple[str, str]:
@@ -67,7 +67,10 @@ def check_ollama(base_url: str = "http://localhost:11434") -> tuple[str, str]:
 
             payload = json.loads(response.read().decode("utf-8"))
             models = [m.get("name", "?") for m in payload.get("models", [])]
-            return ("OK", f"Ollama reachable at {base_url} — models: {', '.join(models) or 'none pulled'}")
+            return (
+                "OK",
+                f"Ollama reachable at {base_url} — models: {', '.join(models) or 'none pulled'}",
+            )
     except (urllib.error.URLError, OSError, TimeoutError):
         return ("WARN", f"Ollama not reachable at {base_url}")
 
@@ -84,7 +87,11 @@ def check_external_tools() -> list[tuple[str, str]]:
             proc = subprocess.run(
                 [tool_name, *version_args], capture_output=True, text=True, timeout=5
             )
-            first_line = (proc.stdout or proc.stderr or "").splitlines()[0] if (proc.stdout or proc.stderr) else path
+            first_line = (
+                (proc.stdout or proc.stderr or "").splitlines()[0]
+                if (proc.stdout or proc.stderr)
+                else path
+            )
             results.append(("OK", f"{tool_name}: {first_line.strip()}"))
         except (OSError, subprocess.TimeoutExpired, IndexError):
             results.append(("WARN", f"{tool_name} found at {path} but version check failed"))

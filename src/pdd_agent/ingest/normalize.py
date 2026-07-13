@@ -10,7 +10,7 @@ from typing import Any
 
 import structlog
 
-from pdd_agent.ingest.drive import is_blob, is_workspace_native
+from pdd_agent.ingest.drive import is_blob
 
 log = structlog.get_logger(__name__)
 

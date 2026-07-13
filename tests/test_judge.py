@@ -15,9 +15,7 @@ def _project_input():
             baseline_emissions_tco2e_per_year=98_000.0,
             project_emissions_tco2e_per_year=21_000.0,
         ),
-        evidence_registry=SimpleNamespace(
-            items=[SimpleNamespace(evidence_id="E001")]
-        ),
+        evidence_registry=SimpleNamespace(items=[SimpleNamespace(evidence_id="E001")]),
     )
 
 
@@ -194,9 +192,9 @@ class TestParseJudgeJson:
         from pdd_agent.review.judge import _parse_judge_json
 
         text = (
-            'Here you go:\n```json\n'
+            "Here you go:\n```json\n"
             '{"score": 82, "passed": true, "critical": [], "advisory": ["cite E002"]}\n'
-            '```'
+            "```"
         )
         payload = _parse_judge_json(text)
         assert payload["score"] == 82

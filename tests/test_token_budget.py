@@ -1,12 +1,22 @@
 """Tests for the per-run token budget tracker."""
 
+from pathlib import Path
+
 import pytest
-from pdd_agent.llm.budget import TokenBudget, BudgetExhaustedError, CallRecord
+from pdd_agent.llm.budget import (
+    TokenBudget,
+    BudgetExhaustedError,
+    CallRecord,
+    _FALLBACK_PRICING,
+    _load_pricing,
+)
 
 
 class TestCallRecord:
     def test_fields(self):
-        rec = CallRecord(section_id="1.1", input_tokens=100, output_tokens=50, model="gpt-4o", cost_usd=0.001)
+        rec = CallRecord(
+            section_id="1.1", input_tokens=100, output_tokens=50, model="gpt-4o", cost_usd=0.001
+        )
         assert rec.section_id == "1.1"
         assert rec.input_tokens == 100
         assert rec.output_tokens == 50
@@ -114,3 +124,34 @@ class TestTokenBudget:
         budget = TokenBudget(max_tokens=300)
         budget.record("1.1", input_tokens=200, output_tokens=100)
         assert budget.is_exhausted is True
+
+
+class TestLoadPricing:
+    def test_loads_real_config_file(self):
+        pricing = _load_pricing()
+        assert pricing["gpt-4o"] == {"input": 2.50, "output": 10.00}
+
+    def test_missing_file_falls_back(self, tmp_path: Path):
+        pricing = _load_pricing(path=tmp_path / "does-not-exist.yaml")
+        assert pricing == _FALLBACK_PRICING
+
+    def test_unparseable_file_falls_back(self, tmp_path: Path):
+        bad_file = tmp_path / "bad.yaml"
+        bad_file.write_text("{not: valid: yaml: [", encoding="utf-8")
+        pricing = _load_pricing(path=bad_file)
+        assert pricing == _FALLBACK_PRICING
+
+    def test_empty_file_falls_back(self, tmp_path: Path):
+        empty_file = tmp_path / "empty.yaml"
+        empty_file.write_text("", encoding="utf-8")
+        pricing = _load_pricing(path=empty_file)
+        assert pricing == _FALLBACK_PRICING
+
+    def test_model_absent_from_pricing_prices_zero(self):
+        budget = TokenBudget()
+        rec = budget.record(
+            "1.1", input_tokens=1000, output_tokens=500, model="made-up-model", provider="made-up"
+        )
+        # fallback_key resolves to "gpt-4o" for unknown non-ollama providers,
+        # so an unrecognized model still prices via that fallback, not zero.
+        assert rec.cost_usd > 0

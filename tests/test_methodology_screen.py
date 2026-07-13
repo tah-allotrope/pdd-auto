@@ -1,6 +1,5 @@
 """Tests for methodology screening module."""
 
-import pytest
 from pathlib import Path
 from unittest.mock import MagicMock
 
@@ -10,7 +9,6 @@ from pdd_agent.domain.methodology_screen import (
     _score_technology_match,
     _score_waste_match,
     _score_category_match,
-    _score_applicability_conditions,
     _score_methodology_id_mentioned,
 )
 from schemas.project_input import SuggestedMethodology
@@ -138,9 +136,7 @@ class TestScreenMethodologies:
         assert suggestions[0].methodology_id == "ACM0001"
 
     def test_confidence_scores_in_range(self):
-        suggestions = screen_methodologies(
-            "A waste treatment project using anaerobic digestion"
-        )
+        suggestions = screen_methodologies("A waste treatment project using anaerobic digestion")
         for s in suggestions:
             assert 0.0 <= s.confidence <= 1.0
 
@@ -155,9 +151,7 @@ class TestScreenMethodologies:
             assert s.rationale
 
     def test_top_k_limits_results(self):
-        suggestions = screen_methodologies(
-            "A waste project", top_k=2
-        )
+        suggestions = screen_methodologies("A waste project", top_k=2)
         assert len(suggestions) <= 2
 
     def test_min_confidence_filters(self):
@@ -193,16 +187,12 @@ class TestScreenMethodologies:
         assert len(top.rationale) > 10
 
     def test_version_populated(self):
-        suggestions = screen_methodologies(
-            "A waste treatment project using ACM0022"
-        )
+        suggestions = screen_methodologies("A waste treatment project using ACM0022")
         if suggestions:
             assert suggestions[0].version is not None
 
     def test_active_status_source_populated(self):
-        suggestions = screen_methodologies(
-            "A waste treatment project"
-        )
+        suggestions = screen_methodologies("A waste treatment project")
         if suggestions:
             assert "methodology_db" in suggestions[0].active_status_source
 
@@ -231,11 +221,18 @@ class TestScreenMethodologies:
         provider = MagicMock()
         provider.name = "test-llm"
         provider.draft_section.return_value = DraftSection(
-            section_id="methodology_screen", sub_section_id="applicability",
-            text="not json", confidence="LOW", provenance=[], issues=[], provider="test-llm",
+            section_id="methodology_screen",
+            sub_section_id="applicability",
+            text="not json",
+            confidence="LOW",
+            provenance=[],
+            issues=[],
+            provider="test-llm",
         )
         suggestions = screen_methodologies(
-            "ACM0022 waste treatment", project_input=_mock_project_input(), llm_provider=provider,
+            "ACM0022 waste treatment",
+            project_input=_mock_project_input(),
+            llm_provider=provider,
         )
         assert suggestions
         assert "methodology_db" in suggestions[0].active_status_source

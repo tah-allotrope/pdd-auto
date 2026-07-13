@@ -2,13 +2,11 @@
 
 from __future__ import annotations
 
-import pytest
 
 from pdd_agent.retrieval.search import (
     _clean_query,
     _highlight,
     RetrievalResult,
-    search,
     get_examples_for_section,
     get_section_heading_examples,
 )

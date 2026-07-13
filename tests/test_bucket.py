@@ -2,9 +2,6 @@
 
 from __future__ import annotations
 
-import json
-import pytest
-from pathlib import Path
 
 from pdd_agent.ingest.bucket import _score_entry, load_bucket_config
 

@@ -136,7 +136,9 @@ def test_create_demo_project_input_writes_assumptions_companion(tmp_path: Path):
     assert assumptions["guardrails"]["blocked_review_paths"] == []
     by_path = {entry["field_path"]: entry for entry in assumptions["assumptions"]}
     assert by_path["project.project_name"]["source_type"] == "demo_curated"
-    assert by_path["quantification.baseline_emissions_tco2e_per_year"]["source_type"] == "demo_curated"
+    assert (
+        by_path["quantification.baseline_emissions_tco2e_per_year"]["source_type"] == "demo_curated"
+    )
     assert by_path["monitoring.parameters_monitored"]["source_type"] == "demo_curated"
 
 
@@ -149,18 +151,22 @@ def test_create_demo_project_input_keeps_quantification_consistent_with_assumpti
     assumptions = yaml.safe_load(assumptions_path.read_text(encoding="utf-8"))
     by_path = {entry["field_path"]: entry for entry in assumptions["assumptions"]}
 
-    assert data["quantification"]["baseline_emissions_tco2e_per_year"] == by_path[
-        "quantification.baseline_emissions_tco2e_per_year"
-    ]["value"]
-    assert data["quantification"]["project_emissions_tco2e_per_year"] == by_path[
-        "quantification.project_emissions_tco2e_per_year"
-    ]["value"]
-    assert data["quantification"]["net_emissions_tco2e_per_year"] == by_path[
-        "quantification.net_emissions_tco2e_per_year"
-    ]["value"]
-    assert data["quantification"]["crediting_period_total_tco2e"] == by_path[
-        "quantification.crediting_period_total_tco2e"
-    ]["value"]
+    assert (
+        data["quantification"]["baseline_emissions_tco2e_per_year"]
+        == by_path["quantification.baseline_emissions_tco2e_per_year"]["value"]
+    )
+    assert (
+        data["quantification"]["project_emissions_tco2e_per_year"]
+        == by_path["quantification.project_emissions_tco2e_per_year"]["value"]
+    )
+    assert (
+        data["quantification"]["net_emissions_tco2e_per_year"]
+        == by_path["quantification.net_emissions_tco2e_per_year"]["value"]
+    )
+    assert (
+        data["quantification"]["crediting_period_total_tco2e"]
+        == by_path["quantification.crediting_period_total_tco2e"]["value"]
+    )
 
 
 def test_load_draft_run_round_trips_saved_json(tmp_path: Path):
@@ -313,6 +319,7 @@ def test_demo_provider_quantification_arithmetic_is_consistent(tmp_path: Path):
     assert comparison["low_confidence_sections"] == 0
 
     import yaml
+
     with open(config_path, encoding="utf-8") as handle:
         data = yaml.safe_load(handle)
     q = data["quantification"]
@@ -320,7 +327,6 @@ def test_demo_provider_quantification_arithmetic_is_consistent(tmp_path: Path):
     project = q["project_emissions_tco2e_per_year"]
     leakage = q["leakage_tco2e_per_year"]
     net = q["net_emissions_tco2e_per_year"]
-    crediting_years = q.get("crediting_period_total_tco2e") / net
 
     assert net == baseline - project - leakage, (
         f"net ({net}) != baseline ({baseline}) - project ({project}) - leakage ({leakage})"
@@ -376,8 +382,19 @@ def test_publish_demo_package_creates_run_archive_and_latest_alias(tmp_path: Pat
         output_root=tmp_path / "reports" / "demo-packages",
     )
 
-    assert package.docx_path == tmp_path / "reports" / "demo-packages" / "soc-son-demo-project" / "run-123" / "run-123.docx"
-    assert package.latest_docx_path == tmp_path / "reports" / "demo-packages" / "soc-son-demo-project" / "latest.docx"
+    assert (
+        package.docx_path
+        == tmp_path
+        / "reports"
+        / "demo-packages"
+        / "soc-son-demo-project"
+        / "run-123"
+        / "run-123.docx"
+    )
+    assert (
+        package.latest_docx_path
+        == tmp_path / "reports" / "demo-packages" / "soc-son-demo-project" / "latest.docx"
+    )
     assert package.manifest_path.exists()
     assert package.docx_path.read_bytes() == b"demo-docx"
     assert package.latest_docx_path.read_bytes() == b"demo-docx"

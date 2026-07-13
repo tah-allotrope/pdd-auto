@@ -44,9 +44,7 @@ PRACTICE_SCALING_FACTORS: dict[str, float] = {
 class RiceProjectPractice(BaseModel):
     """A project activity that reduces methane emissions from rice."""
 
-    practice: str = Field(
-        ..., description="Project practice (e.g. alternate_wetting_drying)"
-    )
+    practice: str = Field(..., description="Project practice (e.g. alternate_wetting_drying)")
     scaling_factor: float | None = Field(
         None,
         gt=0.0,
@@ -75,12 +73,8 @@ class RiceInput(BaseModel):
         default_factory=list,
         description="List of project mitigation practices",
     )
-    gwp_ch4: float = Field(
-        GWP_CH4, gt=0, description="Methane global warming potential"
-    )
-    crediting_period_years: int = Field(
-        7, ge=1, le=30, description="Crediting period in years"
-    )
+    gwp_ch4: float = Field(GWP_CH4, gt=0, description="Methane global warming potential")
+    crediting_period_years: int = Field(7, ge=1, le=30, description="Crediting period in years")
 
     @field_validator("project_practices")
     @classmethod
@@ -180,9 +174,44 @@ class RiceVm0051Engine:
 
     def required_monitoring_params(self, inputs: dict[str, Any]) -> list[dict]:
         return [
-            {"id": "VM0051-PARAM-01", "name": "Rice cultivated area", "unit": "ha", "frequency": "Annual", "source": "Field records / remote sensing", "section_ref": "5.2"},
-            {"id": "VM0051-PARAM-02", "name": "Cultivation period", "unit": "days", "frequency": "Per season", "source": "Agronomic records", "section_ref": "5.2"},
-            {"id": "VM0051-PARAM-03", "name": "Water regime practice", "unit": "practice", "frequency": "Per season", "source": "Field monitoring", "section_ref": "5.2"},
-            {"id": "VM0051-PARAM-04", "name": "Organic matter management", "unit": "practice", "frequency": "Per season", "source": "Agronomic records", "section_ref": "5.2"},
-            {"id": "VM0051-PARAM-05", "name": "Baseline CH4 emission factor", "unit": "kg CH4/ha/day", "frequency": "Per assessment", "source": "IPCC default / field measurement", "section_ref": "4.1"},
+            {
+                "id": "VM0051-PARAM-01",
+                "name": "Rice cultivated area",
+                "unit": "ha",
+                "frequency": "Annual",
+                "source": "Field records / remote sensing",
+                "section_ref": "5.2",
+            },
+            {
+                "id": "VM0051-PARAM-02",
+                "name": "Cultivation period",
+                "unit": "days",
+                "frequency": "Per season",
+                "source": "Agronomic records",
+                "section_ref": "5.2",
+            },
+            {
+                "id": "VM0051-PARAM-03",
+                "name": "Water regime practice",
+                "unit": "practice",
+                "frequency": "Per season",
+                "source": "Field monitoring",
+                "section_ref": "5.2",
+            },
+            {
+                "id": "VM0051-PARAM-04",
+                "name": "Organic matter management",
+                "unit": "practice",
+                "frequency": "Per season",
+                "source": "Agronomic records",
+                "section_ref": "5.2",
+            },
+            {
+                "id": "VM0051-PARAM-05",
+                "name": "Baseline CH4 emission factor",
+                "unit": "kg CH4/ha/day",
+                "frequency": "Per assessment",
+                "source": "IPCC default / field measurement",
+                "section_ref": "4.1",
+            },
         ]

@@ -42,15 +42,11 @@ class StoveEntry(BaseModel):
     operating_days_per_year: int = Field(
         365, ge=1, le=366, description="Days the stove is used per year"
     )
-    ncv_mj_per_kg: float = Field(
-        ..., gt=0, description="Net calorific value of the fuel (MJ/kg)"
-    )
+    ncv_mj_per_kg: float = Field(..., gt=0, description="Net calorific value of the fuel (MJ/kg)")
     ef_kg_co2_per_mj: float = Field(
         ..., gt=0, description="CO2 emission factor of the fuel (kg CO2/MJ)"
     )
-    fnrb: float = Field(
-        ..., ge=0.0, le=1.0, description="Non-renewable biomass fraction"
-    )
+    fnrb: float = Field(..., ge=0.0, le=1.0, description="Non-renewable biomass fraction")
 
     @field_validator("project_fuel_kg_per_day_per_stove")
     @classmethod
@@ -65,9 +61,7 @@ class CookstoveInput(BaseModel):
     """All inputs required for an AMS-II.G cookstove quantification."""
 
     stoves: list[StoveEntry] = Field(..., min_length=1, description="Cookstove cohorts")
-    crediting_period_years: int = Field(
-        7, ge=1, le=21, description="Crediting period in years"
-    )
+    crediting_period_years: int = Field(7, ge=1, le=21, description="Crediting period in years")
 
 
 class CookstoveAmsiigEngine:
@@ -102,8 +96,12 @@ class CookstoveAmsiigEngine:
         saved_fuel_tonnes = baseline_fuel_tonnes - project_fuel_tonnes
         # tCO2e = fuel_tonnes * (kg fuel per tonne) * NCV * EF * fNRB / 1000
         # The 1000 cancels with the tonnes->kg conversion.
-        baseline_tco2e = baseline_fuel_tonnes * stove.ncv_mj_per_kg * stove.ef_kg_co2_per_mj * stove.fnrb
-        project_tco2e = project_fuel_tonnes * stove.ncv_mj_per_kg * stove.ef_kg_co2_per_mj * stove.fnrb
+        baseline_tco2e = (
+            baseline_fuel_tonnes * stove.ncv_mj_per_kg * stove.ef_kg_co2_per_mj * stove.fnrb
+        )
+        project_tco2e = (
+            project_fuel_tonnes * stove.ncv_mj_per_kg * stove.ef_kg_co2_per_mj * stove.fnrb
+        )
         return baseline_fuel_tonnes, saved_fuel_tonnes, baseline_tco2e, project_tco2e
 
     def compute_baseline(self, inputs: dict[str, Any]) -> ComputationResult:
@@ -160,10 +158,52 @@ class CookstoveAmsiigEngine:
 
     def required_monitoring_params(self, inputs: dict[str, Any]) -> list[dict]:
         return [
-            {"id": "AMSIIG-PARAM-01", "name": "Number of operating stoves", "unit": "stoves", "frequency": "Annual", "source": "Survey / distribution records", "section_ref": "5.2"},
-            {"id": "AMSIIG-PARAM-02", "name": "Baseline fuel consumption", "unit": "kg/day/stove", "frequency": "Spot-check survey", "source": "Baseline household survey", "section_ref": "4.1"},
-            {"id": "AMSIIG-PARAM-03", "name": "Project fuel consumption", "unit": "kg/day/stove", "frequency": "Spot-check survey", "source": "Project household survey", "section_ref": "4.2"},
-            {"id": "AMSIIG-PARAM-04", "name": "Fuel net calorific value", "unit": "MJ/kg", "frequency": "Per batch or annual lab test", "source": "Laboratory analysis", "section_ref": "4.1"},
-            {"id": "AMSIIG-PARAM-05", "name": "Fuel CO2 emission factor", "unit": "kg CO2/MJ", "frequency": "Annual update", "source": "IPCC / methodology default", "section_ref": "4.1"},
-            {"id": "AMSIIG-PARAM-06", "name": "Non-renewable biomass fraction", "unit": "fraction", "frequency": "Per assessment", "source": "Wood fuel assessment", "section_ref": "4.1"},
+            {
+                "id": "AMSIIG-PARAM-01",
+                "name": "Number of operating stoves",
+                "unit": "stoves",
+                "frequency": "Annual",
+                "source": "Survey / distribution records",
+                "section_ref": "5.2",
+            },
+            {
+                "id": "AMSIIG-PARAM-02",
+                "name": "Baseline fuel consumption",
+                "unit": "kg/day/stove",
+                "frequency": "Spot-check survey",
+                "source": "Baseline household survey",
+                "section_ref": "4.1",
+            },
+            {
+                "id": "AMSIIG-PARAM-03",
+                "name": "Project fuel consumption",
+                "unit": "kg/day/stove",
+                "frequency": "Spot-check survey",
+                "source": "Project household survey",
+                "section_ref": "4.2",
+            },
+            {
+                "id": "AMSIIG-PARAM-04",
+                "name": "Fuel net calorific value",
+                "unit": "MJ/kg",
+                "frequency": "Per batch or annual lab test",
+                "source": "Laboratory analysis",
+                "section_ref": "4.1",
+            },
+            {
+                "id": "AMSIIG-PARAM-05",
+                "name": "Fuel CO2 emission factor",
+                "unit": "kg CO2/MJ",
+                "frequency": "Annual update",
+                "source": "IPCC / methodology default",
+                "section_ref": "4.1",
+            },
+            {
+                "id": "AMSIIG-PARAM-06",
+                "name": "Non-renewable biomass fraction",
+                "unit": "fraction",
+                "frequency": "Per assessment",
+                "source": "Wood fuel assessment",
+                "section_ref": "4.1",
+            },
         ]

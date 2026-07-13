@@ -1,0 +1,30 @@
+# Model pricing for token-cost estimation.
+#
+# Units: USD per 1,000,000 tokens. For example, "input: 2.50" means
+# $2.50 per 1,000,000 input tokens.
+#
+# Loaded by src/pdd_agent/llm/budget.py at import time via _load_pricing().
+# `pdd-agent doctor` warns (never fails) when a configured draft/judge model
+# has no pricing entry here.
+
+gpt-4o:
+  input: 2.50
+  output: 10.00
+gpt-4o-mini:
+  input: 0.15
+  output: 0.60
+gpt-4-turbo:
+  input: 10.00
+  output: 30.00
+claude-sonnet-5:
+  input: 3.00
+  output: 15.00
+claude-opus-4-8:
+  input: 15.00
+  output: 75.00
+claude-haiku-4-5-20251001:
+  input: 0.25
+  output: 1.25
+ollama-local:
+  input: 0.0
+  output: 0.0

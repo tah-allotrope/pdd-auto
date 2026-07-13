@@ -44,7 +44,10 @@ class CorpusProvider(BaseProvider):
         source = max(eligible, key=lambda example: len(example.text.strip()))
         if source.content_class == "FACTUAL":
             return self._fallback_section(section_id, sub_section_id, prompt, provenance, max_chars)
-        if source.content_class in {"METHODOLOGY_DEPENDENT", "QUANTITATIVE"} and not self._methodology_matches(source.text):
+        if source.content_class in {
+            "METHODOLOGY_DEPENDENT",
+            "QUANTITATIVE",
+        } and not self._methodology_matches(source.text):
             return self._fallback_section(section_id, sub_section_id, prompt, provenance, max_chars)
 
         result = FactSubstitutionEngine(self._project_input).adapt(
@@ -74,7 +77,9 @@ class CorpusProvider(BaseProvider):
         return not source_ids or bool(source_ids & target_ids)
 
     def _fallback_section(self, section_id, sub_section_id, prompt, provenance, max_chars):
-        draft = self._fallback.draft_section(section_id, sub_section_id, prompt, provenance, max_chars)
+        draft = self._fallback.draft_section(
+            section_id, sub_section_id, prompt, provenance, max_chars
+        )
         draft.text = f"[SYNTHETIC FALLBACK: corpus unavailable]\n{draft.text}"[:max_chars]
         draft.provider = self.name
         draft.issues.append("REVIEW REQUIRED: corpus adaptation fallback used")

@@ -4,15 +4,14 @@ Tests the full pipeline from a raw project description through extraction,
 methodology screening, and PDD drafting using DemoProvider for deterministic output.
 """
 
-import pytest
 from pathlib import Path
 from unittest.mock import MagicMock
 
-from pdd_agent.ingest.extract import extract_project_input, ExtractionError
+from pdd_agent.ingest.extract import extract_project_input
 from pdd_agent.domain.methodology_screen import screen_methodologies
 from pdd_agent.agent.section_orchestrator import SectionOrchestrator
-from pdd_agent.llm.provider import DraftSection, NoopProvider, DemoProvider
-from schemas.project_input import ProjectInput, SuggestedMethodology
+from pdd_agent.llm.provider import DraftSection, DemoProvider
+from schemas.project_input import ProjectInput
 
 
 _SCHEMA_PATH = Path("schemas/pdd_section_schema.yaml")
@@ -148,7 +147,9 @@ class TestDocToExtractionE2E:
         provider = _mock_extraction_provider(_MOCK_EXTRACTION_YAML)
         result = extract_project_input(_INEGOL_DESCRIPTION, provider)
         assert isinstance(result, ProjectInput)
-        assert "neg" in result.project.project_name.lower() and "Waste" in result.project.project_name
+        assert (
+            "neg" in result.project.project_name.lower() and "Waste" in result.project.project_name
+        )
         assert result.technology.methodology_ids == ["ACM0022"]
         assert result.technology.annual_waste_throughput == 262970
 

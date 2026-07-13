@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pytest
 
 from pdd_agent.doctor import (
     check_api_keys,
@@ -26,9 +25,7 @@ class TestCheckApiKeys:
     def test_key_present_is_masked(self, monkeypatch):
         monkeypatch.setenv("OPENAI_API_KEY", "sk-test1234567890")
         monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-ant-test1234567890")
-        results = dict(
-            (msg.split()[0], (status, msg)) for status, msg in check_api_keys()
-        )
+        results = dict((msg.split()[0], (status, msg)) for status, msg in check_api_keys())
         status, message = results["OPENAI_API_KEY"]
         assert status == "OK"
         assert "sk-test1" in message
@@ -56,6 +53,7 @@ class TestCheckModelPricing:
     def test_no_model_env_vars_is_ok(self, monkeypatch):
         monkeypatch.delenv("OPENAI_MODEL", raising=False)
         monkeypatch.delenv("ANTHROPIC_MODEL", raising=False)
+        monkeypatch.delenv("PDD_JUDGE_MODEL", raising=False)
         status, _ = check_model_pricing()
         assert status == "OK"
 
@@ -64,6 +62,15 @@ class TestCheckModelPricing:
         status, message = check_model_pricing()
         assert status == "WARN"
         assert "totally-made-up-model" in message
+
+    def test_unknown_judge_model_is_warn(self, monkeypatch):
+        monkeypatch.delenv("OPENAI_MODEL", raising=False)
+        monkeypatch.delenv("ANTHROPIC_MODEL", raising=False)
+        monkeypatch.setenv("PDD_JUDGE_MODEL", "totally-made-up-judge-model")
+        status, message = check_model_pricing()
+        assert status == "WARN"
+        assert "PDD_JUDGE_MODEL" in message
+        assert "totally-made-up-judge-model" in message
 
 
 class TestRunDoctor:

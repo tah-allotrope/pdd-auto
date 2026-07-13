@@ -11,14 +11,18 @@ class WasteStream(BaseModel):
     waste_type: str = Field(..., description="Waste type key matching constants.DOC_BY_WASTE_TYPE")
     annual_tonnes: float = Field(..., gt=0, description="Annual waste input (tonnes/year)")
     doc_override: float | None = Field(None, ge=0, le=1, description="Override DOC fraction")
-    decay_rate_override: float | None = Field(None, gt=0, description="Override decay rate k (1/year)")
+    decay_rate_override: float | None = Field(
+        None, gt=0, description="Override decay rate k (1/year)"
+    )
 
 
 class FossilFuelInput(BaseModel):
     """Fossil fuel consumption by the project."""
 
     fuel_type: str = Field(..., description="Fuel type key matching constants.FOSSIL_FUEL_EF")
-    annual_consumption_tonnes: float = Field(..., ge=0, description="Annual consumption (tonnes/year)")
+    annual_consumption_tonnes: float = Field(
+        ..., ge=0, description="Annual consumption (tonnes/year)"
+    )
     ncv_override: float | None = Field(None, gt=0, description="Override NCV (GJ/tonne)")
     ef_override: float | None = Field(None, gt=0, description="Override emission factor (tCO2/GJ)")
 
@@ -31,13 +35,16 @@ class ACM0022CalcInput(BaseModel):
         ..., min_length=1, description="Waste streams entering the project"
     )
     biomethanization_fraction: float = Field(
-        ..., ge=0, le=1,
+        ...,
+        ge=0,
+        le=1,
         description="Fraction of incoming waste suitable for biomethanization",
     )
 
     # Biogas / energy parameters
     biogas_yield_m3_per_tonne: float = Field(
-        130.0, gt=0,
+        130.0,
+        gt=0,
         description="Biogas yield (Nm3 biogas per tonne organic waste fed to AD)",
     )
     methane_fraction_biogas: float = Field(
@@ -47,7 +54,8 @@ class ACM0022CalcInput(BaseModel):
         0.41, gt=0, le=1, description="Gas engine electrical efficiency"
     )
     electricity_exported_mwh_per_year: float | None = Field(
-        None, ge=0,
+        None,
+        ge=0,
         description="Monitored net electricity export (MWh/year); if None, estimated from biogas",
     )
     electricity_consumed_from_grid_mwh_per_year: float = Field(
@@ -58,26 +66,32 @@ class ACM0022CalcInput(BaseModel):
     grid_emission_factor_tco2_per_mwh: float = Field(
         ..., gt=0, description="Grid emission factor (tCO2/MWh)"
     )
-    grid_emission_factor_source: str = Field(
-        ..., description="Source of grid emission factor"
-    )
+    grid_emission_factor_source: str = Field(..., description="Source of grid emission factor")
     tdl_factor: float = Field(
-        0.0, ge=0, le=0.3,
+        0.0,
+        ge=0,
+        le=0.3,
         description="Transmission and distribution loss factor (fraction)",
     )
 
     # Baseline SWDS parameters
     baseline_methane_captured_fraction: float = Field(
-        0.0, ge=0, le=1,
+        0.0,
+        ge=0,
+        le=1,
         description="Fraction of methane captured at baseline SWDS (f_y)",
     )
     mcf: float = Field(1.0, gt=0, le=1, description="Methane correction factor")
     oxidation_factor: float = Field(0.0, ge=0, le=0.2, description="Oxidation factor (OX)")
-    model_correction_factor: float = Field(0.9, gt=0, le=1, description="Model correction factor (φ)")
+    model_correction_factor: float = Field(
+        0.9, gt=0, le=1, description="Model correction factor (φ)"
+    )
     doc_f: float = Field(0.5, gt=0, le=1, description="Fraction of DOC that decomposes")
     f_ch4: float = Field(0.5, gt=0, le=1, description="Fraction of CH4 in SWDS gas (volume)")
     rate_compliance: float = Field(
-        0.0, ge=0, le=1,
+        0.0,
+        ge=0,
+        le=1,
         description="Regulatory compliance discount factor",
     )
 
@@ -86,14 +100,16 @@ class ACM0022CalcInput(BaseModel):
         default_factory=list, description="Fossil fuels consumed by the project"
     )
     methane_leakage_fraction: float = Field(
-        0.05, ge=0, le=1,
+        0.05,
+        ge=0,
+        le=1,
         description="Fraction of methane produced that leaks from AD (EF_CH4,default)",
     )
-    flare_type: str = Field(
-        "open", description="Flare type: 'open' (50%) or 'enclosed' (90%)"
-    )
+    flare_type: str = Field("open", description="Flare type: 'open' (50%) or 'enclosed' (90%)")
     fraction_biogas_to_flare: float = Field(
-        0.0, ge=0, le=1,
+        0.0,
+        ge=0,
+        le=1,
         description="Fraction of total biogas sent to flare (vs engines)",
     )
 
@@ -117,7 +133,9 @@ class ACM0022CalcInput(BaseModel):
     # Crediting period
     crediting_period_years: int = Field(..., ge=1, le=30, description="Crediting period in years")
     calculation_year: int = Field(
-        1, ge=1, le=30,
+        1,
+        ge=1,
+        le=30,
         description="Which year of the crediting period to calculate for (affects FOD model)",
     )
 
@@ -135,15 +153,15 @@ class ACM0022CalcResult(BaseModel):
     """Structured output from an ACM0022 emission reduction calculation."""
 
     # Summary values
-    baseline_emissions_tco2e: float = Field(..., description="Total baseline emissions (tCO2e/year)")
+    baseline_emissions_tco2e: float = Field(
+        ..., description="Total baseline emissions (tCO2e/year)"
+    )
     project_emissions_tco2e: float = Field(..., description="Total project emissions (tCO2e/year)")
     leakage_tco2e: float = Field(..., description="Total leakage (tCO2e/year)")
     net_emission_reductions_tco2e: float = Field(
         ..., description="Net = baseline - project - leakage (tCO2e/year)"
     )
-    crediting_period_total_tco2e: float = Field(
-        ..., description="Net × crediting years (tCO2e)"
-    )
+    crediting_period_total_tco2e: float = Field(..., description="Net × crediting years (tCO2e)")
 
     # Decomposed baseline
     baseline_methane_swds_tco2e: float = Field(
@@ -157,23 +175,15 @@ class ACM0022CalcResult(BaseModel):
     project_electricity_consumption_tco2e: float = Field(
         ..., description="PE_EC: grid electricity consumed"
     )
-    project_fossil_fuel_tco2e: float = Field(
-        ..., description="PE_FC: fossil fuel combustion"
-    )
-    project_methane_leakage_tco2e: float = Field(
-        ..., description="PE_CH4: methane leakage from AD"
-    )
-    project_flaring_tco2e: float = Field(
-        ..., description="PE_FLARE: incomplete flare destruction"
-    )
+    project_fossil_fuel_tco2e: float = Field(..., description="PE_FC: fossil fuel combustion")
+    project_methane_leakage_tco2e: float = Field(..., description="PE_CH4: methane leakage from AD")
+    project_flaring_tco2e: float = Field(..., description="PE_FLARE: incomplete flare destruction")
 
     # Decomposed leakage
     leakage_rdf_combustion_tco2e: float = Field(
         ..., description="LE_ENDUSE_RDF: RDF end-use leakage"
     )
-    leakage_digestate_tco2e: float = Field(
-        ..., description="LE_AD: digestate storage leakage"
-    )
+    leakage_digestate_tco2e: float = Field(..., description="LE_AD: digestate storage leakage")
 
     # Intermediate values for audit
     organic_waste_to_ad_tonnes: float = Field(

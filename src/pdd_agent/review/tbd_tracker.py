@@ -73,12 +73,17 @@ class TBDReport:
 
 
 def _load_schema(schema_path: Path | None = None) -> dict[str, Any]:
-    path = schema_path or Path(__file__).parent.parent.parent.parent / "schemas" / "pdd_section_schema.yaml"
+    path = (
+        schema_path
+        or Path(__file__).parent.parent.parent.parent / "schemas" / "pdd_section_schema.yaml"
+    )
     with open(path, encoding="utf-8") as f:
         return yaml.safe_load(f)
 
 
-def _evidence_for_section(schema: dict[str, Any], section_id: str, sub_section_id: str) -> str | None:
+def _evidence_for_section(
+    schema: dict[str, Any], section_id: str, sub_section_id: str
+) -> str | None:
     for sec in schema.get("sections", []):
         if sec["section_id"] != section_id:
             continue

@@ -62,7 +62,6 @@ def bucket_documents(manifest_path: str, config: dict[str, Any]) -> None:
     for entry in entries:
         file_id = entry["id"]
         name = entry["name"]
-        mime_type = entry["mime_type"]
 
         bucket_label, reason = _score_entry(entry, inclusion, exclusion)
 
@@ -105,7 +104,6 @@ def _score_entry(
     name = entry["name"].lower()
     mime_type = entry["mime_type"]
     word_count = entry.get("word_count", 0)
-    heading_count = entry.get("heading_count", 0)
 
     # Exclusion checks first
     for pattern in exclusion.get("name_patterns", []):
@@ -126,7 +124,6 @@ def _score_entry(
 
     # Inclusion checks
     include_name_patterns = inclusion.get("name_patterns", [])
-    exclude_name_patterns = exclusion.get("name_patterns", [])
 
     if include_name_patterns:
         matched = any(re.search(p, name, re.IGNORECASE) for p in include_name_patterns)
@@ -158,7 +155,6 @@ def _score_entry(
         "tamil nadu",
     ]
     name_hits = sum(1 for kw in wte_keywords if kw in name)
-    heading_ratio = heading_count / max(word_count, 1)
 
     # Quality heuristics
     if word_count < 500:

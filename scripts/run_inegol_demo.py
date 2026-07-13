@@ -23,7 +23,6 @@ from pdd_agent.agent.section_orchestrator import SectionOrchestrator
 from pdd_agent.export.docx_export import export_run_to_docx
 from pdd_agent.llm.provider import get_provider_registry
 from pdd_agent.review.tbd_tracker import TBDTracker
-from pdd_agent.review.consistency import check_quantitative_consistency
 from schemas.project_input import ProjectInput
 from _demo_helpers import copy_to_output, ensure_demo_index, print_demo_banner
 
@@ -42,7 +41,9 @@ def _open_docx(path: Path) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Run the Inegol demo end to end")
-    parser.add_argument("--open", action="store_true", help="Open the generated DOCX after completion")
+    parser.add_argument(
+        "--open", action="store_true", help="Open the generated DOCX after completion"
+    )
     args = parser.parse_args()
 
     config_path = REPO_ROOT / "configs" / "demo" / "inegol_project_input.yaml"
@@ -96,7 +97,7 @@ def main() -> int:
     )
 
     # Detailed review output (secondary)
-    print(f"Review results:")
+    print("Review results:")
     print(f"  Review passed: {review_result['review']['passed']}")
     print(f"  Consistency passed: {review_result['consistency']['passed']}")
     print(f"  TBD markers found: {tbd_report.count}")
@@ -105,10 +106,10 @@ def main() -> int:
     # Comparison metrics
     print("\n=== Pipeline vs Codex Baseline ===")
     print(f"Sections populated: {len(run.sections)} (Codex: ~36 sections in 23 pages)")
-    print(f"Structured tables: 11 VCS v4.4 table types supported")
-    print(f"Provenance tracking: per-section corpus citations")
-    print(f"Review layers: consistency + TBD + compliance (Codex: static markers only)")
-    print(f"Appendices: Assumptions + Reviewer Issues + Data Gaps (Codex: 2 appendices)")
+    print("Structured tables: 11 VCS v4.4 table types supported")
+    print("Provenance tracking: per-section corpus citations")
+    print("Review layers: consistency + TBD + compliance (Codex: static markers only)")
+    print("Appendices: Assumptions + Reviewer Issues + Data Gaps (Codex: 2 appendices)")
 
     if args.open:
         _open_docx(stable_path)

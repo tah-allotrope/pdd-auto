@@ -1,6 +1,5 @@
 """Tests for v2 prompt assembly, calc injection, and enhanced retrieval wiring."""
 
-import pytest
 from unittest.mock import MagicMock, patch
 from pathlib import Path
 
@@ -53,7 +52,9 @@ def _mock_calc_result():
     return cr
 
 
-def _mock_retrieval_result(doc_name="TestDoc", heading="Test Heading", text="Example text", score=5.0):
+def _mock_retrieval_result(
+    doc_name="TestDoc", heading="Test Heading", text="Example text", score=5.0
+):
     result = MagicMock()
     result.document_name = doc_name
     result.canonical_heading = heading
@@ -266,6 +267,7 @@ class TestBudgetIntegration:
 class TestSchemaExtensions:
     def test_generation_controls_import(self):
         from schemas.project_input import GenerationControls
+
         gc = GenerationControls()
         assert gc.provider_name == "noop"
         assert gc.token_budget == 500_000
@@ -273,12 +275,14 @@ class TestSchemaExtensions:
 
     def test_review_flags_import(self):
         from schemas.project_input import ReviewFlags
+
         rf = ReviewFlags()
         assert rf.require_evidence_for_high is True
         assert rf.block_on_missing_markers is True
 
     def test_evidence_registry_import(self):
         from schemas.project_input import EvidenceRegistry
+
         reg = EvidenceRegistry()
         eid = reg.add("corpus", "Test evidence", section_ref="1.1")
         assert eid == "E001"
@@ -289,6 +293,7 @@ class TestSchemaExtensions:
 
     def test_project_input_with_optional_extensions(self):
         from schemas.project_input import ProjectInput
+
         data = _minimal_project_dict()
         pi = ProjectInput(**data)
         assert pi.generation_controls is None
@@ -296,7 +301,8 @@ class TestSchemaExtensions:
         assert pi.evidence_registry is None
 
     def test_project_input_with_generation_controls(self):
-        from schemas.project_input import ProjectInput, GenerationControls
+        from schemas.project_input import ProjectInput
+
         data = _minimal_project_dict()
         data["generation_controls"] = {"provider_name": "openai", "model_name": "gpt-4o"}
         pi = ProjectInput(**data)
@@ -337,7 +343,13 @@ def _minimal_project_dict():
         "quantification": {},
         "monitoring": {
             "parameters_monitored": [
-                {"name": "waste", "unit": "t/yr", "frequency": "continuous", "method": "weighbridge", "data_source": "project"}
+                {
+                    "name": "waste",
+                    "unit": "t/yr",
+                    "frequency": "continuous",
+                    "method": "weighbridge",
+                    "data_source": "project",
+                }
             ],
             "data_management": "Digital records",
         },

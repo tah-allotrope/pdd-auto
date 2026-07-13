@@ -6,10 +6,17 @@ import math
 
 import pytest
 
-from pdd_agent.calc import cdm_tool_03, cdm_tool_04, cdm_tool_05, cdm_tool_06, cdm_tool_07, cdm_tool_12, cdm_tool_14
+from pdd_agent.calc import (
+    cdm_tool_03,
+    cdm_tool_04,
+    cdm_tool_05,
+    cdm_tool_06,
+    cdm_tool_07,
+    cdm_tool_12,
+    cdm_tool_14,
+)
 from pdd_agent.calc.constants import (
     CH4_TO_CO2_RATIO,
-    DENSITY_CH4,
     DOC_BY_WASTE_TYPE,
     DOC_F_DEFAULT,
     EF_CH4_DIGESTER_DEFAULT,
@@ -77,7 +84,9 @@ class TestTool03FossilFuelEmissions:
 class TestTool04FODModel:
     def test_year1_positive(self):
         result = cdm_tool_04.methane_from_swds(
-            "municipal_solid_waste", 100_000, year=1,
+            "municipal_solid_waste",
+            100_000,
+            year=1,
         )
         assert result > 0
 
@@ -101,28 +110,40 @@ class TestTool04FODModel:
     def test_baseline_capture_reduces_emissions(self):
         no_capture = cdm_tool_04.methane_from_swds("municipal_solid_waste", 100_000, year=3)
         with_capture = cdm_tool_04.methane_from_swds(
-            "municipal_solid_waste", 100_000, year=3, baseline_capture_fraction=0.5,
+            "municipal_solid_waste",
+            100_000,
+            year=3,
+            baseline_capture_fraction=0.5,
         )
         assert with_capture == pytest.approx(no_capture * 0.5, rel=0.001)
 
     def test_model_correction_factor(self):
         default_phi = cdm_tool_04.methane_from_swds("municipal_solid_waste", 100_000, year=3)
         phi_1 = cdm_tool_04.methane_from_swds(
-            "municipal_solid_waste", 100_000, year=3, model_correction_factor=1.0,
+            "municipal_solid_waste",
+            100_000,
+            year=3,
+            model_correction_factor=1.0,
         )
         assert phi_1 > default_phi
 
     def test_doc_override(self):
         default = cdm_tool_04.methane_from_swds("municipal_solid_waste", 100_000, year=3)
         high_doc = cdm_tool_04.methane_from_swds(
-            "municipal_solid_waste", 100_000, year=3, doc_override=0.40,
+            "municipal_solid_waste",
+            100_000,
+            year=3,
+            doc_override=0.40,
         )
         assert high_doc > default
 
     def test_decay_rate_override(self):
         default = cdm_tool_04.methane_from_swds("municipal_solid_waste", 100_000, year=1)
         fast_decay = cdm_tool_04.methane_from_swds(
-            "municipal_solid_waste", 100_000, year=1, decay_rate_override=0.5,
+            "municipal_solid_waste",
+            100_000,
+            year=1,
+            decay_rate_override=0.5,
         )
         assert fast_decay > default
 
@@ -251,7 +272,9 @@ def test_tool_07_default_factor():
 
 def test_tool_07_efficiency_adjustment():
     result = cdm_tool_07.fossil_fuel_displacement_emissions(
-        10.0, "diesel", conversion_efficiency=0.5,
+        10.0,
+        "diesel",
+        conversion_efficiency=0.5,
     )
     assert result == pytest.approx(20 * FOSSIL_FUEL_NCV["diesel"] * FOSSIL_FUEL_EF["diesel"])
 
@@ -267,7 +290,8 @@ def test_tool_12_landfill_baseline():
 
 def test_tool_12_rejects_existing_recovery():
     result = cdm_tool_12.identify_wte_baseline(
-        waste_currently_landfilled=True, existing_energy_recovery=True,
+        waste_currently_landfilled=True,
+        existing_energy_recovery=True,
     )
     assert result.eligible is False
 
