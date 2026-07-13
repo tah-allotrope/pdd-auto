@@ -8,14 +8,14 @@ from pdd_agent.llm.provider import NoopProvider, DemoProvider
 from pdd_agent.llm.budget import TokenBudget
 
 
-def _mock_project_input():
+def _mock_project_input(methodology_ids=None, technology_type=None):
     """Build a minimal mock ProjectInput for testing."""
     proj = MagicMock()
     proj.project.project_name = "Test WTE Project"
     proj.location.city = "TestCity"
     proj.location.country = "TestCountry"
-    proj.technology.methodology_ids = ["ACM0022"]
-    proj.technology.technology_type = "anaerobic_digestion"
+    proj.technology.methodology_ids = methodology_ids or ["ACM0022"]
+    proj.technology.technology_type = technology_type or "anaerobic_digestion"
     proj.technology.installed_capacity_mw = 5.0
     proj.technology.annual_waste_throughput = 100000
     proj.quantification.net_emissions_tco2e_per_year = 50000
@@ -183,6 +183,199 @@ class TestCalcInjection:
         assert "Organic waste to AD" in text
         assert "Annual biogas" in text
         assert "MWh/year" in text
+
+    def test_calc_injection_header_names_resolved_methodology(self):
+        project = _mock_project_input(methodology_ids=["VM0051"])
+        calc = _mock_calc_result()
+        orch = SectionOrchestrator(
+            provider=NoopProvider(),
+            project_input=project,
+            schema_path=_SCHEMA_PATH,
+            prompts_dir=_PROMPTS_DIR,
+            calc_result=calc,
+        )
+        text = orch._format_calc_injection()
+        assert "VM0051 Calculation Engine Results" in text
+        assert "ACM0022 Calculation Engine Results" not in text
+
+    def test_calc_injection_header_defaults_to_acm0022_without_project(self):
+        calc = _mock_calc_result()
+        orch = SectionOrchestrator(
+            provider=NoopProvider(),
+            project_input=None,
+            schema_path=_SCHEMA_PATH,
+            prompts_dir=_PROMPTS_DIR,
+            calc_result=calc,
+        )
+        text = orch._format_calc_injection()
+        assert "ACM0022 Calculation Engine Results" in text
+
+
+class TestMethodologyOverlay:
+    def test_wte_project_resolves_wte_family(self):
+        project = _mock_project_input(methodology_ids=["ACM0022"])
+        orch = SectionOrchestrator(
+            provider=NoopProvider(),
+            project_input=project,
+            schema_path=_SCHEMA_PATH,
+            prompts_dir=_PROMPTS_DIR,
+        )
+        assert orch._family_slug() == "wte"
+
+    def test_rice_project_resolves_rice_family(self):
+        project = _mock_project_input(methodology_ids=["VM0051"], technology_type="rice_awd")
+        orch = SectionOrchestrator(
+            provider=NoopProvider(),
+            project_input=project,
+            schema_path=_SCHEMA_PATH,
+            prompts_dir=_PROMPTS_DIR,
+        )
+        assert orch._family_slug() == "rice"
+
+    def test_biochar_project_resolves_biochar_family(self):
+        project = _mock_project_input(
+            methodology_ids=["VM0044"], technology_type="biochar_production"
+        )
+        orch = SectionOrchestrator(
+            provider=NoopProvider(),
+            project_input=project,
+            schema_path=_SCHEMA_PATH,
+            prompts_dir=_PROMPTS_DIR,
+        )
+        assert orch._family_slug() == "biochar"
+
+    def test_cookstove_project_resolves_cookstove_family(self):
+        project = _mock_project_input(
+            methodology_ids=["AMS-II.G"], technology_type="improved_cookstoves"
+        )
+        orch = SectionOrchestrator(
+            provider=NoopProvider(),
+            project_input=project,
+            schema_path=_SCHEMA_PATH,
+            prompts_dir=_PROMPTS_DIR,
+        )
+        assert orch._family_slug() == "cookstove"
+
+    def test_unknown_methodology_falls_back_to_wte(self):
+        project = _mock_project_input(methodology_ids=["UNKNOWN-METH"])
+        orch = SectionOrchestrator(
+            provider=NoopProvider(),
+            project_input=project,
+            schema_path=_SCHEMA_PATH,
+            prompts_dir=_PROMPTS_DIR,
+        )
+        assert orch._family_slug() == "wte"
+
+    def test_empty_methodology_ids_falls_back_to_wte(self):
+        project = _mock_project_input(methodology_ids=[])
+        orch = SectionOrchestrator(
+            provider=NoopProvider(),
+            project_input=project,
+            schema_path=_SCHEMA_PATH,
+            prompts_dir=_PROMPTS_DIR,
+        )
+        assert orch._family_slug() == "wte"
+
+    def test_no_project_input_falls_back_to_wte(self):
+        orch = SectionOrchestrator(
+            provider=NoopProvider(),
+            project_input=None,
+            schema_path=_SCHEMA_PATH,
+            prompts_dir=_PROMPTS_DIR,
+        )
+        assert orch._family_slug() == "wte"
+
+    def test_wte_prompt_contains_wte_overlay(self):
+        project = _mock_project_input(methodology_ids=["ACM0022"])
+        orch = SectionOrchestrator(
+            provider=NoopProvider(),
+            project_input=project,
+            schema_path=_SCHEMA_PATH,
+            prompts_dir=_PROMPTS_DIR,
+        )
+        orch._use_v2_prompt = True
+        examples = [_mock_retrieval_result()]
+        prompt = orch._build_prompt("1", "1.1", examples, project)
+        assert "waste-to-energy" in prompt.lower()
+
+    def test_rice_prompt_contains_rice_overlay_not_wte_keywords(self):
+        project = _mock_project_input(methodology_ids=["VM0051"], technology_type="rice_awd")
+        orch = SectionOrchestrator(
+            provider=NoopProvider(),
+            project_input=project,
+            schema_path=_SCHEMA_PATH,
+            prompts_dir=_PROMPTS_DIR,
+        )
+        orch._use_v2_prompt = True
+        examples = [_mock_retrieval_result()]
+        prompt = orch._build_prompt("1", "1.1", examples, project)
+        assert "vm0051" in prompt.lower()
+        assert "alternate wetting and drying" in prompt.lower() or "awd" in prompt.lower()
+        assert "landfill" not in prompt.lower()
+        assert "municipal solid waste" not in prompt.lower()
+
+    def test_biochar_prompt_contains_biochar_overlay(self):
+        project = _mock_project_input(
+            methodology_ids=["VM0044"], technology_type="biochar_production"
+        )
+        orch = SectionOrchestrator(
+            provider=NoopProvider(),
+            project_input=project,
+            schema_path=_SCHEMA_PATH,
+            prompts_dir=_PROMPTS_DIR,
+        )
+        orch._use_v2_prompt = True
+        examples = [_mock_retrieval_result()]
+        prompt = orch._build_prompt("1", "1.1", examples, project)
+        assert "biochar" in prompt.lower()
+        assert "pyrolysis" in prompt.lower()
+
+    def test_cookstove_prompt_contains_cookstove_overlay(self):
+        project = _mock_project_input(
+            methodology_ids=["AMS-II.G"], technology_type="improved_cookstoves"
+        )
+        orch = SectionOrchestrator(
+            provider=NoopProvider(),
+            project_input=project,
+            schema_path=_SCHEMA_PATH,
+            prompts_dir=_PROMPTS_DIR,
+        )
+        orch._use_v2_prompt = True
+        examples = [_mock_retrieval_result()]
+        prompt = orch._build_prompt("1", "1.1", examples, project)
+        assert "cookstove" in prompt.lower()
+
+    def test_missing_family_overlay_falls_back_to_wte(self, tmp_path):
+        methodologies_dir = tmp_path / "methodologies"
+        methodologies_dir.mkdir(parents=True)
+        (methodologies_dir / "wte.md").write_text(
+            "## Domain & Methodology Context\n\nFallback waste-to-energy overlay.\n",
+            encoding="utf-8",
+        )
+        # No rice.md written — simulates an incomplete overlay set.
+        project = _mock_project_input(methodology_ids=["VM0051"], technology_type="rice_awd")
+        orch = SectionOrchestrator(
+            provider=NoopProvider(),
+            project_input=project,
+            schema_path=_SCHEMA_PATH,
+            prompts_dir=tmp_path,
+        )
+        overlay = orch._load_overlay()
+        assert "Fallback waste-to-energy overlay" in overlay
+
+    def test_v1_prompt_does_not_inject_overlay(self):
+        """The overlay is only injected for the v2 prompt path (demo/noop use v1)."""
+        project = _mock_project_input(methodology_ids=["VM0051"], technology_type="rice_awd")
+        orch = SectionOrchestrator(
+            provider=NoopProvider(),
+            project_input=project,
+            schema_path=_SCHEMA_PATH,
+            prompts_dir=_PROMPTS_DIR,
+        )
+        orch._use_v2_prompt = False
+        examples = [_mock_retrieval_result()]
+        prompt = orch._build_prompt("1", "1.1", examples, project)
+        assert "Domain & Methodology Context" not in prompt
 
 
 class TestEnhancedRetrieval:

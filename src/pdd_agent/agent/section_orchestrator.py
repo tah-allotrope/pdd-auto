@@ -47,6 +47,31 @@ logger = structlog.get_logger()
 _PROMPTS_DIR = Path(__file__).parent.parent.parent.parent / "prompts"
 _SCHEMA_PATH = Path(__file__).parent.parent.parent.parent / "schemas" / "pdd_section_schema.yaml"
 
+# Maps a project's primary methodology ID to the prompt-overlay / rubric
+# family slug. Unknown or absent methodology IDs default to "wte" for
+# backward compatibility with every project drafted before methodology
+# families existed.
+_METHODOLOGY_FAMILY = {
+    "ACM0022": "wte",
+    "ACM0003": "wte",
+    "VM0051": "rice",
+    "VM0044": "biochar",
+    "AMS-II.G": "cookstove",
+}
+_DEFAULT_FAMILY = "wte"
+
+
+def family_slug_for(methodology_ids: Sequence[str] | None) -> str:
+    """Resolve a methodology-family slug from a project's methodology IDs.
+
+    Uses the first methodology ID, normalized to uppercase. Falls back to
+    "wte" when methodology_ids is empty, None, or unrecognized.
+    """
+    if not methodology_ids:
+        return _DEFAULT_FAMILY
+    normalized = str(methodology_ids[0]).strip().upper()
+    return _METHODOLOGY_FAMILY.get(normalized, _DEFAULT_FAMILY)
+
 
 class SectionOrchestrator:
     """Orchestrates section-level retrieval, prompt assembly, and drafting."""
@@ -92,6 +117,27 @@ class SectionOrchestrator:
             self._provider.set_budget(self._budget)
         if hasattr(self._provider, "set_project_input"):
             self._provider.set_project_input(self._project)
+
+    def _family_slug(self) -> str:
+        """Resolve this project's methodology-family slug (see family_slug_for)."""
+        if not self._project:
+            return _DEFAULT_FAMILY
+        return family_slug_for(self._project.technology.methodology_ids)
+
+    def _load_overlay(self) -> str:
+        """Return the domain-framing overlay Markdown for this project's family.
+
+        Falls back to the WTE overlay when the family-specific file is
+        missing, so drafting never breaks on an incomplete overlay set.
+        """
+        family = self._family_slug()
+        overlay_path = self._prompts_dir / "methodologies" / f"{family}.md"
+        if not overlay_path.exists():
+            overlay_path = self._prompts_dir / "methodologies" / f"{_DEFAULT_FAMILY}.md"
+        try:
+            return overlay_path.read_text(encoding="utf-8")
+        except OSError:
+            return ""
 
     def _default_budget(self) -> TokenBudget:
         import os
@@ -145,13 +191,27 @@ class SectionOrchestrator:
         return section_id == "4" or (sub_section_id or "").startswith("4.")
 
     def _format_calc_injection(self) -> str:
-        """Format ACM0022 calc results for injection into Section 4 prompts."""
+        """Format ACM0022 calc results for injection into Section 4 prompts.
+
+        The field decomposition below (BE_CH4, PE_EC, organic waste to AD,
+        etc.) is specific to ACM0022CalcResult — this is the only calc-result
+        shape wired into prompt injection today. Only the header names the
+        project's actual resolved methodology, so the text is not
+        actively misleading for a project passing a different engine's
+        result through this same field; a full per-methodology calc
+        injection format is out of scope until another engine is wired in.
+        """
         if not self._calc_result:
             return ""
         cr = self._calc_result
+        methodology_name = (
+            self._project.technology.methodology_ids[0]
+            if self._project and self._project.technology.methodology_ids
+            else "ACM0022"
+        )
         parts = [
-            "\n## ACM0022 Calculation Engine Results\n",
-            "The following values were computed by the ACM0022 pure-Python calculation engine.\n"
+            f"\n## {methodology_name} Calculation Engine Results\n",
+            f"The following values were computed by the {methodology_name} pure-Python calculation engine.\n"
             "Use these as the authoritative quantification values. Cite with `[CALC: component_name]`.\n",
             f"- **Baseline emissions**: {cr.baseline_emissions_tco2e:,.2f} tCO2e/year [CALC: baseline_total]",
             f"  - BE_CH4 (methane from SWDS): {cr.baseline_methane_swds_tco2e:,.2f} tCO2e/year [CALC: BE_CH4]",
@@ -278,6 +338,9 @@ class SectionOrchestrator:
                 "Cite evidence: `[E001]`, `[CORPUS: ...]`, `[METHODOLOGY: ...]`, "
                 "`[CALC: ...]`, `[USER INPUT: ...]`\n"
             )
+            overlay = self._load_overlay()
+            if overlay:
+                prompt_parts.append(f"\n{overlay}\n")
 
         if self._should_inject_retrieval():
             prompt_parts.append(
