@@ -517,7 +517,14 @@ def _run_judge(args, log) -> None:
         with open(args.input, encoding="utf-8") as f:
             project_input = ProjectInput.model_validate(yaml.safe_load(f))
 
-    judge = LLMJudge(provider_name=run.provider)
+    judge = LLMJudge(
+        provider_name=run.provider,
+        methodology_ids=(
+            list(project_input.technology.methodology_ids)
+            if project_input and project_input.technology.methodology_ids
+            else None
+        ),
+    )
     results = judge.judge_run(run, project_input)
 
     passed = sum(1 for r in results.values() if r.passed)

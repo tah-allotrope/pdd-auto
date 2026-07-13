@@ -24,10 +24,28 @@ from pdd_agent.llm.provider import DraftRun, DraftSection, get_provider_registry
 logger = structlog.get_logger()
 
 _RUBRIC_PATH = Path(__file__).parent.parent.parent.parent / "rules" / "verra" / "judge_rubric.yaml"
+_RUBRICS_DIR = _RUBRIC_PATH.parent / "rubrics"
 
 _EVIDENCE_ID_RE = re.compile(r"\[E(\d{3})\]")
 
 _QUANTITATIVE_SECTIONS = {"1.10", "4.1", "4.2", "4.4"}
+
+_METHODOLOGY_FAMILY = {
+    "ACM0022": "wte",
+    "ACM0003": "wte",
+    "VM0051": "rice",
+    "VM0044": "biochar",
+    "AMS-II.G": "cookstove",
+}
+_DEFAULT_FAMILY = "wte"
+
+
+def _family_slug_for(methodology_ids: list[str] | None) -> str:
+    """Resolve a methodology-family slug from a list of methodology IDs."""
+    if not methodology_ids:
+        return _DEFAULT_FAMILY
+    normalized = str(methodology_ids[0]).strip().upper()
+    return _METHODOLOGY_FAMILY.get(normalized, _DEFAULT_FAMILY)
 
 # Judge model tiers (ASM-008): cheap tier for iteration, frontier tier for
 # sign-off runs, chosen by provider. Override with PDD_JUDGE_MODEL.
@@ -75,6 +93,8 @@ class LLMJudge:
         pass_threshold: Override pass threshold from the rubric.
         use_llm: If True, attempt to call the provider as an LLM judge. This is
             intentionally off by default until API-backed judge prompts are tuned.
+        model_name: Override judge model name.
+        methodology_ids: Project methodology IDs for family-aware rubric selection.
     """
 
     def __init__(
@@ -84,15 +104,18 @@ class LLMJudge:
         pass_threshold: int | None = None,
         use_llm: bool = False,
         model_name: str | None = None,
+        methodology_ids: list[str] | None = None,
     ) -> None:
         self.provider_name = provider_name
-        self.rubric_path = rubric_path or _RUBRIC_PATH
+        self._methodology_ids = methodology_ids
+        self.rubric_path = rubric_path or self._resolve_rubric_path(methodology_ids)
         self.rubric = self._load_rubric()
         self.pass_threshold = pass_threshold or int(self.rubric["scoring"]["pass_threshold"])
         self.use_llm = use_llm
         self.model_name = self._resolve_model_name(model_name, provider_name)
         self._criteria = {c["id"]: c for c in self.rubric["criteria"]}
         self._provider = get_provider_registry().get(provider_name)
+        self._quantitative_sections = self._resolve_quantitative_sections()
 
     @staticmethod
     def _resolve_model_name(model_name: str | None, provider_name: str) -> str | None:
@@ -103,6 +126,22 @@ class LLMJudge:
         if env_model:
             return env_model
         return _JUDGE_MODEL_TIER_DEFAULTS.get(provider_name)
+
+    @staticmethod
+    def _resolve_rubric_path(methodology_ids: list[str] | None) -> Path:
+        """Select the family rubric file from methodology_ids, falling back to _RUBRIC_PATH."""
+        family = _family_slug_for(methodology_ids)
+        family_path = _RUBRICS_DIR / f"{family}.yaml"
+        if family_path.exists():
+            return family_path
+        return _RUBRIC_PATH
+
+    def _resolve_quantitative_sections(self) -> set[str]:
+        """Read quantitative_sections from the loaded rubric, defaulting to the WTE set."""
+        qs = self.rubric.get("quantitative_sections")
+        if qs and isinstance(qs, list):
+            return set(str(s) for s in qs)
+        return set(_QUANTITATIVE_SECTIONS)
 
     def _load_rubric(self) -> dict[str, Any]:
         with open(self.rubric_path, encoding="utf-8") as f:
@@ -278,7 +317,7 @@ class LLMJudge:
         calc_result: Any | None,
     ) -> list[dict[str, Any]]:
         findings: list[dict[str, Any]] = []
-        if section_key not in _QUANTITATIVE_SECTIONS:
+        if section_key not in self._quantitative_sections:
             return findings
 
         expected = self._expected_quant_value(section_key, project_input, calc_result)

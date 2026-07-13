@@ -1,30 +1,35 @@
-# VVB Desk-Review Rubric for LLM-Judge
+# VVB Desk-Review Rubric — Cookstove Family (AMS-II.G)
 # Version: 0.1.0
-# Scope: Verra VCS WTE PDD drafts (ACM0022 / ACM0003 bucket)
-# Purpose: Score each DraftSection like a validation/verification body desk reviewer.
-#
-# NOTE: This is the WTE fallback rubric. Family-specific rubrics live in
-# rules/verra/rubrics/{wte,rice,biochar,cookstove}.yaml and are selected
-# automatically from the project's methodology_ids. This file is loaded when
-# no methodology_ids are provided or the family file is missing.
+# Family: improved cookstove (AMS-II.G)
+# quantitative_sections: provisional — defaults to WTE set until a registered
+# AMS-II.G PDD refines which subsections carry quantification for cookstoves.
 
 version: "0.1.0"
-bucket: "verra-wte-initial"
+bucket: "verra-amsiig-cookstove"
+family: "cookstove"
+methodology_ids:
+  - "AMS-II.G"
 description: >
-  VVB-style rubric used by the LLM judge. Each criterion maps to a failure category
-  (critical or advisory) and a scoring weight. Critical findings block export and
-  trigger the capped auto-redraft loop; advisory findings allow watermarked DRAFT export.
+  VVB-style rubric for improved cookstove projects under AMS-II.G.
+  Scores draft sections with family-appropriate criteria. Critical findings block
+  export; advisory findings allow watermarked DRAFT export.
 
 scoring:
   scale: "0-100"
   pass_threshold: 70
+
+quantitative_sections:
+  - "1.10"
+  - "4.1"
+  - "4.2"
+  - "4.4"
 
 failure_categories:
   critical:
     description: Hard failures that block export or require expert redraft.
     examples:
       - "Evidence citation does not resolve in the evidence registry."
-      - "A quantitative claim contradicts the calc engine or ProjectInput."
+      - "A quantitative claim contradicts the AMS-II.G calc engine or ProjectInput."
       - "Unresolved [MISSING] markers in Sections 3-4."
   advisory:
     description: Quality issues that do not block export but are surfaced in the reviewer appendix.
@@ -50,13 +55,13 @@ criteria:
     name: Methodology conformance
     category: advisory
     weight: 5
-    description: Methodology-dependent sections cite methodology, calc engine, registry evidence, or corpus evidence.
+    description: Methodology-dependent sections cite AMS-II.G methodology, calc engine, registry evidence, or corpus evidence.
 
   - id: NO_FABRICATED_FACTS
     name: No fabricated facts
     category: critical
     weight: 10
-    description: Quantitative claims in Sections 1.10 and 4.x must match ProjectInput and the ACM0022 calc engine results.
+    description: Quantitative claims must match ProjectInput and the AMS-II.G cookstove calc engine results.
 
   - id: MARKER_HYGIENE
     name: Marker hygiene

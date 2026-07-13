@@ -628,6 +628,11 @@ class SectionOrchestrator:
         judge = LLMJudge(
             provider_name=judge_provider_name,
             use_llm=judge_provider_name not in ("demo", "noop"),
+            methodology_ids=(
+                list(self._project.technology.methodology_ids)
+                if self._project and self._project.technology.methodology_ids
+                else None
+            ),
         )
         section_key = f"{section_id}/{sub_section_id or ''}"
         current_draft = draft

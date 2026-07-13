@@ -90,6 +90,11 @@ def _run_one_provider(
         judge = LLMJudge(
             provider_name=judge_provider_name,
             use_llm=judge_provider_name not in ("demo", "noop"),
+            methodology_ids=(
+                list(project_input.technology.methodology_ids)
+                if project_input and project_input.technology.methodology_ids
+                else None
+            ),
         )
         scores: list[int] = []
         passed_count = 0

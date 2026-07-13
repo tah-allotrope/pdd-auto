@@ -1,15 +1,14 @@
-# VVB Desk-Review Rubric for LLM-Judge
+# VVB Desk-Review Rubric — WTE Family (ACM0022 / ACM0003)
 # Version: 0.1.0
-# Scope: Verra VCS WTE PDD drafts (ACM0022 / ACM0003 bucket)
-# Purpose: Score each DraftSection like a validation/verification body desk reviewer.
-#
-# NOTE: This is the WTE fallback rubric. Family-specific rubrics live in
-# rules/verra/rubrics/{wte,rice,biochar,cookstove}.yaml and are selected
-# automatically from the project's methodology_ids. This file is loaded when
-# no methodology_ids are provided or the family file is missing.
+# Family: waste-to-energy (ACM0022, ACM0003)
+# quantitative_sections: provisional until refined by a registered PDD review.
 
 version: "0.1.0"
 bucket: "verra-wte-initial"
+family: "wte"
+methodology_ids:
+  - "ACM0022"
+  - "ACM0003"
 description: >
   VVB-style rubric used by the LLM judge. Each criterion maps to a failure category
   (critical or advisory) and a scoring weight. Critical findings block export and
@@ -18,6 +17,12 @@ description: >
 scoring:
   scale: "0-100"
   pass_threshold: 70
+
+quantitative_sections:
+  - "1.10"
+  - "4.1"
+  - "4.2"
+  - "4.4"
 
 failure_categories:
   critical:
