@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Final Report :: CI Pipeline &amp; Methodology-Parametrized Drafting Prompt</title>
+  <meta name="color-scheme" content="dark light">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+
+    async function initMermaid() {
+      const blocks = document.querySelectorAll('.mermaid');
+      if (!blocks.length) {
+        return;
+      }
+
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: 'base',
+        securityLevel: 'loose',
+        themeVariables: {
+          primaryColor: '#f3ead9',
+          primaryTextColor: '#1f1912',
+          primaryBorderColor: '#9d6b37',
+          lineColor: '#3b6f76',
+          secondaryColor: '#efe4d0',
+          tertiaryColor: '#ffffff',
+          background: '#fbf7f1',
+          mainBkg: '#fbf7f1',
+          nodeBorder: '#9d6b37',
+          clusterBkg: '#f7efdf',
+          clusterBorder: '#3b6f76',
+          edgeLabelBackground: '#fbf7f1'
+        }
+      });
+
+      await mermaid.run({ nodes: blocks });
+    }
+
+    const run = () => initMermaid().catch((error) => console.error('Mermaid render failed', error));
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', run, { once: true });
+    } else {
+      run();
+    }
+  </script>
+  <style>
+    :root {
+      --paper: #fbf7f1;
+      --paper-strong: #fffdf9;
+      --ink: #1f1912;
+      --ink-soft: #5f564c;
+      --line: #dccdb6;
+      --line-strong: #bfa37d;
+      --accent: #9d6b37;
+      --accent-soft: #efe4d0;
+      --accent-2: #3b6f76;
+      --shadow: 0 18px 40px rgba(49, 33, 16, 0.08);
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --radius-sm: 12px;
+      --page-width: 1040px;
+      --display-font: Georgia, "Times New Roman", serif;
+      --body-font: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      --mono-font: "Cascadia Code", Consolas, monospace;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(157, 107, 55, 0.09), transparent 26%),
+        radial-gradient(circle at 88% 10%, rgba(59, 111, 118, 0.08), transparent 22%),
+        linear-gradient(180deg, #f7f1e7 0%, #fbf7f1 28%, #f6efe5 100%);
+      font-family: var(--body-font);
+      line-height: 1.65;
+      letter-spacing: 0.01em;
+    }
+
+    a { color: var(--accent-2); }
+
+    code, pre, .technical, .meta-chip, .section-index, .eyebrow, .stat-label, .stat-value, .mermaid {
+      font-family: var(--mono-font);
+    }
+
+    .page-shell {
+      width: min(var(--page-width), calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 28px 0 56px;
+    }
+
+    .hero {
+      padding: 34px;
+      border: 1px solid rgba(159, 123, 79, 0.28);
+      border-radius: 30px;
+      background:
+        linear-gradient(135deg, rgba(157, 107, 55, 0.1), transparent 34%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0.86)),
+        var(--paper-strong);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(260px, 0.85fr);
+      gap: 24px;
+      align-items: end;
+    }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .title {
+      margin: 0;
+      max-width: 16ch;
+      font-family: var(--display-font);
+      font-size: clamp(2.2rem, 4.2vw, 3.8rem);
+      line-height: 1.02;
+      letter-spacing: -0.03em;
+      text-wrap: balance;
+    }
+
+    .lede {
+      margin: 18px 0 0;
+      max-width: 60ch;
+      color: var(--ink-soft);
+      font-size: 1rem;
+    }
+
+    .takeaway {
+      margin-top: 22px;
+      padding: 18px 20px;
+      border-left: 4px solid var(--accent-2);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      background: rgba(59, 111, 118, 0.08);
+      color: #20373a;
+      font-size: 1.02rem;
+    }
+
+    .meta-grid { display: grid; gap: 12px; }
+
+    .meta-card, .section, .subcard, .empty-state {
+      border: 1px solid rgba(95, 72, 46, 0.12);
+      background: rgba(255, 253, 249, 0.88);
+      box-shadow: var(--shadow);
+    }
+
+    .meta-card { padding: 16px 18px; border-radius: var(--radius-md); }
+
+    .meta-label {
+      color: var(--ink-soft);
+      font-size: 0.76rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .meta-chip {
+      margin-top: 8px;
+      color: var(--accent);
+      font-size: 1rem;
+      font-weight: 700;
+      word-break: break-word;
+    }
+
+    .section {
+      margin-top: 22px;
+      padding: 24px;
+      border-radius: var(--radius-lg);
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px 18px;
+      align-items: end;
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section-index {
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .section-title {
+      margin: 0;
+      font-family: var(--display-font);
+      font-size: clamp(1.45rem, 2vw, 2rem);
+      line-height: 1.05;
+    }
+
+    .status-pill {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .status-done { background: rgba(59, 111, 118, 0.14); color: var(--accent-2); }
+    .status-pending { background: rgba(159, 123, 79, 0.16); color: var(--accent); }
+
+    .summary-grid, .dual-grid, .phase-grid, .stat-grid, .appendix-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .summary-grid, .dual-grid, .phase-grid, .appendix-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .subcard {
+      padding: 18px;
+      border-radius: var(--radius-md);
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .subcard h3, .subcard h4 { margin: 0 0 10px; font-size: 1rem; line-height: 1.2; }
+    .subcard p:first-child, .subcard ul:first-child, .subcard ol:first-child { margin-top: 0; }
+
+    .stat-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 16px; }
+
+    .stat {
+      padding: 14px 16px;
+      border: 1px solid rgba(59, 111, 118, 0.16);
+      border-radius: var(--radius-sm);
+      background: rgba(59, 111, 118, 0.06);
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .stat-label { color: var(--ink-soft); font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; }
+    .stat-value { margin-top: 8px; color: var(--accent-2); font-size: 1.18rem; font-weight: 700; }
+
+    .narrative, .chart-frame, .technical-frame, .diagram-frame, .viz-frame {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.54);
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .diagram-frame {
+      overflow-x: auto;
+      overflow-y: auto;
+      overscroll-behavior-x: contain;
+      overscroll-behavior-y: contain;
+      max-height: min(70vh, 720px);
+    }
+
+    .chart-frame, .viz-frame { overflow: hidden; }
+
+    .mermaid { width: 100%; max-width: 100%; min-width: 0; color: var(--ink); }
+
+    .mermaid svg {
+      display: block;
+      width: auto !important;
+      min-width: 100%;
+      max-width: none !important;
+      height: auto !important;
+    }
+
+    .diagram-frame.compact-diagram { padding: 12px; max-height: min(62vh, 560px); }
+    .diagram-frame.compact-diagram .mermaid { min-width: 900px; }
+
+    .chart-frame canvas, .technical-frame > canvas, .viz-frame canvas, canvas.report-chart {
+      display: block;
+      width: 100% !important;
+      max-width: 100%;
+      height: 300px !important;
+      min-height: 300px;
+      max-height: 300px;
+    }
+
+    .technical-frame table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+    .technical-frame th, .technical-frame td {
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+      text-align: left;
+    }
+    .technical-frame th {
+      color: var(--accent);
+      font-size: 0.76rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .empty-state {
+      padding: 20px;
+      border-radius: var(--radius-md);
+      text-align: center;
+      color: var(--ink-soft);
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .empty-state strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--accent);
+      font-size: 0.84rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    ul, ol { margin: 0; padding-left: 20px; }
+    li { margin-bottom: 8px; }
+    p:last-child, li:last-child { margin-bottom: 0; }
+
+    .footer-note {
+      margin-top: 18px;
+      color: rgba(95, 86, 76, 0.74);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      text-align: right;
+    }
+
+    @media (max-width: 920px) {
+      .hero-grid, .summary-grid, .dual-grid, .phase-grid, .stat-grid, .appendix-grid {
+        grid-template-columns: 1fr;
+      }
+      .title { max-width: none; }
+    }
+
+    @media (max-width: 640px) {
+      .page-shell { width: min(100vw - 20px, var(--page-width)); padding-top: 16px; padding-bottom: 36px; }
+      .hero, .section { padding: 18px; border-radius: 20px; }
+      .title { font-size: clamp(2.1rem, 12vw, 3.2rem); }
+    }
+
+    @media print {
+      :root {
+        --paper: #ffffff;
+        --paper-strong: #ffffff;
+        --ink: #111111;
+        --ink-soft: #444444;
+        --line: #d6d1c8;
+      }
+      @page { size: A4; margin: 14mm; }
+      body { background: #ffffff; }
+      .page-shell { width: 100%; max-width: none; padding: 0; }
+      .hero, .meta-card, .section, .subcard, .narrative, .chart-frame, .technical-frame,
+      .diagram-frame, .viz-frame, .empty-state, .stat {
+        background: #ffffff;
+        box-shadow: none;
+      }
+      .hero, .section { margin-top: 0; margin-bottom: 10mm; }
+      .diagram-frame { overflow: visible; max-height: none; }
+      .diagram-frame.compact-diagram .mermaid { min-width: 0; }
+      .section-header, .takeaway { break-after: avoid; page-break-after: avoid; }
+      a { color: inherit; text-decoration: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page-shell">
+    <section class="hero" id="title-hero">
+      <div class="hero-grid">
+        <div>
+          <p class="eyebrow">Final Report / Shareable Analysis Artifact</p>
+          <h1 class="title">CI Pipeline &amp; Methodology-Parametrized Drafting Prompt</h1>
+          <p class="lede">
+            Phases 1 and 2 of the six-phase "Methodology-Parametrized Pipeline Under CI" plan, executed and committed to <code>main</code>.
+          </p>
+          <div class="takeaway">
+            The pipeline now has continuous integration guarding every future change, and the real-LLM drafting prompt no longer tells the model it is drafting a waste-to-energy project regardless of what project it actually is. Four phases remain before the frontier-LLM proof can honestly validate all four supported methodology families.
+          </div>
+        </div>
+        <div class="meta-grid">
+          <div class="meta-card">
+            <div class="meta-label">Project</div>
+            <div class="meta-chip">pdd-agent</div>
+          </div>
+          <div class="meta-card">
+            <div class="meta-label">Repository</div>
+            <div class="meta-chip">tah-allotrope/pdd-auto</div>
+          </div>
+          <div class="meta-card">
+            <div class="meta-label">Date</div>
+            <div class="meta-chip">2026-07-14</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="executive-summary">
+      <div class="section-header">
+        <div>
+          <div class="section-index">01 / Executive Summary</div>
+          <h2 class="section-title">Executive Summary</h2>
+        </div>
+      </div>
+      <div class="summary-grid">
+        <div class="subcard">
+          <h3>What was done</h3>
+          <p>
+            Phase 1 added a GitHub Actions CI workflow (lint + format + full test suite on Python 3.11 and 3.12) and moved hardcoded LLM pricing into a YAML config the environment doctor now validates. Getting there required clearing 227 pre-existing lint findings across the codebase — one of which turned out to be a real, previously undetected bug, not dead code. Phase 2 then split the drafting prompt's waste-to-energy framing out into methodology-specific overlay files, selected automatically from each project's declared methodology, so a rice, biochar, or cookstove project is finally prompted as what it actually is.
+          </p>
+        </div>
+        <div class="subcard">
+          <h3>Why it matters now</h3>
+          <p>
+            The prior push (closed 2026-07-12) made the pipeline's code paths real — a working Ollama provider, a real LLM judge, a live registry downloader — but never noticed that the prompt text the model actually reads was still hardcoded to one methodology family. The moment a frontier API key lands, the very first real draft of a non-WTE project would have been silently mis-prompted. This work closes that gap before it becomes an expensive mistake.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="background-objective">
+      <div class="section-header">
+        <div>
+          <div class="section-index">02 / Background &amp; Objective</div>
+          <h2 class="section-title">Background &amp; Objective</h2>
+        </div>
+      </div>
+      <div class="narrative">
+        <p>
+          <strong>pdd-agent</strong> is a Python pipeline that drafts Verra VCS Project Design Documents (PDDs) for carbon-credit projects, combining corpus retrieval, rule-based review, and optional LLM drafting. As of the prior plan's close, the pipeline supported four methodology families end-to-end at the calculation-engine level: waste-to-energy (ACM0022), rice cultivation (VM0051), biochar (VM0044), and improved cookstoves (AMS-II.G).
+        </p>
+        <p>
+          A July-13 codebase analysis (<code>research/2026-07-13-pdd-post-reality-gap-next-level-brainstorm.md</code>) surfaced a sharper finding than any prior review: the calc engines and the <code>ProjectInput</code> schema were genuinely multi-family, but the two artifacts the LLM actually reads to draft a section &mdash; the drafting prompt and the judge rubric &mdash; were still hardcoded to describe every project as waste-to-energy. The one existing non-WTE pilot (a synthetic rice project) only avoided this because it used a deterministic demo provider that never sees the real prompt text.
+        </p>
+        <p>
+          The resulting plan (<code>plans/2026-07-13-methodology-parametrized-pipeline-plan.md</code>) breaks the fix into six phases. This report covers execution of the first two: establishing CI as a safety net, then making the drafting prompt methodology-aware. Both were chosen to run first specifically because neither depends on an API key or GPU access &mdash; they are ready today, independent of the external blockers (no OpenAI/Anthropic keys, no GPU) that have stalled the frontier-LLM proof for three consecutive pushes.
+        </p>
+      </div>
+    </section>
+
+    <section class="section" id="inputs-scope">
+      <div class="section-header">
+        <div>
+          <div class="section-index">03 / Inputs &amp; Scope</div>
+          <h2 class="section-title">Inputs &amp; Scope</h2>
+        </div>
+      </div>
+      <div class="dual-grid">
+        <div class="subcard">
+          <h3>Plan &amp; research inputs</h3>
+          <ul>
+            <li><code>plans/2026-07-13-methodology-parametrized-pipeline-plan.md</code> &mdash; the six-phase plan this report tracks.</li>
+            <li><code>research/2026-07-13-pdd-post-reality-gap-next-level-brainstorm.md</code> &mdash; the analysis that surfaced the prompt/rubric gap.</li>
+            <li>The prior plan's closure state: 606 tests passing, working tree clean, six phases of reality-gap work complete as of 2026-07-12.</li>
+          </ul>
+        </div>
+        <div class="subcard">
+          <h3>Scope of this report</h3>
+          <ul>
+            <li><strong>In scope:</strong> Phase 1 (CI, config-driven pricing) and Phase 2 (methodology-parametrized drafting prompt) of the six-phase plan.</li>
+            <li><strong>Out of scope for this report:</strong> Phase 3 (judge rubric parametrization), Phase 4 (parametrized test matrix), Phase 5 (one-command multi-provider proof), Phase 6 (evidence-registry flow, service batch-approve fix, CLI split) &mdash; not yet started.</li>
+            <li><strong>Out of scope for the plan itself:</strong> anything requiring API keys or a running Ollama instance in tests; the frontier-LLM proof run; the per-family schema split (deferred pending a second real non-WTE project).</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="assumptions-constraints">
+      <div class="section-header">
+        <div>
+          <div class="section-index">04 / Assumptions &amp; Constraints</div>
+          <h2 class="section-title">Assumptions &amp; Constraints</h2>
+        </div>
+      </div>
+      <div class="dual-grid">
+        <div class="subcard">
+          <h3>Binding constraints (carried from the plan)</h3>
+          <ul>
+            <li>Tests must never require API keys, network access, or a running Ollama instance.</li>
+            <li><code>ruff</code> line-length 100 and <code>ruff format</code> must pass on all changed files.</li>
+            <li>Backward compatibility is mandatory: every project without a matching methodology overlay falls back to WTE behavior, so all pre-existing tests keep passing unchanged.</li>
+          </ul>
+        </div>
+        <div class="subcard">
+          <h3>Judgment calls made during execution</h3>
+          <ul>
+            <li>Getting <code>ruff check</code> clean (a CI exit criterion) required deciding, case by case, which of 227 pre-existing lint findings were genuinely dead code versus real bugs worth fixing &mdash; documented in the Methodology section below.</li>
+            <li>A stray, unrelated git worktree (<code>.claude/worktrees/musing-cerf-33391b</code>, another in-progress session on a different branch) was discovered mid-lint-fix when an auto-fix accidentally touched it. The accidental changes were reverted and <code>.claude</code> was excluded from the ruff config so it cannot recur.</li>
+            <li>The calc-injection function's field-level decomposition (baseline/project/leakage breakdown) remains ACM0022-specific by design &mdash; it is the only calc-result shape ever wired into prompt injection in production. Only its header now names the resolved methodology; a full per-methodology calc-injection rewrite was judged out of scope for this phase and is noted as follow-on work.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="methodology">
+      <div class="section-header">
+        <div>
+          <div class="section-index">05 / Methodology</div>
+          <h2 class="section-title">Methodology</h2>
+        </div>
+      </div>
+      <div class="narrative">
+        <p>
+          Each phase followed the same discipline: implement the plan's file changes, run the full test suite, fix any failure before committing, then commit. Phase 1's target of a clean <code>ruff check .</code> turned out to be non-trivial &mdash; the repository had 227 pre-existing lint findings, none related to this work. Rather than silently disabling checks to reach green, each finding was triaged individually: safe mechanical fixes (unused imports, f-strings without placeholders) were auto-fixed; a genuinely undefined forward-reference type hint was fixed with a proper <code>TYPE_CHECKING</code> guard; a pervasive, intentional <code>sys.path</code>/<code>load_dotenv</code>-before-import pattern was allow-listed at the project level rather than risking reordering that could break runtime behavior; and every one of the 17 unused-variable findings was individually inspected rather than blanket-deleted.
+        </p>
+        <p>
+          That inspection surfaced one real bug: <code>MethodologyRules.run_post_draft_checks()</code> computed a per-check <code>applies_to</code> methodology filter but never applied it, so an ACM0022-only compliance check (the Section 1.16 REC/electricity check) was firing unconditionally for every project, including the rice pilot. This was fixed at the root &mdash; threading <code>methodology_ids</code> through from its sole call site &mdash; with a dedicated regression test, rather than deleting the unused variable and leaving the filtering gap in place.
+        </p>
+        <p>
+          Phase 2 began by locating where the drafting prompt's WTE-specific text actually lives. <code>prompts/section_draft_v2.md</code> turned out to be documentation of the prompt, not a template loaded at runtime &mdash; the real prompt is assembled in Python inside <code>SectionOrchestrator._build_prompt()</code>. The fix therefore had two parts: bring the documentation file's language in line with reality (methodology-neutral), and build the actual runtime mechanism &mdash; a methodology-to-family resolver and four overlay files loaded and injected into the assembled prompt. A first draft of the non-WTE overlays told the model "do not use waste-to-energy framing (landfill, biogas combustion, municipal solid waste...)" &mdash; a new test asserting the absence of those exact words caught that the negative instruction was itself injecting the poison words into the prompt. The overlays were rewritten to describe each project positively instead, with no WTE vocabulary present at all.
+        </p>
+      </div>
+      <div class="stat-grid">
+        <div class="stat">
+          <div class="stat-label">Orientation</div>
+          <div class="stat-value">multi-phase</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Audience</div>
+          <div class="stat-value">stakeholder-safe</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Evidence Rule</div>
+          <div class="stat-value">no invented data</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="phase-analysis">
+      <div class="section-header">
+        <div>
+          <div class="section-index">06 / Phase-by-Phase Analysis</div>
+          <h2 class="section-title">Phase-by-Phase Analysis</h2>
+        </div>
+      </div>
+      <div class="phase-grid">
+        <div class="subcard">
+          <h3>Phase 1 &mdash; CI Pipeline &amp; Config-Driven Pricing <span class="status-pill status-done">Done</span></h3>
+          <p>
+            Added <code>.github/workflows/ci.yml</code> (ruff check, ruff format check, full non-corpus pytest suite, matrixed across Python 3.11 and 3.12). Extracted hardcoded LLM token pricing from <code>llm/budget.py</code> into <code>configs/model_pricing.yaml</code> with an embedded fallback, and extended <code>pdd-agent doctor</code>'s pricing check to also cover <code>PDD_JUDGE_MODEL</code>. Cleared all 227 pre-existing ruff findings to reach a green baseline, fixing one real bug (the post-draft methodology-filter gap) along the way. Tests: 606 &rarr; 616 passing.
+          </p>
+        </div>
+        <div class="subcard">
+          <h3>Phase 2 &mdash; Methodology-Parametrized Drafting Prompt <span class="status-pill status-done">Done</span></h3>
+          <p>
+            Added <code>prompts/methodologies/{wte,rice,biochar,cookstove}.md</code>, each a short domain-framing overlay. <code>SectionOrchestrator</code> now resolves a project's methodology family from <code>technology.methodology_ids</code> and injects the matching overlay into the real (v2) drafting prompt, falling back to WTE for any unrecognized or absent methodology. The calc-injection header now names the project's actual resolved methodology instead of hardcoding "ACM0022". The v1 prompt path (used only by the deterministic demo/noop providers) is untouched. Tests: 616 &rarr; 631 passing.
+          </p>
+        </div>
+        <div class="subcard">
+          <h3>Phase 3 &mdash; Methodology-Parametrized Judge Rubric <span class="status-pill status-pending">Not started</span></h3>
+          <p>
+            Planned: split <code>rules/verra/judge_rubric.yaml</code> (currently ACM0022-hardcoded, including its fabricated-facts check) into a shared skeleton plus per-family rubric files, so the LLM judge scores a rice/biochar/cookstove draft against family-appropriate criteria instead of WTE ones.
+          </p>
+        </div>
+        <div class="subcard">
+          <h3>Phase 4 &mdash; Parametrized Test Matrix <span class="status-pill status-pending">Not started</span></h3>
+          <p>
+            Planned: add the first <code>pytest.mark.parametrize</code> coverage across all four methodology families for the draft &rarr; review &rarr; consistency &rarr; export path, converting the class of bug the original rice pilot found by hand into a CI-enforced guarantee.
+          </p>
+        </div>
+        <div class="subcard">
+          <h3>Phase 5 &mdash; One-Command Multi-Provider Proof <span class="status-pill status-pending">Not started</span></h3>
+          <p>
+            Planned: a single <code>pdd-agent prove</code> command that runs a project through every available provider, judges each, and writes a head-to-head scorecard &mdash; so the frontier-key run becomes a model-string swap, not a debugging session.
+          </p>
+        </div>
+        <div class="subcard">
+          <h3>Phase 6 &mdash; Evidence Flow, Batch-Approve, CLI Split <span class="status-pill status-pending">Not started</span></h3>
+          <p>
+            Planned: complete the evidence-registry flow from intake through the DOCX appendix, fix a logged batch-approve-all defect in the review service, and split the 800+ line <code>cli.py</code> into a package.
+          </p>
+        </div>
+      </div>
+      <div class="diagram-frame compact-diagram">
+        <div class="mermaid">
+flowchart LR
+  A["Reality-gap plan closed<br/>606 tests, code paths real"] --> B["Analysis surfaces gap:<br/>prompt/rubric still WTE-only"]
+  B --> C["Phase 1: CI + pricing<br/>DONE"]
+  C --> D["Phase 2: prompt overlays<br/>DONE"]
+  D --> E["Phase 3: judge rubric<br/>not started"]
+  E --> F["Phase 4: test matrix<br/>not started"]
+  F --> G["Phase 5: one-command proof<br/>not started"]
+  G --> H["Phase 6: debt paydown<br/>not started"]
+  H --> I["Frontier-key proof validates<br/>all 4 families, not just WTE"]
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="findings-recommendation">
+      <div class="section-header">
+        <div>
+          <div class="section-index">07 / Findings &amp; Recommendation</div>
+          <h2 class="section-title">Findings &amp; Recommendation</h2>
+        </div>
+      </div>
+      <div class="narrative">
+        <p><strong>Finding 1 &mdash; the lint baseline was not actually clean.</strong> Setting up CI is normally mechanical, but this repository had never had a "does the linter pass" gate, so 227 findings had accumulated. One was a real, currently-live bug (see Finding 2); the rest were genuinely dead code or a deliberate, pervasive import-ordering pattern that was correctly allow-listed rather than "fixed" in a way that risked breaking working behavior.</p>
+        <p><strong>Finding 2 &mdash; a methodology-filter bug was already live before this work started.</strong> <code>run_post_draft_checks()</code> silently ran an ACM0022-only compliance check against every project regardless of methodology. This predates this plan; it was found only because lint cleanup forced a close look at an "unused" variable that turned out to matter. It is now fixed and regression-tested.</p>
+        <p><strong>Finding 3 &mdash; the drafting prompt's WTE-hardcoding was real and is now closed for the prompt layer.</strong> The overlay mechanism is generic, backward-compatible (WTE is the default for anything unrecognized), and test-verified for all four families. The judge rubric (Phase 3) has the same class of gap and remains open &mdash; a draft is now correctly framed by methodology, but not yet scored by a methodology-appropriate rubric.</p>
+        <p><strong>Recommendation:</strong> continue directly into Phase 3 (judge rubric) next. It is the natural completion of Phase 2 &mdash; a project can now be drafted correctly by methodology but would still be judged against WTE-specific pass/fail criteria, which is an inconsistency worth closing before Phase 4's test matrix locks in behavior across all four families.</p>
+      </div>
+    </section>
+
+    <section class="section" id="implementation-path">
+      <div class="section-header">
+        <div>
+          <div class="section-index">08 / Implementation Path</div>
+          <h2 class="section-title">Implementation Path</h2>
+        </div>
+      </div>
+      <div class="phase-grid">
+        <div class="subcard">
+          <h3>Immediate next step</h3>
+          <p>Execute Phase 3 of <code>plans/2026-07-13-methodology-parametrized-pipeline-plan.md</code>: split <code>judge_rubric.yaml</code> into per-family rubrics under <code>rules/verra/rubrics/</code>, reusing the same <code>methodology_ids</code> &rarr; family-slug resolution logic already built in Phase 2's <code>section_orchestrator.py</code> to avoid drift between the two.</p>
+        </div>
+        <div class="subcard">
+          <h3>Dependencies &amp; sequencing</h3>
+          <p>Phase 4 (test matrix) depends on Phases 2 and 3 both being complete, since it verifies that both the prompt and the rubric select the correct family. Phase 5 (one-command proof) depends on Phase 3 so that per-provider judging in the scorecard uses the right rubric. Phase 6 is independent and can be picked up opportunistically.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="risks-open-questions">
+      <div class="section-header">
+        <div>
+          <div class="section-index">09 / Risks / Open Questions</div>
+          <h2 class="section-title">Risks / Open Questions</h2>
+        </div>
+      </div>
+      <div class="dual-grid">
+        <div class="subcard">
+          <h3>Open risks</h3>
+          <ul>
+            <li>The frontier-LLM proof remains blocked on API keys and, separately, on GPU-class hardware for a completed local Ollama run &mdash; neither blocker was addressed by this work, by design (both phases were chosen specifically because they don't depend on either).</li>
+            <li>The calc-injection function's field decomposition is still ACM0022-specific; if a future phase wires the rice/biochar/cookstove calc engines into live prompt injection (they are not today), that decomposition will need a proper per-methodology rewrite, not just a header fix.</li>
+            <li>Four of six plan phases remain unexecuted; the methodology-parametrization work is incomplete until at least Phase 3 (judge rubric) lands, since a correctly-framed draft is currently still judged by WTE-specific pass/fail criteria.</li>
+          </ul>
+        </div>
+        <div class="subcard">
+          <h3>Open questions</h3>
+          <ul>
+            <li>Whether the per-methodology <code>quantitative_sections</code> mapping planned for Phase 3 (which subsections carry quantification for rice/biochar/cookstove) should default to the WTE set (1.10, 4.1, 4.2, 4.4) until real registered PDDs refine it &mdash; the plan's binding default assumes yes; this has not yet been implemented or tested.</li>
+            <li>Whether the logged service batch-approve-all defect (Phase 6) reproduces reliably enough to write a deterministic regression test, or requires deeper investigation of the review-state-store's concurrency behavior first.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="appendices-evidence">
+      <div class="section-header">
+        <div>
+          <div class="section-index">10 / Appendices / Evidence Notes</div>
+          <h2 class="section-title">Appendices / Evidence Notes</h2>
+        </div>
+      </div>
+      <div class="appendix-grid">
+        <div class="subcard">
+          <h3>Commits</h3>
+          <div class="technical-frame">
+            <table>
+              <thead><tr><th>Commit</th><th>Summary</th></tr></thead>
+              <tbody>
+                <tr><td><code>4af1fc0</code></td><td>phase-01: CI pipeline, config-driven model pricing, ruff cleanup</td></tr>
+                <tr><td><code>185c0b7</code></td><td>phase-02: methodology-parametrized drafting prompt</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="subcard">
+          <h3>Test suite progression</h3>
+          <div class="chart-frame">
+            <canvas id="testProgressionChart"></canvas>
+          </div>
+        </div>
+        <div class="subcard">
+          <h3>Files touched (by phase)</h3>
+          <div class="technical-frame">
+            <table>
+              <thead><tr><th>Phase</th><th>Key files created/modified</th></tr></thead>
+              <tbody>
+                <tr><td>Phase 1</td><td><code>.github/workflows/ci.yml</code>, <code>configs/model_pricing.yaml</code>, <code>llm/budget.py</code>, <code>doctor.py</code>, <code>domain/methodology_rules.py</code>, <code>review/checks.py</code>, plus 227 lint-driven touch-ups across <code>src/</code>, <code>scripts/</code>, <code>tests/</code></td></tr>
+                <tr><td>Phase 2</td><td><code>prompts/methodologies/{wte,rice,biochar,cookstove}.md</code>, <code>prompts/section_draft_v2.md</code>, <code>agent/section_orchestrator.py</code>, <code>tests/test_prompt_assembly.py</code></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="subcard">
+          <h3>Verification commands</h3>
+          <div class="technical-frame">
+            <table>
+              <thead><tr><th>Command</th><th>Result</th></tr></thead>
+              <tbody>
+                <tr><td><code>ruff check .</code></td><td>All checks passed</td></tr>
+                <tr><td><code>ruff format --check .</code></td><td>124 files already formatted</td></tr>
+                <tr><td><code>python -m pytest -m "not corpus" -q</code></td><td>631 passed, 7 deselected</td></tr>
+                <tr><td><code>pdd-agent doctor</code></td><td>Exit 0; pricing section reports OK</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="footer-note">designed for html first, printable without reconstruction</div>
+    </section>
+  </main>
+  <script>
+    (function() {
+      const chartCanvases = document.querySelectorAll('canvas');
+      chartCanvases.forEach((canvas) => {
+        canvas.classList.add('report-chart');
+        const parent = canvas.parentElement;
+        if (parent && parent.classList.contains('technical-frame') && !parent.classList.contains('chart-frame')) {
+          parent.classList.add('chart-frame');
+        }
+      });
+    })();
+
+    if (window.Chart) {
+      Chart.defaults.devicePixelRatio = 1;
+      Chart.defaults.animation = false;
+      Chart.defaults.resizeDelay = 150;
+      Chart.defaults.normalized = true;
+      Chart.defaults.maintainAspectRatio = false;
+      Chart.defaults.responsive = true;
+    }
+
+    (function() {
+      const el = document.getElementById('testProgressionChart');
+      if (!el || !window.Chart) return;
+      new Chart(el, {
+        type: 'bar',
+        data: {
+          labels: ['Baseline (2026-07-12)', 'After Phase 1', 'After Phase 2'],
+          datasets: [{
+            label: 'Tests passing',
+            data: [606, 616, 631],
+            backgroundColor: ['#bfa37d', '#9d6b37', '#3b6f76'],
+            borderRadius: 6
+          }]
+        },
+        options: {
+          animation: false,
+          resizeDelay: 150,
+          normalized: true,
+          maintainAspectRatio: false,
+          responsive: true,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { beginAtZero: false, suggestedMin: 590, title: { display: true, text: 'Tests passing' } }
+          }
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
