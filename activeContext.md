@@ -1,10 +1,10 @@
 # PDD Methodology-Parametrized Pipeline — Make Breadth Real for the LLM Path
 
 **Plan:** `plans/2026-07-13-methodology-parametrized-pipeline-plan.md`
-**Status:** PHASES 1-4 COMPLETE — 681 tests passing, working tree clean
-**Last commit:** (pending) — PHASE-04: methodology-parametrized test matrix proves breadth in CI
+**Status:** ALL 6 PHASES COMPLETE — 686 tests passing, working tree clean
+**Last commit:** (pending) — PHASE-05 + PHASE-06: one-command proof, evidence flow, batch-approve fix
 
-**Prior push:** `plans/2026-07-12-pdd-reality-gap-plan.md` (closed 2026-07-12, see `docs/2026-07-12-ollama-shakeout.md` and `docs/2026-07-12-rice-pilot-findings.md`). That push made the code paths real — working Ollama provider, real LLM judge, live registry downloader, rice VM0051 end-to-end pilot — but never noticed that the prompt text and judge rubric were still hardcoded to WTE. This plan closes that gap.
+**Prior push:** `plans/2026-07-12-pdd-reality-gap-plan.md` (closed 2026-07-12, see `docs/2026-07-12-ollama-shakeout.md` and `docs/2026-07-12-rice-pilot-findings.md`). That push made the code paths real — working Ollama provider, real LLM judge, live registry downloader, rice VM0051 end-to-end pilot — but never noticed that the prompt text and judge rubric were still hardcoded to WTE. This plan closed that gap.
 
 ## Phase progress
 
@@ -12,12 +12,14 @@
 - [x] PHASE-02: Methodology-parametrized drafting prompt — `prompts/methodologies/{wte,rice,biochar,cookstove}.md`, family-aware `_build_prompt` in `SectionOrchestrator`
 - [x] PHASE-03: Methodology-parametrized judge rubric — `rules/verra/rubrics/{wte,rice,biochar,cookstove}.yaml`, family-aware `LLMJudge` with `methodology_ids` parameter, per-rubric `quantitative_sections`
 - [x] PHASE-04: Methodology-parametrized test matrix — `tests/fixtures/methodology_projects.py` (per-family `ProjectInput` factories), `tests/test_methodology_matrix.py` (43-test parametrized matrix), `DemoProvider` extended with biochar/cookstove templates (bug found and fixed by the matrix)
-- [ ] PHASE-05: One-command multi-provider proof — `pdd-agent prove`, per-provider judged scorecard
-- [ ] PHASE-06: Architectural debt: evidence flow, batch-approve, CLI split
+- [x] PHASE-05: One-command multi-provider proof — `pdd-agent prove` with `auto` mode, project aliases (`socson`, `inegol`, `rice`), skipped-providers section in scorecard
+- [x] PHASE-06: Evidence flow + batch-approve fix — evidence registry populated at intake, injected into prompt, rendered as DOCX appendix; atomic `POST /api/runs/{run_id}/approve-all` endpoint fixes read-modify-write race
 
 ## Real bugs found and fixed during this push (not in the original plan — surfaced by actually running things)
 
 1. **`DemoProvider` WTE-hardcoding** (PHASE-04): the parametrized test matrix immediately caught that `DemoProvider` had no templates for biochar and cookstove, so it fell back to WTE text containing "landfill" and "municipal solid waste" — exactly the WTE-shaped assumption the matrix was designed to surface. Fixed by adding biochar and cookstove templates.
+
+2. **Batch-approve race condition** (PHASE-06): the service's per-section approve endpoint had a read-modify-write race when clients looped it. Fixed by adding an atomic `POST /api/runs/{run_id}/approve-all` endpoint that loads state once, approves all approvable sections in one in-memory pass, and saves once.
 
 ## Constraints (carried forward, still binding)
 
@@ -35,7 +37,7 @@
 
 ## Test results
 
-- `python -m pytest -m "not corpus" -q`: **681 passed** (up from 631 at the start of this push)
+- `python -m pytest -m "not corpus" -q`: **686 passed** (up from 631 at the start of this push)
 - `python -m pytest tests/test_methodology_matrix.py -v`: **43 passed** (new parametrized matrix)
 - `ruff check .`: **All checks passed**
 - `ruff format --check .`: **All files formatted**
@@ -43,12 +45,11 @@
 
 ## Commits (this push)
 
-- (pending) — PHASE-03 + PHASE-04 (judge rubric, test matrix, DemoProvider fix)
+- (pending) — PHASE-05 + PHASE-06 (one-command proof, evidence flow, batch-approve fix)
 
 ## Suggested next steps
 
-1. Execute PHASE-05 (one-command multi-provider proof): add a `prove` subcommand that wraps `run_provider_scorecard` with provider auto-detection and per-provider judging, so a single command runs a project through every available provider, judges each with the (now family-aware) LLM judge, and writes a head-to-head scorecard.
-2. When `OPENAI_API_KEY`/`ANTHROPIC_API_KEY` arrive: run `pdd-agent prove --project inegol --providers auto`, pick a default drafting model, get domain-expert sign-off on the resulting Inegol DOCX.
-3. Re-run the Ollama full-draft shakeout on GPU-equipped hardware to get a completed (not just verified-correct-under-failure) 36-section local run.
-4. Get browser-devtools access to the Verra registry search UI to finish PHASE-05's live corpus download, then swap the rice/biochar/cookstove golden tests from synthetic to registered values.
-5. Investigate the bulk-approve-all interaction noted in `docs/2026-07-12-rice-pilot-findings.md` if it recurs during real human use of the section-review UI (PHASE-06).
+1. When `OPENAI_API_KEY`/`ANTHROPIC_API_KEY` arrive: run `pdd-agent prove --project inegol --providers auto`, pick a default drafting model, get domain-expert sign-off on the resulting Inegol DOCX.
+2. Re-run the Ollama full-draft shakeout on GPU-equipped hardware to get a completed (not just verified-correct-under-failure) 36-section local run.
+3. Get browser-devtools access to the Verra registry search UI to finish PHASE-05's live corpus download, then swap the rice/biochar/cookstove golden tests from synthetic to registered values.
+4. Investigate the bulk-approve-all interaction noted in `docs/2026-07-12-rice-pilot-findings.md` if it recurs during real human use of the section-review UI (PHASE-06).

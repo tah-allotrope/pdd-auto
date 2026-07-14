@@ -43,6 +43,9 @@
 
 <section class="card">
   <h2>Export</h2>
+  <form action="/api/runs/{{ run_id }}/approve-all" method="post" style="display:inline">
+    <button type="submit" class="button button-secondary">Approve all sections</button>
+  </form>
   <p>
     <a class="button" href="/api/runs/{{ run_id }}/docx?force=1">Download DOCX (force)</a>
     <a class="button button-secondary" href="/api/runs/{{ run_id }}/docx">Download DOCX (gated)</a>

@@ -8,6 +8,7 @@ from pathlib import Path
 from pdd_agent.phase05.benchmark import create_demo_project_input
 from pdd_agent.phase05.provider_scorecard import (
     _is_provider_available,
+    _resolve_providers,
     run_provider_scorecard,
 )
 
@@ -82,3 +83,51 @@ class TestRunProviderScorecard:
 
         text = output_path.read_text(encoding="utf-8")
         assert "| demo | 36 | 0.0% | 0.0 |" in text
+
+
+class TestResolveProviders:
+    def test_auto_expands_to_all_known(self):
+        resolved = _resolve_providers("auto")
+        assert "demo" in resolved
+        assert "ollama" in resolved
+        assert "openai" in resolved
+        assert "anthropic" in resolved
+
+    def test_explicit_list_passthrough(self):
+        resolved = _resolve_providers(["demo", "openai"])
+        assert resolved == ["demo", "openai"]
+
+    def test_comma_string_parsed(self):
+        resolved = _resolve_providers("demo, ollama")
+        assert resolved == ["demo", "ollama"]
+
+    def test_auto_as_list(self):
+        resolved = _resolve_providers(["auto"])
+        assert "demo" in resolved
+        assert len(resolved) >= 3
+
+
+class TestAutoModeScorecard:
+    def test_auto_mode_skips_unkeyed_providers(self, tmp_path: Path, monkeypatch):
+        monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+        monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+        monkeypatch.setattr(
+            "pdd_agent.phase05.provider_scorecard._is_provider_available",
+            lambda name: (False, "no_ollama") if name == "ollama" else _is_provider_available(name),
+        )
+        input_path = create_demo_project_input(tmp_path / "demo_project.yaml")
+        output_path = tmp_path / "scorecard.md"
+
+        run_provider_scorecard(
+            input_path=input_path,
+            providers="auto",
+            output_path=output_path,
+        )
+
+        text = output_path.read_text(encoding="utf-8")
+        assert "| demo |" in text
+        assert "Providers ran:" in text
+        assert "Providers skipped:" in text
+        assert "Skipped providers" in text
+        assert "openai" in text
+        assert "anthropic" in text

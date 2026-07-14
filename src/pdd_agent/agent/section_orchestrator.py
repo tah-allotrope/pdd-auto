@@ -371,6 +371,11 @@ class SectionOrchestrator:
         else:
             prompt_parts.append("ProjectInput not provided — all content must be placeholder.\n")
 
+        if project_input and getattr(project_input, "evidence_registry", None):
+            evidence_text = self._format_evidence_registry(project_input.evidence_registry)
+            if evidence_text:
+                prompt_parts.append(evidence_text)
+
         if fact_entries:
             prompt_parts.append("\n## Fact Provenance\n")
             for entry in fact_entries:
@@ -429,6 +434,20 @@ class SectionOrchestrator:
             f"- Crediting period: {p.dates.crediting_period_years} years",
         ]
         return "\n".join(parts) + "\n"
+
+    def _format_evidence_registry(self, registry: Any) -> str:
+        """Format the evidence registry for injection into the drafting prompt."""
+        if not registry or not getattr(registry, "items", None):
+            return ""
+        parts = ["\n## Evidence Registry (cite these IDs)\n"]
+        for item in registry.items:
+            eid = getattr(item, "evidence_id", "?")
+            source_type = getattr(item, "source_type", "unknown")
+            description = getattr(item, "description", "")
+            section_ref = getattr(item, "section_ref", None)
+            ref_str = f" (section {section_ref})" if section_ref else ""
+            parts.append(f"- [{eid}] {source_type}: {description}{ref_str}\n")
+        return "".join(parts)
 
     def draft_section(
         self,

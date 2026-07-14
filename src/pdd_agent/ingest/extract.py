@@ -15,7 +15,7 @@ import structlog
 import yaml
 
 from pdd_agent.llm.provider import BaseProvider
-from schemas.project_input import ProjectInput, ExtractionProvenance
+from schemas.project_input import ProjectInput, ExtractionProvenance, EvidenceRegistry
 
 logger = structlog.get_logger()
 
@@ -284,4 +284,41 @@ def extract_project_input(
         raise ExtractionError(f"Extracted data failed ProjectInput validation: {exc}") from exc
 
     project_input.extraction_provenance = provenance
+
+    if project_input.evidence_registry is None:
+        project_input.evidence_registry = EvidenceRegistry()
+    _populate_evidence_registry(project_input, source_path)
+
     return project_input
+
+
+def _populate_evidence_registry(project_input: ProjectInput, source_path: str | None) -> None:
+    """Populate the evidence registry with extracted factual sources.
+
+    Registers each major section's data as an EvidenceItem with sequential
+    E### IDs, so the drafting prompt can cite [E001], [E002], etc.
+    """
+    registry = project_input.evidence_registry
+    if registry is None:
+        return
+
+    source_doc = source_path or "extraction"
+
+    section_sources = [
+        ("project", "user_input", "Project identity and proponent information"),
+        ("location", "user_input", "Project location and boundary coordinates"),
+        ("technology", "user_input", "Technology type and capacity parameters"),
+        ("quantification", "calc_engine", "Emission quantification inputs"),
+        ("monitoring", "user_input", "Monitoring plan parameters"),
+        ("methodology_applicability", "methodology", "Methodology eligibility checklist"),
+    ]
+
+    for section_key, source_type, description in section_sources:
+        section_data = getattr(project_input, section_key, None)
+        if section_data is not None:
+            registry.add(
+                source_type=source_type,
+                description=f"{description} (from {source_doc})",
+                document_ref=source_doc,
+                section_ref=section_key,
+            )

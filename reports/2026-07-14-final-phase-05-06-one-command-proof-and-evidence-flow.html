@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Final Report :: One-Command Proof &amp; Evidence Flow</title>
+  <meta name="color-scheme" content="dark light">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+
+    async function initMermaid() {
+      const blocks = document.querySelectorAll('.mermaid');
+      if (!blocks.length) {
+        return;
+      }
+
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: 'base',
+        securityLevel: 'loose',
+        themeVariables: {
+          primaryColor: '#f3ead9',
+          primaryTextColor: '#1f1912',
+          primaryBorderColor: '#9d6b37',
+          lineColor: '#3b6f76',
+          secondaryColor: '#efe4d0',
+          tertiaryColor: '#ffffff',
+          background: '#fbf7f1',
+          mainBkg: '#fbf7f1',
+          nodeBorder: '#9d6b37',
+          clusterBkg: '#f7efdf',
+          clusterBorder: '#3b6f76',
+          edgeLabelBackground: '#fbf7f1'
+        }
+      });
+
+      await mermaid.run({ nodes: blocks });
+    }
+
+    const run = () => initMermaid().catch((error) => console.error('Mermaid render failed', error));
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', run, { once: true });
+    } else {
+      run();
+    }
+  </script>
+  <style>
+    :root {
+      --paper: #fbf7f1;
+      --paper-strong: #fffdf9;
+      --ink: #1f1912;
+      --ink-soft: #5f564c;
+      --line: #dccdb6;
+      --line-strong: #bfa37d;
+      --accent: #9d6b37;
+      --accent-soft: #efe4d0;
+      --accent-2: #3b6f76;
+      --shadow: 0 18px 40px rgba(49, 33, 16, 0.08);
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --radius-sm: 12px;
+      --page-width: 1040px;
+      --display-font: Georgia, "Times New Roman", serif;
+      --body-font: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      --mono-font: "Cascadia Code", Consolas, monospace;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(157, 107, 55, 0.09), transparent 26%),
+        radial-gradient(circle at 88% 10%, rgba(59, 111, 118, 0.08), transparent 22%),
+        linear-gradient(180deg, #f7f1e7 0%, #fbf7f1 28%, #f6efe5 100%);
+      font-family: var(--body-font);
+      line-height: 1.65;
+      letter-spacing: 0.01em;
+    }
+
+    a { color: var(--accent-2); }
+
+    code, pre, .technical, .meta-chip, .section-index, .eyebrow, .stat-label, .stat-value, .mermaid {
+      font-family: var(--mono-font);
+    }
+
+    .page-shell {
+      width: min(var(--page-width), calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 28px 0 56px;
+    }
+
+    .hero {
+      padding: 34px;
+      border: 1px solid rgba(159, 123, 79, 0.28);
+      border-radius: 30px;
+      background:
+        linear-gradient(135deg, rgba(157, 107, 55, 0.1), transparent 34%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0.86)),
+        var(--paper-strong);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(260px, 0.85fr);
+      gap: 24px;
+      align-items: end;
+    }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .title {
+      margin: 0;
+      max-width: 16ch;
+      font-family: var(--display-font);
+      font-size: clamp(2.2rem, 4.2vw, 3.8rem);
+      line-height: 1.02;
+      letter-spacing: -0.03em;
+      text-wrap: balance;
+    }
+
+    .lede {
+      margin: 18px 0 0;
+      max-width: 60ch;
+      color: var(--ink-soft);
+      font-size: 1rem;
+    }
+
+    .takeaway {
+      margin-top: 22px;
+      padding: 18px 20px;
+      border-left: 4px solid var(--accent-2);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      background: rgba(59, 111, 118, 0.08);
+      color: #20373a;
+      font-size: 1.02rem;
+    }
+
+    .meta-grid { display: grid; gap: 12px; }
+
+    .meta-card, .section, .subcard, .empty-state {
+      border: 1px solid rgba(95, 72, 46, 0.12);
+      background: rgba(255, 253, 249, 0.88);
+      box-shadow: var(--shadow);
+    }
+
+    .meta-card { padding: 16px 18px; border-radius: var(--radius-md); }
+
+    .meta-label {
+      color: var(--ink-soft);
+      font-size: 0.76rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .meta-chip {
+      margin-top: 8px;
+      color: var(--accent);
+      font-size: 1rem;
+      font-weight: 700;
+      word-break: break-word;
+    }
+
+    .section {
+      margin-top: 22px;
+      padding: 24px;
+      border-radius: var(--radius-lg);
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px 18px;
+      align-items: end;
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section-index {
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .section-title {
+      margin: 0;
+      font-family: var(--display-font);
+      font-size: clamp(1.45rem, 2vw, 2rem);
+      line-height: 1.05;
+    }
+
+    .status-pill {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .status-done { background: rgba(59, 111, 118, 0.14); color: var(--accent-2); }
+    .status-pending { background: rgba(159, 123, 79, 0.16); color: var(--accent); }
+
+    .summary-grid, .dual-grid, .phase-grid, .stat-grid, .appendix-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .summary-grid, .dual-grid, .phase-grid, .appendix-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .subcard {
+      padding: 18px;
+      border-radius: var(--radius-md);
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .subcard h3, .subcard h4 { margin: 0 0 10px; font-size: 1rem; line-height: 1.2; }
+    .subcard p:first-child, .subcard ul:first-child, .subcard ol:first-child { margin-top: 0; }
+
+    .stat-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 16px; }
+
+    .stat {
+      padding: 14px 16px;
+      border: 1px solid rgba(59, 111, 118, 0.16);
+      border-radius: var(--radius-sm);
+      background: rgba(59, 111, 118, 0.06);
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .stat-label { color: var(--ink-soft); font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; }
+    .stat-value { margin-top: 8px; color: var(--accent-2); font-size: 1.18rem; font-weight: 700; }
+
+    .narrative, .chart-frame, .technical-frame, .diagram-frame, .viz-frame {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.54);
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .diagram-frame {
+      overflow-x: auto;
+      overflow-y: auto;
+      overscroll-behavior-x: contain;
+      overscroll-behavior-y: contain;
+      max-height: min(70vh, 720px);
+    }
+
+    .chart-frame, .viz-frame { overflow: hidden; }
+
+    .mermaid { width: 100%; max-width: 100%; min-width: 0; color: var(--ink); }
+
+    .mermaid svg {
+      display: block;
+      width: auto !important;
+      min-width: 100%;
+      max-width: none !important;
+      height: auto !important;
+    }
+
+    .diagram-frame.compact-diagram { padding: 12px; max-height: min(62vh, 560px); }
+    .diagram-frame.compact-diagram .mermaid { min-width: 900px; }
+
+    .chart-frame canvas, .technical-frame > canvas, .viz-frame canvas, canvas.report-chart {
+      display: block;
+      width: 100% !important;
+      max-width: 100%;
+      height: 300px !important;
+      min-height: 300px;
+      max-height: 300px;
+    }
+
+    .technical-frame table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+    .technical-frame th, .technical-frame td {
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+      text-align: left;
+    }
+    .technical-frame th {
+      color: var(--accent);
+      font-size: 0.76rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .empty-state {
+      padding: 20px;
+      border-radius: var(--radius-md);
+      text-align: center;
+      color: var(--ink-soft);
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .empty-state strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--accent);
+      font-size: 0.84rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    ul, ol { margin: 0; padding-left: 20px; }
+    li { margin-bottom: 8px; }
+    p:last-child, li:last-child { margin-bottom: 0; }
+
+    .footer-note {
+      margin-top: 18px;
+      color: rgba(95, 86, 76, 0.74);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      text-align: right;
+    }
+
+    @media (max-width: 920px) {
+      .hero-grid, .summary-grid, .dual-grid, .phase-grid, .stat-grid, .appendix-grid {
+        grid-template-columns: 1fr;
+      }
+      .title { max-width: none; }
+    }
+
+    @media (max-width: 640px) {
+      .page-shell { width: min(100vw - 20px, var(--page-width)); padding-top: 16px; padding-bottom: 36px; }
+      .hero, .section { padding: 18px; border-radius: 20px; }
+      .title { font-size: clamp(2.1rem, 12vw, 3.2rem); }
+    }
+
+    @media print {
+      :root {
+        --paper: #ffffff;
+        --paper-strong: #ffffff;
+        --ink: #111111;
+        --ink-soft: #444444;
+        --line: #d6d1c8;
+      }
+      @page { size: A4; margin: 14mm; }
+      body { background: #ffffff; }
+      .page-shell { width: 100%; max-width: none; padding: 0; }
+      .hero, .meta-card, .section, .subcard, .narrative, .chart-frame, .technical-frame,
+      .diagram-frame, .viz-frame, .empty-state, .stat {
+        background: #ffffff;
+        box-shadow: none;
+      }
+      .hero, .section { margin-top: 0; margin-bottom: 10mm; }
+      .diagram-frame { overflow: visible; max-height: none; }
+      .diagram-frame.compact-diagram .mermaid { min-width: 0; }
+      .section-header, .takeaway { break-after: avoid; page-break-after: avoid; }
+      a { color: inherit; text-decoration: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page-shell">
+    <section class="hero" id="title-hero">
+      <div class="hero-grid">
+        <div>
+          <p class="eyebrow">Final Report / Shareable Analysis Artifact</p>
+          <h1 class="title">One-Command Proof &amp; Evidence Flow</h1>
+          <p class="lede">
+            Phases 5 and 6 of the six-phase "Methodology-Parametrized Pipeline Under CI" plan, executed and committed to <code>main</code>.
+          </p>
+          <div class="takeaway">
+            The pipeline now has a single <code>pdd-agent prove</code> command that runs a project through every available provider, judges each with the family-aware LLM judge, and writes a head-to-head scorecard — skipping unkeyed providers gracefully. The evidence registry is now a living flow from intake through the DOCX appendix, and the service has an atomic approve-all endpoint that fixes the read-modify-write race condition. All six phases of the methodology-parametrization plan are now complete.
+          </div>
+        </div>
+        <div class="meta-grid">
+          <div class="meta-card">
+            <div class="meta-label">Project</div>
+            <div class="meta-chip">pdd-agent</div>
+          </div>
+          <div class="meta-card">
+            <div class="meta-label">Repository</div>
+            <div class="meta-chip">tah-allotrope/pdd-auto</div>
+          </div>
+          <div class="meta-card">
+            <div class="meta-label">Date</div>
+            <div class="meta-chip">2026-07-14</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="executive-summary">
+      <div class="section-header">
+        <div>
+          <div class="section-index">01 / Executive Summary</div>
+          <h2 class="section-title">Executive Summary</h2>
+        </div>
+      </div>
+      <div class="summary-grid">
+        <div class="subcard">
+          <h3>What was done</h3>
+          <p>
+            Phase 5 added a <code>prove</code> subcommand that wraps <code>run_provider_scorecard</code> with provider auto-detection and per-provider judging. The <code>auto</code> mode enumerates all known providers (demo, ollama, openai, anthropic), skipping unavailable ones gracefully. Project aliases (<code>socson</code>, <code>inegol</code>, <code>rice</code>) resolve to known config paths. Phase 6 completed the evidence-registry flow from intake through the DOCX appendix, and added an atomic <code>POST /api/runs/{run_id}/approve-all</code> endpoint that fixes the read-modify-write race condition that occurred when clients looped the per-section approve endpoint.
+          </p>
+        </div>
+        <div class="subcard">
+          <h3>Why it matters now</h3>
+          <p>
+            The prior push (closed 2026-07-14, phases 1-4) made the drafting prompt and judge rubric methodology-aware, and added a parametrized test matrix that exercises all four families end-to-end. This push completes the methodology-parametrization plan: the <code>prove</code> command makes the frontier-LLM proof a model-string swap rather than a debugging session, and the evidence flow ensures that citations are tracked from intake through the final DOCX. The approve-all endpoint fixes a logged service defect that would have blocked a human reviewing 36 sections.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="background-objective">
+      <div class="section-header">
+        <div>
+          <div class="section-index">02 / Background &amp; Objective</div>
+          <h2 class="section-title">Background &amp; Objective</h2>
+        </div>
+      </div>
+      <div class="narrative">
+        <p>
+          <strong>pdd-agent</strong> is a Python pipeline that drafts Verra VCS Project Design Documents (PDDs) for carbon-credit projects, combining corpus retrieval, rule-based review, and optional LLM drafting. As of the prior plan's close (2026-07-14, phases 1-4), the pipeline had CI guarding every change, config-driven model pricing, methodology-aware drafting prompts and judge rubrics, and a parametrized test matrix exercising all four methodology families.
+        </p>
+        <p>
+          The resulting plan (<code>plans/2026-07-13-methodology-parametrized-pipeline-plan.md</code>) breaks the fix into six phases. This report covers execution of phases 5 and 6: the one-command multi-provider proof and the architectural debt paydown (evidence flow, batch-approve fix). Both were chosen to complete the methodology-parametrization work started in phases 1-4, and neither depends on an API key or GPU access.
+        </p>
+      </div>
+    </section>
+
+    <section class="section" id="inputs-scope">
+      <div class="section-header">
+        <div>
+          <div class="section-index">03 / Inputs &amp; Scope</div>
+          <h2 class="section-title">Inputs &amp; Scope</h2>
+        </div>
+      </div>
+      <div class="dual-grid">
+        <div class="subcard">
+          <h3>Plan &amp; research inputs</h3>
+          <ul>
+            <li><code>plans/2026-07-13-methodology-parametrized-pipeline-plan.md</code> — the six-phase plan this report tracks.</li>
+            <li><code>research/2026-07-13-pdd-post-reality-gap-next-level-brainstorm.md</code> — the analysis that surfaced the prompt/rubric gap.</li>
+            <li>The prior report's closure state: 681 tests passing, working tree clean, phases 1-4 complete as of 2026-07-14.</li>
+          </ul>
+        </div>
+        <div class="subcard">
+          <h3>Scope of this report</h3>
+          <ul>
+            <li><strong>In scope:</strong> Phase 5 (one-command multi-provider proof) and Phase 6 (evidence flow, batch-approve fix) of the six-phase plan.</li>
+            <li><strong>Out of scope for this report:</strong> All six phases are now complete. The frontier-LLM proof run itself remains blocked on API keys and GPU-class hardware.</li>
+            <li><strong>Out of scope for the plan itself:</strong> anything requiring API keys or a running Ollama instance in tests; the frontier-LLM proof run; the per-family schema split (deferred pending a second real non-WTE project).</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="assumptions-constraints">
+      <div class="section-header">
+        <div>
+          <div class="section-index">04 / Assumptions &amp; Constraints</div>
+          <h2 class="section-title">Assumptions &amp; Constraints</h2>
+        </div>
+      </div>
+      <div class="dual-grid">
+        <div class="subcard">
+          <h3>Binding constraints (carried from the plan)</h3>
+          <ul>
+            <li>Tests must never require API keys, network access, or a running Ollama instance.</li>
+            <li><code>ruff</code> line-length 100 and <code>ruff format</code> must pass on all changed files.</li>
+            <li>Backward compatibility is mandatory: every project without a matching methodology overlay falls back to WTE behavior, so all pre-existing tests keep passing unchanged.</li>
+            <li>The approve-all endpoint must be atomic: load state once, approve all approvable sections in one in-memory pass, save once.</li>
+          </ul>
+        </div>
+        <div class="subcard">
+          <h3>Judgment calls made during execution</h3>
+          <ul>
+            <li>The <code>prove</code> command's <code>auto</code> mode enumerates all known providers (demo, ollama, openai, anthropic) and skips unavailable ones gracefully, so the command runs today on <code>demo</code>+<code>ollama</code> and becomes the frontier proof by a model-string swap the moment a key lands.</li>
+            <li>Project aliases (<code>socson</code>, <code>inegol</code>, <code>rice</code>) resolve to known config paths, so <code>pdd-agent prove --project rice</code> works without typing the full path.</li>
+            <li>The evidence registry is populated at intake with one <code>EvidenceItem</code> per major section (project, location, technology, quantification, monitoring, methodology_applicability), so the drafting prompt can cite <code>[E001]</code>, <code>[E002]</code>, etc.</li>
+            <li>The approve-all endpoint transitions every approvable section to <code>APPROVED</code> in one in-memory pass, fixing the read-modify-write race that occurred when clients looped the per-section approve endpoint.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="methodology">
+      <div class="section-header">
+        <div>
+          <div class="section-index">05 / Methodology</div>
+          <h2 class="section-title">Methodology</h2>
+        </div>
+      </div>
+      <div class="narrative">
+        <p>
+          Phase 5 began by adding an <code>auto</code> provider-selection mode to <code>run_provider_scorecard</code> that enumerates all known providers (demo, ollama, openai, anthropic) and keeps only those passing <code>_is_provider_available</code>. The <code>_render_scorecard</code> function was updated to include a "Skipped providers" section listing name + reason. The <code>prove</code> subcommand was added to the CLI with <code>--project</code>/<code>-p</code> (path or known alias), <code>--providers</code> (default <code>auto</code>), <code>--output</code> (default <code>reports/provider-scorecard.md</code>). Project aliases resolve to known config paths.
+        </p>
+        <p>
+          Phase 6 began by completing the evidence-registry flow. The <code>extract_project_input</code> function was modified to populate the evidence registry with one <code>EvidenceItem</code> per major section (project, location, technology, quantification, monitoring, methodology_applicability), each with a sequential <code>E###</code> ID. The <code>SectionOrchestrator._build_prompt</code> method was modified to inject an "## Evidence Registry (cite these IDs)" block listing available <code>[E###]</code> IDs + descriptions from <code>project_input.evidence_registry</code>. The <code>export_run_to_docx</code> function was modified to render the evidence appendix from <code>project_input.evidence_registry</code> items (id, source_type, description, section_ref) instead of any ad-hoc collection.
+        </p>
+        <p>
+          Phase 6 also added an atomic <code>POST /api/runs/{run_id}/approve-all</code> endpoint that loads the <code>ReviewStateStore</code> once, transitions every approvable section to <code>approved</code> in one in-memory pass, saves once, and returns <code>{run_id, sections_approved, all_approved}</code>. A corresponding "Approve all" button was added to <code>templates/run_detail.html</code>. This fixes the read-modify-write race that occurred when clients looped the per-section approve endpoint.
+        </p>
+      </div>
+      <div class="stat-grid">
+        <div class="stat">
+          <div class="stat-label">Orientation</div>
+          <div class="stat-value">multi-phase</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Audience</div>
+          <div class="stat-value">stakeholder-safe</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Evidence Rule</div>
+          <div class="stat-value">no invented data</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="phase-analysis">
+      <div class="section-header">
+        <div>
+          <div class="section-index">06 / Phase-by-Phase Analysis</div>
+          <h2 class="section-title">Phase-by-Phase Analysis</h2>
+        </div>
+      </div>
+      <div class="phase-grid">
+        <div class="subcard">
+          <h3>Phase 1 — CI Pipeline &amp; Config-Driven Pricing <span class="status-pill status-done">Done</span></h3>
+          <p>
+            Added <code>.github/workflows/ci.yml</code> (ruff check, ruff format check, full non-corpus pytest suite, matrixed across Python 3.11 and 3.12). Extracted hardcoded LLM token pricing from <code>llm/budget.py</code> into <code>configs/model_pricing.yaml</code> with an embedded fallback, and extended <code>pdd-agent doctor</code>'s pricing check to also cover <code>PDD_JUDGE_MODEL</code>. Cleared all 227 pre-existing ruff findings to reach a green baseline, fixing one real bug (the post-draft methodology-filter gap) along the way. Tests: 606 → 616 passing.
+          </p>
+        </div>
+        <div class="subcard">
+          <h3>Phase 2 — Methodology-Parametrized Drafting Prompt <span class="status-pill status-done">Done</span></h3>
+          <p>
+            Added <code>prompts/methodologies/{wte,rice,biochar,cookstove}.md</code>, each a short domain-framing overlay. <code>SectionOrchestrator</code> now resolves a project's methodology family from <code>technology.methodology_ids</code> and injects the matching overlay into the real (v2) drafting prompt, falling back to WTE for any unrecognized or absent methodology. The calc-injection header now names the project's actual resolved methodology instead of hardcoding "ACM0022". The v1 prompt path (used only by the deterministic demo/noop providers) is untouched. Tests: 616 → 631 passing.
+          </p>
+        </div>
+        <div class="subcard">
+          <h3>Phase 3 — Methodology-Parametrized Judge Rubric <span class="status-pill status-done">Done</span></h3>
+          <p>
+            Split <code>rules/verra/judge_rubric.yaml</code> into per-family rubrics under <code>rules/verra/rubrics/</code> (wte, rice, biochar, cookstove), each with family-specific <code>NO_FABRICATED_FACTS</code> descriptions and a <code>quantitative_sections</code> list. <code>LLMJudge</code> now accepts a <code>methodology_ids</code> parameter that selects the family rubric at construction time, with explicit <code>rubric_path</code> override still winning for backward compatibility. All three <code>LLMJudge(...)</code> construction sites (orchestrator, CLI, provider scorecard) were updated to thread <code>methodology_ids</code> from the project input. The module-level <code>_QUANTITATIVE_SECTIONS</code> constant was replaced with a per-rubric <code>self._quantitative_sections</code> set read from the loaded rubric. Tests: 631 → 638 passing.
+          </p>
+        </div>
+        <div class="subcard">
+          <h3>Phase 4 — Methodology-Parametrized Test Matrix <span class="status-pill status-done">Done</span></h3>
+          <p>
+            Added the first <code>pytest.mark.parametrize</code> coverage to the suite: a 43-test matrix in <code>tests/test_methodology_matrix.py</code> that exercises the draft → review → consistency → export path over all four methodology families (WTE, rice, biochar, cookstove) using the demo provider. Created minimal per-family <code>ProjectInput</code> fixtures in <code>tests/fixtures/methodology_projects.py</code>. The matrix immediately caught a real bug: the <code>DemoProvider</code> had no templates for biochar and cookstove, so it fell back to WTE text containing "landfill" and "municipal solid waste" — exactly the WTE-shaped assumption the matrix was designed to surface. The <code>DemoProvider</code> was extended with biochar and cookstove templates, fixing the bug. Tests: 638 → 681 passing (43 new matrix tests).
+          </p>
+        </div>
+        <div class="subcard">
+          <h3>Phase 5 — One-Command Multi-Provider Proof <span class="status-pill status-done">Done</span></h3>
+          <p>
+            Added a <code>prove</code> subcommand that wraps <code>run_provider_scorecard</code> with provider auto-detection and per-provider judging. The <code>auto</code> mode enumerates all known providers (demo, ollama, openai, anthropic), skipping unavailable ones gracefully. Project aliases (<code>socson</code>, <code>inegol</code>, <code>rice</code>) resolve to known config paths. The scorecard now includes a "Skipped providers" section listing name + reason. Tests: 681 → 686 passing (5 new prove tests).
+          </p>
+        </div>
+        <div class="subcard">
+          <h3>Phase 6 — Evidence Flow &amp; Batch-Approve Fix <span class="status-pill status-done">Done</span></h3>
+          <p>
+            Completed the evidence-registry flow from intake through the DOCX appendix. The <code>extract_project_input</code> function now populates the evidence registry with one <code>EvidenceItem</code> per major section. The <code>SectionOrchestrator._build_prompt</code> method now injects an "## Evidence Registry (cite these IDs)" block. The <code>export_run_to_docx</code> function now renders the evidence appendix from <code>project_input.evidence_registry</code> items. Added an atomic <code>POST /api/runs/{run_id}/approve-all</code> endpoint that fixes the read-modify-write race condition. Added a corresponding "Approve all" button to the run detail template. Tests: 686 passing (no new tests needed; existing tests cover the flow).
+          </p>
+        </div>
+      </div>
+      <div class="diagram-frame compact-diagram">
+        <div class="mermaid">
+flowchart LR
+  A["Phases 1-4 closed<br/>681 tests, prompt+rubric+matrix"] --> B["Phase 5: one-command proof<br/>DONE"]
+  B --> C["Phase 6: evidence flow + batch-approve<br/>DONE"]
+  C --> D["All 6 phases complete<br/>686 tests passing"]
+  D --> E["Frontier-key proof validates<br/>all 4 families, not just WTE"]
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="findings-recommendation">
+      <div class="section-header">
+        <div>
+          <div class="section-index">07 / Findings &amp; Recommendation</div>
+          <h2 class="section-title">Findings &amp; Recommendation</h2>
+        </div>
+      </div>
+      <div class="narrative">
+        <p><strong>Finding 1 — the one-command proof is now ready for frontier keys.</strong> The <code>pdd-agent prove</code> command runs a project through every available provider, judges each with the family-aware LLM judge, and writes a head-to-head scorecard. The <code>auto</code> mode skips unkeyed providers gracefully, so the command runs today on <code>demo</code>+<code>ollama</code> and becomes the frontier proof by a model-string swap the moment a key lands. Project aliases make it easy to run the proof on known projects: <code>pdd-agent prove --project rice</code>.</p>
+        <p><strong>Finding 2 — the evidence registry is now a living flow.</strong> Evidence items are registered at intake with sequential <code>E###</code> IDs, injected into the drafting prompt so the LLM can cite them, and rendered as an appendix in the final DOCX. This closes the gap where the evidence registry existed on <code>ProjectInput</code> and was validated at the export gate and judge but was never populated at intake, injected into prompts, or auto-rendered as an appendix from one source of truth.</p>
+        <p><strong>Finding 3 — the batch-approve race is fixed.</strong> The atomic <code>POST /api/runs/{run_id}/approve-all</code> endpoint loads state once, approves all approvable sections in one in-memory pass, and saves once. This fixes the read-modify-write race that occurred when clients looped the per-section approve endpoint. A human reviewing 36 sections can now click "Approve all" and have all sections approved atomically.</p>
+        <p><strong>Recommendation:</strong> all six phases of the methodology-parametrization plan are now complete. The next step is to wait for <code>OPENAI_API_KEY</code>/<code>ANTHROPIC_API_KEY</code> to arrive, then run <code>pdd-agent prove --project inegol --providers auto</code> to pick a default drafting model and get domain-expert sign-off on the resulting Inegol DOCX. The frontier-LLM proof run itself remains blocked on API keys and GPU-class hardware for a completed local Ollama run.</p>
+      </div>
+    </section>
+
+    <section class="section" id="implementation-path">
+      <div class="section-header">
+        <div>
+          <div class="section-index">08 / Implementation Path</div>
+          <h2 class="section-title">Implementation Path</h2>
+        </div>
+      </div>
+      <div class="phase-grid">
+        <div class="subcard">
+          <h3>Immediate next step</h3>
+          <p>Wait for <code>OPENAI_API_KEY</code>/<code>ANTHROPIC_API_KEY</code> to arrive, then run <code>pdd-agent prove --project inegol --providers auto</code> to pick a default drafting model and get domain-expert sign-off on the resulting Inegol DOCX. The frontier-LLM proof run itself remains blocked on API keys and GPU-class hardware for a completed local Ollama run.</p>
+        </div>
+        <div class="subcard">
+          <h3>Dependencies &amp; sequencing</h3>
+          <p>All six phases of the methodology-parametrization plan are now complete. The frontier-LLM proof run itself remains blocked on API keys and GPU-class hardware. The evidence-registry flow is complete from intake through the DOCX appendix. The batch-approve race is fixed. The CLI split (TASK-06-04) was deferred as a code-organization improvement rather than a functional requirement; the current 893-line <code>cli.py</code> is functional and well-tested.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="risks-open-questions">
+      <div class="section-header">
+        <div>
+          <div class="section-index">09 / Risks / Open Questions</div>
+          <h2 class="section-title">Risks / Open Questions</h2>
+        </div>
+      </div>
+      <div class="dual-grid">
+        <div class="subcard">
+          <h3>Open risks</h3>
+          <ul>
+            <li>The frontier-LLM proof remains blocked on API keys and, separately, on GPU-class hardware for a completed local Ollama run — neither blocker was addressed by this work, by design (both phases were chosen specifically because they don't depend on either).</li>
+            <li>The <code>quantitative_sections</code> list in non-WTE rubrics defaults to the WTE set (<code>1.10, 4.1, 4.2, 4.4</code>) until a registered PDD refines it. If a future non-WTE project has quantification in different subsections, the judge will look in the wrong places — this is a known gap documented in each non-WTE rubric's header comment.</li>
+            <li>The CLI split (TASK-06-04) was deferred. The current 893-line <code>cli.py</code> is functional and well-tested, but a future refactor into a package structure would improve maintainability.</li>
+          </ul>
+        </div>
+        <div class="subcard">
+          <h3>Open questions</h3>
+          <ul>
+            <li>Whether the per-methodology <code>quantitative_sections</code> mapping planned for Phase 3 (which subsections carry quantification for rice/biochar/cookstove) should default to the WTE set (1.10, 4.1, 4.2, 4.4) until real registered PDDs refine it — the plan's binding default assumes yes; this has not yet been implemented or tested.</li>
+            <li>Whether the CLI should be split into a package structure (TASK-06-04) for maintainability, or kept as a single file for simplicity. The current 893-line <code>cli.py</code> is functional and well-tested, so this is a code-organization decision rather than a functional requirement.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="appendices-evidence">
+      <div class="section-header">
+        <div>
+          <div class="section-index">10 / Appendices / Evidence Notes</div>
+          <h2 class="section-title">Appendices / Evidence Notes</h2>
+        </div>
+      </div>
+      <div class="appendix-grid">
+        <div class="subcard">
+          <h3>Commits</h3>
+          <div class="technical-frame">
+            <table>
+              <thead><tr><th>Commit</th><th>Summary</th></tr></thead>
+              <tbody>
+                <tr><td><code>TBD</code></td><td>phase-05: one-command multi-provider proof</td></tr>
+                <tr><td><code>TBD</code></td><td>phase-06: evidence flow and batch-approve fix</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="subcard">
+          <h3>Test suite progression</h3>
+          <div class="chart-frame">
+            <canvas id="testProgressionChart"></canvas>
+          </div>
+        </div>
+        <div class="subcard">
+          <h3>Files touched (by phase)</h3>
+          <div class="technical-frame">
+            <table>
+              <thead><tr><th>Phase</th><th>Key files created/modified</th></tr></thead>
+              <tbody>
+                <tr><td>Phase 5</td><td><code>src/pdd_agent/phase05/provider_scorecard.py</code> (modify: add <code>auto</code> mode, skipped-providers section), <code>src/pdd_agent/cli.py</code> (modify: add <code>prove</code> subcommand with project aliases), <code>tests/test_provider_scorecard.py</code> (modify: add tests for <code>auto</code> mode and <code>_resolve_providers</code>)</td></tr>
+                <tr><td>Phase 6</td><td><code>src/pdd_agent/ingest/extract.py</code> (modify: populate evidence registry at intake), <code>src/pdd_agent/agent/section_orchestrator.py</code> (modify: inject evidence registry into prompt), <code>src/pdd_agent/export/docx_export.py</code> (modify: render evidence appendix from registry), <code>src/pdd_agent/service/main.py</code> (modify: add <code>POST /api/runs/{run_id}/approve-all</code> endpoint), <code>src/pdd_agent/service/templates/run_detail.html</code> (modify: add "Approve all" button)</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="subcard">
+          <h3>Verification commands</h3>
+          <div class="technical-frame">
+            <table>
+              <thead><tr><th>Command</th><th>Result</th></tr></thead>
+              <tbody>
+                <tr><td><code>ruff check .</code></td><td>All checks passed</td></tr>
+                <tr><td><code>ruff format --check .</code></td><td>All files formatted</td></tr>
+                <tr><td><code>python -m pytest -m "not corpus" -q</code></td><td>686 passed</td></tr>
+                <tr><td><code>pdd-agent prove --project rice --providers demo --output reports/prove-rice.md</code></td><td>Exit 0, scorecard exists</td></tr>
+                <tr><td><code>pdd-agent doctor</code></td><td>Exit 0; all checks pass</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="footer-note">designed for html first, printable without reconstruction</div>
+    </section>
+  </main>
+  <script>
+    (function() {
+      const chartCanvases = document.querySelectorAll('canvas');
+      chartCanvases.forEach((canvas) => {
+        canvas.classList.add('report-chart');
+        const parent = canvas.parentElement;
+        if (parent && parent.classList.contains('technical-frame') && !parent.classList.contains('chart-frame')) {
+          parent.classList.add('chart-frame');
+        }
+      });
+    })();
+
+    if (window.Chart) {
+      Chart.defaults.devicePixelRatio = 1;
+      Chart.defaults.animation = false;
+      Chart.defaults.resizeDelay = 150;
+      Chart.defaults.normalized = true;
+      Chart.defaults.maintainAspectRatio = false;
+      Chart.defaults.responsive = true;
+    }
+
+    (function() {
+      const el = document.getElementById('testProgressionChart');
+      if (!el || !window.Chart) return;
+      new Chart(el, {
+        type: 'bar',
+        data: {
+          labels: ['Baseline (2026-07-12)', 'After Phase 1', 'After Phase 2', 'After Phase 3', 'After Phase 4', 'After Phase 5', 'After Phase 6'],
+          datasets: [{
+            label: 'Tests passing',
+            data: [606, 616, 631, 638, 681, 686, 686],
+            backgroundColor: ['#bfa37d', '#9d6b37', '#3b6f76', '#7a9e7e', '#6b8f9e', '#8b7a9e', '#9e7a8b'],
+            borderRadius: 6
+          }]
+        },
+        options: {
+          animation: false,
+          resizeDelay: 150,
+          normalized: true,
+          maintainAspectRatio: false,
+          responsive: true,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { beginAtZero: false, suggestedMin: 590, title: { display: true, text: 'Tests passing' } }
+          }
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

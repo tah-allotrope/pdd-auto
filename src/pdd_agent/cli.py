@@ -185,6 +185,39 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Skip judge scoring (drafting-only comparison)",
     )
 
+    _PROJECT_ALIASES = {
+        "socson": "configs/projects/demo_socson_like.yaml",
+        "inegol": "configs/projects/demo_socson_like.yaml",
+        "rice": "configs/projects/rice_vm0051_pilot.yaml",
+    }
+
+    prove_parser = sub.add_parser(
+        "prove",
+        help="Run a project through every available provider, judge each, "
+        "and write a head-to-head scorecard (skips unkeyed providers gracefully)",
+    )
+    prove_parser.add_argument(
+        "--project",
+        "-p",
+        required=True,
+        help="Path to ProjectInput YAML or alias: socson, inegol, rice",
+    )
+    prove_parser.add_argument(
+        "--providers",
+        default="auto",
+        help="Comma-separated provider names or 'auto' (default: auto)",
+    )
+    prove_parser.add_argument(
+        "--output",
+        default="reports/provider-scorecard.md",
+        help="Output markdown path (default: reports/provider-scorecard.md)",
+    )
+    prove_parser.add_argument(
+        "--no-judge",
+        action="store_true",
+        help="Skip judge scoring (drafting-only comparison)",
+    )
+
     demo_config_parser = sub.add_parser(
         "demo-config", help="Write the reproducible Soc Son-like demo ProjectInput"
     )
@@ -387,6 +420,7 @@ def main() -> int:
         "demo-config": lambda: _run_demo_config(args, log),
         "fetch-registry": lambda: _run_fetch_registry(args, log),
         "scorecard": lambda: _run_scorecard(args, log),
+        "prove": lambda: _run_prove(args, log),
         "benchmark": lambda: _run_benchmark(args, log),
         "fetch-workbook": lambda: _run_fetch_workbook(args, log),
         "map-spreadsheet": lambda: _run_map_spreadsheet(args, log),
@@ -639,6 +673,35 @@ def _run_scorecard(args, log) -> None:
         enable_judge=not args.no_judge,
     )
     log.info("scorecard_complete", output=str(output_path), providers=providers)
+
+
+def _run_prove(args, log) -> None:
+    from pdd_agent.phase05.provider_scorecard import run_provider_scorecard
+
+    project_aliases = {
+        "socson": "configs/projects/demo_socson_like.yaml",
+        "inegol": "configs/projects/demo_socson_like.yaml",
+        "rice": "configs/projects/rice_vm0051_pilot.yaml",
+    }
+    project_path = project_aliases.get(args.project.lower(), args.project)
+    input_path = Path(project_path)
+    if not input_path.exists():
+        log.error("prove_project_not_found", project=args.project, path=str(input_path))
+        raise SystemExit(1)
+
+    providers = [p.strip() for p in args.providers.split(",") if p.strip()]
+    output_path = run_provider_scorecard(
+        input_path=input_path,
+        providers=providers,
+        output_path=Path(args.output),
+        enable_judge=not args.no_judge,
+    )
+    log.info(
+        "prove_complete",
+        project=args.project,
+        output=str(output_path),
+        providers=providers,
+    )
 
 
 def _run_fetch_registry(args, log) -> None:

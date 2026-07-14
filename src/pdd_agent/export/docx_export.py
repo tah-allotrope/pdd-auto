@@ -287,6 +287,9 @@ def export_run_to_docx(
     if tbd_report:
         render_tbd_appendix(doc, tbd_report)
 
+    if project_input and getattr(project_input, "evidence_registry", None):
+        _add_evidence_appendix(doc, project_input.evidence_registry)
+
     _add_page_numbers(doc)
 
     final_output = Path(output_path) if output_path else effective_runs_dir / f"{run_id}.docx"
@@ -646,6 +649,38 @@ def render_tbd_appendix(doc: Any, tbd_report: dict[str, Any]) -> Any:
         doc,
         rows,
         widths=[Inches(1.0), Inches(1.5), Inches(2.5), Inches(2.1)],
+        header=True,
+        font_size=8.0,
+    )
+
+
+def _add_evidence_appendix(doc: Any, registry: Any) -> None:
+    """Render the evidence registry as an appendix table in the DOCX."""
+    Inches = _docx_attr("docx.shared", "Inches")
+    items = getattr(registry, "items", [])
+    if not items:
+        return
+
+    doc.add_page_break()
+    doc.add_heading("Appendix D - Evidence Registry", level=1)
+    doc.add_paragraph(
+        "The following evidence items were registered during project intake. "
+        "Each item is assigned a unique ID (E001, E002, ...) that can be cited "
+        "in the PDD draft using [E###] markers."
+    )
+
+    rows = [["ID", "Source type", "Description", "Section ref"]]
+    for item in items:
+        eid = getattr(item, "evidence_id", "?")
+        source_type = getattr(item, "source_type", "unknown")
+        description = getattr(item, "description", "")
+        section_ref = getattr(item, "section_ref", "-") or "-"
+        rows.append([eid, source_type, description, section_ref])
+
+    add_styled_table(
+        doc,
+        rows,
+        widths=[Inches(0.8), Inches(1.2), Inches(3.5), Inches(1.0)],
         header=True,
         font_size=8.0,
     )

@@ -124,10 +124,14 @@ def _parse_positive_float(value: str | None) -> float | None:
 
 
 def _render_scorecard(rows: list[ProviderScorecardRow], input_path: Path) -> str:
+    ran_rows = [r for r in rows if not r.skipped_reason]
+    skipped_rows = [r for r in rows if r.skipped_reason]
     lines = [
         "# Provider Scorecard",
         "",
         f"- Input: `{input_path}`",
+        f"- Providers ran: {len(ran_rows)}",
+        f"- Providers skipped: {len(skipped_rows)}",
         "",
         "| Provider | Sections drafted | Judge pass rate | Mean judge score | Redraft count | Total tokens | Est. cost (USD) | Wall clock (s) |",
         "|---|---:|---:|---:|---:|---:|---:|---:|",
@@ -142,7 +146,13 @@ def _render_scorecard(rows: list[ProviderScorecardRow], input_path: Path) -> str
             f"${row.estimated_cost_usd} | {row.wall_clock_seconds} |"
         )
     lines.append("")
-    for row in rows:
+    if skipped_rows:
+        lines.append("## Skipped providers")
+        lines.append("")
+        for row in skipped_rows:
+            lines.append(f"- **{row.provider}**: {row.skipped_reason}")
+        lines.append("")
+    for row in ran_rows:
         if row.findings:
             lines.append(f"## {row.provider} — critical findings")
             for finding in row.findings[:20]:
@@ -151,22 +161,37 @@ def _render_scorecard(rows: list[ProviderScorecardRow], input_path: Path) -> str
     return "\n".join(lines) + "\n"
 
 
+_ALL_PROVIDERS = ["demo", "ollama", "openai", "anthropic"]
+
+
+def _resolve_providers(providers: list[str] | str) -> list[str]:
+    """Resolve provider list; 'auto' expands to all known providers."""
+    if isinstance(providers, str):
+        providers = [p.strip() for p in providers.split(",") if p.strip()]
+    if providers == ["auto"] or providers == "auto":
+        return list(_ALL_PROVIDERS)
+    return providers
+
+
 def run_provider_scorecard(
     input_path: Path,
-    providers: list[str],
+    providers: list[str] | str,
     output_path: Path,
     enable_judge: bool = True,
 ) -> Path:
     """Run the same ProjectInput through each provider and write a scorecard.
 
     Providers without a configured API key are skipped with a logged warning
-    rather than raising. Returns output_path.
+    rather than raising. ``providers`` may be ``"auto"`` to enumerate all
+    known providers (demo, ollama, openai, anthropic), skipping unavailable
+    ones gracefully. Returns output_path.
     """
     with open(input_path, encoding="utf-8") as f:
         project_input = ProjectInput.model_validate(yaml.safe_load(f))
 
+    resolved = _resolve_providers(providers)
     rows: list[ProviderScorecardRow] = []
-    for provider_name in providers:
+    for provider_name in resolved:
         available, reason = _is_provider_available(provider_name)
         if not available:
             logger.warning("scorecard_provider_skipped", provider=provider_name, reason=reason)

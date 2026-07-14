@@ -47,6 +47,7 @@ def _family_slug_for(methodology_ids: list[str] | None) -> str:
     normalized = str(methodology_ids[0]).strip().upper()
     return _METHODOLOGY_FAMILY.get(normalized, _DEFAULT_FAMILY)
 
+
 # Judge model tiers (ASM-008): cheap tier for iteration, frontier tier for
 # sign-off runs, chosen by provider. Override with PDD_JUDGE_MODEL.
 _JUDGE_MODEL_TIER_DEFAULTS = {

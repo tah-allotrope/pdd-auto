@@ -647,6 +647,36 @@ def api_approve_section(run_id: str, section_key: str):
     return {"run_id": run_id, "section_key": section_key, "state": "approved"}
 
 
+@app.post("/api/runs/{run_id}/approve-all")
+def api_approve_all(run_id: str):
+    """Approve all sections atomically in a single load-modify-save pass.
+
+    This fixes the read-modify-write race that occurred when clients looped
+    the per-section approve endpoint. Loads state once, transitions every
+    approvable section to APPROVED in one in-memory pass, saves once.
+    """
+    run_data = _load_run_json(run_id)
+    store = _ensure_review_state_for_run(run_id, run_data)
+
+    sections_approved = 0
+    for key, section_state in store.sections.items():
+        if section_state.state.can_transition_to(ReviewState.APPROVED):
+            section_state.state = ReviewState.APPROVED
+            section_state.last_updated = datetime.now(timezone.utc).isoformat()
+            section_state.updated_by = "approve_all"
+            section_state.reviewer_notes.append("Approved via approve-all endpoint")
+            sections_approved += 1
+
+    store.updated_at = datetime.now(timezone.utc).isoformat()
+    _save_review_state(store)
+
+    return {
+        "run_id": run_id,
+        "sections_approved": sections_approved,
+        "all_approved": store.is_all_approved(),
+    }
+
+
 @app.post("/api/runs/{run_id}/sections/{section_key:path}/edit")
 def api_edit_section(
     run_id: str,
