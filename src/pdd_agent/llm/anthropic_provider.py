@@ -16,6 +16,13 @@ logger = structlog.get_logger()
 _MAX_RETRIES = 3
 _RETRY_BACKOFF_BASE = 2.0
 
+_DEFAULT_SYSTEM_PROMPT = (
+    "You are a technical writing assistant specializing in Verra VCS "
+    "carbon credit Project Design Documents for waste-to-energy projects. "
+    "Follow the prompt instructions exactly. Cite all sources using the "
+    "required citation format. Never fabricate data."
+)
+
 
 class AnthropicProviderError(Exception):
     """Raised when the Anthropic provider encounters a non-retryable error."""
@@ -32,10 +39,15 @@ class AnthropicProvider(BaseProvider):
         self._anthropic_module = None
         self._model = config.model_name or "claude-sonnet-5"
         self._budget = None
+        self._system_prompt = _DEFAULT_SYSTEM_PROMPT
 
     def set_budget(self, budget) -> None:
         """Attach a TokenBudget instance for per-run tracking."""
         self._budget = budget
+
+    def set_system_prompt(self, text: str) -> None:
+        """Override the system message used on every subsequent draft call."""
+        self._system_prompt = text
 
     def _get_client(self):
         if self._client is None:
@@ -81,12 +93,6 @@ class AnthropicProvider(BaseProvider):
     def _call_api(self, prompt: str, max_tokens: int) -> LLMResponse:
         """Call the Anthropic Messages API with retry logic."""
         client = self._get_client()
-        system_message = (
-            "You are a technical writing assistant specializing in Verra VCS "
-            "carbon credit Project Design Documents for waste-to-energy projects. "
-            "Follow the prompt instructions exactly. Cite all sources using the "
-            "required citation format. Never fabricate data."
-        )
         messages = [{"role": "user", "content": prompt}]
 
         last_error = None
@@ -100,7 +106,7 @@ class AnthropicProvider(BaseProvider):
                     max_tokens=max_tokens,
                     messages=messages,
                     temperature=self._config.temperature,
-                    system=system_message,
+                    system=self._system_prompt,
                 )
 
                 input_tokens = response.usage.input_tokens if response.usage else 0

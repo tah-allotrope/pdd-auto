@@ -173,6 +173,30 @@ class TestPromptOverlayDefaults:
         assert orchestrator._family_slug() == "wte"
 
 
+@pytest.mark.parametrize("family", FAMILIES)
+class TestFamilySystemPrompt:
+    """PHASE-03: a non-WTE draft must not receive the WTE system prompt."""
+
+    def test_system_prompt_matches_family_and_excludes_other_families(self, family):
+        from pdd_agent.agent.section_orchestrator import system_prompt_for
+
+        project = make_project_input(family)
+        prompt = system_prompt_for(project.technology.methodology_ids)
+
+        if family == "wte":
+            assert "waste-to-energy" in prompt
+        else:
+            assert "waste-to-energy" not in prompt
+
+        expected_descriptor = {
+            "wte": "waste-to-energy projects",
+            "rice": "rice cultivation (alternate wetting and drying) projects",
+            "biochar": "biochar carbon-removal projects",
+            "cookstove": "improved cookstove projects",
+        }[family]
+        assert expected_descriptor in prompt
+
+
 class TestEdgeCases:
     def test_judge_explicit_rubric_path_overrides_methodology(self, tmp_path):
         import shutil

@@ -32,7 +32,7 @@ _MAX_RETRIES = 3
 _RETRY_BACKOFF_BASE = 2.0
 _REQUEST_TIMEOUT_SECONDS = 120
 
-_SYSTEM_PROMPT = (
+_DEFAULT_SYSTEM_PROMPT = (
     "You are a technical writing assistant specializing in Verra VCS "
     "carbon credit Project Design Documents for waste-to-energy projects. "
     "Follow the prompt instructions exactly. Cite all sources using the "
@@ -54,10 +54,15 @@ class OllamaProvider(BaseProvider):
         self._model = config.model_name or "llama3.1:8b"
         self._base_url = (config.base_url or "http://localhost:11434").rstrip("/")
         self._budget = None
+        self._system_prompt = _DEFAULT_SYSTEM_PROMPT
 
     def set_budget(self, budget) -> None:
         """Attach a TokenBudget instance for per-run tracking."""
         self._budget = budget
+
+    def set_system_prompt(self, text: str) -> None:
+        """Override the system message used on every subsequent draft call."""
+        self._system_prompt = text
 
     def _call_api(self, prompt: str, max_tokens: int) -> LLMResponse:
         """Call Ollama's /api/chat endpoint with retry logic."""
@@ -65,7 +70,7 @@ class OllamaProvider(BaseProvider):
             {
                 "model": self._model,
                 "messages": [
-                    {"role": "system", "content": _SYSTEM_PROMPT},
+                    {"role": "system", "content": self._system_prompt},
                     {"role": "user", "content": prompt},
                 ],
                 "stream": False,

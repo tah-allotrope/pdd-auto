@@ -1,10 +1,12 @@
 """Tests for v2 prompt assembly, calc injection, and enhanced retrieval wiring."""
 
+import json
+import urllib.request
 from unittest.mock import MagicMock, patch
 from pathlib import Path
 
-from pdd_agent.agent.section_orchestrator import SectionOrchestrator
-from pdd_agent.llm.provider import NoopProvider, DemoProvider
+from pdd_agent.agent.section_orchestrator import SectionOrchestrator, system_prompt_for
+from pdd_agent.llm.provider import NoopProvider, DemoProvider, ModelConfig
 from pdd_agent.llm.budget import TokenBudget
 
 
@@ -554,3 +556,80 @@ def _minimal_project_dict():
         },
         "sustainable_development": {},
     }
+
+
+class TestSystemPromptFor:
+    """PHASE-03: family-aware system prompt shared by the three real providers."""
+
+    _WTE_GOLDEN = (
+        "You are a technical writing assistant specializing in Verra VCS "
+        "carbon credit Project Design Documents for waste-to-energy projects. "
+        "Follow the prompt instructions exactly. Cite all sources using the "
+        "required citation format. Never fabricate data."
+    )
+
+    def test_wte_is_byte_identical_to_prior_hardcoded_constant(self):
+        assert system_prompt_for(["ACM0022"]) == self._WTE_GOLDEN
+
+    def test_rice_contains_descriptor_and_not_wte(self):
+        prompt = system_prompt_for(["VM0051"])
+        assert "rice cultivation (alternate wetting and drying) projects" in prompt
+        assert "waste-to-energy" not in prompt
+
+    def test_biochar_and_cookstove_descriptors(self):
+        assert "biochar carbon-removal projects" in system_prompt_for(["VM0044"])
+        assert "improved cookstove projects" in system_prompt_for(["AMS-II.G"])
+
+    def test_none_empty_and_unknown_default_to_wte(self):
+        assert system_prompt_for(None) == self._WTE_GOLDEN
+        assert system_prompt_for([]) == self._WTE_GOLDEN
+        assert system_prompt_for(["UNKNOWN"]) == self._WTE_GOLDEN
+
+
+class TestOllamaProviderSystemPromptHook:
+    def test_default_then_custom_system_prompt(self):
+        from pdd_agent.llm.ollama_provider import OllamaProvider, _DEFAULT_SYSTEM_PROMPT
+
+        provider = OllamaProvider(ModelConfig(provider_name="ollama", model_name="m"))
+        captured = {}
+
+        class _FakeResponse:
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *args):
+                return False
+
+            def read(self):
+                return json.dumps({"message": {"content": "ok"}}).encode("utf-8")
+
+        def fake_urlopen(request, timeout=None):
+            captured["body"] = json.loads(request.data.decode("utf-8"))
+            return _FakeResponse()
+
+        with patch.object(urllib.request, "urlopen", side_effect=fake_urlopen):
+            provider.draft_section("1", "1.1", "p", [])
+            assert captured["body"]["messages"][0]["content"] == _DEFAULT_SYSTEM_PROMPT
+
+            provider.set_system_prompt("CUSTOM")
+            provider.draft_section("1", "1.1", "p", [])
+            assert captured["body"]["messages"][0]["content"] == "CUSTOM"
+
+
+class TestOrchestratorSystemPromptWiring:
+    def test_orchestrator_pushes_family_system_prompt_to_provider(self):
+        from tests.fixtures.methodology_projects import make_project_input
+
+        provider = MagicMock()
+        provider.name = "stub"
+        project = make_project_input("rice")
+
+        SectionOrchestrator(
+            provider=provider,
+            project_input=project,
+            token_budget=TokenBudget(),
+        )
+
+        provider.set_system_prompt.assert_called_once()
+        call_arg = provider.set_system_prompt.call_args[0][0]
+        assert "rice cultivation" in call_arg

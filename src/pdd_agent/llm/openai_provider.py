@@ -16,6 +16,13 @@ logger = structlog.get_logger()
 _MAX_RETRIES = 3
 _RETRY_BACKOFF_BASE = 2.0
 
+_DEFAULT_SYSTEM_PROMPT = (
+    "You are a technical writing assistant specializing in Verra VCS "
+    "carbon credit Project Design Documents for waste-to-energy projects. "
+    "Follow the prompt instructions exactly. Cite all sources using the "
+    "required citation format. Never fabricate data."
+)
+
 
 class OpenAIProviderError(Exception):
     """Raised when the OpenAI provider encounters a non-retryable error."""
@@ -31,10 +38,15 @@ class OpenAIProvider(BaseProvider):
         self._client = None
         self._model = config.model_name or "gpt-4o"
         self._budget = None
+        self._system_prompt = _DEFAULT_SYSTEM_PROMPT
 
     def set_budget(self, budget) -> None:
         """Attach a TokenBudget instance for per-run tracking."""
         self._budget = budget
+
+    def set_system_prompt(self, text: str) -> None:
+        """Override the system message used on every subsequent draft call."""
+        self._system_prompt = text
 
     def _get_client(self):
         if self._client is None:
@@ -60,15 +72,7 @@ class OpenAIProvider(BaseProvider):
 
         client = self._get_client()
         messages = [
-            {
-                "role": "system",
-                "content": (
-                    "You are a technical writing assistant specializing in Verra VCS "
-                    "carbon credit Project Design Documents for waste-to-energy projects. "
-                    "Follow the prompt instructions exactly. Cite all sources using the "
-                    "required citation format. Never fabricate data."
-                ),
-            },
+            {"role": "system", "content": self._system_prompt},
             {"role": "user", "content": prompt},
         ]
 

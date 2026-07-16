@@ -73,6 +73,38 @@ def family_slug_for(methodology_ids: Sequence[str] | None) -> str:
     return _METHODOLOGY_FAMILY.get(normalized, _DEFAULT_FAMILY)
 
 
+# Domain descriptor substituted into the shared system-prompt template below,
+# keyed by the same family slug family_slug_for() resolves. The "wte" entry
+# must stay exactly "waste-to-energy projects" — every real provider hardcoded
+# this system prompt verbatim before system_prompt_for() existed, and WTE
+# drafting behavior must stay byte-identical.
+_FAMILY_SYSTEM_DESCRIPTOR = {
+    "wte": "waste-to-energy projects",
+    "rice": "rice cultivation (alternate wetting and drying) projects",
+    "biochar": "biochar carbon-removal projects",
+    "cookstove": "improved cookstove projects",
+}
+
+
+def system_prompt_for(methodology_ids: Sequence[str] | None) -> str:
+    """Return the family-aware system prompt for the given methodology IDs.
+
+    Resolves the family via family_slug_for (first ID, uppercase-normalized;
+    unknown/empty/None defaults to "wte"), then substitutes that family's
+    domain descriptor into the shared template. The wte case is byte-
+    identical to the string every real provider (OpenAI, Anthropic, Ollama)
+    hardcoded before this function existed.
+    """
+    family = family_slug_for(methodology_ids)
+    descriptor = _FAMILY_SYSTEM_DESCRIPTOR.get(family, _FAMILY_SYSTEM_DESCRIPTOR[_DEFAULT_FAMILY])
+    return (
+        "You are a technical writing assistant specializing in Verra VCS "
+        f"carbon credit Project Design Documents for {descriptor}. "
+        "Follow the prompt instructions exactly. Cite all sources using the "
+        "required citation format. Never fabricate data."
+    )
+
+
 class SectionOrchestrator:
     """Orchestrates section-level retrieval, prompt assembly, and drafting."""
 
@@ -117,6 +149,12 @@ class SectionOrchestrator:
             self._provider.set_budget(self._budget)
         if hasattr(self._provider, "set_project_input"):
             self._provider.set_project_input(self._project)
+        if hasattr(self._provider, "set_system_prompt"):
+            self._provider.set_system_prompt(
+                system_prompt_for(
+                    self._project.technology.methodology_ids if self._project else None
+                )
+            )
 
     def _family_slug(self) -> str:
         """Resolve this project's methodology-family slug (see family_slug_for)."""
