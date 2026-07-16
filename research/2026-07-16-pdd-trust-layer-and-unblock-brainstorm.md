@@ -121,10 +121,10 @@ Report bet, unchanged from the July-13 analysis, as the post-proof strategic mov
 
 ### Track A — Repair and fortify the trust layer (started this session; finish in hours)
 
-- **A1. CI dependency fix + Linux-portability fixes — DONE.** Commit `c24d476` plus a follow-up
-  commit (this session) fixing the 11 Linux failures the unblocked suite surfaced. The first-ever
-  green CI run is pending observation at session close; the run URL and conclusion are reported
-  in the session summary.
+- **A1. CI dependency fix + Linux-portability fixes — DONE AND OBSERVED GREEN.** Commits
+  `c24d476` and `577c634` (this session). **CI run 29517028366 concluded `success` on both
+  Python 3.11 and 3.12 — the first green CI run in the project's history**
+  (https://github.com/tah-allotrope/pdd-auto/actions/runs/29517028366).
 - **A2. Make red CI impossible to miss.** Add the Actions status badge to `README.md`; enable
   branch protection on `main` requiring the `test` check; end every future plan's exit criteria
   with *observed* CI evidence (run URL + conclusion), not a local-equivalent command. A
