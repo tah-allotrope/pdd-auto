@@ -95,6 +95,20 @@ class TestTokenBudget:
         rec = budget.record("1.1", input_tokens=1000, output_tokens=500, model="gpt-4o")
         assert rec.cost_usd > 0
 
+    def test_claude_code_provider_prices_zero_even_for_unrecognized_model_alias(self):
+        """The CLI model alias (e.g. "sonnet") isn't a pricing key; without the
+        provider-aware fallback this would silently price at gpt-4o rates
+        instead of the subscription-billed $0 claude-code entry."""
+        budget = TokenBudget()
+        rec = budget.record(
+            "1.1",
+            input_tokens=1_000_000,
+            output_tokens=1_000_000,
+            model="sonnet",
+            provider="claude-code",
+        )
+        assert rec.cost_usd == 0.0
+
     def test_estimated_cost_usd(self):
         budget = TokenBudget()
         budget.record("1.1", input_tokens=100000, output_tokens=50000, model="gpt-4o")

@@ -184,6 +184,28 @@ def check_external_tools() -> list[tuple[str, str]]:
     return results
 
 
+def check_claude_cli() -> tuple[str, str]:
+    """Return ("OK", version) if the Claude Code CLI is installed, else ("WARN", ...).
+
+    The claude-code provider (keyless frontier drafting) needs this CLI on
+    PATH; its absence is never fatal since demo/noop/other providers remain
+    available.
+    """
+    path = shutil.which("claude")
+    if not path:
+        return ("WARN", "claude CLI not found on PATH — claude-code provider unavailable")
+    try:
+        proc = subprocess.run(["claude", "--version"], capture_output=True, text=True, timeout=10)
+        first_line = (
+            (proc.stdout or proc.stderr or "").splitlines()[0]
+            if (proc.stdout or proc.stderr)
+            else path
+        )
+        return ("OK", f"claude CLI: {first_line.strip()}")
+    except (OSError, subprocess.TimeoutExpired, IndexError):
+        return ("WARN", f"claude CLI found at {path} but version check failed")
+
+
 def check_retrieval_index(db_path: Path | None = None) -> tuple[str, str]:
     """Return ("OK", doc count) if the FTS5 index DB exists and is queryable."""
     import sqlite3
@@ -238,6 +260,7 @@ def run_doctor() -> int:
     all_results.extend(check_api_keys())
     all_results.append(check_ollama())
     all_results.extend(check_external_tools())
+    all_results.append(check_claude_cli())
     all_results.append(check_retrieval_index())
     all_results.append(check_model_pricing())
 

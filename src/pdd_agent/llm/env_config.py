@@ -20,6 +20,9 @@ def configure_provider_from_env(provider_name: str) -> None:
     - ``ollama``: always configures — local inference needs no API key.
       Reads ``OLLAMA_MODEL`` (default ``llama3.1:8b``) and
       ``OLLAMA_BASE_URL`` (default ``http://localhost:11434``).
+    - ``claude-code``: always configures — shells out to the local Claude
+      Code CLI, no API key needed. Reads ``CLAUDE_CODE_MODEL`` (default
+      ``sonnet``) and ``CLAUDE_CODE_MAX_TOKENS`` (default ``4000``).
     - Any other provider name: no-op.
     """
     if provider_name == "ollama":
@@ -29,6 +32,16 @@ def configure_provider_from_env(provider_name: str) -> None:
             base_url=os.environ.get("OLLAMA_BASE_URL", "http://localhost:11434"),
             max_tokens=int(os.environ.get("OLLAMA_MAX_TOKENS", "4000")),
             temperature=float(os.environ.get("OLLAMA_TEMPERATURE", "0.1")),
+        )
+        configure_provider(config)
+        return
+
+    if provider_name == "claude-code":
+        config = ModelConfig(
+            provider_name="claude-code",
+            model_name=os.environ.get("CLAUDE_CODE_MODEL", "sonnet"),
+            max_tokens=int(os.environ.get("CLAUDE_CODE_MAX_TOKENS", "4000")),
+            temperature=0.1,
         )
         configure_provider(config)
         return

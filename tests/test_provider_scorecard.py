@@ -53,6 +53,18 @@ class TestIsProviderAvailable:
     def test_unknown_provider_unavailable(self):
         assert _is_provider_available("mystery") == (False, "unknown_provider")
 
+    def test_claude_code_unavailable_without_cli(self, monkeypatch):
+        monkeypatch.setattr("pdd_agent.phase05.provider_scorecard.shutil.which", lambda name: None)
+        assert _is_provider_available("claude-code") == (False, "claude_cli_not_found")
+
+    def test_claude_code_available_with_cli_no_cost_ceiling_required(self, monkeypatch):
+        monkeypatch.delenv("PDD_MAX_COST_USD", raising=False)
+        monkeypatch.setattr(
+            "pdd_agent.phase05.provider_scorecard.shutil.which",
+            lambda name: "/usr/local/bin/claude",
+        )
+        assert _is_provider_available("claude-code") == (True, None)
+
 
 class TestSelectJudgeProvider:
     def test_no_other_candidate_falls_back_to_demo(self, monkeypatch):
@@ -216,10 +228,26 @@ class TestAutoModeScorecard:
     def test_auto_mode_skips_unkeyed_providers(self, tmp_path: Path, monkeypatch):
         monkeypatch.delenv("OPENAI_API_KEY", raising=False)
         monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+
+        def fake_availability(name):
+            # Force every provider this dev machine might genuinely have
+            # installed (Ollama, the Claude Code CLI) to "unavailable" so
+            # this test never depends on real local tool state — without
+            # this, a machine with `claude` on PATH would let "claude-code"
+            # leak into available_providers and get selected as a REAL
+            # cross-judge for the demo row, firing an actual (billed)
+            # `claude` subprocess call. This exact leak happened once.
+            if name in ("ollama", "claude-code"):
+                return False, f"no_{name.replace('-', '_')}"
+            return _is_provider_available(name)
+
         monkeypatch.setattr(
             "pdd_agent.phase05.provider_scorecard._is_provider_available",
-            lambda name: (False, "no_ollama") if name == "ollama" else _is_provider_available(name),
+            fake_availability,
         )
+        # Defense-in-depth: even if availability leaked, force the
+        # deterministic judge so no provider is ever cross-judged for real.
+        monkeypatch.setenv("PDD_JUDGE_PROVIDER", "demo")
         input_path = create_demo_project_input(tmp_path / "demo_project.yaml")
         output_path = tmp_path / "scorecard.md"
 

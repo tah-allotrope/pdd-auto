@@ -167,7 +167,12 @@ class TokenBudget:
     def _estimate_cost(
         self, input_tokens: int, output_tokens: int, model: str, provider: str = ""
     ) -> float:
-        fallback_key = "ollama-local" if provider == "ollama" else "gpt-4o"
+        # claude-code is billed via the operator's subscription, not a
+        # per-token API rate (ASM-007) — without this, its CLI model alias
+        # (e.g. "sonnet") wouldn't match a pricing key and would silently
+        # fall through to gpt-4o rates instead of $0.
+        _PROVIDER_FALLBACK_KEY = {"ollama": "ollama-local", "claude-code": "claude-code"}
+        fallback_key = _PROVIDER_FALLBACK_KEY.get(provider, "gpt-4o")
         pricing = _DEFAULT_PRICING.get(model, _DEFAULT_PRICING.get(fallback_key, {}))
         if not pricing:
             return 0.0

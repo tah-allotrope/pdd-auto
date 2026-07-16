@@ -12,6 +12,7 @@ aborting the whole scorecard.
 from __future__ import annotations
 
 import os
+import shutil
 import time
 import urllib.error
 import urllib.request
@@ -87,6 +88,13 @@ def _is_provider_available(provider_name: str) -> tuple[bool, str | None]:
         return True, None
     if provider_name == "ollama":
         return _probe_ollama_available()
+    if provider_name == "claude-code":
+        # Subscription-billed (ASM-007): no PDD_MAX_COST_USD gate, just
+        # presence of the CLI on PATH.
+        cli = os.environ.get("CLAUDE_CODE_CLI", "claude")
+        if shutil.which(cli) is None:
+            return False, "claude_cli_not_found"
+        return True, None
     if provider_name in ("openai", "anthropic"):
         if not os.environ.get(f"{provider_name.upper()}_API_KEY"):
             return False, "missing_api_key"
@@ -267,7 +275,7 @@ def _render_scorecard(
     return "\n".join(lines) + "\n"
 
 
-_ALL_PROVIDERS = ["demo", "ollama", "openai", "anthropic"]
+_ALL_PROVIDERS = ["demo", "ollama", "claude-code", "openai", "anthropic"]
 
 
 def _resolve_providers(providers: list[str] | str) -> list[str]:

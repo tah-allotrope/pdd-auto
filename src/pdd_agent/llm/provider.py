@@ -232,6 +232,10 @@ def configure_provider(config: ModelConfig) -> None:
         from pdd_agent.llm.ollama_provider import OllamaProvider
 
         registry.register("ollama", OllamaProvider(config))
+    elif config.provider_name == "claude-code":
+        from pdd_agent.llm.claude_code_provider import ClaudeCodeProvider
+
+        registry.register("claude-code", ClaudeCodeProvider(config))
     else:
         logger.warning("unknown_provider", name=config.provider_name)
 
