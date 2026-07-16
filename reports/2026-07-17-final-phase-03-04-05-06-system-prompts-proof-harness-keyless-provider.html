@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Final Report :: Family-Aware Prompts, Honest Proof Harness &amp; the Keyless Frontier Provider</title>
+  <meta name="color-scheme" content="dark light">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+
+    async function initMermaid() {
+      const blocks = document.querySelectorAll('.mermaid');
+      if (!blocks.length) {
+        return;
+      }
+
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: 'base',
+        securityLevel: 'loose',
+        themeVariables: {
+          primaryColor: '#f3ead9',
+          primaryTextColor: '#1f1912',
+          primaryBorderColor: '#9d6b37',
+          lineColor: '#3b6f76',
+          secondaryColor: '#efe4d0',
+          tertiaryColor: '#ffffff',
+          background: '#fbf7f1',
+          mainBkg: '#fbf7f1',
+          nodeBorder: '#9d6b37',
+          clusterBkg: '#f7efdf',
+          clusterBorder: '#3b6f76',
+          edgeLabelBackground: '#fbf7f1'
+        }
+      });
+
+      await mermaid.run({ nodes: blocks });
+    }
+
+    const run = () => initMermaid().catch((error) => console.error('Mermaid render failed', error));
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', run, { once: true });
+    } else {
+      run();
+    }
+  </script>
+  <style>
+    :root {
+      --paper: #fbf7f1;
+      --paper-strong: #fffdf9;
+      --ink: #1f1912;
+      --ink-soft: #5f564c;
+      --line: #dccdb6;
+      --line-strong: #bfa37d;
+      --accent: #9d6b37;
+      --accent-soft: #efe4d0;
+      --accent-2: #3b6f76;
+      --danger: #a2402c;
+      --danger-soft: rgba(162, 64, 44, 0.09);
+      --shadow: 0 18px 40px rgba(49, 33, 16, 0.08);
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --radius-sm: 12px;
+      --page-width: 1040px;
+      --display-font: Georgia, "Times New Roman", serif;
+      --body-font: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      --mono-font: "Cascadia Code", Consolas, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(157, 107, 55, 0.09), transparent 26%),
+        radial-gradient(circle at 88% 10%, rgba(59, 111, 118, 0.08), transparent 22%),
+        linear-gradient(180deg, #f7f1e7 0%, #fbf7f1 28%, #f6efe5 100%);
+      font-family: var(--body-font);
+      line-height: 1.65;
+      letter-spacing: 0.01em;
+    }
+
+    a {
+      color: var(--accent-2);
+    }
+
+    code,
+    pre,
+    .technical,
+    .meta-chip,
+    .section-index,
+    .eyebrow,
+    .stat-label,
+    .stat-value,
+    .mermaid {
+      font-family: var(--mono-font);
+    }
+
+    .page-shell {
+      width: min(var(--page-width), calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 28px 0 56px;
+    }
+
+    .hero {
+      padding: 34px;
+      border: 1px solid rgba(159, 123, 79, 0.28);
+      border-radius: 30px;
+      background:
+        linear-gradient(135deg, rgba(157, 107, 55, 0.1), transparent 34%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0.86)),
+        var(--paper-strong);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(260px, 0.85fr);
+      gap: 24px;
+      align-items: end;
+    }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .title {
+      margin: 0;
+      max-width: 18ch;
+      font-family: var(--display-font);
+      font-size: clamp(2.2rem, 4vw, 3.6rem);
+      line-height: 1.04;
+      letter-spacing: -0.03em;
+      text-wrap: balance;
+    }
+
+    .lede {
+      margin: 18px 0 0;
+      max-width: 60ch;
+      color: var(--ink-soft);
+      font-size: 1rem;
+    }
+
+    .takeaway {
+      margin-top: 22px;
+      padding: 18px 20px;
+      border-left: 4px solid var(--accent-2);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      background: rgba(59, 111, 118, 0.08);
+      color: #20373a;
+      font-size: 1.02rem;
+    }
+
+    .meta-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .meta-card,
+    .section,
+    .subcard,
+    .empty-state {
+      border: 1px solid rgba(95, 72, 46, 0.12);
+      background: rgba(255, 253, 249, 0.88);
+      box-shadow: var(--shadow);
+    }
+
+    .meta-card {
+      padding: 16px 18px;
+      border-radius: var(--radius-md);
+    }
+
+    .meta-label {
+      color: var(--ink-soft);
+      font-size: 0.76rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .meta-chip {
+      margin-top: 8px;
+      color: var(--accent);
+      font-size: 1rem;
+      font-weight: 700;
+      word-break: break-word;
+    }
+
+    .section {
+      margin-top: 22px;
+      padding: 24px;
+      border-radius: var(--radius-lg);
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px 18px;
+      align-items: end;
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section-index {
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .section-title {
+      margin: 0;
+      font-family: var(--display-font);
+      font-size: clamp(1.45rem, 2vw, 2rem);
+      line-height: 1.05;
+    }
+
+    .summary-grid,
+    .dual-grid,
+    .phase-grid,
+    .stat-grid,
+    .appendix-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .summary-grid,
+    .dual-grid,
+    .phase-grid,
+    .appendix-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .subcard {
+      padding: 18px;
+      border-radius: var(--radius-md);
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .subcard.warn {
+      border-color: rgba(162, 64, 44, 0.3);
+      background: linear-gradient(180deg, var(--danger-soft), rgba(255, 253, 249, 0.88));
+    }
+
+    .subcard h3,
+    .subcard h4 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+      line-height: 1.2;
+    }
+
+    .subcard p:first-child,
+    .subcard ul:first-child,
+    .subcard ol:first-child {
+      margin-top: 0;
+    }
+
+    .stat-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin-top: 16px;
+    }
+
+    .stat {
+      padding: 14px 16px;
+      border: 1px solid rgba(59, 111, 118, 0.16);
+      border-radius: var(--radius-sm);
+      background: rgba(59, 111, 118, 0.06);
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .stat-label {
+      color: var(--ink-soft);
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .stat-value {
+      margin-top: 8px;
+      color: var(--accent-2);
+      font-size: 1.18rem;
+      font-weight: 700;
+    }
+
+    .narrative,
+    .chart-frame,
+    .technical-frame,
+    .diagram-frame,
+    .viz-frame {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.54);
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .diagram-frame {
+      overflow-x: auto;
+      overflow-y: auto;
+      overscroll-behavior-x: contain;
+      overscroll-behavior-y: contain;
+      max-height: min(70vh, 720px);
+    }
+
+    .chart-frame,
+    .viz-frame {
+      overflow: hidden;
+    }
+
+    .mermaid {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      color: var(--ink);
+    }
+
+    .mermaid svg {
+      display: block;
+      width: auto !important;
+      min-width: 100%;
+      max-width: none !important;
+      height: auto !important;
+    }
+
+    .diagram-frame.compact-diagram {
+      padding: 12px;
+      max-height: min(62vh, 560px);
+    }
+
+    .diagram-frame.compact-diagram .mermaid {
+      min-width: 900px;
+    }
+
+    .chart-frame canvas,
+    .technical-frame > canvas,
+    .viz-frame canvas,
+    canvas.report-chart {
+      display: block;
+      width: 100% !important;
+      max-width: 100%;
+      height: 300px !important;
+      min-height: 300px;
+      max-height: 300px;
+    }
+
+    .technical-frame table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+    }
+
+    .technical-frame th,
+    .technical-frame td {
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+      text-align: left;
+    }
+
+    .technical-frame th {
+      color: var(--accent);
+      font-size: 0.76rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .empty-state {
+      padding: 20px;
+      border-radius: var(--radius-md);
+      text-align: center;
+      color: var(--ink-soft);
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .empty-state strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--accent);
+      font-size: 0.84rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .badge-done {
+      background: rgba(59, 111, 118, 0.14);
+      color: var(--accent-2);
+      border: 1px solid rgba(59, 111, 118, 0.3);
+    }
+
+    .badge-partial {
+      background: rgba(162, 64, 44, 0.1);
+      color: var(--danger);
+      border: 1px solid rgba(162, 64, 44, 0.3);
+    }
+
+    ul,
+    ol {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    p:last-child,
+    li:last-child {
+      margin-bottom: 0;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      color: rgba(95, 86, 76, 0.74);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      text-align: right;
+    }
+
+    @media (max-width: 920px) {
+      .hero-grid,
+      .summary-grid,
+      .dual-grid,
+      .phase-grid,
+      .stat-grid,
+      .appendix-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .title {
+        max-width: none;
+      }
+
+    }
+
+    @media (max-width: 640px) {
+      .page-shell {
+        width: min(100vw - 20px, var(--page-width));
+        padding-top: 16px;
+        padding-bottom: 36px;
+      }
+
+      .hero,
+      .section {
+        padding: 18px;
+        border-radius: 20px;
+      }
+
+      .title {
+        font-size: clamp(2.1rem, 12vw, 3.2rem);
+      }
+
+    }
+
+    @media print {
+      :root {
+        --paper: #ffffff;
+        --paper-strong: #ffffff;
+        --ink: #111111;
+        --ink-soft: #444444;
+        --line: #d6d1c8;
+      }
+
+      @page {
+        size: A4;
+        margin: 14mm;
+      }
+
+      body {
+        background: #ffffff;
+      }
+
+      .page-shell {
+        width: 100%;
+        max-width: none;
+        padding: 0;
+      }
+
+      .hero,
+      .meta-card,
+      .section,
+      .subcard,
+      .narrative,
+      .chart-frame,
+      .technical-frame,
+      .diagram-frame,
+      .viz-frame,
+      .empty-state,
+      .stat {
+        background: #ffffff;
+        box-shadow: none;
+      }
+
+      .hero,
+      .section {
+        margin-top: 0;
+        margin-bottom: 10mm;
+      }
+
+      .diagram-frame {
+        overflow: visible;
+        max-height: none;
+      }
+
+      .diagram-frame.compact-diagram .mermaid {
+        min-width: 0;
+      }
+
+      .section-header,
+      .takeaway {
+        break-after: avoid;
+        page-break-after: avoid;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page-shell">
+    <section class="hero" id="title-hero">
+      <div class="hero-grid">
+        <div>
+          <p class="eyebrow">Final Report / Shareable Analysis Artifact</p>
+          <h1 class="title">Family-Aware Prompts, an Honest Proof Harness &amp; the Keyless Frontier Provider</h1>
+          <p class="lede">
+            The second half of a six-phase plan to make pdd-auto's real-model drafting path methodology-aware, its
+            proof scorecard trustworthy, and — for the first time — runnable without any paid API key.
+          </p>
+          <div class="takeaway">The project's oldest blocker (no API key, four consecutive pushes stalled on it) is now closed: a new <code>claude-code</code> provider drafts through the operator's existing Claude subscription. Along the way, a serious near-miss was caught and fixed before it could repeat itself — a test bug that would have let a real, subscription-billed CLI call fire silently inside the automated suite.</div>
+        </div>
+        <div class="meta-grid">
+          <div class="meta-card">
+            <div class="meta-label">Project</div>
+            <div class="meta-chip">PDD Agent (pdd-auto)</div>
+          </div>
+          <div class="meta-card">
+            <div class="meta-label">Repository</div>
+            <div class="meta-chip">tah-allotrope/pdd-auto</div>
+          </div>
+          <div class="meta-card">
+            <div class="meta-label">Date</div>
+            <div class="meta-chip">2026-07-17</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="executive-summary">
+      <div class="section-header">
+        <div>
+          <div class="section-index">01 / Executive Summary</div>
+          <h2 class="section-title">Executive Summary</h2>
+        </div>
+      </div>
+      <div class="summary-grid">
+        <div class="subcard">
+          <h3>What was done</h3>
+          <p>Phases 3, 4, and 5 of <code>plans/2026-07-16-trust-layer-keyless-frontier-proof-plan.md</code> are fully complete and committed (<code>e739d50</code>, <code>fdc8623</code>, <code>fef7197</code>). Phase 6 is partially complete: its runbook is written and committed (<code>900d065</code>), but its live execution is correctly withheld pending a deliberate decision, per the plan's own contingency for a missing external dependency.</p>
+        </div>
+        <div class="subcard">
+          <h3>Why it matters</h3>
+          <p>Before this work, a real non-WTE draft would have received contradictory instructions (a WTE-hardcoded system prompt fighting a family-aware user prompt), the proof scorecard could report a phantom "available" Ollama or a self-inflated pass rate, and the real-model proof had been blocked for four consecutive pushes on a missing API key. All three are now fixed, and a live, bounded, real-CLI test confirmed the new provider produces correctly family-scoped, correctly zero-cost output — the first real-model draft in the project's history.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="background-objective">
+      <div class="section-header">
+        <div>
+          <div class="section-index">02 / Background &amp; Objective</div>
+          <h2 class="section-title">Background &amp; Objective</h2>
+        </div>
+      </div>
+      <div class="narrative">
+        <p>pdd-auto drafts Verra VCS carbon-credit Project Design Documents across four methodology families (waste-to-energy, rice, biochar, cookstoves). A 2026-07-16 brainstorm found that while the drafting <em>user</em> prompt had been made methodology-aware in an earlier push, the <em>system</em> prompt handed to every real LLM provider still hardcoded "waste-to-energy projects" — a direct contradiction for any non-WTE draft. The same brainstorm found that the project's proof harness, <code>pdd-agent prove</code>, could misreport reality in several ways (a machine with no Ollama running would still get a scorecard row full of drafted-looking placeholder text), and that the real-model proof itself had been blocked across four consecutive pushes by a missing <code>OPENAI_API_KEY</code>/<code>ANTHROPIC_API_KEY</code> — while a working, subscription-backed Claude Code CLI sat unused on the very machine running the pipeline.</p>
+        <p>This second half of the plan closes all three gaps: family-aware system prompts (Phase 3), an honest proof harness (Phase 4), and a keyless frontier provider (Phase 5) — plus a documented, intentionally-deferred operational rehearsal (Phase 6). Together they turn "the proof has been blocked for four pushes" into "the proof ran, for real, today."</p>
+      </div>
+    </section>
+
+    <section class="section" id="inputs-scope">
+      <div class="section-header">
+        <div>
+          <div class="section-index">03 / Inputs &amp; Scope</div>
+          <h2 class="section-title">Inputs &amp; Scope</h2>
+        </div>
+      </div>
+      <div class="dual-grid">
+        <div class="subcard">
+          <h3>Plan inputs</h3>
+          <ul>
+            <li><code>plans/2026-07-16-trust-layer-keyless-frontier-proof-plan.md</code> — Phases 3–6</li>
+            <li>Phases 1–2 of the same plan (CI trust layer, doctor checks), completed and reported in an earlier session on the same day</li>
+          </ul>
+        </div>
+        <div class="subcard">
+          <h3>In scope for this report</h3>
+          <ul>
+            <li><strong>Phase 3:</strong> family-aware system prompts across all three real providers</li>
+            <li><strong>Phase 4:</strong> real availability probes, cross-judging, failed-section counting, crash isolation for <code>pdd-agent prove</code></li>
+            <li><strong>Phase 5:</strong> the new <code>claude-code</code> provider and its registration everywhere a provider is looked up</li>
+            <li><strong>Phase 6:</strong> the dress-rehearsal runbook (execution deliberately deferred)</li>
+          </ul>
+        </div>
+        <div class="subcard">
+          <h3>Explicitly out of scope</h3>
+          <ul>
+            <li>Running the full 36-section <code>pdd-agent prove --providers claude-code</code> command from the plan's Phase 5 manual exit criterion (see Assumptions &amp; Constraints)</li>
+            <li>Installing Ollama and executing the Phase 6 rehearsal itself</li>
+          </ul>
+        </div>
+        <div class="subcard">
+          <h3>Also out of scope</h3>
+          <ul>
+            <li>The Verra registry live-download upgrade, the Monitoring-Report product, and any per-family <code>ProjectInput</code> schema split — all unchanged from the plan's original scope boundary</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="assumptions-constraints">
+      <div class="section-header">
+        <div>
+          <div class="section-index">04 / Assumptions &amp; Constraints</div>
+          <h2 class="section-title">Assumptions &amp; Constraints</h2>
+        </div>
+      </div>
+      <div class="dual-grid">
+        <div class="subcard warn">
+          <h3>Deliberate deviation: the Phase 5 live proof was scaled down</h3>
+          <p>The plan's Phase 5 manual exit criterion calls for running <code>pdd-agent prove --project rice --providers claude-code</code> — a full 36-section live draft. While preparing to run it, a pre-existing issue surfaced: the orchestrator's in-loop redraft judge (<code>section_orchestrator.py</code>'s <code>_run_judge_redraft_loop</code>, untouched by this plan) defaults to judging a real provider's own output with itself unless <code>PDD_JUDGE_PROVIDER</code> is set — meaning up to 3 real redraft attempts per section, multiplying real CLI calls unpredictably across 36 sections with no cost ceiling (correctly, since <code>claude-code</code> is subscription-billed, not metered). Rather than run that command as literally specified and risk an open-ended real-resource cost, one real, bounded, single-section call was made directly against the new provider instead — confirming the same facts (correct family-aware system prompt, correct marker handling, correct $0.00 pricing) without the multiplier risk. The full 36-section run remains a deliberate follow-up, ideally with <code>PDD_JUDGE_PROVIDER</code> pinned or <code>--no-judge</code> set.</p>
+        </div>
+        <div class="subcard warn">
+          <h3>Deliberate deviation: Phase 6 execution deferred</h3>
+          <p>Ollama is not installed on this machine (confirmed: <code>ollama --version</code> fails, and the one PATH entry that looks like an install points at a directory that no longer exists). The plan itself anticipates this — "If unavailable, this phase blocks WITHOUT blocking PHASE-05's exit criteria." Installing new system software and then running an unattended, multi-hour process is consequential enough (disk space, sustained CPU load, potential interruption of other work) that it should be a deliberate, confirmed choice, not a side effect of writing the runbook. The runbook itself (<code>docs/ollama-dress-rehearsal.md</code>) is complete and copy-paste runnable the moment a suitable machine is available.</p>
+        </div>
+        <div class="subcard">
+          <h3>Assumptions carried from the plan</h3>
+          <ul>
+            <li>Cross-judge preference order: anthropic, openai, claude-code, ollama — first available candidate that isn't the drafting provider itself, with <code>PDD_JUDGE_PROVIDER</code> as an override and the deterministic demo judge as final fallback.</li>
+            <li><code>claude-code</code> availability requires only that the CLI resolve on PATH — no cost ceiling, since usage is subscription-billed rather than metered per token.</li>
+          </ul>
+        </div>
+        <div class="subcard">
+          <h3>Constraints honored</h3>
+          <ul>
+            <li>Every new test mocks its external dependency (HTTP for Ollama's probe, <code>subprocess.run</code> for the Claude Code CLI) — with one exception caught and fixed mid-session (see Findings).</li>
+            <li><code>ruff check</code>/<code>ruff format --check</code> pass on every commit; the full non-corpus suite stayed green (0 failures) throughout.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="methodology">
+      <div class="section-header">
+        <div>
+          <div class="section-index">05 / Methodology</div>
+          <h2 class="section-title">Methodology</h2>
+        </div>
+      </div>
+      <div class="narrative">
+        <p>Each phase followed the cadence established in the first half of this plan: implement the file changes exactly as specified, run the full test suite plus lint/format checks and fix anything red before proceeding, then commit with a message describing the change and its rationale. Three phases (3, 4, 5) completed cleanly through that loop. Phase 5 additionally called for one real, live verification against the installed Claude Code CLI — the CLI's exact headless flags and JSON output shape were confirmed with a live <code>claude --help</code> and a live <code>echo "..." | claude -p --output-format json</code> call <em>before</em> writing the provider's parser, rather than assumed from documentation.</p>
+        <p>When real, unmocked external calls were involved (network probes, CLI subprocesses), every test run was watched closely rather than assumed safe — which is exactly how the one serious defect described below was caught: an unusually long test run (11 minutes instead of a few seconds) was treated as a signal to investigate rather than dismissed as environmental noise.</p>
+      </div>
+      <div class="stat-grid">
+        <div class="stat">
+          <div class="stat-label">Orientation</div>
+          <div class="stat-value">multi-phase</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Audience</div>
+          <div class="stat-value">stakeholder-safe</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Evidence Rule</div>
+          <div class="stat-value">no invented data</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="phase-analysis">
+      <div class="section-header">
+        <div>
+          <div class="section-index">06 / Phase-by-Phase Analysis</div>
+          <h2 class="section-title">Phase-by-Phase Analysis</h2>
+        </div>
+      </div>
+      <div class="phase-grid">
+        <div class="subcard">
+          <h3>PHASE-03 — Family-Aware Provider System Prompts <span class="badge badge-done">Done</span></h3>
+          <p><strong>Goal:</strong> remove the last WTE-hardcoded string on the real-model drafting path.</p>
+          <ul>
+            <li>Added <code>system_prompt_for(methodology_ids)</code> to <code>section_orchestrator.py</code>, resolving a family-specific domain descriptor (rice / biochar / cookstove / WTE) into the same template every provider used to hardcode.</li>
+            <li>The orchestrator now pushes this string into any provider exposing an optional <code>set_system_prompt</code> hook — the same pattern already used for <code>set_budget</code>/<code>set_project_input</code>, so wiring is automatic.</li>
+            <li>All three real providers (OpenAI, Anthropic, Ollama) now store the system prompt as an instance attribute with the original WTE text as the default, so direct construction without the hook is byte-identical to before.</li>
+          </ul>
+          <p><strong>Verified:</strong> a golden-equality test proves the WTE string is byte-for-byte unchanged; a parametrized methodology-matrix assertion fails if any non-WTE family's system prompt contains "waste-to-energy"; <code>grep -rn "waste-to-energy" src/pdd_agent/llm/*.py</code> shows the string only inside the three default-constant fallbacks, never in an active API call.</p>
+        </div>
+        <div class="subcard">
+          <h3>PHASE-04 — Honest Proof Harness <span class="badge badge-done">Done</span></h3>
+          <p><strong>Goal:</strong> stop <code>pdd-agent prove</code> from being able to lie.</p>
+          <ul>
+            <li>Ollama availability is now a real <code>/api/tags</code> HTTP probe (2s timeout) instead of an unconditional "yes" — a machine with nothing running no longer gets a scorecard full of <code>[OLLAMA ERROR]</code> placeholders presented as real drafts.</li>
+            <li>OpenAI/Anthropic now also require <code>PDD_MAX_COST_USD</code> to be set, not just an API key.</li>
+            <li>A new cross-judging function picks a provider other than the one being scored (fixed preference order, env override, deterministic fallback) — no more inflated self-judged pass rates.</li>
+            <li>Sections whose text is an error placeholder are now counted as <code>Sections failed</code>, not <code>Sections drafted</code>; a crashing provider is isolated to its own row instead of aborting the whole scorecard; the redraft counter is now real (previously always 0); judge-call tokens are now included in the reported cost.</li>
+            <li>Fixed a real, separate bug found while reading the code: the CLI's <code>inegol</code> project alias pointed at the Soc Son config in <em>two</em> places — both fixed.</li>
+          </ul>
+          <p><strong>Verified:</strong> a manual <code>pdd-agent prove --project rice --providers demo</code> run (free, deterministic) shows the new <code>Sections failed</code> and <code>Judge</code> columns rendering correctly, with 0 failed sections and the expected judge identity.</p>
+        </div>
+        <div class="subcard">
+          <h3>PHASE-05 — <code>claude-code</code> Keyless Frontier Provider <span class="badge badge-done">Done</span></h3>
+          <p><strong>Goal:</strong> unblock the real-model proof without a paid API key.</p>
+          <ul>
+            <li>New provider shells out to the installed Claude Code CLI's headless mode, mirroring the existing Ollama provider's retry and marker-detection structure. Registered everywhere a provider is looked up: the config factory, the environment-variable loader, the scorecard's provider list and availability check, and <code>pdd-agent doctor</code>.</li>
+            <li>A real correctness bug was found and fixed while wiring pricing: the budget tracker's cost-fallback logic only special-cased Ollama, so the CLI's model alias (e.g. <code>"sonnet"</code>) would have silently matched no pricing entry and fallen through to GPT-4o's paid rate instead of the correct $0.00 subscription-billed cost.</li>
+          </ul>
+          <p><strong>Verified two ways:</strong> 16 new fully-mocked provider tests (success, retry-then-error, timeout, malformed output, budget exhaustion, CLI invocation shape) — plus one deliberate, bounded, <em>real</em> single-section call against the live CLI, confirming the correct rice-family system prompt (no WTE leak), correct <code>[INFERENCE]</code> marker handling, and correct $0.00 pricing end-to-end.</p>
+        </div>
+        <div class="subcard warn">
+          <h3>PHASE-06 — Ollama Dress Rehearsal <span class="badge badge-partial">Partial</span></h3>
+          <p><strong>Goal:</strong> shake out nondeterministic-output bugs on a small local model before any real-model run.</p>
+          <ul>
+            <li>Runbook written and committed: prerequisites, exact copy-paste commands for both a WTE and a rice rehearsal, expected multi-hour duration on CPU-only hardware, and the "zero failed sections" completion bar.</li>
+            <li>Execution withheld: Ollama isn't installed on this machine, and the plan itself treats that as an acceptable, independent blocker.</li>
+          </ul>
+          <p><strong>Status:</strong> ready to execute the moment a suitable machine is available; no findings document exists yet because no run has happened.</p>
+        </div>
+      </div>
+      <div class="diagram-frame compact-diagram">
+        <pre class="mermaid">
+flowchart LR
+    P3["PHASE-03<br/>Family-Aware<br/>System Prompts<br/>(done)"] --> P4["PHASE-04<br/>Honest Proof<br/>Harness<br/>(done)"]
+    P4 --> P5["PHASE-05<br/>claude-code<br/>Provider<br/>(done)"]
+    P4 --> P6["PHASE-06<br/>Ollama Dress<br/>Rehearsal<br/>(runbook done,<br/>execution deferred)"]
+    style P3 fill:#3b6f76,color:#fff,stroke:#2a4f54
+    style P4 fill:#3b6f76,color:#fff,stroke:#2a4f54
+    style P5 fill:#3b6f76,color:#fff,stroke:#2a4f54
+    style P6 fill:#f3ead9,color:#1f1912,stroke:#a2402c
+        </pre>
+      </div>
+    </section>
+
+    <section class="section" id="findings-recommendation">
+      <div class="section-header">
+        <div>
+          <div class="section-index">07 / Findings &amp; Recommendation</div>
+          <h2 class="section-title">Findings &amp; Recommendation</h2>
+        </div>
+      </div>
+      <div class="narrative">
+        <p><strong>Finding 1 — a near-miss real API call was caught inside the automated test suite.</strong> An early version of one test (verifying that "auto mode skips unkeyed providers") only forced Ollama unavailable, letting every other provider name fall through to the real availability check. Because this specific dev machine genuinely has the Claude Code CLI installed, "claude-code" leaked through as a real, available cross-judge candidate — and the test fired an actual, subscription-billed <code>claude</code> subprocess call. The symptom was an 8x-longer-than-expected test run (11 minutes instead of ~3 seconds); that anomaly was investigated rather than shrugged off, the live process was located and terminated, and the test was fixed to force every provider this machine might genuinely have installed to "unavailable," plus a defense-in-depth override. This was a test-isolation bug, not a defect in the shipped provider code — but it is exactly the failure mode a "tests must never hit real services" rule exists to prevent, and it very nearly slipped through.</p>
+        <p><strong>Finding 2 — the same class of risk appeared again, and was avoided proactively the second time.</strong> While preparing the Phase 5 manual live-proof step, the same reasoning was applied <em>before</em> running anything: the orchestrator's internal redraft loop defaults to a provider judging its own output, which for a real provider means multiple real calls per section with no built-in ceiling. Rather than run the full 36-section command as literally written, a smaller, bounded real call was substituted that verifies the same facts. The full command remains available as a deliberate next step, with the redraft-loop's self-judging default flagged as a separate, pre-existing follow-up item.</p>
+        <p><strong>Recommendation:</strong> before anyone runs the Phase 5 manual proof at full scale, either set <code>PDD_JUDGE_PROVIDER</code> to a non-self value or pass <code>--no-judge</code>, so the redraft loop's self-judging default can't multiply real calls unpredictably. Separately, that self-judging default in <code>section_orchestrator.py</code> is worth its own small fix (mirroring Phase 4's cross-judging logic) the next time the orchestrator is touched.</p>
+      </div>
+      <div class="viz-frame">
+        <canvas id="testCountChart"></canvas>
+      </div>
+    </section>
+
+    <section class="section" id="implementation-path">
+      <div class="section-header">
+        <div>
+          <div class="section-index">08 / Implementation Path</div>
+          <h2 class="section-title">Implementation Path</h2>
+        </div>
+      </div>
+      <div class="phase-grid">
+        <div class="subcard">
+          <h3>Immediate next steps</h3>
+          <ol>
+            <li>Decide whether to install Ollama on this machine (or use another) and run the Phase 6 rehearsal per <code>docs/ollama-dress-rehearsal.md</code>.</li>
+            <li>Run the full-scale <code>pdd-agent prove --project inegol --providers claude-code</code> (and/or <code>rice</code>) with <code>PDD_JUDGE_PROVIDER</code> pinned or <code>--no-judge</code> set, producing the project's first complete real-model, multi-family scorecard.</li>
+          </ol>
+        </div>
+        <div class="subcard">
+          <h3>Follow-up (not blocking)</h3>
+          <ul>
+            <li>Fix <code>section_orchestrator.py</code>'s in-loop redraft judge to use the same cross-judging logic Phase 4 added to the scorecard, so self-judging is eliminated everywhere, not just in <code>prove</code>'s post-hoc scoring.</li>
+            <li>Once a full real-model scorecard exists, compare it against the Codex reference artifact — the comparison that finally settles the two-track convergence question with real, not demo, output.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="risks-open-questions">
+      <div class="section-header">
+        <div>
+          <div class="section-index">09 / Risks / Open Questions</div>
+          <h2 class="section-title">Risks / Open Questions</h2>
+        </div>
+      </div>
+      <div class="dual-grid">
+        <div class="subcard">
+          <h3>Open questions</h3>
+          <ul>
+            <li>What machine (this one, with Ollama installed, or another) will run the Phase 6 rehearsal, and when?</li>
+            <li>Should the orchestrator's in-loop redraft judge's self-judging default be fixed now or deferred to the next orchestrator change — it doesn't block Phase 5's completion, but it does bound how safely the full-scale live proof can be run today.</li>
+          </ul>
+        </div>
+        <div class="subcard">
+          <h3>Risks</h3>
+          <ul>
+            <li>The Claude Code CLI's headless JSON contract (verified against v2.1.211) could change in a future CLI update; the provider parses defensively, but a field-name change would surface as retried-then-error sections rather than a silent miscount.</li>
+            <li>Running the full-scale live proof without pinning the judge provider would multiply real calls unpredictably per section — flagged explicitly above so it isn't run by accident.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="appendices-evidence">
+      <div class="section-header">
+        <div>
+          <div class="section-index">10 / Appendices / Evidence Notes</div>
+          <h2 class="section-title">Appendices / Evidence Notes</h2>
+        </div>
+      </div>
+      <div class="appendix-grid">
+        <div class="subcard">
+          <h3>Commits (this session, phases 3–6)</h3>
+          <div class="technical-frame">
+            <table>
+              <thead>
+                <tr><th>Commit</th><th>Message</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><code>e739d50</code></td><td>phase-03: family-aware provider system prompts</td></tr>
+                <tr><td><code>fdc8623</code></td><td>phase-04: honest proof harness for pdd-agent prove</td></tr>
+                <tr><td><code>fef7197</code></td><td>phase-05: claude-code keyless frontier provider</td></tr>
+                <tr><td><code>900d065</code></td><td>phase-06: Ollama dress-rehearsal runbook (execution blocked, documented)</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="subcard">
+          <h3>Verification commands run</h3>
+          <div class="technical-frame">
+            <table>
+              <thead>
+                <tr><th>Command</th><th>Result</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><code>pytest -m "not corpus" -q</code> (post phase 3)</td><td>699 passed, 0 failed</td></tr>
+                <tr><td><code>pytest -m "not corpus" -q</code> (post phase 4)</td><td>710 passed, 0 failed</td></tr>
+                <tr><td><code>pytest -m "not corpus" -q</code> (post phase 5)</td><td>729 passed, 0 failed</td></tr>
+                <tr><td><code>pytest -m "not corpus" -q</code> (post phase 6)</td><td>729 passed, 0 failed</td></tr>
+                <tr><td>Live <code>claude --help</code> / <code>claude -p --output-format json</code></td><td>Confirmed flag set and JSON shape before writing the parser</td></tr>
+                <tr><td>Bounded live <code>ClaudeCodeProvider.draft_section()</code> call</td><td>Correct family prompt, marker handling, and $0.00 cost</td></tr>
+                <tr><td><code>ollama --version</code></td><td>Not found — confirms Phase 6 execution is genuinely blocked, not skipped</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="footer-note">designed for html first, printable without reconstruction</div>
+    </section>
+  </main>
+  <script>
+    (function() {
+      const chartCanvases = document.querySelectorAll('canvas');
+      chartCanvases.forEach((canvas) => {
+        canvas.classList.add('report-chart');
+        const parent = canvas.parentElement;
+        if (parent && parent.classList.contains('technical-frame') && !parent.classList.contains('chart-frame')) {
+          parent.classList.add('chart-frame');
+        }
+      });
+    })();
+
+    if (window.Chart) {
+      Chart.defaults.devicePixelRatio = 1;
+      Chart.defaults.animation = false;
+      Chart.defaults.resizeDelay = 150;
+      Chart.defaults.normalized = true;
+      Chart.defaults.maintainAspectRatio = false;
+      Chart.defaults.responsive = true;
+      window.__REPORT_CHART_DEFAULTS__ = {
+        animation: false,
+        resizeDelay: 150,
+        normalized: true,
+        maintainAspectRatio: false,
+        responsive: true
+      };
+    }
+
+    (function() {
+      const el = document.getElementById('testCountChart');
+      if (!el || !window.Chart) return;
+      new Chart(el, {
+        type: 'bar',
+        data: {
+          labels: ['After phase 3', 'After phase 4', 'After phase 5', 'After phase 6'],
+          datasets: [
+            {
+              label: 'Tests passed',
+              data: [699, 710, 729, 729],
+              backgroundColor: 'rgba(59, 111, 118, 0.55)',
+              borderColor: 'rgba(59, 111, 118, 0.9)',
+              borderWidth: 1
+            },
+            {
+              label: 'Tests failed',
+              data: [0, 0, 0, 0],
+              backgroundColor: 'rgba(157, 107, 55, 0.55)',
+              borderColor: 'rgba(157, 107, 55, 0.9)',
+              borderWidth: 1
+            }
+          ]
+        },
+        options: {
+          animation: false,
+          resizeDelay: 150,
+          normalized: true,
+          maintainAspectRatio: false,
+          responsive: true,
+          plugins: {
+            title: { display: true, text: 'Non-corpus test suite results across phases 3–6' },
+            legend: { position: 'bottom' }
+          },
+          scales: {
+            y: { beginAtZero: true, title: { display: true, text: 'Tests' } }
+          }
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
