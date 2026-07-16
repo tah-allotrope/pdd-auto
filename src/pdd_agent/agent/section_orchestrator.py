@@ -144,6 +144,7 @@ class SectionOrchestrator:
         self._use_v2_prompt = self._should_use_v2()
         self._enable_judge = enable_judge
         self._max_redraft_attempts = max(0, max_redraft_attempts)
+        self.redraft_count: int = 0
 
         if hasattr(self._provider, "set_budget"):
             self._provider.set_budget(self._budget)
@@ -732,6 +733,7 @@ class SectionOrchestrator:
                 attempt=attempt,
                 critical_count=len(critical),
             )
+            self.redraft_count += 1
             current_draft = self._provider.draft_section(
                 section_id=section_id,
                 sub_section_id=sub_section_id or "",

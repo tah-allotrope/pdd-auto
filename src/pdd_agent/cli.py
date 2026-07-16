@@ -187,7 +187,7 @@ def _build_parser() -> argparse.ArgumentParser:
 
     _PROJECT_ALIASES = {
         "socson": "configs/projects/demo_socson_like.yaml",
-        "inegol": "configs/projects/demo_socson_like.yaml",
+        "inegol": "configs/demo/inegol_project_input.yaml",
         "rice": "configs/projects/rice_vm0051_pilot.yaml",
     }
 
@@ -680,7 +680,7 @@ def _run_prove(args, log) -> None:
 
     project_aliases = {
         "socson": "configs/projects/demo_socson_like.yaml",
-        "inegol": "configs/projects/demo_socson_like.yaml",
+        "inegol": "configs/demo/inegol_project_input.yaml",
         "rice": "configs/projects/rice_vm0051_pilot.yaml",
     }
     project_path = project_aliases.get(args.project.lower(), args.project)

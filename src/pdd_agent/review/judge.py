@@ -19,6 +19,7 @@ from typing import Any
 import structlog
 import yaml
 
+from pdd_agent.llm.budget import TokenBudget
 from pdd_agent.llm.provider import DraftRun, DraftSection, get_provider_registry
 
 logger = structlog.get_logger()
@@ -96,6 +97,9 @@ class LLMJudge:
             intentionally off by default until API-backed judge prompts are tuned.
         model_name: Override judge model name.
         methodology_ids: Project methodology IDs for family-aware rubric selection.
+        token_budget: When given, attached to the judge's provider (if it
+            supports ``set_budget``) so judge-call tokens are recorded in the
+            same budget as drafting, instead of being excluded from run cost.
     """
 
     def __init__(
@@ -106,6 +110,7 @@ class LLMJudge:
         use_llm: bool = False,
         model_name: str | None = None,
         methodology_ids: list[str] | None = None,
+        token_budget: TokenBudget | None = None,
     ) -> None:
         self.provider_name = provider_name
         self._methodology_ids = methodology_ids
@@ -116,6 +121,8 @@ class LLMJudge:
         self.model_name = self._resolve_model_name(model_name, provider_name)
         self._criteria = {c["id"]: c for c in self.rubric["criteria"]}
         self._provider = get_provider_registry().get(provider_name)
+        if token_budget is not None and hasattr(self._provider, "set_budget"):
+            self._provider.set_budget(token_budget)
         self._quantitative_sections = self._resolve_quantitative_sections()
 
     @staticmethod
