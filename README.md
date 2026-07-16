@@ -1,6 +1,8 @@
 # PDD Agent — Agentic Low-Cost WTE Carbon-Credit PDD Drafting Tool
 
-**Status:** 544 tests pass. Pipeline skeleton is mature: corpus RAG, rule-based review, VCS v4.4 DOCX export, LLM-judge + capped redraft loop, a local FastAPI section-review service, and calc engines for ACM0022, AMS-II.G, VM0051, and VM0044. Real LLM providers (OpenAI, Anthropic, Ollama) are implemented; live drafting runs are pending API keys (Ollama runs today with no key required — see `pdd-agent doctor`). All demo/benchmark output to date uses the deterministic `demo`/`noop` providers.
+[![CI](https://github.com/tah-allotrope/pdd-auto/actions/workflows/ci.yml/badge.svg)](https://github.com/tah-allotrope/pdd-auto/actions/workflows/ci.yml)
+
+**Status:** 686 tests collected (679 run, 7 corpus-marked deselected), green under CI on Python 3.11/3.12. Pipeline skeleton is mature: corpus RAG, rule-based review, VCS v4.4 DOCX export, LLM-judge + capped redraft loop, a local FastAPI section-review service, and calc engines for ACM0022, AMS-II.G, VM0051, and VM0044. Real LLM providers (OpenAI, Anthropic, Ollama) are implemented; live drafting runs are pending API keys (Ollama runs today with no key required — see `pdd-agent doctor`). All demo/benchmark output to date uses the deterministic `demo`/`noop` providers.
 
 **Demo Quickstart:** Want to see it working in 5 minutes? → [QUICKSTART.md](QUICKSTART.md)
 
@@ -85,6 +87,7 @@ pdd-agent upload --run-id <run-id>
 | `pdd-agent fetch-workbook` | Cache the Vietnam WTE workbook under `data/source_inputs/spreadsheets/` |
 | `pdd-agent map-spreadsheet` | Profile the workbook and generate Vietnam ProjectInput + assumptions artifacts |
 | `pdd-agent run-vietnam-pdd` | Run the full Vietnam spreadsheet-to-review-package workflow |
+| `pdd-agent prove` | Run a project through every available provider, judge each, write a head-to-head scorecard |
 
 ## Example Output
 
@@ -316,8 +319,8 @@ src/pdd_agent/
 ## Known Gaps
 
 - `python-docx` is declared in `pyproject.toml`, but local environments still need it installed before DOCX export works at runtime; the exporter now fails with a clear install message instead of skipping silently
-- Real LLM providers (OpenAI, Anthropic) are implemented but have never executed a live drafting run — `OPENAI_API_KEY`/`ANTHROPIC_API_KEY` are not available in the current environment. Every demo/benchmark artifact produced so far uses the deterministic `DemoProvider` (client-demo output) or `NoopProvider` (reviewer-facing placeholder draft). The `OllamaProvider` is currently a stub (registered but returns placeholder text, not a real local-model call) — see `plans/2026-07-12-pdd-reality-gap-plan.md` PHASE-02 for the fix in progress.
-- The LLM-judge (`review/judge.py`) defaults to deterministic rule-based scoring; the `use_llm=True` path is a thin interface stub, not a tuned judge prompt.
+- Real LLM providers (OpenAI, Anthropic) are implemented but have never executed a live drafting run — `OPENAI_API_KEY`/`ANTHROPIC_API_KEY` are not available in the current environment. Every demo/benchmark artifact produced so far uses the deterministic `DemoProvider` (client-demo output) or `NoopProvider` (reviewer-facing placeholder draft).
+- The LLM-judge (`review/judge.py`) defaults to deterministic rule-based scoring; the use_llm=True judge prompt has not yet been calibrated against real model output.
 - The `reports/demo-packages/` client-demo path is implemented — `python scripts/run_demo.py` publishes a readable synthetic DOCX with zero placeholders, aligned quantification, and a strong synthetic disclosure
 - The first benchmark is a workflow proof on one Soc Son-like case; a second project is still needed before claiming broader WTE coverage
 - The Soc Son spreadsheet mapper intentionally blocks review-sensitive quantitative splits, coordinates, and safeguards fields when they rely on synthetic assumptions

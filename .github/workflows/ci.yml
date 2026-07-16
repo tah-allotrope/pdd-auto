@@ -29,3 +29,21 @@ jobs:
 
       - name: Test suite (non-corpus)
         run: python -m pytest -m "not corpus" -q
+
+  lock-reproducibility:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.11"
+
+      - name: Lockfile is current
+        run: uv lock --check
+
+      - name: Locked install
+        run: uv sync --locked --all-extras
+
+      - name: Test suite (non-corpus, locked env)
+        run: uv run python -m pytest -m "not corpus" -q
