@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import threading
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
@@ -59,8 +60,13 @@ class TestThreadSafety:
 
     def test_each_thread_gets_its_own_connection(self, built_index: RetrievalIndex):
         lock_free_ids: list[int] = []
+        # Hold all four tasks at a barrier so the pool cannot reuse a fast
+        # worker thread for two tasks (which would legitimately yield the same
+        # thread-local connection twice and break the distinctness assertion).
+        barrier = threading.Barrier(4)
 
         def record_conn_id() -> None:
+            barrier.wait(timeout=10)
             conn = built_index._open()
             lock_free_ids.append(id(conn))
 

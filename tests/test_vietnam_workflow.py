@@ -358,9 +358,7 @@ def test_run_vietnam_pdd_workflow_writes_phase05_reports(tmp_path: Path):
     )
     validation_text = artifacts.validation_report_path.read_text(encoding="utf-8")
     assert "Workflow Outcome" in validation_text
-    assert (
-        "reports\\review-packages\\soc-son-test-project\\viet-run\\viet-run.docx" in validation_text
-    )
+    assert "reports/review-packages/soc-son-test-project/viet-run/viet-run.docx" in validation_text
     assert "python scripts/run_vietnam_pdd.py" in artifacts.runbook_path.read_text(encoding="utf-8")
 
 

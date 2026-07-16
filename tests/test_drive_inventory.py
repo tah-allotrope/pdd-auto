@@ -85,8 +85,9 @@ class TestBuildEntry:
 
 
 class TestDriveInventory:
+    @patch("pdd_agent.ingest.drive._check_gws_available")
     @patch("subprocess.run")
-    def test_inventory_writes_manifest(self, mock_run, tmp_path):
+    def test_inventory_writes_manifest(self, mock_run, _mock_gws_check, tmp_path):
         mock_run.return_value = MagicMock(
             returncode=0,
             stdout=json.dumps(
@@ -125,8 +126,9 @@ class TestDriveInventory:
         first_entry = json.loads(lines[0])
         assert first_entry["id"] == "file1"
 
+    @patch("pdd_agent.ingest.drive._check_gws_available")
     @patch("subprocess.run")
-    def test_dry_run_does_not_write(self, mock_run, tmp_path):
+    def test_dry_run_does_not_write(self, mock_run, _mock_gws_check, tmp_path):
         mock_run.return_value = MagicMock(
             returncode=0,
             stdout=json.dumps({"files": []}),

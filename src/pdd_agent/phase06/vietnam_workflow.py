@@ -189,7 +189,7 @@ def write_validation_report(
         f"- Draft run JSON: `{Path(review_summary['draft_run_path'])}`",
         f"- Review state JSON: `{Path(review_summary['review_state_path'])}`",
         f"- Assumption burden report: `{Path(review_summary['assumption_burden_path'])}`",
-        f"- DOCX draft: `{Path(docx_path)}`",
+        f"- DOCX draft: `{Path(docx_path).as_posix()}`",
         "",
         "## Workflow Outcome",
         "",

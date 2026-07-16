@@ -221,6 +221,16 @@ def _apply_schema_defaults(data: dict[str, Any]) -> dict[str, Any]:
     return data
 
 
+def _is_existing_path(source: str) -> bool:
+    """True if the string names an existing file. Raw document text passed as a
+    string can exceed the OS filename limit, where ``Path.exists()`` raises
+    ``OSError`` (e.g. ENAMETOOLONG on Linux) instead of returning False."""
+    try:
+        return Path(source).exists()
+    except (OSError, ValueError):
+        return False
+
+
 def extract_project_input(
     source: str | Path,
     provider: BaseProvider,
@@ -242,7 +252,7 @@ def extract_project_input(
     """
     source_path: str | None = None
 
-    if isinstance(source, Path) or (isinstance(source, str) and Path(source).exists()):
+    if isinstance(source, Path) or (isinstance(source, str) and _is_existing_path(source)):
         path = Path(source)
         if not path.exists():
             raise ExtractionError(f"File not found: {path}")
