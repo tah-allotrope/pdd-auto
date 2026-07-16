@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Final Report :: Trust-Layer Hardening — Phases 1–2 (CI Trust Layer &amp; Doctor Checks)</title>
+  <meta name="color-scheme" content="dark light">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+
+    async function initMermaid() {
+      const blocks = document.querySelectorAll('.mermaid');
+      if (!blocks.length) {
+        return;
+      }
+
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: 'base',
+        securityLevel: 'loose',
+        themeVariables: {
+          primaryColor: '#f3ead9',
+          primaryTextColor: '#1f1912',
+          primaryBorderColor: '#9d6b37',
+          lineColor: '#3b6f76',
+          secondaryColor: '#efe4d0',
+          tertiaryColor: '#ffffff',
+          background: '#fbf7f1',
+          mainBkg: '#fbf7f1',
+          nodeBorder: '#9d6b37',
+          clusterBkg: '#f7efdf',
+          clusterBorder: '#3b6f76',
+          edgeLabelBackground: '#fbf7f1'
+        }
+      });
+
+      await mermaid.run({ nodes: blocks });
+    }
+
+    const run = () => initMermaid().catch((error) => console.error('Mermaid render failed', error));
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', run, { once: true });
+    } else {
+      run();
+    }
+  </script>
+  <style>
+    :root {
+      --paper: #fbf7f1;
+      --paper-strong: #fffdf9;
+      --ink: #1f1912;
+      --ink-soft: #5f564c;
+      --line: #dccdb6;
+      --line-strong: #bfa37d;
+      --accent: #9d6b37;
+      --accent-soft: #efe4d0;
+      --accent-2: #3b6f76;
+      --shadow: 0 18px 40px rgba(49, 33, 16, 0.08);
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --radius-sm: 12px;
+      --page-width: 1040px;
+      --display-font: Georgia, "Times New Roman", serif;
+      --body-font: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      --mono-font: "Cascadia Code", Consolas, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(157, 107, 55, 0.09), transparent 26%),
+        radial-gradient(circle at 88% 10%, rgba(59, 111, 118, 0.08), transparent 22%),
+        linear-gradient(180deg, #f7f1e7 0%, #fbf7f1 28%, #f6efe5 100%);
+      font-family: var(--body-font);
+      line-height: 1.65;
+      letter-spacing: 0.01em;
+    }
+
+    a {
+      color: var(--accent-2);
+    }
+
+    code,
+    pre,
+    .technical,
+    .meta-chip,
+    .section-index,
+    .eyebrow,
+    .stat-label,
+    .stat-value,
+    .mermaid {
+      font-family: var(--mono-font);
+    }
+
+    .page-shell {
+      width: min(var(--page-width), calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 28px 0 56px;
+    }
+
+    .hero {
+      padding: 34px;
+      border: 1px solid rgba(159, 123, 79, 0.28);
+      border-radius: 30px;
+      background:
+        linear-gradient(135deg, rgba(157, 107, 55, 0.1), transparent 34%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0.86)),
+        var(--paper-strong);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(260px, 0.85fr);
+      gap: 24px;
+      align-items: end;
+    }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .title {
+      margin: 0;
+      max-width: 16ch;
+      font-family: var(--display-font);
+      font-size: clamp(2.4rem, 4.4vw, 4rem);
+      line-height: 1.02;
+      letter-spacing: -0.03em;
+      text-wrap: balance;
+    }
+
+    .lede {
+      margin: 18px 0 0;
+      max-width: 60ch;
+      color: var(--ink-soft);
+      font-size: 1rem;
+    }
+
+    .takeaway {
+      margin-top: 22px;
+      padding: 18px 20px;
+      border-left: 4px solid var(--accent-2);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      background: rgba(59, 111, 118, 0.08);
+      color: #20373a;
+      font-size: 1.02rem;
+    }
+
+    .meta-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .meta-card,
+    .section,
+    .subcard,
+    .empty-state {
+      border: 1px solid rgba(95, 72, 46, 0.12);
+      background: rgba(255, 253, 249, 0.88);
+      box-shadow: var(--shadow);
+    }
+
+    .meta-card {
+      padding: 16px 18px;
+      border-radius: var(--radius-md);
+    }
+
+    .meta-label {
+      color: var(--ink-soft);
+      font-size: 0.76rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .meta-chip {
+      margin-top: 8px;
+      color: var(--accent);
+      font-size: 1rem;
+      font-weight: 700;
+      word-break: break-word;
+    }
+
+    .section {
+      margin-top: 22px;
+      padding: 24px;
+      border-radius: var(--radius-lg);
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px 18px;
+      align-items: end;
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section-index {
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .section-title {
+      margin: 0;
+      font-family: var(--display-font);
+      font-size: clamp(1.45rem, 2vw, 2rem);
+      line-height: 1.05;
+    }
+
+    .summary-grid,
+    .dual-grid,
+    .phase-grid,
+    .stat-grid,
+    .appendix-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .summary-grid,
+    .dual-grid,
+    .phase-grid,
+    .appendix-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .subcard {
+      padding: 18px;
+      border-radius: var(--radius-md);
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .subcard h3,
+    .subcard h4 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+      line-height: 1.2;
+    }
+
+    .subcard p:first-child,
+    .subcard ul:first-child,
+    .subcard ol:first-child {
+      margin-top: 0;
+    }
+
+    .stat-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin-top: 16px;
+    }
+
+    .stat {
+      padding: 14px 16px;
+      border: 1px solid rgba(59, 111, 118, 0.16);
+      border-radius: var(--radius-sm);
+      background: rgba(59, 111, 118, 0.06);
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .stat-label {
+      color: var(--ink-soft);
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .stat-value {
+      margin-top: 8px;
+      color: var(--accent-2);
+      font-size: 1.18rem;
+      font-weight: 700;
+    }
+
+    .narrative,
+    .chart-frame,
+    .technical-frame,
+    .diagram-frame,
+    .viz-frame {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.54);
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .diagram-frame {
+      overflow-x: auto;
+      overflow-y: auto;
+      overscroll-behavior-x: contain;
+      overscroll-behavior-y: contain;
+      max-height: min(70vh, 720px);
+    }
+
+    .chart-frame,
+    .viz-frame {
+      overflow: hidden;
+    }
+
+    .mermaid {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      color: var(--ink);
+    }
+
+    .mermaid svg {
+      display: block;
+      width: auto !important;
+      min-width: 100%;
+      max-width: none !important;
+      height: auto !important;
+    }
+
+    .diagram-frame.compact-diagram {
+      padding: 12px;
+      max-height: min(62vh, 560px);
+    }
+
+    .diagram-frame.compact-diagram .mermaid {
+      min-width: 900px;
+    }
+
+    .chart-frame canvas,
+    .technical-frame > canvas,
+    .viz-frame canvas,
+    canvas.report-chart {
+      display: block;
+      width: 100% !important;
+      max-width: 100%;
+      height: 300px !important;
+      min-height: 300px;
+      max-height: 300px;
+    }
+
+    .technical-frame table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+    }
+
+    .technical-frame th,
+    .technical-frame td {
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+      text-align: left;
+    }
+
+    .technical-frame th {
+      color: var(--accent);
+      font-size: 0.76rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .empty-state {
+      padding: 20px;
+      border-radius: var(--radius-md);
+      text-align: center;
+      color: var(--ink-soft);
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .empty-state strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--accent);
+      font-size: 0.84rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .badge-done {
+      background: rgba(59, 111, 118, 0.14);
+      color: var(--accent-2);
+      border: 1px solid rgba(59, 111, 118, 0.3);
+    }
+
+    .badge-pending {
+      background: rgba(157, 107, 55, 0.1);
+      color: var(--accent);
+      border: 1px solid rgba(157, 107, 55, 0.28);
+    }
+
+    ul,
+    ol {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    p:last-child,
+    li:last-child {
+      margin-bottom: 0;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      color: rgba(95, 86, 76, 0.74);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      text-align: right;
+    }
+
+    @media (max-width: 920px) {
+      .hero-grid,
+      .summary-grid,
+      .dual-grid,
+      .phase-grid,
+      .stat-grid,
+      .appendix-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .title {
+        max-width: none;
+      }
+
+    }
+
+    @media (max-width: 640px) {
+      .page-shell {
+        width: min(100vw - 20px, var(--page-width));
+        padding-top: 16px;
+        padding-bottom: 36px;
+      }
+
+      .hero,
+      .section {
+        padding: 18px;
+        border-radius: 20px;
+      }
+
+      .title {
+        font-size: clamp(2.1rem, 12vw, 3.2rem);
+      }
+
+    }
+
+    @media print {
+      :root {
+        --paper: #ffffff;
+        --paper-strong: #ffffff;
+        --ink: #111111;
+        --ink-soft: #444444;
+        --line: #d6d1c8;
+      }
+
+      @page {
+        size: A4;
+        margin: 14mm;
+      }
+
+      body {
+        background: #ffffff;
+      }
+
+      .page-shell {
+        width: 100%;
+        max-width: none;
+        padding: 0;
+      }
+
+      .hero,
+      .meta-card,
+      .section,
+      .subcard,
+      .narrative,
+      .chart-frame,
+      .technical-frame,
+      .diagram-frame,
+      .viz-frame,
+      .empty-state,
+      .stat {
+        background: #ffffff;
+        box-shadow: none;
+      }
+
+      .hero,
+      .section {
+        margin-top: 0;
+        margin-bottom: 10mm;
+      }
+
+      .diagram-frame {
+        overflow: visible;
+        max-height: none;
+      }
+
+      .diagram-frame.compact-diagram .mermaid {
+        min-width: 0;
+      }
+
+      .section-header,
+      .takeaway {
+        break-after: avoid;
+        page-break-after: avoid;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page-shell">
+    <section class="hero" id="title-hero">
+      <div class="hero-grid">
+        <div>
+          <p class="eyebrow">Final Report / Shareable Analysis Artifact</p>
+          <h1 class="title">Trust-Layer Hardening: Phases 1–2</h1>
+          <p class="lede">
+            A presentation-ready synthesis of the first two phases of a six-phase plan to make pdd-auto's CI, environment diagnostics, and proof harness trustworthy again — and to add a keyless path to a frontier drafting model.
+          </p>
+          <div class="takeaway">CI has been red since its own creation, unnoticed for three days. Phases 1–2 make that failure mode structurally harder to repeat: a visible badge, branch protection, a lockfile-enforcing CI job, and three new `pdd-agent doctor` checks that catch the exact environment gaps that caused the outage — all shipped, tested, and green.</div>
+        </div>
+        <div class="meta-grid">
+          <div class="meta-card">
+            <div class="meta-label">Project</div>
+            <div class="meta-chip">PDD Agent (pdd-auto)</div>
+          </div>
+          <div class="meta-card">
+            <div class="meta-label">Repository</div>
+            <div class="meta-chip">tah-allotrope/pdd-auto</div>
+          </div>
+          <div class="meta-card">
+            <div class="meta-label">Date</div>
+            <div class="meta-chip">2026-07-17</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="executive-summary">
+      <div class="section-header">
+        <div>
+          <div class="section-index">01 / Executive Summary</div>
+          <h2 class="section-title">Executive Summary</h2>
+        </div>
+      </div>
+      <div class="summary-grid">
+        <div class="subcard">
+          <h3>What was done</h3>
+          <p>The first two of six planned phases from <code>plans/2026-07-16-trust-layer-keyless-frontier-proof-plan.md</code> are complete and committed to <code>main</code>: <strong>PHASE-01 (CI Trust Layer)</strong> and <strong>PHASE-02 (Doctor Environment-Integrity Checks)</strong>. Both were implemented, verified against a green local test run, and committed with descriptive messages (<code>532cecd</code>, <code>87b8105</code>).</p>
+        </div>
+        <div class="subcard">
+          <h3>Why it matters</h3>
+          <p>CI for this repository ran green for the first time ever only one day before this work began — it had been red on all three of its prior runs since creation, and nobody noticed because there was no badge, no branch protection, and no lockfile enforcement. Phases 1–2 close exactly that visibility gap and give the local environment (<code>pdd-agent doctor</code>) the same diagnostic power CI now has.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="background-objective">
+      <div class="section-header">
+        <div>
+          <div class="section-index">02 / Background &amp; Objective</div>
+          <h2 class="section-title">Background &amp; Objective</h2>
+        </div>
+      </div>
+      <div class="narrative">
+        <p>pdd-auto is a Python pipeline that drafts Verra VCS Project Design Documents for carbon-credit projects (waste-to-energy plus three additional methodology families: rice, biochar, cookstoves). A 2026-07-16 codebase brainstorm found that GitHub Actions CI had been failing on every run since its creation three days earlier — a missing <code>python-multipart</code> dependency broke test collection on any fresh install, while the developer's already-provisioned local environment masked the problem entirely. Fixing that single dependency then exposed 11 further Linux-only test failures the Windows-only development history had never surfaced. Both issues were fixed in that same session, producing the project's first-ever green CI run.</p>
+        <p>The six-phase plan that followed this brainstorm has one connecting thread across its first half: <strong>make the trust infrastructure itself trustworthy</strong> — visible, enforced, and self-diagnosing — before building anything on top of it (a hardened proof harness in Phases 3–4, and a keyless frontier drafting provider in Phase 5). This report covers the two phases that deliver that foundation: PHASE-01 and PHASE-02.</p>
+      </div>
+    </section>
+
+    <section class="section" id="inputs-scope">
+      <div class="section-header">
+        <div>
+          <div class="section-index">03 / Inputs &amp; Scope</div>
+          <h2 class="section-title">Inputs &amp; Scope</h2>
+        </div>
+      </div>
+      <div class="dual-grid">
+        <div class="subcard">
+          <h3>Plan inputs</h3>
+          <ul>
+            <li><code>plans/2026-07-16-trust-layer-keyless-frontier-proof-plan.md</code> — the six-phase source plan (PHASE-01 through PHASE-06)</li>
+            <li><code>research/2026-07-16-pdd-trust-layer-and-unblock-brainstorm.md</code> — the brainstorm that found CI was red from birth and identified the WTE-hardcoded system prompts and proof-harness defects addressed in later phases</li>
+          </ul>
+        </div>
+        <div class="subcard">
+          <h3>In scope for this report</h3>
+          <ul>
+            <li><strong>PHASE-01:</strong> CI status badge, a new <code>lock-reproducibility</code> CI job, GitHub branch protection on <code>main</code>, and README truth-sync</li>
+            <li><strong>PHASE-02:</strong> three new <code>pdd-agent doctor</code> checks — fresh-install dependency presence, <code>PYTHONPATH</code> pollution, and <code>uv.lock</code> staleness</li>
+          </ul>
+        </div>
+        <div class="subcard">
+          <h3>Explicitly out of scope (later phases)</h3>
+          <ul>
+            <li>PHASE-03: family-aware provider system prompts (removing the last WTE-hardcoded string from the three real LLM providers)</li>
+            <li>PHASE-04: honest <code>pdd-agent prove</code> harness (real Ollama availability probing, cross-judging, failed-section counting)</li>
+          </ul>
+        </div>
+        <div class="subcard">
+          <h3>Also out of scope</h3>
+          <ul>
+            <li>PHASE-05: the <code>claude-code</code> keyless frontier drafting provider</li>
+            <li>PHASE-06: the small-model Ollama dress rehearsal (operational, needs a machine with Ollama installed)</li>
+            <li>Running any real-model proof itself, or the Verra registry live-download upgrade — both explicitly out of scope for the whole plan</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="assumptions-constraints">
+      <div class="section-header">
+        <div>
+          <div class="section-index">04 / Assumptions &amp; Constraints</div>
+          <h2 class="section-title">Assumptions &amp; Constraints</h2>
+        </div>
+      </div>
+      <div class="dual-grid">
+        <div class="subcard">
+          <h3>Assumptions carried from the plan</h3>
+          <ul>
+            <li>Branch protection is applied with <code>enforce_admins: false</code> so the current solo direct-push-to-<code>main</code> workflow is not broken — the goal is visibility, not blocking the sole maintainer.</li>
+            <li>The repository (<code>tah-allotrope/pdd-auto</code>, public) supports branch protection on GitHub's free plan, confirmed via <code>gh repo view</code>.</li>
+            <li>The <code>python-multipart</code> package's import name varies by version, so the doctor check tries both <code>python_multipart</code> and <code>multipart</code>.</li>
+          </ul>
+        </div>
+        <div class="subcard">
+          <h3>Constraints honored</h3>
+          <ul>
+            <li>Tests must never require API keys, network access, or a running external tool (Ollama, <code>gws</code>, <code>uv</code>) — every new test in this scope mocks <code>subprocess.run</code>, <code>shutil.which</code>, and <code>importlib.import_module</code> as needed.</li>
+            <li><code>ruff check</code> and <code>ruff format --check</code> must pass on all new/modified files (line length 100) — verified before every commit.</li>
+            <li>Per the session's explicit instructions, <code>git push origin main</code> is deferred to a single push after both phases are committed, rather than pushed per phase.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="methodology">
+      <div class="section-header">
+        <div>
+          <div class="section-index">05 / Methodology</div>
+          <h2 class="section-title">Methodology</h2>
+        </div>
+      </div>
+      <div class="narrative">
+        <p>Each phase followed the same four-step discipline specified by the plan: implement the file changes exactly as described, run the project's full test suite plus lint/format checks and fix anything red before proceeding, stage and commit with a message describing the change and its rationale, then move to the next phase. No phase was marked complete without a locally green test run — "would a fresh install pass this?" was the standing bar, since that is precisely the question the original CI outage answered wrong for three days.</p>
+        <p>Branch protection (an API-level change, not a file change) was applied using GitHub's REST API with three required status-check contexts matching the CI workflow's rendered job names — two already confirmed from a prior live CI run (<code>test (3.11)</code>, <code>test (3.12)</code>) and one predictable from the new job's YAML identifier (<code>lock-reproducibility</code>, which carries no matrix and therefore renders as its bare job id).</p>
+      </div>
+      <div class="stat-grid">
+        <div class="stat">
+          <div class="stat-label">Orientation</div>
+          <div class="stat-value">multi-phase</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Audience</div>
+          <div class="stat-value">stakeholder-safe</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Evidence Rule</div>
+          <div class="stat-value">no invented data</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="phase-analysis">
+      <div class="section-header">
+        <div>
+          <div class="section-index">06 / Phase-by-Phase Analysis</div>
+          <h2 class="section-title">Phase-by-Phase Analysis</h2>
+        </div>
+      </div>
+      <div class="phase-grid">
+        <div class="subcard">
+          <h3>PHASE-01 — CI Trust Layer <span class="badge badge-done">Done</span></h3>
+          <p><strong>Goal:</strong> make a red CI impossible to miss and a stale lockfile impossible to commit unnoticed.</p>
+          <ul>
+            <li>Added a CI status badge as the first line under the README's H1, linking to the Actions workflow.</li>
+            <li>Added a second CI job, <code>lock-reproducibility</code>, that runs <code>uv lock --check</code> then a locked <code>uv sync --all-extras</code> install and the full test suite — so a stale lockfile (exactly what shipped for three days this week) now fails CI on its own, independent of the existing pip-based job.</li>
+            <li>Applied GitHub branch protection to <code>main</code> requiring all three check contexts (<code>test (3.11)</code>, <code>test (3.12)</code>, <code>lock-reproducibility</code>) in non-strict mode with admins exempt — confirmed live via the GitHub API, which echoed back all three contexts.</li>
+            <li>Truth-synced README: replaced the two-pushes-stale "544 tests pass" claim with the current collected/run/deselected counts; removed two Known Gaps bullets describing the Ollama provider and LLM judge as "stubs" (both were fixed in earlier pushes and no longer described the code); added the missing <code>pdd-agent prove</code> row to the CLI Commands table.</li>
+          </ul>
+          <p><strong>Verified:</strong> <code>uv lock --check</code> passed locally before the new CI job was wired in (RISK-01-01 mitigation); <code>ruff check</code>/<code>ruff format --check</code> clean; full suite 679 passed / 0 failed; <code>grep -c "544 tests" README.md</code> returns 0; branch protection confirmed via <code>gh api .../protection</code> echoing the three contexts.</p>
+        </div>
+        <div class="subcard">
+          <h3>PHASE-02 — Doctor Environment-Integrity Checks <span class="badge badge-done">Done</span></h3>
+          <p><strong>Goal:</strong> teach <code>pdd-agent doctor</code> to diagnose the three environment failures that caused or masked this week's CI outage.</p>
+          <ul>
+            <li><code>check_test_deps()</code> — verifies <code>pytest</code>, <code>python_multipart</code> (with a fallback to the <code>multipart</code> import name across package versions), <code>uvicorn</code>, and <code>jinja2</code> import cleanly; this is precisely the dependency class that broke fresh-install CI collection.</li>
+            <li><code>check_pythonpath()</code> — warns when the <code>PYTHONPATH</code> environment variable is set, since a foreign <code>PYTHONPATH</code> injected by other tooling on the development machine was directly observed this week to shadow the project's own virtual environment.</li>
+            <li><code>check_uv_lock()</code> — runs <code>uv lock --check</code> (skipping gracefully if <code>uv</code> isn't on PATH or <code>uv.lock</code> doesn't exist) so a stale lockfile is caught locally, not only by CI.</li>
+            <li>All three checks follow the doctor's existing contract exactly: they can only ever report <code>OK</code> or <code>WARN</code>, never <code>FAIL</code> — a regression test explicitly proves <code>run_doctor()</code> still exits 0 when all three new checks warn simultaneously.</li>
+          </ul>
+          <p><strong>Verified:</strong> 10 new tests added to <code>tests/test_doctor.py</code> (21 total in that file), all passing; manual run of <code>pdd-agent doctor</code> on the development machine shows all three new lines and exits 0; full suite 689 passed / 0 failed; <code>ruff check</code>/<code>ruff format --check</code> clean.</p>
+        </div>
+      </div>
+      <div class="diagram-frame compact-diagram">
+        <pre class="mermaid">
+flowchart LR
+    P1["PHASE-01<br/>CI Trust Layer<br/>(done)"] --> P2["PHASE-02<br/>Doctor Checks<br/>(done)"]
+    P2 --> P3["PHASE-03<br/>Family-Aware<br/>System Prompts<br/>(planned)"]
+    P3 --> P4["PHASE-04<br/>Honest Proof<br/>Harness<br/>(planned)"]
+    P4 --> P5["PHASE-05<br/>claude-code<br/>Provider<br/>(planned)"]
+    P4 --> P6["PHASE-06<br/>Ollama Dress<br/>Rehearsal<br/>(planned)"]
+    style P1 fill:#3b6f76,color:#fff,stroke:#2a4f54
+    style P2 fill:#3b6f76,color:#fff,stroke:#2a4f54
+    style P3 fill:#efe4d0,color:#1f1912,stroke:#9d6b37
+    style P4 fill:#efe4d0,color:#1f1912,stroke:#9d6b37
+    style P5 fill:#efe4d0,color:#1f1912,stroke:#9d6b37
+    style P6 fill:#efe4d0,color:#1f1912,stroke:#9d6b37
+        </pre>
+      </div>
+    </section>
+
+    <section class="section" id="findings-recommendation">
+      <div class="section-header">
+        <div>
+          <div class="section-index">07 / Findings &amp; Recommendation</div>
+          <h2 class="section-title">Findings &amp; Recommendation</h2>
+        </div>
+      </div>
+      <div class="narrative">
+        <p><strong>Finding 1 — the trust-layer gap was structural, not incidental.</strong> CI existed, ran on every push, and still failed silently for three days because nothing surfaced its status outside the Actions tab itself. Phases 1–2 close that gap on two levels at once: a badge and branch protection make CI status visible and enforced at the repository level, while the three new doctor checks give any individual developer (or a future colleague's first-ever local setup) the same diagnostic power without needing to check GitHub at all.</p>
+        <p><strong>Finding 2 — the fixes are structurally cheap relative to the risk they close.</strong> The new CI job is 18 added lines of YAML; the three doctor checks are under 90 lines of Python with 10 new tests. Both build directly on existing patterns already in the codebase (the doctor's <code>(status, message)</code> tuple convention; the CI job's steps mirror the existing <code>test</code> job's structure) rather than introducing new architecture.</p>
+        <p><strong>Recommendation:</strong> proceed to PHASE-03 (family-aware provider system prompts) next. It is explicitly a dependency for PHASE-04 and is self-contained and non-key-gated — it can be built and fully tested with the deterministic <code>demo</code> provider and mocked HTTP calls, with no external service or credential required, consistent with the pattern already followed in Phases 1–2.</p>
+      </div>
+      <div class="viz-frame">
+        <canvas id="testCountChart"></canvas>
+      </div>
+    </section>
+
+    <section class="section" id="implementation-path">
+      <div class="section-header">
+        <div>
+          <div class="section-index">08 / Implementation Path</div>
+          <h2 class="section-title">Implementation Path</h2>
+        </div>
+      </div>
+      <div class="phase-grid">
+        <div class="subcard">
+          <h3>Immediate next step</h3>
+          <p><strong>PHASE-03 — Family-Aware Provider System Prompts.</strong> Removes the last known WTE-hardcoded string from the three real LLM providers (OpenAI, Anthropic, Ollama), replacing it with a family-aware system prompt selected by the project's methodology. Fully testable without any API key, using the existing golden-equality pattern (the WTE string must remain byte-identical to preserve backward compatibility).</p>
+        </div>
+        <div class="subcard">
+          <h3>Following steps</h3>
+          <p><strong>PHASE-04</strong> (honest <code>prove</code> harness) depends on PHASE-03's system-prompt hook. <strong>PHASE-05</strong> (the <code>claude-code</code> keyless provider) depends on both PHASE-03 and PHASE-04. <strong>PHASE-06</strong> (the Ollama dress rehearsal) is operational and needs a machine with Ollama installed — it can run independently once PHASE-04 lands, since its measurements depend on PHASE-04's honest availability and redraft-counting logic.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="risks-open-questions">
+      <div class="section-header">
+        <div>
+          <div class="section-index">09 / Risks / Open Questions</div>
+          <h2 class="section-title">Risks / Open Questions</h2>
+        </div>
+      </div>
+      <div class="dual-grid">
+        <div class="subcard">
+          <h3>Known limitation of this session's execution</h3>
+          <p>Per explicit session instructions, the commits from Phases 1–2 were <strong>not pushed individually</strong> — a single push covers both phases plus this report at the end of the session. This means PHASE-01's exit criterion of observing a live, push-triggered CI run for these specific commits was not performed mid-session; branch protection was instead applied using check-context names already confirmed from a prior live run (<code>test (3.11)</code>, <code>test (3.12)</code>) plus one predictable name for the new job (<code>lock-reproducibility</code>, which has no build matrix). The first real CI run against these commits will occur when this branch is pushed — that run should be watched once, per the plan's own OBS-001 verification item.</p>
+        </div>
+        <div class="subcard">
+          <h3>Carried-forward risks (not yet exercised)</h3>
+          <ul>
+            <li><strong>RISK-003</strong> (from the plan): branch protection with <code>enforce_admins: false</code> does not physically block a red push by the repository owner — it provides visibility, not enforcement, against the sole maintainer. Accepted per the plan; revisit if the team grows.</li>
+            <li>PHASE-03's golden-equality bar (CON-003) requires the WTE system-prompt string to remain byte-identical after refactoring — a subtle whitespace or wrapping difference would silently break this. The plan's mitigation (write the golden test against the current literal first, then refactor) should be followed exactly.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="appendices-evidence">
+      <div class="section-header">
+        <div>
+          <div class="section-index">10 / Appendices / Evidence Notes</div>
+          <h2 class="section-title">Appendices / Evidence Notes</h2>
+        </div>
+      </div>
+      <div class="appendix-grid">
+        <div class="subcard">
+          <h3>Commits (this session)</h3>
+          <div class="technical-frame">
+            <table>
+              <thead>
+                <tr><th>Commit</th><th>Message</th><th>Files changed</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><code>532cecd</code></td><td>phase-01: CI trust layer — badge, lockfile-enforcing job, README truth-sync</td><td>3 files, +503/&minus;3</td></tr>
+                <tr><td><code>87b8105</code></td><td>phase-02: doctor environment-integrity checks</td><td>2 files, +188</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="subcard">
+          <h3>Verification commands run</h3>
+          <div class="technical-frame">
+            <table>
+              <thead>
+                <tr><th>Command</th><th>Result</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><code>uv lock --check</code></td><td>Passed (lockfile current before enforcing in CI)</td></tr>
+                <tr><td><code>ruff check .</code></td><td>All checks passed (both phases)</td></tr>
+                <tr><td><code>ruff format --check .</code></td><td>All files formatted (both phases)</td></tr>
+                <tr><td><code>pytest -m "not corpus" -q</code> (post PHASE-01)</td><td>679 passed, 7 deselected, 0 failed</td></tr>
+                <tr><td><code>pytest tests/test_doctor.py -q</code> (PHASE-02)</td><td>21 passed, 0 failed</td></tr>
+                <tr><td><code>pytest -m "not corpus" -q</code> (post PHASE-02)</td><td>689 passed, 7 deselected, 0 failed</td></tr>
+                <tr><td><code>pdd-agent doctor</code></td><td>All 3 new checks print; exit 0</td></tr>
+                <tr><td><code>gh api .../branches/main/protection</code></td><td>Confirmed 3 required check contexts</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="footer-note">designed for html first, printable without reconstruction</div>
+    </section>
+  </main>
+  <script>
+    (function() {
+      const chartCanvases = document.querySelectorAll('canvas');
+      chartCanvases.forEach((canvas) => {
+        canvas.classList.add('report-chart');
+        const parent = canvas.parentElement;
+        if (parent && parent.classList.contains('technical-frame') && !parent.classList.contains('chart-frame')) {
+          parent.classList.add('chart-frame');
+        }
+      });
+    })();
+
+    if (window.Chart) {
+      Chart.defaults.devicePixelRatio = 1;
+      Chart.defaults.animation = false;
+      Chart.defaults.resizeDelay = 150;
+      Chart.defaults.normalized = true;
+      Chart.defaults.maintainAspectRatio = false;
+      Chart.defaults.responsive = true;
+      window.__REPORT_CHART_DEFAULTS__ = {
+        animation: false,
+        resizeDelay: 150,
+        normalized: true,
+        maintainAspectRatio: false,
+        responsive: true
+      };
+    }
+
+    (function() {
+      const el = document.getElementById('testCountChart');
+      if (!el || !window.Chart) return;
+      new Chart(el, {
+        type: 'bar',
+        data: {
+          labels: ['Before PHASE-01', 'After PHASE-01', 'After PHASE-02'],
+          datasets: [
+            {
+              label: 'Tests passed',
+              data: [679, 679, 689],
+              backgroundColor: 'rgba(59, 111, 118, 0.55)',
+              borderColor: 'rgba(59, 111, 118, 0.9)',
+              borderWidth: 1
+            },
+            {
+              label: 'Tests failed',
+              data: [0, 0, 0],
+              backgroundColor: 'rgba(157, 107, 55, 0.55)',
+              borderColor: 'rgba(157, 107, 55, 0.9)',
+              borderWidth: 1
+            }
+          ]
+        },
+        options: {
+          animation: false,
+          resizeDelay: 150,
+          normalized: true,
+          maintainAspectRatio: false,
+          responsive: true,
+          plugins: {
+            title: { display: true, text: 'Test suite results across Phases 1–2 (non-corpus suite)' },
+            legend: { position: 'bottom' }
+          },
+          scales: {
+            y: { beginAtZero: true, title: { display: true, text: 'Tests' } }
+          }
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
