@@ -2,15 +2,20 @@
 
 from __future__ import annotations
 
+import subprocess
 from pathlib import Path
+from unittest.mock import patch
 
 
 from pdd_agent.doctor import (
     check_api_keys,
     check_model_pricing,
     check_ollama,
+    check_pythonpath,
     check_python_version,
     check_retrieval_index,
+    check_test_deps,
+    check_uv_lock,
     run_doctor,
 )
 
@@ -47,6 +52,92 @@ class TestCheckRetrievalIndex:
     def test_missing_db_is_warn(self, tmp_path: Path):
         status, _ = check_retrieval_index(db_path=tmp_path / "missing.db")
         assert status == "WARN"
+
+
+class TestCheckPythonpath:
+    def test_not_set_is_ok(self, monkeypatch):
+        monkeypatch.delenv("PYTHONPATH", raising=False)
+        status, _ = check_pythonpath()
+        assert status == "OK"
+
+    def test_set_is_warn(self, monkeypatch):
+        monkeypatch.setenv("PYTHONPATH", "C:/foreign/site-packages")
+        status, message = check_pythonpath()
+        assert status == "WARN"
+        assert "C:/foreign/site-packages" in message
+
+
+class TestCheckTestDeps:
+    def test_all_present_is_ok(self):
+        results = check_test_deps()
+        assert all(status == "OK" for status, _ in results)
+
+    def test_python_multipart_missing_is_warn(self):
+        def fake_import(name):
+            if name in ("python_multipart", "multipart"):
+                raise ImportError(name)
+            return object()
+
+        with patch("pdd_agent.doctor.importlib.import_module", side_effect=fake_import):
+            results = check_test_deps()
+
+        warn_rows = [(status, msg) for status, msg in results if status == "WARN"]
+        assert len(warn_rows) == 1
+        assert "python_multipart" in warn_rows[0][1]
+        ok_rows = [(status, msg) for status, msg in results if status == "OK"]
+        assert len(ok_rows) == len(results) - 1
+
+
+class TestCheckUvLock:
+    def test_uv_not_on_path_is_ok(self):
+        with patch("pdd_agent.doctor.shutil.which", return_value=None):
+            status, message = check_uv_lock()
+        assert status == "OK"
+        assert "not on PATH" in message
+
+    def test_lock_missing_is_ok(self, tmp_path: Path):
+        with patch("pdd_agent.doctor.shutil.which", return_value="/usr/bin/uv"):
+            status, message = check_uv_lock(repo_root=tmp_path)
+        assert status == "OK"
+        assert "not present" in message
+
+    def test_stale_lock_is_warn(self, tmp_path: Path):
+        (tmp_path / "uv.lock").write_text("stale", encoding="utf-8")
+        with (
+            patch("pdd_agent.doctor.shutil.which", return_value="/usr/bin/uv"),
+            patch(
+                "pdd_agent.doctor.subprocess.run",
+                return_value=subprocess.CompletedProcess(args=[], returncode=2),
+            ),
+        ):
+            status, message = check_uv_lock(repo_root=tmp_path)
+        assert status == "WARN"
+        assert "stale" in message
+
+    def test_current_lock_is_ok(self, tmp_path: Path):
+        (tmp_path / "uv.lock").write_text("current", encoding="utf-8")
+        with (
+            patch("pdd_agent.doctor.shutil.which", return_value="/usr/bin/uv"),
+            patch(
+                "pdd_agent.doctor.subprocess.run",
+                return_value=subprocess.CompletedProcess(args=[], returncode=0),
+            ),
+        ):
+            status, _ = check_uv_lock(repo_root=tmp_path)
+        assert status == "OK"
+
+    def test_timeout_is_warn(self, tmp_path: Path):
+        (tmp_path / "uv.lock").write_text("current", encoding="utf-8")
+        with (
+            patch("pdd_agent.doctor.shutil.which", return_value="/usr/bin/uv"),
+            patch(
+                "pdd_agent.doctor.subprocess.run",
+                side_effect=subprocess.TimeoutExpired(cmd="uv", timeout=30),
+            ),
+        ):
+            status, message = check_uv_lock(repo_root=tmp_path)
+        assert status == "WARN"
+        assert "failed to run" in message
 
 
 class TestCheckModelPricing:
@@ -86,6 +177,14 @@ class TestRunDoctor:
             doctor_module, "check_python_version", lambda: ("FAIL", "forced failure")
         )
         assert run_doctor() == 1
+
+    def test_exits_zero_when_new_checks_all_warn(self, monkeypatch):
+        import pdd_agent.doctor as doctor_module
+
+        monkeypatch.setattr(doctor_module, "check_test_deps", lambda: [("WARN", "forced warn")])
+        monkeypatch.setattr(doctor_module, "check_pythonpath", lambda: ("WARN", "forced warn"))
+        monkeypatch.setattr(doctor_module, "check_uv_lock", lambda: ("WARN", "forced warn"))
+        assert run_doctor() == 0
 
 
 class TestDotenvLoading:

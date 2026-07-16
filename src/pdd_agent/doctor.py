@@ -22,6 +22,10 @@ from pdd_agent.llm.budget import _DEFAULT_PRICING
 _OPTIONAL_PACKAGES = ["openai", "anthropic", "fastapi", "docx", "dotenv"]
 _API_KEY_ENV_VARS = ["OPENAI_API_KEY", "ANTHROPIC_API_KEY"]
 _MODEL_ENV_VARS = ["OPENAI_MODEL", "ANTHROPIC_MODEL", "PDD_JUDGE_MODEL"]
+_TEST_DEPS = ["pytest", "python_multipart", "uvicorn", "jinja2"]
+_INSTALL_HINT = (
+    "install with 'uv sync --all-extras' or 'pip install -e \".[dev,service,export,llm]\"'"
+)
 
 
 def check_python_version() -> tuple[str, str]:
@@ -41,6 +45,88 @@ def check_package_imports() -> list[tuple[str, str]]:
         except ImportError:
             results.append(("WARN", f"{package_name} not installed"))
     return results
+
+
+def check_test_deps() -> list[tuple[str, str]]:
+    """Return one (status, message) per fresh-install dev/service dependency.
+
+    Unlike check_package_imports (LLM/export extras), these are the
+    dependencies a fresh `uv sync --all-extras`/`pip install -e .` must
+    provide for the test suite and service to even collect/import — a gap
+    here is exactly the class of bug that left CI red for 3 days (an
+    undeclared python-multipart dependency broke test collection on every
+    fresh install while the dev machine's already-provisioned venv masked it
+    locally).
+    """
+    results = []
+    for name in _TEST_DEPS:
+        if name == "python_multipart":
+            found = False
+            for candidate in ("python_multipart", "multipart"):
+                try:
+                    importlib.import_module(candidate)
+                    found = True
+                    break
+                except ImportError:
+                    continue
+            if found:
+                results.append(("OK", f"{name} importable"))
+            else:
+                results.append(("WARN", f"{name} not installed — {_INSTALL_HINT}"))
+            continue
+        try:
+            importlib.import_module(name)
+            results.append(("OK", f"{name} importable"))
+        except ImportError:
+            results.append(("WARN", f"{name} not installed — {_INSTALL_HINT}"))
+    return results
+
+
+def check_pythonpath() -> tuple[str, str]:
+    """Return ("WARN", ...) if PYTHONPATH is set, else ("OK", ...).
+
+    A foreign PYTHONPATH injected by other tooling on the machine can shadow
+    this project's venv (symptom: `No module named pytest` or a mismatched
+    pydantic_core binary) even though the project's own dependencies are
+    correctly installed.
+    """
+    import os
+
+    value = os.environ.get("PYTHONPATH")
+    if not value:
+        return ("OK", "PYTHONPATH not set")
+    return (
+        "WARN",
+        f"PYTHONPATH is set ({value}) — may shadow the project venv; run with PYTHONPATH cleared",
+    )
+
+
+def check_uv_lock(repo_root: Path | None = None) -> tuple[str, str]:
+    """Return ("OK", ...) if uv.lock is current or not applicable, else ("WARN", ...).
+
+    A stale uv.lock silently drifts from pyproject.toml (missing dependencies,
+    outdated versions) until someone runs a fresh `uv sync` and discovers it —
+    exactly what happened before the CI lock-reproducibility job was added.
+    """
+    root = repo_root or Path.cwd()
+    if shutil.which("uv") is None:
+        return ("OK", "uv not on PATH; lock check skipped")
+    lock_path = root / "uv.lock"
+    if not lock_path.exists():
+        return ("OK", "uv.lock not present")
+    try:
+        proc = subprocess.run(
+            ["uv", "lock", "--check"],
+            cwd=root,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+    except (subprocess.TimeoutExpired, OSError) as exc:
+        return ("WARN", f"uv lock --check failed to run: {exc}")
+    if proc.returncode == 0:
+        return ("OK", "uv.lock is current")
+    return ("WARN", "uv.lock is stale relative to pyproject.toml — run 'uv lock' and commit")
 
 
 def check_api_keys() -> list[tuple[str, str]]:
@@ -146,6 +232,9 @@ def run_doctor() -> int:
 
     all_results.append(check_python_version())
     all_results.extend(check_package_imports())
+    all_results.extend(check_test_deps())
+    all_results.append(check_pythonpath())
+    all_results.append(check_uv_lock())
     all_results.extend(check_api_keys())
     all_results.append(check_ollama())
     all_results.extend(check_external_tools())
