@@ -152,12 +152,12 @@ class TestClaudeCodeProviderDraftSection:
 
 class TestClaudeCodeProviderAvailability:
     def test_unavailable_when_cli_missing(self, monkeypatch):
-        monkeypatch.setattr("pdd_agent.phase05.provider_scorecard.shutil.which", lambda name: None)
+        monkeypatch.setattr("pdd_agent.llm.judge_selection.shutil.which", lambda name: None)
         assert _is_provider_available("claude-code") == (False, "claude_cli_not_found")
 
     def test_available_when_cli_present(self, monkeypatch):
         monkeypatch.setattr(
-            "pdd_agent.phase05.provider_scorecard.shutil.which",
+            "pdd_agent.llm.judge_selection.shutil.which",
             lambda name: "/usr/local/bin/claude",
         )
         assert _is_provider_available("claude-code") == (True, None)

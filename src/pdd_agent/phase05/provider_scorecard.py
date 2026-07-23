@@ -12,10 +12,7 @@ aborting the whole scorecard.
 from __future__ import annotations
 
 import os
-import shutil
 import time
-import urllib.error
-import urllib.request
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -25,17 +22,17 @@ import yaml
 from pdd_agent.agent.section_orchestrator import SectionOrchestrator
 from pdd_agent.llm.budget import BudgetExhaustedError, TokenBudget
 from pdd_agent.llm.env_config import configure_provider_from_env
+from pdd_agent.llm.judge_selection import (
+    is_provider_available as _is_provider_available,
+)
+from pdd_agent.llm.judge_selection import (
+    select_judge_provider as _select_judge_provider,
+)
 from pdd_agent.llm.provider import get_provider_registry
 from pdd_agent.review.judge import LLMJudge
 from schemas.project_input import ProjectInput
 
 logger = structlog.get_logger()
-
-# Preference order for cross-judging (ASM-006): the first provider in this
-# list that is available and is not the drafting provider itself judges that
-# provider's output. Falls back to the deterministic demo judge when nothing
-# else qualifies, so a provider is never scored by itself.
-_JUDGE_PREFERENCE_ORDER = ["anthropic", "openai", "claude-code", "ollama"]
 
 
 @dataclass
@@ -64,66 +61,6 @@ def _parse_positive_float(value: str | None) -> float | None:
     except ValueError:
         return None
     return parsed if parsed > 0 else None
-
-
-def _probe_ollama_available() -> tuple[bool, str | None]:
-    """Real reachability probe (mirrors doctor.check_ollama), not a hardcoded True.
-
-    A machine with no Ollama instance running previously got an "available"
-    Ollama row full of `[OLLAMA ERROR ...]` placeholder sections presented as
-    a real run — this probe makes "available" mean "answered".
-    """
-    base_url = os.environ.get("OLLAMA_BASE_URL", "http://localhost:11434")
-    try:
-        request = urllib.request.Request(f"{base_url}/api/tags")
-        with urllib.request.urlopen(request, timeout=2):
-            pass
-        return True, None
-    except (urllib.error.URLError, OSError, TimeoutError):
-        return False, "ollama_unreachable"
-
-
-def _is_provider_available(provider_name: str) -> tuple[bool, str | None]:
-    if provider_name in ("demo", "noop"):
-        return True, None
-    if provider_name == "ollama":
-        return _probe_ollama_available()
-    if provider_name == "claude-code":
-        # Subscription-billed (ASM-007): no PDD_MAX_COST_USD gate, just
-        # presence of the CLI on PATH.
-        cli = os.environ.get("CLAUDE_CODE_CLI", "claude")
-        if shutil.which(cli) is None:
-            return False, "claude_cli_not_found"
-        return True, None
-    if provider_name in ("openai", "anthropic"):
-        if not os.environ.get(f"{provider_name.upper()}_API_KEY"):
-            return False, "missing_api_key"
-        if _parse_positive_float(os.environ.get("PDD_MAX_COST_USD")) is None:
-            return False, "missing_cost_ceiling"
-        return True, None
-    return False, "unknown_provider"
-
-
-def _select_judge_provider(
-    drafting_provider: str, available_providers: list[str]
-) -> tuple[str, bool]:
-    """Resolve which provider judges `drafting_provider`'s output (never itself).
-
-    Order: PDD_JUDGE_PROVIDER env override, then the first available provider
-    in _JUDGE_PREFERENCE_ORDER that isn't the drafting provider, else the
-    deterministic demo judge.
-    """
-    env_override = os.environ.get("PDD_JUDGE_PROVIDER")
-    if env_override:
-        return env_override, env_override not in ("demo", "noop")
-
-    for candidate in _JUDGE_PREFERENCE_ORDER:
-        if candidate == drafting_provider:
-            continue
-        if candidate in available_providers:
-            return candidate, True
-
-    return "demo", False
 
 
 def _count_failed_sections(sections, provider_name: str) -> int:

@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import urllib.error
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
@@ -13,78 +12,8 @@ from pdd_agent.phase05.provider_scorecard import (
     _count_failed_sections,
     _is_provider_available,
     _resolve_providers,
-    _select_judge_provider,
     run_provider_scorecard,
 )
-
-
-class TestIsProviderAvailable:
-    def test_demo_always_available(self):
-        assert _is_provider_available("demo") == (True, None)
-
-    def test_noop_always_available(self):
-        assert _is_provider_available("noop") == (True, None)
-
-    def test_ollama_unreachable_is_unavailable(self):
-        with patch("urllib.request.urlopen", side_effect=urllib.error.URLError("refused")):
-            assert _is_provider_available("ollama") == (False, "ollama_unreachable")
-
-    def test_ollama_reachable_is_available(self):
-        response = MagicMock()
-        response.__enter__ = MagicMock(return_value=response)
-        response.__exit__ = MagicMock(return_value=False)
-        with patch("urllib.request.urlopen", return_value=response):
-            assert _is_provider_available("ollama") == (True, None)
-
-    def test_openai_without_key_unavailable(self, monkeypatch):
-        monkeypatch.delenv("OPENAI_API_KEY", raising=False)
-        assert _is_provider_available("openai") == (False, "missing_api_key")
-
-    def test_openai_with_key_but_no_cost_ceiling_unavailable(self, monkeypatch):
-        monkeypatch.setenv("OPENAI_API_KEY", "sk-test")
-        monkeypatch.delenv("PDD_MAX_COST_USD", raising=False)
-        assert _is_provider_available("openai") == (False, "missing_cost_ceiling")
-
-    def test_openai_with_key_and_cost_ceiling_available(self, monkeypatch):
-        monkeypatch.setenv("OPENAI_API_KEY", "sk-test")
-        monkeypatch.setenv("PDD_MAX_COST_USD", "5.0")
-        assert _is_provider_available("openai") == (True, None)
-
-    def test_unknown_provider_unavailable(self):
-        assert _is_provider_available("mystery") == (False, "unknown_provider")
-
-    def test_claude_code_unavailable_without_cli(self, monkeypatch):
-        monkeypatch.setattr("pdd_agent.phase05.provider_scorecard.shutil.which", lambda name: None)
-        assert _is_provider_available("claude-code") == (False, "claude_cli_not_found")
-
-    def test_claude_code_available_with_cli_no_cost_ceiling_required(self, monkeypatch):
-        monkeypatch.delenv("PDD_MAX_COST_USD", raising=False)
-        monkeypatch.setattr(
-            "pdd_agent.phase05.provider_scorecard.shutil.which",
-            lambda name: "/usr/local/bin/claude",
-        )
-        assert _is_provider_available("claude-code") == (True, None)
-
-
-class TestSelectJudgeProvider:
-    def test_no_other_candidate_falls_back_to_demo(self, monkeypatch):
-        monkeypatch.delenv("PDD_JUDGE_PROVIDER", raising=False)
-        assert _select_judge_provider("ollama", ["demo", "ollama"]) == ("demo", False)
-
-    def test_prefers_anthropic_over_drafting_provider(self, monkeypatch):
-        monkeypatch.delenv("PDD_JUDGE_PROVIDER", raising=False)
-        assert _select_judge_provider("ollama", ["demo", "ollama", "anthropic"]) == (
-            "anthropic",
-            True,
-        )
-
-    def test_skips_self_and_picks_next_in_preference_order(self, monkeypatch):
-        monkeypatch.delenv("PDD_JUDGE_PROVIDER", raising=False)
-        assert _select_judge_provider("anthropic", ["anthropic", "openai"]) == ("openai", True)
-
-    def test_env_override_wins(self, monkeypatch):
-        monkeypatch.setenv("PDD_JUDGE_PROVIDER", "demo")
-        assert _select_judge_provider("anthropic", ["anthropic", "openai"]) == ("demo", False)
 
 
 class TestCountFailedSections:
