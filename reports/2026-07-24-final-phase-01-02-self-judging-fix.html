@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Final Report :: Fixing the Self-Judging Redraft Loop — Phases 1–2</title>
+  <meta name="color-scheme" content="dark light">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+
+    async function initMermaid() {
+      const blocks = document.querySelectorAll('.mermaid');
+      if (!blocks.length) {
+        return;
+      }
+
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: 'base',
+        securityLevel: 'loose',
+        themeVariables: {
+          primaryColor: '#f3ead9',
+          primaryTextColor: '#1f1912',
+          primaryBorderColor: '#9d6b37',
+          lineColor: '#3b6f76',
+          secondaryColor: '#efe4d0',
+          tertiaryColor: '#ffffff',
+          background: '#fbf7f1',
+          mainBkg: '#fbf7f1',
+          nodeBorder: '#9d6b37',
+          clusterBkg: '#f7efdf',
+          clusterBorder: '#3b6f76',
+          edgeLabelBackground: '#fbf7f1'
+        }
+      });
+
+      await mermaid.run({ nodes: blocks });
+    }
+
+    const run = () => initMermaid().catch((error) => console.error('Mermaid render failed', error));
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', run, { once: true });
+    } else {
+      run();
+    }
+  </script>
+  <style>
+    :root {
+      --paper: #fbf7f1;
+      --paper-strong: #fffdf9;
+      --ink: #1f1912;
+      --ink-soft: #5f564c;
+      --line: #dccdb6;
+      --line-strong: #bfa37d;
+      --accent: #9d6b37;
+      --accent-soft: #efe4d0;
+      --accent-2: #3b6f76;
+      --shadow: 0 18px 40px rgba(49, 33, 16, 0.08);
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --radius-sm: 12px;
+      --page-width: 1040px;
+      --display-font: Georgia, "Times New Roman", serif;
+      --body-font: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      --mono-font: "Cascadia Code", Consolas, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(157, 107, 55, 0.09), transparent 26%),
+        radial-gradient(circle at 88% 10%, rgba(59, 111, 118, 0.08), transparent 22%),
+        linear-gradient(180deg, #f7f1e7 0%, #fbf7f1 28%, #f6efe5 100%);
+      font-family: var(--body-font);
+      line-height: 1.65;
+      letter-spacing: 0.01em;
+    }
+
+    a {
+      color: var(--accent-2);
+    }
+
+    code,
+    pre,
+    .technical,
+    .meta-chip,
+    .section-index,
+    .eyebrow,
+    .stat-label,
+    .stat-value,
+    .mermaid {
+      font-family: var(--mono-font);
+    }
+
+    .page-shell {
+      width: min(var(--page-width), calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 28px 0 56px;
+    }
+
+    .hero {
+      padding: 34px;
+      border: 1px solid rgba(159, 123, 79, 0.28);
+      border-radius: 30px;
+      background:
+        linear-gradient(135deg, rgba(157, 107, 55, 0.1), transparent 34%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0.86)),
+        var(--paper-strong);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(260px, 0.85fr);
+      gap: 24px;
+      align-items: end;
+    }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .title {
+      margin: 0;
+      max-width: 16ch;
+      font-family: var(--display-font);
+      font-size: clamp(2.4rem, 4.4vw, 4rem);
+      line-height: 1;
+      letter-spacing: -0.03em;
+      text-wrap: balance;
+    }
+
+    .lede {
+      margin: 18px 0 0;
+      max-width: 60ch;
+      color: var(--ink-soft);
+      font-size: 1rem;
+    }
+
+    .takeaway {
+      margin-top: 22px;
+      padding: 18px 20px;
+      border-left: 4px solid var(--accent-2);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      background: rgba(59, 111, 118, 0.08);
+      color: #20373a;
+      font-size: 1.02rem;
+    }
+
+    .meta-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .meta-card,
+    .section,
+    .subcard,
+    .empty-state {
+      border: 1px solid rgba(95, 72, 46, 0.12);
+      background: rgba(255, 253, 249, 0.88);
+      box-shadow: var(--shadow);
+    }
+
+    .meta-card {
+      padding: 16px 18px;
+      border-radius: var(--radius-md);
+    }
+
+    .meta-label {
+      color: var(--ink-soft);
+      font-size: 0.76rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .meta-chip {
+      margin-top: 8px;
+      color: var(--accent);
+      font-size: 1rem;
+      font-weight: 700;
+      word-break: break-word;
+    }
+
+    .section {
+      margin-top: 22px;
+      padding: 24px;
+      border-radius: var(--radius-lg);
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px 18px;
+      align-items: end;
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section-index {
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .section-title {
+      margin: 0;
+      font-family: var(--display-font);
+      font-size: clamp(1.45rem, 2vw, 2rem);
+      line-height: 1.05;
+    }
+
+    .summary-grid,
+    .dual-grid,
+    .phase-grid,
+    .stat-grid,
+    .appendix-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .summary-grid,
+    .dual-grid,
+    .phase-grid,
+    .appendix-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .subcard {
+      padding: 18px;
+      border-radius: var(--radius-md);
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .subcard h3,
+    .subcard h4 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+      line-height: 1.2;
+    }
+
+    .subcard p:first-child,
+    .subcard ul:first-child,
+    .subcard ol:first-child {
+      margin-top: 0;
+    }
+
+    .stat-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin-top: 16px;
+    }
+
+    .stat {
+      padding: 14px 16px;
+      border: 1px solid rgba(59, 111, 118, 0.16);
+      border-radius: var(--radius-sm);
+      background: rgba(59, 111, 118, 0.06);
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .stat-label {
+      color: var(--ink-soft);
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .stat-value {
+      margin-top: 8px;
+      color: var(--accent-2);
+      font-size: 1.18rem;
+      font-weight: 700;
+    }
+
+    .narrative,
+    .chart-frame,
+    .technical-frame,
+    .diagram-frame,
+    .viz-frame {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.54);
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .diagram-frame {
+      overflow-x: auto;
+      overflow-y: auto;
+      overscroll-behavior-x: contain;
+      overscroll-behavior-y: contain;
+      max-height: min(70vh, 720px);
+    }
+
+    .chart-frame,
+    .viz-frame {
+      overflow: hidden;
+    }
+
+    .mermaid {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      color: var(--ink);
+    }
+
+    .mermaid svg {
+      display: block;
+      width: auto !important;
+      min-width: 100%;
+      max-width: none !important;
+      height: auto !important;
+    }
+
+    .diagram-frame.compact-diagram {
+      padding: 12px;
+      max-height: min(62vh, 560px);
+    }
+
+    .diagram-frame.compact-diagram .mermaid {
+      min-width: 900px;
+    }
+
+    .chart-frame canvas,
+    .technical-frame > canvas,
+    .viz-frame canvas,
+    canvas.report-chart {
+      display: block;
+      width: 100% !important;
+      max-width: 100%;
+      height: 300px !important;
+      min-height: 300px;
+      max-height: 300px;
+    }
+
+    .technical-frame table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+    }
+
+    .technical-frame th,
+    .technical-frame td {
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+      text-align: left;
+    }
+
+    .technical-frame th {
+      color: var(--accent);
+      font-size: 0.76rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .empty-state {
+      padding: 20px;
+      border-radius: var(--radius-md);
+      text-align: center;
+      color: var(--ink-soft);
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .empty-state strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--accent);
+      font-size: 0.84rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .status-pill {
+      display: inline-block;
+      margin-left: 8px;
+      padding: 2px 10px;
+      border-radius: 999px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      vertical-align: middle;
+    }
+
+    .status-done {
+      background: rgba(59, 111, 118, 0.16);
+      color: var(--accent-2);
+    }
+
+    .status-open {
+      background: rgba(157, 107, 55, 0.16);
+      color: var(--accent);
+    }
+
+    ul,
+    ol {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    p:last-child,
+    li:last-child {
+      margin-bottom: 0;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      color: rgba(95, 86, 76, 0.74);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      text-align: right;
+    }
+
+    @media (max-width: 920px) {
+      .hero-grid,
+      .summary-grid,
+      .dual-grid,
+      .phase-grid,
+      .stat-grid,
+      .appendix-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .title {
+        max-width: none;
+      }
+
+    }
+
+    @media (max-width: 640px) {
+      .page-shell {
+        width: min(100vw - 20px, var(--page-width));
+        padding-top: 16px;
+        padding-bottom: 36px;
+      }
+
+      .hero,
+      .section {
+        padding: 18px;
+        border-radius: 20px;
+      }
+
+      .title {
+        font-size: clamp(2.1rem, 12vw, 3.2rem);
+      }
+
+    }
+
+    @media print {
+      :root {
+        --paper: #ffffff;
+        --paper-strong: #ffffff;
+        --ink: #111111;
+        --ink-soft: #444444;
+        --line: #d6d1c8;
+      }
+
+      @page {
+        size: A4;
+        margin: 14mm;
+      }
+
+      body {
+        background: #ffffff;
+      }
+
+      .page-shell {
+        width: 100%;
+        max-width: none;
+        padding: 0;
+      }
+
+      .hero,
+      .meta-card,
+      .section,
+      .subcard,
+      .narrative,
+      .chart-frame,
+      .technical-frame,
+      .diagram-frame,
+      .viz-frame,
+      .empty-state,
+      .stat {
+        background: #ffffff;
+        box-shadow: none;
+      }
+
+      .hero,
+      .section {
+        margin-top: 0;
+        margin-bottom: 10mm;
+      }
+
+      .diagram-frame {
+        overflow: visible;
+        max-height: none;
+      }
+
+      .diagram-frame.compact-diagram .mermaid {
+        min-width: 0;
+      }
+
+      .section-header,
+      .takeaway {
+        break-after: avoid;
+        page-break-after: avoid;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page-shell">
+    <section class="hero" id="title-hero">
+      <div class="hero-grid">
+        <div>
+          <p class="eyebrow">Final Report / Shareable Analysis Artifact</p>
+          <h1 class="title">Fixing the Self-Judging Redraft Loop</h1>
+          <p class="lede">
+            Phases 1–2 of a 4-phase plan: the code fix that makes the project's long-deferred
+            real-model proof safe to run, verified against a subtle live-execution risk that only
+            surfaced under empirical testing.
+          </p>
+          <div class="takeaway">
+            The redraft judge no longer judges its own output. That fix is merged, tested, and
+            pushed to <code>main</code> — but it required finding and closing a second, unplanned
+            problem along the way: the test suite itself was one machine-specific detail away from
+            silently shelling out to a live AI CLI on every run. Running the actual real-model proof
+            (Phases 3–4) is the deliberate next action, not yet taken.
+          </div>
+        </div>
+        <div class="meta-grid">
+          <div class="meta-card">
+            <div class="meta-label">Project</div>
+            <div class="meta-chip">PDD Agent</div>
+          </div>
+          <div class="meta-card">
+            <div class="meta-label">Repository</div>
+            <div class="meta-chip">tah-allotrope/pdd-auto</div>
+          </div>
+          <div class="meta-card">
+            <div class="meta-label">Date</div>
+            <div class="meta-chip">2026-07-24</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="executive-summary">
+      <div class="section-header">
+        <div>
+          <div class="section-index">01 / Executive Summary</div>
+          <h2 class="section-title">Executive Summary</h2>
+        </div>
+      </div>
+      <div class="summary-grid">
+        <div class="subcard">
+          <h3>What was fixed</h3>
+          <p>
+            A drafting orchestrator component (<code>SectionOrchestrator._run_judge_redraft_loop</code>)
+            used to default to letting a drafting provider judge its own output whenever no explicit
+            override was set. That meant a real AI provider could evaluate its own work with no
+            independent check — the exact defect that stopped a prior push from running the
+            project's real-model proof at full scale. This pass extracted the project's
+            already-correct "never self-judge" logic into a shared module and wired it into the one
+            place that was still missing it.
+          </p>
+        </div>
+        <div class="subcard">
+          <h3>What this unblocks</h3>
+          <p>
+            Running <code>pdd-agent prove</code> against the keyless <code>claude-code</code>
+            provider — the project's long-standing milestone, attempted only once before in a
+            deliberately small, bounded form — is now safe to run at full scale by default. That run
+            itself (Phase 3) and a related corpus-capture task (Phase 4) were <strong>not</strong>
+            executed in this pass; they remain open, deliberate follow-up actions.
+          </p>
+        </div>
+      </div>
+      <div class="summary-grid" style="margin-top:16px;">
+        <div class="subcard">
+          <h3>Unplanned but material finding</h3>
+          <p>
+            Verifying the fix surfaced a real risk the plan flagged only in principle: on a machine
+            with the AI CLI installed, the automated test suite itself would have started making
+            real, live calls to that CLI during ordinary test runs — confirmed by direct
+            reproduction, then closed with explicit test-side safeguards. See Section 6 and 7 for the
+            full account; it is the most consequential finding of this pass.
+          </p>
+        </div>
+        <div class="subcard">
+          <h3>Verified state</h3>
+          <p>
+            735 tests passing, 7 intentionally skipped, zero lint findings, full suite runtime back
+            to its normal ~83-second baseline. Two commits on <code>main</code>:
+            <code>4266be1</code> (Phase 1) and <code>aae79b3</code> (Phase 2).
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="background-objective">
+      <div class="section-header">
+        <div>
+          <div class="section-index">02 / Background &amp; Objective</div>
+          <h2 class="section-title">Background &amp; Objective</h2>
+        </div>
+      </div>
+      <div class="narrative">
+        <p>
+          PDD Agent drafts Verra carbon-credit project design documents using a corpus-grounded
+          drafting pipeline with an automated review step: an AI "judge" scores each drafted section
+          and can trigger up to several redraft attempts if it finds critical problems. Four
+          consecutive prior development pushes on this repository built toward one milestone: proving
+          the pipeline works with a real frontier AI model, not just the deterministic placeholder
+          providers used for demos. The most recent of those pushes finally removed the last
+          procurement blocker — a "keyless" provider that uses a locally installed AI command-line
+          tool instead of requiring a paid API key — but its own closing report stopped short of
+          actually running the full proof. The stated reason: the in-loop redraft judge still let a
+          real provider judge its own work by default, an unbounded and unverified risk that made the
+          team run only a small, deliberately bounded manual check instead.
+        </p>
+        <p>
+          The objective of this pass was narrow and specific: close that one gap (Phase 1–2 of a
+          4-phase plan), so that running the actual full-scale proof becomes a safe, deliberate
+          action rather than a still-blocked one. Running that proof itself, and a separate,
+          independent task to unlock live corpus data from a public registry, were scoped as later
+          phases of the same plan and were intentionally left for a following pass.
+        </p>
+      </div>
+    </section>
+
+    <section class="section" id="inputs-scope">
+      <div class="section-header">
+        <div>
+          <div class="section-index">03 / Inputs &amp; Scope</div>
+          <h2 class="section-title">Inputs &amp; Scope</h2>
+        </div>
+      </div>
+      <div class="dual-grid">
+        <div class="subcard">
+          <h3>Governing plan</h3>
+          <p>
+            <code>plans/2026-07-23-run-real-model-proof-plan.md</code> — a 4-phase plan derived from
+            a same-day repository brainstorm. This pass executed only Phase 1 and Phase 2.
+          </p>
+          <ul>
+            <li><strong>Phase 1</strong> (executed) — extract shared judge-selection logic.</li>
+            <li><strong>Phase 2</strong> (executed) — fix the in-loop redraft judge.</li>
+            <li><strong>Phase 3</strong> (not executed) — run the real-model proof.</li>
+            <li><strong>Phase 4</strong> (not executed) — live registry-API capture.</li>
+          </ul>
+        </div>
+        <div class="subcard">
+          <h3>In scope this pass</h3>
+          <ul>
+            <li>A new shared selection module and its dedicated tests.</li>
+            <li>The orchestrator wiring fix and its regression tests.</li>
+            <li>Whatever additional test-safety fixes verification required to land the above two
+              items honestly (never committing on a red or unsafe suite).</li>
+          </ul>
+          <h3 style="margin-top:14px;">Explicitly out of scope</h3>
+          <ul>
+            <li>Actually running the real-model proof against real projects (Phase 3).</li>
+            <li>Capturing the live public-registry search API (Phase 4).</li>
+            <li>Any change to review, consistency, or export logic.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="assumptions-constraints">
+      <div class="section-header">
+        <div>
+          <div class="section-index">04 / Assumptions &amp; Constraints</div>
+          <h2 class="section-title">Assumptions &amp; Constraints</h2>
+        </div>
+      </div>
+      <div class="dual-grid">
+        <div class="subcard">
+          <h3>Constraints honored</h3>
+          <ul>
+            <li>The project's standing rule that automated tests must never require API keys,
+              network access, or an installed AI CLI — this pass discovered a real violation risk of
+              this exact rule and closed it (Section 6).</li>
+            <li>Lint and formatting checks clean across the whole repository before every commit.</li>
+            <li>No commit made on a failing or unverified test suite.</li>
+          </ul>
+        </div>
+        <div class="subcard">
+          <h3>Assumptions carried from the plan</h3>
+          <ul>
+            <li>The shared selection logic should live in a new leaf module rather than create a
+              circular import between the two files that need it — confirmed correct during
+              implementation.</li>
+            <li>The judge-provider decision should be resolved once per drafting run and cached, not
+              recomputed per section — confirmed necessary and correct; see the performance finding
+              in Section 6.</li>
+            <li>Phase 3 (the real proof run) involves genuine, non-trivial time and
+              subscription-billed usage and should be a deliberate, separately-authorized action —
+              this assumption held, and Phase 3 was accordingly not run automatically in this pass.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="methodology">
+      <div class="section-header">
+        <div>
+          <div class="section-index">05 / Methodology</div>
+          <h2 class="section-title">Methodology</h2>
+        </div>
+      </div>
+      <div class="narrative">
+        <p>
+          Each phase followed the same discipline: implement the change exactly as specified in the
+          plan, then verify it empirically rather than by inspection alone — running the full
+          automated test suite, the linter, and the formatter after every change, and only committing
+          once all three were clean. Phase 2 in particular did not stop at "the tests pass" — a
+          suspicious ~2x increase in full-suite runtime after the code change was treated as a
+          finding to chase down, not noise to ignore, which is what surfaced the live-CLI risk
+          documented in Section 6. That risk was confirmed with a direct, isolated reproduction
+          (deliberately triggering the suspected behavior with instrumentation, in a sandboxed way
+          that could not itself make a real external call) before being fixed, and the fix was
+          re-verified the same way to confirm the risk was actually closed, not just no longer
+          triggering the specific test that first exposed it.
+        </p>
+      </div>
+      <div class="stat-grid">
+        <div class="stat">
+          <div class="stat-label">Orientation</div>
+          <div class="stat-value">multi-phase</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Audience</div>
+          <div class="stat-value">stakeholder-safe</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Evidence Rule</div>
+          <div class="stat-value">no invented data</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="phase-analysis">
+      <div class="section-header">
+        <div>
+          <div class="section-index">06 / Phase-by-Phase Analysis</div>
+          <h2 class="section-title">Phase-by-Phase Analysis</h2>
+        </div>
+      </div>
+      <div class="phase-grid">
+        <div class="subcard">
+          <h3>Phase 1 — Extract shared selection logic <span class="status-pill status-done">Done</span></h3>
+          <p>
+            The logic for "which provider should judge this drafting provider's output, and never
+            let it judge itself" already existed correctly in one place in the codebase (the
+            head-to-head provider scorecard used by the <code>prove</code> command) but was never
+            reused anywhere else. This phase moved that logic into a new shared module
+            (<code>judge_selection.py</code>) with a small addition — a convenience function for
+            callers that need to resolve a judge for a single provider on the fly, rather than from a
+            pre-computed list. The scorecard module was updated to import the shared logic instead of
+            defining its own copy. Seventeen tests covering this logic were relocated into a
+            dedicated test file; the scorecard's own test file shrank accordingly, with the total
+            test count for this area unchanged — confirming the move preserved behavior exactly.
+          </p>
+        </div>
+        <div class="subcard">
+          <h3>Phase 2 — Fix the in-loop redraft judge <span class="status-pill status-done">Done</span></h3>
+          <p>
+            The actual bug fix: the orchestrator's per-section redraft loop was rewired to call the
+            new shared selection logic instead of a one-line default that silently picked the
+            drafting provider as its own judge. The fix also caches that decision once per drafting
+            run rather than recomputing it for every section (a run drafts dozens of sections), and
+            it now correctly counts the judge's own token usage toward the run's cost — previously
+            excluded. What made this phase take real effort was not the code change itself (about a
+            dozen lines) but verifying it was actually safe — see the finding below.
+          </p>
+        </div>
+        <div class="subcard">
+          <h3>Phase 3 — Run the real-model proof <span class="status-pill status-open">Not started</span></h3>
+          <p>
+            Now safe to run by default (that was the entire point of Phases 1–2), but involves real
+            wall-clock time (tens of minutes) and subscription-billed AI usage. Treated as a
+            deliberate follow-up action rather than something to trigger automatically at the end of
+            a code-change pass.
+          </p>
+        </div>
+        <div class="subcard">
+          <h3>Phase 4 — Live registry-API capture <span class="status-pill status-open">Not started</span></h3>
+          <p>
+            Independent of Phases 1–3 and not touched in this pass. Requires an interactive,
+            devtools-based capture of a public registry's search API before it can be automated.
+          </p>
+        </div>
+      </div>
+      <div class="diagram-frame compact-diagram">
+        <pre class="mermaid">
+flowchart LR
+  A["Prior pushes:\nkeyless provider built,\nproof never run"] --> B["Phase 1\nExtract shared\njudge-selection logic"]
+  B --> C["Phase 2\nWire fix into\nredraft loop"]
+  C --> D{"Full suite\nre-run"}
+  D -->|"passed, but 2x slower"| E["Investigate\nthe slowdown"]
+  E --> F["Reproduce risk:\nlive CLI calls\nduring tests"]
+  F --> G["Add test-side\nsafeguards"]
+  G --> H{"Re-verify:\nzero live calls,\nnormal runtime"}
+  H -->|"confirmed"| I["Commit + push\nPhase 1 &amp; 2"]
+  I --> J["Phase 3: run\nreal proof — open"]
+  I --> K["Phase 4: registry\ncapture — open"]
+        </pre>
+      </div>
+    </section>
+
+    <section class="section" id="findings-recommendation">
+      <div class="section-header">
+        <div>
+          <div class="section-index">07 / Findings &amp; Recommendation</div>
+          <h2 class="section-title">Findings &amp; Recommendation</h2>
+        </div>
+      </div>
+      <div class="narrative">
+        <p><strong>Finding 1 — the primary bug is fixed and verified.</strong> The in-loop redraft
+          judge no longer defaults to self-judging. A direct code check
+          (<code>grep</code> for the old default expression) confirms the literal defect is gone, and
+          three new regression tests assert the judge provider is never the drafting provider when an
+          alternative is available, correctly falls back to a deterministic judge when nothing else
+          is available, and is resolved only once per run rather than once per section.</p>
+        <p><strong>Finding 2 — the most consequential discovery of this pass was not in the plan.</strong>
+          After the Phase 2 code change, the full test suite still passed — but took roughly twice as
+          long as normal (158 seconds versus an ~83-second baseline). Rather than treat "tests still
+          pass" as sufficient, that timing anomaly was investigated directly. The cause: one test file
+          registers a real instance of the AI-CLI-backed provider into a shared, process-wide registry
+          and never removes it; combined with the AI CLI actually being installed on the machine
+          running the tests, the newly-fixed judge-selection logic would <em>correctly</em> select that
+          real provider as judge during later, unrelated tests — and then actually invoke the live CLI
+          during what should have been a fully offline, mocked test run. This was proven, not assumed:
+          a deliberate, sandboxed reproduction showed two real command invocations firing during a
+          test run before the fix, and zero after. This also explains the timing anomaly — separately,
+          each such judge-selection decision was independently probing a local network service with a
+          multi-second timeout, adding real time even when it wasn't making a live CLI call. Both
+          issues were fixed together by making the relevant tests explicitly force every real
+          provider "unavailable" before exercising the judge path, and by caching the judge-selection
+          decision once per run (Phase 2's original design intent, now correctly enforced by the same
+          fix).</p>
+        <p><strong>Recommendation.</strong> The code is ready for Phase 3. Because Phase 3 involves
+          real cost and non-trivial run time, it should be scheduled as its own deliberate action —
+          not appended automatically onto this one — with someone available to review the resulting
+          scorecard artifacts once the run completes.</p>
+      </div>
+      <div class="viz-frame">
+        <canvas id="suite-timing-chart"></canvas>
+      </div>
+    </section>
+
+    <section class="section" id="implementation-path">
+      <div class="section-header">
+        <div>
+          <div class="section-index">08 / Implementation Path</div>
+          <h2 class="section-title">Implementation Path</h2>
+        </div>
+      </div>
+      <div class="phase-grid">
+        <div class="subcard">
+          <h3>Immediate next step</h3>
+          <p>
+            Run Phase 3 of the plan: <code>pdd-agent prove</code> against the keyless provider for
+            both a waste-to-energy project and a rice-cultivation project, producing two scorecard
+            artifacts and a findings write-up. Suggested owner: whoever has visibility into the AI
+            subscription's usage budget, since this is the phase with a real cost.
+          </p>
+        </div>
+        <div class="subcard">
+          <h3>Independent, parallel step</h3>
+          <p>
+            Phase 4 (live registry-API capture) does not depend on Phase 3 and can be picked up by a
+            different person or session at any time — it requires a one-time interactive browser
+            session with developer tools open, not code changes alone.
+          </p>
+        </div>
+        <div class="subcard">
+          <h3>After Phase 3 lands</h3>
+          <p>
+            Domain-expert review of the resulting draft document, and — per the governing plan's own
+            sequencing — only then does it make sense to revisit longer-horizon product bets that
+            depend on having a real, not synthetic, drafting artifact to point to.
+          </p>
+        </div>
+        <div class="subcard">
+          <h3>Housekeeping noted, not actioned</h3>
+          <p>
+            A small piece of dead code (an unused duplicate list of project aliases in the
+            command-line interface) was noticed during this pass and intentionally left alone to
+            avoid scope creep — flagged for a future small cleanup, not this one.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="risks-open-questions">
+      <div class="section-header">
+        <div>
+          <div class="section-index">09 / Risks / Open Questions</div>
+          <h2 class="section-title">Risks / Open Questions</h2>
+        </div>
+      </div>
+      <div class="dual-grid">
+        <div class="subcard">
+          <h3>Risks carried into Phase 3</h3>
+          <ul>
+            <li>A 36-section run against a real, live AI CLI has less predictable timing and failure
+              modes than the deterministic placeholder providers this project has run almost
+              exclusively until now.</li>
+            <li>Real, subscription-billed usage and meaningful wall-clock time mean Phase 3 should not
+              be run casually or repeatedly without a reason.</li>
+          </ul>
+        </div>
+        <div class="subcard">
+          <h3>Open questions</h3>
+          <ul>
+            <li>Whether the resulting drafted sections, once Phase 3 runs, will actually read as
+              coherent, usable prose — this pass verified the pipeline is <em>safe</em> to run, not
+              what the real output quality will be.</li>
+            <li>Whether the live public-registry API (Phase 4) will turn out to match the shape
+              currently guessed in the codebase, or require a larger rework once actually captured.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="appendices-evidence">
+      <div class="section-header">
+        <div>
+          <div class="section-index">10 / Appendices / Evidence Notes</div>
+          <h2 class="section-title">Appendices / Evidence Notes</h2>
+        </div>
+      </div>
+      <div class="appendix-grid">
+        <div class="subcard">
+          <h3>Verified test state</h3>
+          <div class="technical-frame" style="margin-top:8px;">
+            <table>
+              <thead>
+                <tr><th>Checkpoint</th><th>Tests passing</th><th>Full-suite time</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Before this pass (recorded baseline)</td><td>729</td><td>~83–87s</td></tr>
+                <tr><td>After Phase 1</td><td>732</td><td>83.34s</td></tr>
+                <tr><td>After Phase 2 code change, before the live-call fix</td><td>732</td><td>158.51s</td></tr>
+                <tr><td>After Phase 2, fully fixed and verified</td><td>735</td><td>83.54s</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="subcard">
+          <h3>Commits</h3>
+          <ul>
+            <li><code>4266be1</code> — Phase 1: extract shared never-self-judge provider-selection
+              logic.</li>
+            <li><code>aae79b3</code> — Phase 2: fix in-loop redraft judge self-judging default.</li>
+          </ul>
+          <h3 style="margin-top:14px;">Files touched</h3>
+          <ul>
+            <li><code>src/pdd_agent/llm/judge_selection.py</code> (new)</li>
+            <li><code>src/pdd_agent/phase05/provider_scorecard.py</code></li>
+            <li><code>src/pdd_agent/agent/section_orchestrator.py</code></li>
+            <li><code>tests/test_judge_selection.py</code> (new)</li>
+            <li><code>tests/test_provider_scorecard.py</code></li>
+            <li><code>tests/test_claude_code_provider.py</code></li>
+            <li><code>tests/test_section_orchestrator.py</code></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-note">designed for html first, printable without reconstruction</div>
+    </section>
+  </main>
+  <script>
+    (function() {
+      const chartCanvases = document.querySelectorAll('canvas');
+      chartCanvases.forEach((canvas) => {
+        canvas.classList.add('report-chart');
+        const parent = canvas.parentElement;
+        if (parent && parent.classList.contains('technical-frame') && !parent.classList.contains('chart-frame')) {
+          parent.classList.add('chart-frame');
+        }
+      });
+    })();
+
+    if (window.Chart) {
+      Chart.defaults.devicePixelRatio = 1;
+      Chart.defaults.animation = false;
+      Chart.defaults.resizeDelay = 150;
+      Chart.defaults.normalized = true;
+      Chart.defaults.maintainAspectRatio = false;
+      Chart.defaults.responsive = true;
+      window.__REPORT_CHART_DEFAULTS__ = {
+        animation: false,
+        resizeDelay: 150,
+        normalized: true,
+        maintainAspectRatio: false,
+        responsive: true
+      };
+
+      const ctx = document.getElementById('suite-timing-chart');
+      if (ctx) {
+        new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: ['After Phase 1', 'Phase 2, bug exposed', 'Phase 2, fixed'],
+            datasets: [{
+              label: 'Full suite wall-clock (seconds)',
+              data: [83.34, 158.51, 83.54],
+              backgroundColor: ['#3b6f76', '#c26a3f', '#3b6f76'],
+              borderRadius: 6
+            }]
+          },
+          options: {
+            plugins: {
+              legend: { display: false },
+              title: {
+                display: true,
+                text: 'Full test-suite runtime, measured this session'
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                title: { display: true, text: 'seconds' }
+              }
+            }
+          }
+        });
+      }
+    }
+  </script>
+</body>
+</html>
