@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 
+import urllib.error
 from pathlib import Path
+from unittest.mock import MagicMock
 
 from pdd_agent.llm.provider import (
     DraftSection,
@@ -16,6 +18,27 @@ from pdd_agent.llm.provider import (
 )
 from pdd_agent.agent.section_orchestrator import SectionOrchestrator
 from pdd_agent.review.states import ReviewStateStore
+
+
+def _force_only_demo_judge_available(monkeypatch) -> None:
+    """Force resolve_judge_provider() to fall back to the deterministic demo judge.
+
+    Without this, tests that enable the in-loop judge would probe real
+    provider availability for real — and on a machine with the `claude` CLI
+    on PATH (as this repo's reference dev machine has), or after
+    tests/test_claude_code_provider.py has registered a real
+    ClaudeCodeProvider under "claude-code" in the process-global provider
+    registry, the judge would actually shell out to the live CLI during a
+    pytest run. See judge_selection.is_provider_available for what each of
+    these four patches forces unavailable.
+    """
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    monkeypatch.setattr("pdd_agent.llm.judge_selection.shutil.which", lambda name: None)
+    monkeypatch.setattr(
+        "pdd_agent.llm.judge_selection.urllib.request.urlopen",
+        MagicMock(side_effect=urllib.error.URLError("refused")),
+    )
 
 
 class TestNoopProvider:
@@ -284,11 +307,13 @@ class TestSectionOrchestratorRedraft:
         assert orch._max_redraft_attempts == 3
         assert orch._enable_judge is False
 
-    def test_judge_redraft_loop_parks_failed_section(self, tmp_path: Path):
+    def test_judge_redraft_loop_parks_failed_section(self, tmp_path: Path, monkeypatch):
         from pathlib import Path
 
         import yaml
         from schemas.project_input import EvidenceItem, EvidenceRegistry, ProjectInput
+
+        _force_only_demo_judge_available(monkeypatch)
 
         project_yaml = (
             Path(__file__).parent.parent / "configs" / "projects" / "demo_socson_like.yaml"
@@ -312,9 +337,101 @@ class TestSectionOrchestratorRedraft:
         assert any("JUDGE REDRAFT FAILED" in issue for issue in draft.issues)
         assert any("attempts" in note for note in orch.draft_run.notes)
 
-    def test_manual_redraft_section_invokes_judge(self):
+    def test_manual_redraft_section_invokes_judge(self, monkeypatch):
+        _force_only_demo_judge_available(monkeypatch)
         orch = SectionOrchestrator()
         _first = orch.draft_section("1", "1.1")
         second = orch.redraft_section("1", "1.1")
         assert second.section_id == "1"
         assert second.sub_section_id == "1.1"
+
+
+class TestRedraftJudgeSelection:
+    """Regression coverage for the in-loop redraft judge never self-judging."""
+
+    def test_never_self_judges_when_alternative_available(self, monkeypatch):
+        recorded_kwargs: dict = {}
+
+        def fake_llm_judge(*args, **kwargs):
+            recorded_kwargs.update(kwargs)
+            judge = MagicMock()
+            judge.judge_section.return_value = MagicMock(
+                passed=True, categories={"critical": [], "advisory": []}, score=95
+            )
+            return judge
+
+        monkeypatch.setattr(
+            "pdd_agent.agent.section_orchestrator.resolve_judge_provider",
+            lambda drafting_provider: ("anthropic", True),
+        )
+        monkeypatch.setattr(
+            "pdd_agent.agent.section_orchestrator.LLMJudge",
+            fake_llm_judge,
+        )
+
+        orch = SectionOrchestrator(
+            provider=_CitationFailingProvider(),
+            enable_judge=True,
+        )
+        orch.draft_section("1", "1.1")
+
+        assert recorded_kwargs["provider_name"] == "anthropic"
+        assert recorded_kwargs["provider_name"] != "fake-citation-fail"
+        assert recorded_kwargs["use_llm"] is True
+
+    def test_falls_back_to_demo_when_no_alternative(self, monkeypatch):
+        recorded_kwargs: dict = {}
+
+        def fake_llm_judge(*args, **kwargs):
+            recorded_kwargs.update(kwargs)
+            judge = MagicMock()
+            judge.judge_section.return_value = MagicMock(
+                passed=True, categories={"critical": [], "advisory": []}, score=95
+            )
+            return judge
+
+        monkeypatch.setattr(
+            "pdd_agent.agent.section_orchestrator.resolve_judge_provider",
+            lambda drafting_provider: ("demo", False),
+        )
+        monkeypatch.setattr(
+            "pdd_agent.agent.section_orchestrator.LLMJudge",
+            fake_llm_judge,
+        )
+
+        orch = SectionOrchestrator(
+            provider=_CitationFailingProvider(),
+            enable_judge=True,
+        )
+        orch.draft_section("1", "1.1")
+
+        assert recorded_kwargs["provider_name"] == "demo"
+        assert recorded_kwargs["use_llm"] is False
+
+    def test_caches_judge_provider_across_sections(self, monkeypatch):
+        resolve_calls: list[str] = []
+
+        def fake_resolve(drafting_provider):
+            resolve_calls.append(drafting_provider)
+            return ("anthropic", True)
+
+        def fake_llm_judge(*args, **kwargs):
+            judge = MagicMock()
+            judge.judge_section.return_value = MagicMock(
+                passed=True, categories={"critical": [], "advisory": []}, score=95
+            )
+            return judge
+
+        monkeypatch.setattr(
+            "pdd_agent.agent.section_orchestrator.resolve_judge_provider", fake_resolve
+        )
+        monkeypatch.setattr("pdd_agent.agent.section_orchestrator.LLMJudge", fake_llm_judge)
+
+        orch = SectionOrchestrator(
+            provider=_CitationFailingProvider(),
+            enable_judge=True,
+        )
+        orch.draft_section("1", "1.1")
+        orch.draft_section("1", "1.2")
+
+        assert len(resolve_calls) == 1

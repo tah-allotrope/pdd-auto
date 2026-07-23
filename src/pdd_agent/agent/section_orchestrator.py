@@ -16,6 +16,7 @@ import yaml
 
 from pdd_agent.domain.methodology_rules import get_methodology_rules
 from pdd_agent.llm.budget import TokenBudget, BudgetExhaustedError
+from pdd_agent.llm.judge_selection import resolve_judge_provider
 from pdd_agent.llm.provider import (
     BaseProvider,
     DraftRun,
@@ -145,6 +146,7 @@ class SectionOrchestrator:
         self._enable_judge = enable_judge
         self._max_redraft_attempts = max(0, max_redraft_attempts)
         self.redraft_count: int = 0
+        self._judge_provider_cache: tuple[str, bool] | None = None
 
         if hasattr(self._provider, "set_budget"):
             self._provider.set_budget(self._budget)
@@ -666,6 +668,17 @@ class SectionOrchestrator:
 
         return draft
 
+    def _resolve_judge_provider(self, drafting_provider_name: str) -> tuple[str, bool]:
+        """Resolve (and cache) which provider judges this run's drafts, never itself.
+
+        Cached per orchestrator instance so a 36-section run probes provider
+        availability (which includes a live Ollama reachability check) once,
+        not once per section.
+        """
+        if self._judge_provider_cache is None:
+            self._judge_provider_cache = resolve_judge_provider(drafting_provider_name)
+        return self._judge_provider_cache
+
     def _run_judge_redraft_loop(
         self,
         draft: DraftSection,
@@ -679,18 +692,17 @@ class SectionOrchestrator:
         synthetic: list[dict[str, Any]],
     ) -> DraftSection:
         """Judge a draft and auto-redraft up to max attempts if critical findings exist."""
-        import os
-
         drafting_provider_name = getattr(self._provider, "name", "demo")
-        judge_provider_name = os.environ.get("PDD_JUDGE_PROVIDER", drafting_provider_name)
+        judge_provider_name, judge_use_llm = self._resolve_judge_provider(drafting_provider_name)
         judge = LLMJudge(
             provider_name=judge_provider_name,
-            use_llm=judge_provider_name not in ("demo", "noop"),
+            use_llm=judge_use_llm,
             methodology_ids=(
                 list(self._project.technology.methodology_ids)
                 if self._project and self._project.technology.methodology_ids
                 else None
             ),
+            token_budget=self._budget,
         )
         section_key = f"{section_id}/{sub_section_id or ''}"
         current_draft = draft
