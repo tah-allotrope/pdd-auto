@@ -24,6 +24,11 @@ _TRAILER_RE = re.compile(
 
 _HORIZONTAL_RULES = {"---", "***", "___"}
 
+# A trailer phrase is only conversational filler when it forms an unbroken suffix
+# of the body. Mid-document, "Note: I've assumed ..." is how a PDD discloses an
+# assumption, so matching anywhere would silently delete real content that
+# follows it.
+
 
 def strip_assistant_preamble(text: str) -> str:
     """Remove leading conversational preamble and trailing conversational tail."""
@@ -66,15 +71,16 @@ def strip_assistant_preamble(text: str) -> str:
         if drop_count > 0:
             lines = lines[drop_count:]
 
+    # Walk backwards over non-empty lines while they look conversational; the cut
+    # point is the first line of that suffix block. A trailer phrase with real
+    # content after it is not a trailer.
+    non_empty_indices = [i for i, line in enumerate(lines) if line.strip()]
     trailer_start = None
-    for i, line in enumerate(lines):
-        stripped = line.strip()
-        if not stripped:
-            continue
-        cleaned = stripped.lstrip("*_")
-        if _TRAILER_RE.match(cleaned):
-            trailer_start = i
+    for i in reversed(non_empty_indices):
+        cleaned = lines[i].strip().lstrip("*_")
+        if not _TRAILER_RE.match(cleaned):
             break
+        trailer_start = i
     if trailer_start is not None:
         lines = lines[:trailer_start]
 

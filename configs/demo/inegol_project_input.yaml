@@ -65,6 +65,9 @@ technology:
   waste_type:
     - "municipal_solid_waste"
   annual_waste_throughput: 262970.37
+  # Assumption — organic fraction routed to anaerobic digestion; not published in
+  # the VCS-3908 PDD. Drives the AD pathway only, not avoided landfill methane.
+  biomethanization_suitable_fraction: 0.35
   installed_capacity_mw: 8.484
   energy_generation_mwh_year: 49935.315
   tip_fee_usd_per_tonne: null
@@ -112,8 +115,8 @@ quantification:
   project_emissions_tco2e_per_year: null
   leakage_tco2e_per_year: 0.0
   net_emissions_tco2e_per_year: null
-  grid_emission_factor: null
-  grid_emission_factor_source: null
+  grid_emission_factor: 0.5410
+  grid_emission_factor_source: "VCS-3908 registered PDD, combined margin EFgrid,CM,y = 0.5 x EFgrid,BM,y (0.3541) + 0.5 x EFgrid,OM,y (0.7279), per CDM Tool 07"
   methane_capture_rate: null
   methane_generation_factor: null
   crediting_period_total_tco2e: null

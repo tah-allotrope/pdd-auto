@@ -29,10 +29,14 @@ class TestComputeFor:
         )
         assert len(result.components) == 4
 
-    def test_inegol_returns_none_missing_grid_ef(self):
+    def test_inegol_computes_after_grid_ef_populated(self):
+        # The config carried a null grid_emission_factor until the combined
+        # margin (0.5410 tCO2/MWh) was read out of the VCS-3908 registered PDD.
         pi = _load_pi("configs/demo/inegol_project_input.yaml")
         result = compute_for(pi)
-        assert result is None
+        assert result is not None
+        assert result.methodology_id == "ACM0022"
+        assert result.net_emission_reductions_tco2e > 0
 
     def test_socson_returns_acm0022_with_warning(self):
         pi = _load_pi("configs/projects/demo_socson_like.yaml")

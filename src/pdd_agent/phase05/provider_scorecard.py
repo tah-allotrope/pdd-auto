@@ -51,6 +51,11 @@ class ProviderScorecardRow:
     wall_clock_seconds: float = 0.0
     skipped_reason: str | None = None
     findings: list[str] = field(default_factory=list)
+    # Grounding provenance — what the run was actually retrieved against and
+    # which quantification engine (if any) fed its numbers.
+    retrieval_index: str = ""
+    corpus_doc_count: int = 0
+    calc_methodology: str = ""
 
 
 def _parse_positive_float(value: str | None) -> float | None:
@@ -104,6 +109,15 @@ def _run_one_provider(
             calc_result = compute_for(project_input)
             if calc_result is not None and hasattr(orchestrator, "set_calc_result"):
                 orchestrator.set_calc_result(calc_result)
+                row.calc_methodology = calc_result.methodology_id
+
+        # Record what this run is actually grounded on. Without it a scorecard
+        # cannot distinguish a 17-document corpus run from a 3-document demo
+        # fallback (see get_retrieval_index).
+        from pdd_agent.retrieval.index import get_active_index_doc_count, get_active_index_path
+
+        row.retrieval_index = str(get_active_index_path())
+        row.corpus_doc_count = get_active_index_doc_count()
 
         run = orchestrator.run()
 
@@ -178,6 +192,26 @@ def _render_row(row: ProviderScorecardRow) -> str:
     return "| " + " | ".join(cells) + " |"
 
 
+def _render_grounding_block(ran_rows: list[ProviderScorecardRow]) -> list[str]:
+    """Render the grounding-provenance bullets shared by every row.
+
+    Returns an empty list when no provider ran, so a fully skipped scorecard
+    does not claim grounding it never had.
+    """
+    if not ran_rows:
+        return []
+    first = ran_rows[0]
+    calc = first.calc_methodology or "none (no calc engine dispatched)"
+    return [
+        "## Grounding",
+        "",
+        f"- Retrieval index: `{first.retrieval_index or 'unknown'}`",
+        f"- Corpus documents: {first.corpus_doc_count} indexed section rows",
+        f"- Calc methodology: {calc}",
+        "",
+    ]
+
+
 def _render_scorecard(
     rows: list[ProviderScorecardRow], input_path: Path, enable_judge: bool = True
 ) -> str:
@@ -190,6 +224,7 @@ def _render_scorecard(
         f"- Providers ran: {len(ran_rows)}",
         f"- Providers skipped: {len(skipped_rows)}",
         "",
+        *_render_grounding_block(ran_rows),
         "| Provider | Sections drafted | Sections failed | Judge pass rate | "
         "Mean judge score | Judge | Redraft count | Total tokens | "
         "Est. cost (USD) | Wall clock (s) |",

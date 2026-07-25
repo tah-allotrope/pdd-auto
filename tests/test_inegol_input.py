@@ -132,13 +132,20 @@ class TestInegolApplicability:
 
 class TestInegolQuantification:
     def test_tbd_fields(self, inegol_input):
+        # The emission scalars stay unset on purpose: the calc engine is the only
+        # source of quantification for this project, so nothing here can be
+        # transcribed from a human-authored figure.
         assert inegol_input.quantification.baseline_emissions_tco2e_per_year is None
         assert inegol_input.quantification.project_emissions_tco2e_per_year is None
         assert inegol_input.quantification.net_emissions_tco2e_per_year is None
-        assert inegol_input.quantification.grid_emission_factor is None
 
-    def test_grid_emission_factor_source(self, inegol_input):
-        assert inegol_input.quantification.grid_emission_factor_source is None
+    def test_grid_emission_factor_from_registered_pdd(self, inegol_input):
+        # Combined margin read out of the VCS-3908 registered PDD:
+        # 0.5 x EFgrid,BM,y (0.3541) + 0.5 x EFgrid,OM,y (0.7279) = 0.5410 tCO2/MWh.
+        assert inegol_input.quantification.grid_emission_factor == 0.5410
+        source = inegol_input.quantification.grid_emission_factor_source
+        assert source is not None
+        assert "VCS-3908" in source
 
 
 class TestInegolMonitoring:

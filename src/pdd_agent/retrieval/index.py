@@ -50,6 +50,11 @@ class RetrievalIndex:
         # connection, created lazily on first use.
         self._local = threading.local()
 
+    @property
+    def db_path(self) -> Path:
+        """Filesystem path of the SQLite database backing this index."""
+        return self._db_path
+
     def _open(self) -> sqlite3.Connection:
         conn = getattr(self._local, "conn", None)
         if conn is None:
@@ -288,10 +293,43 @@ def get_retrieval_index() -> RetrievalIndex:
         corpus_path = index_dir / "corpus.fts.db"
         demo_path = index_dir / "demo.fts.db"
         if not corpus_path.exists() and demo_path.exists():
+            # Silent degradation here would ground a "corpus-backed" run on the
+            # 3-document demo subset, so say so loudly.
+            logger.warning(
+                "retrieval_index_fallback",
+                requested=str(corpus_path),
+                using=str(demo_path),
+            )
             _index = RetrievalIndex(db_path=demo_path)
         else:
             _index = RetrievalIndex()
     return _index
+
+
+def get_active_index_path() -> Path:
+    """Return the filesystem path of the retrieval index currently in use."""
+    return get_retrieval_index().db_path
+
+
+def get_active_index_doc_count() -> int:
+    """Return the number of indexed section rows in the active retrieval index.
+
+    Returns 0 when the index file does not exist or is not queryable, so callers
+    can record grounding provenance without needing to handle sqlite errors.
+    """
+    import sqlite3
+
+    path = get_active_index_path()
+    if not path.exists():
+        return 0
+    try:
+        conn = sqlite3.connect(str(path))
+        try:
+            return int(conn.execute("SELECT COUNT(*) FROM sections_fts").fetchone()[0])
+        finally:
+            conn.close()
+    except sqlite3.Error:
+        return 0
 
 
 def set_retrieval_index(index: RetrievalIndex) -> None:

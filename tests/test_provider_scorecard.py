@@ -11,6 +11,7 @@ from pdd_agent.phase05.provider_scorecard import (
     ProviderScorecardRow,
     _count_failed_sections,
     _is_provider_available,
+    _render_grounding_block,
     _resolve_providers,
     run_provider_scorecard,
 )
@@ -195,8 +196,37 @@ class TestAutoModeScorecard:
         assert "anthropic" in text
 
 
+class TestGroundingProvenance:
+    def test_grounding_block_rendered(self, tmp_path: Path):
+        input_path = create_demo_project_input(tmp_path / "demo_project.yaml")
+        output_path = tmp_path / "scorecard.md"
+
+        run_provider_scorecard(
+            input_path=input_path,
+            providers=["demo"],
+            output_path=output_path,
+        )
+
+        text = output_path.read_text(encoding="utf-8")
+        assert "## Grounding" in text
+        assert "- Retrieval index: " in text
+        assert "- Corpus documents: " in text
+        assert "- Calc methodology: " in text
+
+    def test_grounding_block_omitted_when_nothing_ran(self):
+        assert _render_grounding_block([]) == []
+
+    def test_grounding_block_reports_absent_calc(self):
+        row = ProviderScorecardRow(provider="demo", retrieval_index="x.db", corpus_doc_count=3)
+        lines = _render_grounding_block([row])
+        assert "- Calc methodology: none (no calc engine dispatched)" in lines
+
+
 class TestProviderScorecardRowFields:
     def test_new_fields_default_correctly(self):
         row = ProviderScorecardRow(provider="demo")
         assert row.sections_failed == 0
         assert row.judge_provider == ""
+        assert row.retrieval_index == ""
+        assert row.corpus_doc_count == 0
+        assert row.calc_methodology == ""
