@@ -9,6 +9,7 @@ import time
 import structlog
 
 from pdd_agent.llm.budget import BudgetExhaustedError
+from pdd_agent.llm.output_normalize import strip_assistant_preamble
 from pdd_agent.llm.provider import BaseProvider, DraftSection, LLMResponse, ModelConfig
 
 logger = structlog.get_logger()
@@ -187,7 +188,7 @@ class OpenAIProvider(BaseProvider):
                 model=response.model or self._model,
             )
 
-        text = response.text[:max_chars]
+        text = strip_assistant_preamble(response.text)[:max_chars]
         confidence = self._assess_confidence(text, provenance)
 
         return DraftSection(

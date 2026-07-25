@@ -24,5 +24,5 @@ Python 3.11+ pipeline that drafts Verra VCS Project Design Documents (WTE/ACM002
 - Optional external tools (`gws`, LibreOffice) must degrade gracefully — never a hard requirement.
 
 ## Where to look
-- Active plan: newest file in `plans/`. Current push: `plans/2026-07-12-pdd-reality-gap-plan.md`.
+- Active plan: newest file in `plans/`. Current push: `plans/2026-07-25-calc-spine-and-cost-truth-plan.md`.
 - Strategy context: newest brief in `research/`.

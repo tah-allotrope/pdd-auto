@@ -97,7 +97,7 @@ def check_quantitative_consistency(
         draft_sections: List of DraftSection objects from orchestrator run.
         project_input: ProjectInput for absolute cross-checks against known values.
         run_id: Identifier for the report.
-        calc_result: Optional ACM0022CalcResult for cross-checking calc engine output
+        calc_result: Optional calc result for cross-checking calc engine output
             against both ProjectInput and draft sections.
     """
     report = ConsistencyReport(run_id=run_id)
@@ -437,8 +437,14 @@ def _check_calc_result_internal(
             )
         )
 
-    be_sum = calc_result.baseline_methane_swds_tco2e + calc_result.baseline_electricity_tco2e
-    if abs(be - be_sum) > 0.01:
+    be_sum_check = hasattr(calc_result, "baseline_methane_swds_tco2e") and hasattr(
+        calc_result, "baseline_electricity_tco2e"
+    )
+    if be_sum_check:
+        be_sum = calc_result.baseline_methane_swds_tco2e + calc_result.baseline_electricity_tco2e
+    else:
+        be_sum = None
+    if be_sum is not None and abs(be - be_sum) > 0.01:
         report.flags.append(
             ConsistencyFlag(
                 section_a="CalcResult.baseline",

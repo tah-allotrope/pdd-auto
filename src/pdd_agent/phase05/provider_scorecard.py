@@ -98,6 +98,13 @@ def _run_one_provider(
             enable_judge=drafting_enable_judge,
         )
 
+        if provider_name not in ("demo", "noop"):
+            from pdd_agent.calc.dispatch import compute_for
+
+            calc_result = compute_for(project_input)
+            if calc_result is not None and hasattr(orchestrator, "set_calc_result"):
+                orchestrator.set_calc_result(calc_result)
+
         run = orchestrator.run()
 
         row.sections_drafted = len(run.sections)

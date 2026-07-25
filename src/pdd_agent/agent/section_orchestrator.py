@@ -232,19 +232,30 @@ class SectionOrchestrator:
         return section_id == "4" or (sub_section_id or "").startswith("4.")
 
     def _format_calc_injection(self) -> str:
-        """Format ACM0022 calc results for injection into Section 4 prompts.
+        """Format calc results for injection into Section 4 prompts.
 
-        The field decomposition below (BE_CH4, PE_EC, organic waste to AD,
-        etc.) is specific to ACM0022CalcResult — this is the only calc-result
-        shape wired into prompt injection today. Only the header names the
-        project's actual resolved methodology, so the text is not
-        actively misleading for a project passing a different engine's
-        result through this same field; a full per-methodology calc
-        injection format is out of scope until another engine is wired in.
+        Three-branch dispatch:
+        1. No calc result -> empty string.
+        2. PddCalcResult with non-ACM0022 methodology -> to_prompt_block().
+        3. ACM0022 (raw or via PddCalcResult.raw_result) -> existing WTE format.
         """
         if not self._calc_result:
             return ""
+
         cr = self._calc_result
+        from pdd_agent.calc.dispatch import PddCalcResult
+
+        if isinstance(cr, PddCalcResult) and cr.methodology_id != "ACM0022":
+            return cr.to_prompt_block()
+
+        raw = getattr(cr, "raw_result", None)
+        if isinstance(raw, PddCalcResult) and raw.methodology_id != "ACM0022":
+            return raw.to_prompt_block()
+
+        if not isinstance(cr, PddCalcResult):
+            raw = cr
+        else:
+            raw = getattr(cr, "raw_result", None) or cr
         methodology_name = (
             self._project.technology.methodology_ids[0]
             if self._project and self._project.technology.methodology_ids
@@ -254,26 +265,26 @@ class SectionOrchestrator:
             f"\n## {methodology_name} Calculation Engine Results\n",
             f"The following values were computed by the {methodology_name} pure-Python calculation engine.\n"
             "Use these as the authoritative quantification values. Cite with `[CALC: component_name]`.\n",
-            f"- **Baseline emissions**: {cr.baseline_emissions_tco2e:,.2f} tCO2e/year [CALC: baseline_total]",
-            f"  - BE_CH4 (methane from SWDS): {cr.baseline_methane_swds_tco2e:,.2f} tCO2e/year [CALC: BE_CH4]",
-            f"  - BE_EC (displaced grid electricity): {cr.baseline_electricity_tco2e:,.2f} tCO2e/year [CALC: BE_EC]",
-            f"- **Project emissions**: {cr.project_emissions_tco2e:,.2f} tCO2e/year [CALC: project_total]",
-            f"  - PE_EC (grid consumption): {cr.project_electricity_consumption_tco2e:,.2f} tCO2e/year [CALC: PE_EC]",
-            f"  - PE_FC (fossil fuel): {cr.project_fossil_fuel_tco2e:,.2f} tCO2e/year [CALC: PE_FC]",
-            f"  - PE_CH4 (AD leakage): {cr.project_methane_leakage_tco2e:,.2f} tCO2e/year [CALC: PE_CH4]",
-            f"  - PE_FLARE (flare): {cr.project_flaring_tco2e:,.2f} tCO2e/year [CALC: PE_FLARE]",
-            f"- **Leakage**: {cr.leakage_tco2e:,.2f} tCO2e/year [CALC: leakage_total]",
-            f"  - LE_RDF (RDF combustion): {cr.leakage_rdf_combustion_tco2e:,.2f} tCO2e/year [CALC: LE_RDF]",
-            f"  - LE_AD (digestate): {cr.leakage_digestate_tco2e:,.2f} tCO2e/year [CALC: LE_AD]",
-            f"- **Net emission reductions**: {cr.net_emission_reductions_tco2e:,.2f} tCO2e/year [CALC: net_ER]",
-            f"- **Crediting period total**: {cr.crediting_period_total_tco2e:,.2f} tCO2e ({cr.crediting_period_years} years) [CALC: crediting_total]",
+            f"- **Baseline emissions**: {raw.baseline_emissions_tco2e:,.2f} tCO2e/year [CALC: baseline_total]",
+            f"  - BE_CH4 (methane from SWDS): {raw.baseline_methane_swds_tco2e:,.2f} tCO2e/year [CALC: BE_CH4]",
+            f"  - BE_EC (displaced grid electricity): {raw.baseline_electricity_tco2e:,.2f} tCO2e/year [CALC: BE_EC]",
+            f"- **Project emissions**: {raw.project_emissions_tco2e:,.2f} tCO2e/year [CALC: project_total]",
+            f"  - PE_EC (grid consumption): {raw.project_electricity_consumption_tco2e:,.2f} tCO2e/year [CALC: PE_EC]",
+            f"  - PE_FC (fossil fuel): {raw.project_fossil_fuel_tco2e:,.2f} tCO2e/year [CALC: PE_FC]",
+            f"  - PE_CH4 (AD leakage): {raw.project_methane_leakage_tco2e:,.2f} tCO2e/year [CALC: PE_CH4]",
+            f"  - PE_FLARE (flare): {raw.project_flaring_tco2e:,.2f} tCO2e/year [CALC: PE_FLARE]",
+            f"- **Leakage**: {raw.leakage_tco2e:,.2f} tCO2e/year [CALC: leakage_total]",
+            f"  - LE_RDF (RDF combustion): {raw.leakage_rdf_combustion_tco2e:,.2f} tCO2e/year [CALC: LE_RDF]",
+            f"  - LE_AD (digestate): {raw.leakage_digestate_tco2e:,.2f} tCO2e/year [CALC: LE_AD]",
+            f"- **Net emission reductions**: {raw.net_emission_reductions_tco2e:,.2f} tCO2e/year [CALC: net_ER]",
+            f"- **Crediting period total**: {raw.crediting_period_total_tco2e:,.2f} tCO2e ({raw.crediting_period_years} years) [CALC: crediting_total]",
             "",
             "### Key Intermediates",
-            f"- Organic waste to AD: {cr.organic_waste_to_ad_tonnes:,.1f} tonnes/year",
-            f"- Annual biogas: {cr.annual_biogas_m3:,.0f} Nm3/year",
-            f"- Annual methane: {cr.annual_methane_m3:,.0f} Nm3/year ({cr.annual_methane_tonnes:,.1f} tonnes)",
-            f"- Electricity generated: {cr.electricity_generated_mwh:,.1f} MWh/year",
-            f"- Methodology: {cr.methodology_version}",
+            f"- Organic waste to AD: {raw.organic_waste_to_ad_tonnes:,.1f} tonnes/year",
+            f"- Annual biogas: {raw.annual_biogas_m3:,.0f} Nm3/year",
+            f"- Annual methane: {raw.annual_methane_m3:,.0f} Nm3/year ({raw.annual_methane_tonnes:,.1f} tonnes)",
+            f"- Electricity generated: {raw.electricity_generated_mwh:,.1f} MWh/year",
+            f"- Methodology: {raw.methodology_version}",
             "",
         ]
         return "\n".join(parts)
@@ -937,6 +948,7 @@ class SectionOrchestrator:
             draft_sections=self._run.sections,
             project_input=self._project,
             run_id=self._run_id,
+            calc_result=self._calc_result,
         )
 
         tbd_tracker = TBDTracker()

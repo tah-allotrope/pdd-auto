@@ -17,10 +17,12 @@ CLI contract verified 2026-07-17 against Claude Code CLI 2.1.211
   ``--append-system-prompt <text>`` all exist and behave as documented.
 - JSON result shape: a single object with ``result`` (str, completion
   text), ``is_error`` (bool), ``usage.input_tokens`` (int),
-  ``usage.output_tokens`` (int), and ``total_cost_usd`` (float — not used
-  here, since usage is billed via the operator's subscription, not a
-  per-token API rate; see ``configs/model_pricing.yaml``'s ``claude-code``
-  entry).
+  ``usage.output_tokens`` (int), ``usage.cache_creation_input_tokens``
+  (int, default 0), ``usage.cache_read_input_tokens`` (int, default 0),
+  and ``total_cost_usd`` (float — the authoritative cost billed to the
+  operator's subscription, used verbatim for budget tracking; the
+  ``0.0`` rates in ``configs/model_pricing.yaml`` are the fallback used
+  only when the CLI omits the field).
 - Parsed defensively regardless: missing ``usage`` fields default to 0;
   a missing/empty ``result`` with ``is_error: false`` is treated as an
   error and retried like any other failure mode.
@@ -41,6 +43,7 @@ import time
 import structlog
 
 from pdd_agent.llm.budget import BudgetExhaustedError
+from pdd_agent.llm.output_normalize import strip_assistant_preamble
 from pdd_agent.llm.provider import BaseProvider, DraftSection, LLMResponse, ModelConfig
 
 logger = structlog.get_logger()
@@ -132,16 +135,24 @@ class ClaudeCodeProvider(BaseProvider):
                 usage = payload.get("usage") or {}
                 input_tokens = usage.get("input_tokens", 0) or 0
                 output_tokens = usage.get("output_tokens", 0) or 0
+                cache_creation_tokens = usage.get("cache_creation_input_tokens", 0) or 0
+                cache_read_tokens = usage.get("cache_read_input_tokens", 0) or 0
+                total_cost_usd = payload.get("total_cost_usd")
 
                 return LLMResponse(
                     text=text,
                     provider=self.name,
                     model=self._model,
-                    tokens_used=input_tokens + output_tokens,
-                    cost_usd=0.0,
+                    tokens_used=(
+                        input_tokens + output_tokens + cache_creation_tokens + cache_read_tokens
+                    ),
+                    cost_usd=total_cost_usd if total_cost_usd is not None else 0.0,
                     raw={
                         "input_tokens": input_tokens,
                         "output_tokens": output_tokens,
+                        "cache_creation_tokens": cache_creation_tokens,
+                        "cache_read_tokens": cache_read_tokens,
+                        "cost_usd": total_cost_usd,
                     },
                 )
             except BudgetExhaustedError:
@@ -207,9 +218,12 @@ class ClaudeCodeProvider(BaseProvider):
                 output_tokens=response.raw.get("output_tokens", 0),
                 model=response.model or self._model,
                 provider=self.name,
+                cache_creation_tokens=response.raw.get("cache_creation_tokens", 0),
+                cache_read_tokens=response.raw.get("cache_read_tokens", 0),
+                cost_usd=response.raw.get("cost_usd"),
             )
 
-        text = response.text[:max_chars]
+        text = strip_assistant_preamble(response.text)[:max_chars]
         confidence = self._assess_confidence(text, provenance)
 
         return DraftSection(

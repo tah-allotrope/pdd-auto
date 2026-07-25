@@ -28,8 +28,8 @@ claude-haiku-4-5-20251001:
 ollama-local:
   input: 0.0
   output: 0.0
-# claude-code is billed via the operator's Claude subscription; per-token USD
-# cost is not applicable, so both rates are 0.0 (tokens are still budget-tracked).
+# claude-code cost now comes from the CLI's reported total_cost_usd (authoritative).
+# The 0.0 rates below are the fallback used only when the CLI omits that field.
 claude-code:
   input: 0.0
   output: 0.0

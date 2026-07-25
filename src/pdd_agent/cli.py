@@ -185,12 +185,6 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Skip judge scoring (drafting-only comparison)",
     )
 
-    _PROJECT_ALIASES = {
-        "socson": "configs/projects/demo_socson_like.yaml",
-        "inegol": "configs/demo/inegol_project_input.yaml",
-        "rice": "configs/projects/rice_vm0051_pilot.yaml",
-    }
-
     prove_parser = sub.add_parser(
         "prove",
         help="Run a project through every available provider, judge each, "
@@ -375,6 +369,21 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Path to a document to extract ProjectInput from before drafting",
     )
 
+    calc_parser = sub.add_parser(
+        "calc",
+        help="Compute methodology quantification for a ProjectInput without any LLM call",
+    )
+    calc_parser.add_argument(
+        "--input",
+        required=True,
+        help="Path to a ProjectInput YAML file",
+    )
+    calc_parser.add_argument(
+        "--output",
+        default=None,
+        help="Optional path to write the result as JSON",
+    )
+
     parser.add_argument(
         "--folder-id",
         default="1pp23yRZ8qtopw1BPXrzVewXsmmWplCse",
@@ -413,6 +422,7 @@ def main() -> int:
         "build-index": lambda: _run_build_index(args, log),
         "demo-setup": lambda: _run_demo_setup(args, log),
         "draft": lambda: _run_draft(args, log),
+        "calc": lambda: _run_calc(args, log),
         "review": lambda: _run_review(args, log),
         "judge": lambda: _run_judge(args, log),
         "export": lambda: _run_export(args, log),
@@ -503,6 +513,20 @@ def _run_draft(args, log) -> None:
         max_redraft_attempts=3,
     )
 
+    if args.provider not in ("demo", "noop"):
+        from pdd_agent.calc.dispatch import compute_for
+
+        calc_result = compute_for(project_input)
+        if calc_result is not None:
+            orchestrator.set_calc_result(calc_result)
+            log.info(
+                "calc_engine_ready",
+                methodology_id=calc_result.methodology_id,
+                net_tco2e=calc_result.net_emission_reductions_tco2e,
+            )
+        else:
+            log.info("calc_engine_skipped", reason="compute_for returned None")
+
     if not (hasattr(args, "from_doc") and args.from_doc):
         input_path = Path(args.input)
         assumptions_path = resolve_assumptions_path(input_path)
@@ -521,6 +545,82 @@ def _run_draft(args, log) -> None:
         auto_approved=review_out["review"].get("auto_approved_sections", []),
         blocking=review_out["review"].get("blocking_issues", []),
     )
+
+
+def _run_calc(args, log) -> None:
+    import json as _json
+
+    from pdd_agent.calc.dispatch import compute_for
+
+    input_path = Path(args.input)
+    if not input_path.exists():
+        log.error("input_file_not_found", path=str(input_path))
+        return
+
+    with open(input_path, encoding="utf-8") as f:
+        input_data = yaml.safe_load(f)
+    project_input = ProjectInput.model_validate(input_data)
+
+    result = compute_for(project_input)
+    if result is None:
+        missing = []
+        mid = (
+            project_input.technology.methodology_ids[0].strip().upper()
+            if project_input.technology.methodology_ids
+            else ""
+        )
+        if mid == "ACM0022":
+            if project_input.quantification.grid_emission_factor is None:
+                missing.append("quantification.grid_emission_factor")
+            if not project_input.quantification.grid_emission_factor_source:
+                missing.append("quantification.grid_emission_factor_source")
+        log.info("calc_inputs_incomplete", methodology_id=mid, missing=missing)
+        print(f"Calc inputs incomplete for methodology {mid}: missing {', '.join(missing)}")
+        return
+
+    print(f"Methodology: {result.methodology_id}")
+    print(f"Baseline emissions: {result.baseline_emissions_tco2e:,.2f} tCO2e/year")
+    print(f"Project emissions: {result.project_emissions_tco2e:,.2f} tCO2e/year")
+    print(f"Leakage: {result.leakage_tco2e:,.2f} tCO2e/year")
+    print(f"Net emission reductions: {result.net_emission_reductions_tco2e:,.2f} tCO2e/year")
+    print(
+        f"Crediting period total: {result.crediting_period_total_tco2e:,.2f} tCO2e "
+        f"({result.crediting_period_years} years)"
+    )
+    print(f"\nComponents ({len(result.components)}):")
+    for comp in result.components:
+        print(f"  - {comp.name}: {comp.value_tco2e:,.2f} {comp.unit} — {comp.formula}")
+    print(f"\nMonitoring parameters: {len(result.monitoring_params)}")
+    if result.warnings:
+        print(f"\nWarnings ({len(result.warnings)}):")
+        for w in result.warnings:
+            print(f"  - {w}")
+
+    if args.output:
+        output_path = Path(args.output)
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        data = {
+            "methodology_id": result.methodology_id,
+            "baseline_emissions_tco2e": result.baseline_emissions_tco2e,
+            "project_emissions_tco2e": result.project_emissions_tco2e,
+            "leakage_tco2e": result.leakage_tco2e,
+            "net_emission_reductions_tco2e": result.net_emission_reductions_tco2e,
+            "crediting_period_total_tco2e": result.crediting_period_total_tco2e,
+            "crediting_period_years": result.crediting_period_years,
+            "components": [
+                {
+                    "name": c.name,
+                    "value_tco2e": c.value_tco2e,
+                    "unit": c.unit,
+                    "formula": c.formula,
+                    "notes": c.notes,
+                }
+                for c in result.components
+            ],
+            "warnings": result.warnings,
+        }
+        output_path.write_text(_json.dumps(data, indent=2), encoding="utf-8")
+        log.info("calc_output_written", path=str(output_path))
 
 
 def _run_review(args, log) -> None:

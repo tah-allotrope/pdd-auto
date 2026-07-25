@@ -342,6 +342,15 @@ def _execute_run(run_id: str, project_input_path: Path, provider_name: str) -> N
             assumption_burden_path=_service_runs_dir() / f"assumption-burden-{run_id}.md",
             runs_dir=_service_runs_dir(),
         )
+
+        effective_name = getattr(provider, "name", provider_name)
+        if effective_name not in ("demo", "noop"):
+            from pdd_agent.calc.dispatch import compute_for
+
+            calc_result = compute_for(project_input)
+            if calc_result is not None:
+                orchestrator.set_calc_result(calc_result)
+
         orchestrator.run()
         orchestrator.run_review()
         logger.info("service_run_complete", run_id=run_id)

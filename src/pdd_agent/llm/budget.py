@@ -29,6 +29,8 @@ class CallRecord:
     output_tokens: int
     model: str = ""
     cost_usd: float = 0.0
+    cache_creation_tokens: int = 0
+    cache_read_tokens: int = 0
 
 
 # Pricing per 1M tokens (approximate as of 2025). Embedded fallback used only
@@ -91,8 +93,12 @@ class TokenBudget:
         return sum(c.output_tokens for c in self.calls)
 
     @property
+    def total_cache_tokens(self) -> int:
+        return sum(c.cache_creation_tokens + c.cache_read_tokens for c in self.calls)
+
+    @property
     def total_tokens(self) -> int:
-        return self.total_input_tokens + self.total_output_tokens
+        return self.total_input_tokens + self.total_output_tokens + self.total_cache_tokens
 
     @property
     def remaining(self) -> int:
@@ -143,15 +149,23 @@ class TokenBudget:
         output_tokens: int,
         model: str = "",
         provider: str = "",
+        cache_creation_tokens: int = 0,
+        cache_read_tokens: int = 0,
+        cost_usd: float | None = None,
     ) -> CallRecord:
         """Record a completed LLM call and return the call record."""
-        cost = self._estimate_cost(input_tokens, output_tokens, model, provider)
+        if cost_usd is not None:
+            cost = cost_usd
+        else:
+            cost = self._estimate_cost(input_tokens, output_tokens, model, provider)
         record = CallRecord(
             section_id=section_id,
             input_tokens=input_tokens,
             output_tokens=output_tokens,
             model=model,
             cost_usd=cost,
+            cache_creation_tokens=cache_creation_tokens,
+            cache_read_tokens=cache_read_tokens,
         )
         self.calls.append(record)
         logger.debug(
@@ -187,6 +201,7 @@ class TokenBudget:
             "max_cost_usd": self.max_cost_usd,
             "total_input_tokens": self.total_input_tokens,
             "total_output_tokens": self.total_output_tokens,
+            "total_cache_tokens": self.total_cache_tokens,
             "total_tokens": self.total_tokens,
             "utilization": round(self.utilization, 4),
             "remaining": self.remaining,

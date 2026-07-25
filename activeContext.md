@@ -1,55 +1,38 @@
-# PDD Methodology-Parametrized Pipeline — Make Breadth Real for the LLM Path
+# PDD Pipeline — Calc Spine, Cost Truth, and Preamble Normalization
 
-**Plan:** `plans/2026-07-13-methodology-parametrized-pipeline-plan.md`
-**Status:** ALL 6 PHASES COMPLETE — 686 tests passing, working tree clean
-**Last commit:** (pending) — PHASE-05 + PHASE-06: one-command proof, evidence flow, batch-approve fix
+**Plan:** `plans/2026-07-25-calc-spine-and-cost-truth-plan.md`
+**Status:** PHASE-01 through PHASE-05 COMPLETE — 752 tests passing, working tree clean
+**Prior plan:** `plans/2026-07-23-run-real-model-proof-plan.md` (PHASE-01/02 complete: shared judge selection + in-loop redraft fix)
 
-**Prior push:** `plans/2026-07-12-pdd-reality-gap-plan.md` (closed 2026-07-12, see `docs/2026-07-12-ollama-shakeout.md` and `docs/2026-07-12-rice-pilot-findings.md`). That push made the code paths real — working Ollama provider, real LLM judge, live registry downloader, rice VM0051 end-to-end pilot — but never noticed that the prompt text and judge rubric were still hardcoded to WTE. This plan closed that gap.
+## Phase progress (2026-07-25 plan)
 
-## Phase progress
+- [x] PHASE-01: Truthful token/cost accounting — `CallRecord` extended with `cache_creation_tokens`/`cache_read_tokens`, `TokenBudget.record()` accepts `cost_usd`, `ClaudeCodeProvider` parses all four token classes + `total_cost_usd`
+- [x] PHASE-02: Assistant-preamble normalization — `src/pdd_agent/llm/output_normalize.py`, wired into all four real providers (claude-code, openai, anthropic, ollama)
+- [x] PHASE-03: Family-agnostic calc dispatch — `src/pdd_agent/calc/dispatch.py` with `compute_for()`, `PddCalcResult`, `PddCalcResult.to_prompt_block()`, three-branch `_format_calc_injection` in orchestrator, guarded ACM0022-specific consistency check
+- [x] PHASE-04: Calc wired into three drafting entry points (`cli.py:_run_draft`, `provider_scorecard.py:_run_one_provider`, `service/main.py:_execute_run`), `pdd-agent calc` subcommand added, `run_review` passes `calc_result` to consistency check
+- [x] PHASE-05: Documentation truth-sync — dead `_PROJECT_ALIASES` removed, leaked test artifact deleted, CLAUDE.md plan pointer updated
 
-- [x] PHASE-01: CI pipeline + config-driven model pricing — `.github/workflows/ci.yml`, `configs/model_pricing.yaml`, `doctor` pricing check, 227 lint findings cleared (one real bug fixed)
-- [x] PHASE-02: Methodology-parametrized drafting prompt — `prompts/methodologies/{wte,rice,biochar,cookstove}.md`, family-aware `_build_prompt` in `SectionOrchestrator`
-- [x] PHASE-03: Methodology-parametrized judge rubric — `rules/verra/rubrics/{wte,rice,biochar,cookstove}.yaml`, family-aware `LLMJudge` with `methodology_ids` parameter, per-rubric `quantitative_sections`
-- [x] PHASE-04: Methodology-parametrized test matrix — `tests/fixtures/methodology_projects.py` (per-family `ProjectInput` factories), `tests/test_methodology_matrix.py` (43-test parametrized matrix), `DemoProvider` extended with biochar/cookstove templates (bug found and fixed by the matrix)
-- [x] PHASE-05: One-command multi-provider proof — `pdd-agent prove` with `auto` mode, project aliases (`socson`, `inegol`, `rice`), skipped-providers section in scorecard
-- [x] PHASE-06: Evidence flow + batch-approve fix — evidence registry populated at intake, injected into prompt, rendered as DOCX appendix; atomic `POST /api/runs/{run_id}/approve-all` endpoint fixes read-modify-write race
+## Phase progress (2026-07-23 plan)
 
-## Real bugs found and fixed during this push (not in the original plan — surfaced by actually running things)
-
-1. **`DemoProvider` WTE-hardcoding** (PHASE-04): the parametrized test matrix immediately caught that `DemoProvider` had no templates for biochar and cookstove, so it fell back to WTE text containing "landfill" and "municipal solid waste" — exactly the WTE-shaped assumption the matrix was designed to surface. Fixed by adding biochar and cookstove templates.
-
-2. **Batch-approve race condition** (PHASE-06): the service's per-section approve endpoint had a read-modify-write race when clients looped it. Fixed by adding an atomic `POST /api/runs/{run_id}/approve-all` endpoint that loads state once, approves all approvable sections in one in-memory pass, and saves once.
-
-## Constraints (carried forward, still binding)
-
-- Tests must never require API keys, network access, or a running Ollama instance — mock all HTTP.
-- Demo/noop providers remain the safe default everywhere; real providers are opt-in via env vars.
-- Local-only deployment; no cloud/container infra this push.
-- `quantitative_sections` in non-WTE rubrics defaults to the WTE set (`1.10, 4.1, 4.2, 4.4`) until a registered PDD refines it (ASM-003).
-
-## Remaining blockers (external, not resolvable this push)
-
-1. No `OPENAI_API_KEY` / `ANTHROPIC_API_KEY` in the environment — PHASE-05's one-command proof is fully implemented and checklisted, ready to run the moment keys land.
-2. This dev machine's CPU-only hardware (Intel i5-8250U, no GPU) cannot complete a full 36-section Ollama run within a reasonable time — recommend GPU hardware or a remote Ollama instance for that specific proof; the code path itself is verified correct.
-3. The Verra registry's exact search API shape needs browser-devtools inspection to move past manual-download mode — real corpora for the three new families are not yet populated.
-4. Seraphin greenfield data remains externally blocked; the rice pilot (from the prior push) is the completed substitute, but a *real* (non-synthetic) Vietnam rice prospect has not yet been identified.
+- [x] PHASE-01: Extract shared judge-selection logic — `src/pdd_agent/llm/judge_selection.py`
+- [x] PHASE-02: Fix in-loop redraft judge — `SectionOrchestrator` uses `resolve_judge_provider()`, cached per instance
+- [ ] PHASE-03: Run first real-model proof (operational — requires `claude` CLI + real cost)
+- [ ] PHASE-04: Capture live Verra registry search API (operational — requires browser devtools)
 
 ## Test results
 
-- `python -m pytest -m "not corpus" -q`: **686 passed** (up from 631 at the start of this push)
-- `python -m pytest tests/test_methodology_matrix.py -v`: **43 passed** (new parametrized matrix)
+- `python -m pytest -m "not corpus" -q`: **752 passed**, 7 deselected
 - `ruff check .`: **All checks passed**
 - `ruff format --check .`: **All files formatted**
-- All manual/live verifications documented with concrete evidence in the phase docs listed above.
 
-## Commits (this push)
+## Remaining blockers (external, not resolvable this push)
 
-- (pending) — PHASE-05 + PHASE-06 (one-command proof, evidence flow, batch-approve fix)
+1. No `OPENAI_API_KEY` / `ANTHROPIC_API_KEY` in the environment — real-provider proof runs require the `claude` CLI (present on reference machine) or API keys.
+2. Verra registry's exact search API shape needs browser-devtools inspection to move past manual-download mode.
+3. PHASE-06 (real-model proof) and PHASE-04 of the 07-23 plan (registry capture) are operational phases requiring real CLI usage and interactive browser capture respectively.
 
 ## Suggested next steps
 
-1. When `OPENAI_API_KEY`/`ANTHROPIC_API_KEY` arrive: run `pdd-agent prove --project inegol --providers auto`, pick a default drafting model, get domain-expert sign-off on the resulting Inegol DOCX.
-2. Re-run the Ollama full-draft shakeout on GPU-equipped hardware to get a completed (not just verified-correct-under-failure) 36-section local run.
-3. Get browser-devtools access to the Verra registry search UI to finish PHASE-05's live corpus download, then swap the rice/biochar/cookstove golden tests from synthetic to registered values.
-4. Investigate the bulk-approve-all interaction noted in `docs/2026-07-12-rice-pilot-findings.md` if it recurs during real human use of the section-review UI (PHASE-06).
+1. Run `pdd-agent prove --project rice --providers claude-code` with `PDD_MAX_COST_USD=15` to produce the first real-model proof with calc spine active.
+2. Capture the Verra registry search API shape via browser devtools.
+3. Build the production retrieval index: `pdd-agent build-index --corpus-dir data/corpus/normalized --index-db data/index/corpus.fts.db`.

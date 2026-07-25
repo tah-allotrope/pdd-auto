@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/tah-allotrope/pdd-auto/actions/workflows/ci.yml/badge.svg)](https://github.com/tah-allotrope/pdd-auto/actions/workflows/ci.yml)
 
-**Status:** 686 tests collected (679 run, 7 corpus-marked deselected), green under CI on Python 3.11/3.12. Pipeline skeleton is mature: corpus RAG, rule-based review, VCS v4.4 DOCX export, LLM-judge + capped redraft loop, a local FastAPI section-review service, and calc engines for ACM0022, AMS-II.G, VM0051, and VM0044. Real LLM providers (OpenAI, Anthropic, Ollama) are implemented; live drafting runs are pending API keys (Ollama runs today with no key required — see `pdd-agent doctor`). All demo/benchmark output to date uses the deterministic `demo`/`noop` providers.
+**Status:** 752 tests collected (745 run, 7 corpus-marked deselected), green under CI on Python 3.11/3.12. Pipeline skeleton is mature: corpus RAG, rule-based review, VCS v4.4 DOCX export, LLM-judge + capped redraft loop, a local FastAPI section-review service, calc engines for ACM0022, AMS-II.G, VM0051, and VM0044 wired into the drafting pipeline via `pdd-agent calc` / `compute_for()`, truthful token/cost accounting for the `claude-code` provider, and assistant-preamble normalization for all real providers. Real LLM providers (OpenAI, Anthropic, Ollama, claude-code) are implemented; live drafting runs are pending API keys (Ollama runs today with no key required — see `pdd-agent doctor`). All demo/benchmark output to date uses the deterministic `demo`/`noop` providers.
 
 **Demo Quickstart:** Want to see it working in 5 minutes? → [QUICKSTART.md](QUICKSTART.md)
 
@@ -88,6 +88,7 @@ pdd-agent upload --run-id <run-id>
 | `pdd-agent map-spreadsheet` | Profile the workbook and generate Vietnam ProjectInput + assumptions artifacts |
 | `pdd-agent run-vietnam-pdd` | Run the full Vietnam spreadsheet-to-review-package workflow |
 | `pdd-agent prove` | Run a project through every available provider, judge each, write a head-to-head scorecard |
+| `pdd-agent calc` | Compute methodology quantification for a ProjectInput without any LLM call |
 
 ## Example Output
 
@@ -308,7 +309,7 @@ src/pdd_agent/
 ├── llm/provider.py                 # PHASE-03: Provider abstraction + NoopProvider
 ├── llm/openai_provider.py          # PHASE-03: OpenAI provider (implemented; live runs pending API key)
 ├── llm/anthropic_provider.py       # PHASE-03: Anthropic provider (implemented; live runs pending API key)
-├── llm/ollama_provider.py          # PHASE-03: Ollama provider stub — registered but not yet a real HTTP client
+├── llm/ollama_provider.py          # PHASE-03: Ollama provider — HTTP client against {OLLAMA_BASE_URL}/api/chat
 ├── agent/section_orchestrator.py   # PHASE-03+04: Drafting + review pipeline
 ├── review/checks.py               # PHASE-04: Rule-based compliance checks
 ├── review/consistency.py          # PHASE-04: Cross-section numeric consistency
@@ -325,7 +326,7 @@ src/pdd_agent/
 - The first benchmark is a workflow proof on one Soc Son-like case; a second project is still needed before claiming broader WTE coverage
 - The Soc Son spreadsheet mapper intentionally blocks review-sensitive quantitative splits, coordinates, and safeguards fields when they rely on synthetic assumptions
 - `ingest/registry_download.py` (public Verra/CDM registry PDD downloader) is a stub — the rice/AMS-II.G/biochar calc engines have golden tests against synthetic-but-documented values, not real registered-PDD corpora
-- The FastAPI service (`src/pdd_agent/service/`) currently forces the `demo` provider and disables corpus retrieval regardless of configuration, to sidestep SQLite thread-affinity — see `plans/2026-07-12-pdd-reality-gap-plan.md` PHASE-03
+- The FastAPI service's `_get_provider` does not recognize `claude-code`, so that provider silently falls back to `demo` with `reason="unknown_provider"`; `/dashboard` and `/api/runs` scan every `run-*.json` in the runs directory on each request, with no pagination or retention policy
 
 ## Key References
 
