@@ -282,3 +282,58 @@ class TestACM0022InegolValidation:
         data = result.model_dump()
         roundtrip = ACM0022CalcResult(**data)
         assert roundtrip.net_emission_reductions_tco2e == result.net_emission_reductions_tco2e
+
+
+class TestSwdsDiversionDecoupledFromBiomethanization:
+    """BE_CH4 tracks landfill diversion, not anaerobic-digestion routing.
+
+    Before this distinction existed, BE_CH4 was multiplied by
+    biomethanization_fraction, so a mass-burn plant — which biomethanizes
+    nothing yet diverts its entire throughput from landfill — reported zero
+    avoided methane. That understated the flagship methodology's dominant
+    baseline term by construction.
+    """
+
+    @staticmethod
+    def _mass_burn(**overrides) -> ACM0022CalcInput:
+        params = dict(
+            waste_streams=[
+                WasteStream(waste_type="municipal_solid_waste", annual_tonnes=100_000.0)
+            ],
+            biomethanization_fraction=0.0,
+            grid_emission_factor_tco2_per_mwh=0.92,
+            grid_emission_factor_source="test",
+            crediting_period_years=7,
+        )
+        params.update(overrides)
+        return ACM0022CalcInput(**params)
+
+    def test_mass_burn_has_non_zero_baseline_methane(self):
+        result = ACM0022Calculator(self._mass_burn()).calculate()
+        assert result.baseline_methane_swds_tco2e > 0.0
+
+    def test_explicit_zero_diversion_yields_zero_methane(self):
+        """Proves the new field drives the term, not an unconditional constant."""
+        result = ACM0022Calculator(self._mass_burn(swds_diversion_fraction=0.0)).calculate()
+        assert result.baseline_methane_swds_tco2e == 0.0
+
+    def test_biomethanization_does_not_affect_baseline_methane(self):
+        no_ad = ACM0022Calculator(self._mass_burn(biomethanization_fraction=0.0)).calculate()
+        half_ad = ACM0022Calculator(self._mass_burn(biomethanization_fraction=0.5)).calculate()
+        assert no_ad.baseline_methane_swds_tco2e == half_ad.baseline_methane_swds_tco2e
+        # ... while the anaerobic digestion pathway itself clearly differs.
+        assert half_ad.annual_biogas_m3 > no_ad.annual_biogas_m3
+
+    def test_diversion_fraction_scales_baseline_methane(self):
+        full = ACM0022Calculator(self._mass_burn(swds_diversion_fraction=1.0)).calculate()
+        half = ACM0022Calculator(self._mass_burn(swds_diversion_fraction=0.5)).calculate()
+        assert half.baseline_methane_swds_tco2e == pytest.approx(
+            full.baseline_methane_swds_tco2e / 2.0
+        )
+
+    def test_diversion_fraction_defaults_to_full_throughput(self):
+        assert self._mass_burn().swds_diversion_fraction == 1.0
+
+    def test_diversion_fraction_rejects_out_of_range(self):
+        with pytest.raises(ValueError):
+            self._mass_burn(swds_diversion_fraction=1.5)

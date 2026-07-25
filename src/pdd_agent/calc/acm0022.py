@@ -49,13 +49,19 @@ class ACM0022Calculator:
 
         # ========== BASELINE EMISSIONS ==========
 
-        # BE_CH4: methane from SWDS (FOD model, summed over waste streams)
+        # BE_CH4: methane from SWDS (FOD model, summed over waste streams).
+        #
+        # This is the methane the landfill would have emitted for waste the
+        # project diverts, so it scales with swds_diversion_fraction — NOT with
+        # biomethanization_fraction, which only governs how much of that waste is
+        # routed to anaerobic digestion. A mass-burn plant biomethanizes nothing
+        # and still avoids the entire landfill methane stream.
         be_ch4_total = 0.0
         for ws in self._inp.waste_streams:
-            organic_diverted = ws.annual_tonnes * self._inp.biomethanization_fraction
+            diverted_from_swds = ws.annual_tonnes * self._inp.swds_diversion_fraction
             be_ch4_ws = cdm_tool_04.methane_from_swds(
                 waste_type=ws.waste_type,
-                annual_waste_tonnes=organic_diverted,
+                annual_waste_tonnes=diverted_from_swds,
                 year=self._inp.calculation_year,
                 doc_override=ws.doc_override,
                 decay_rate_override=ws.decay_rate_override,
@@ -73,7 +79,10 @@ class ACM0022Calculator:
                 name="BE_CH4 (methane from SWDS)",
                 value_tco2e=be_ch4_total,
                 formula_ref="ACM0022 Eq.1 + Tool 04 Eq.2",
-                notes=f"FOD model, year {self._inp.calculation_year}",
+                notes=(
+                    f"FOD model, year {self._inp.calculation_year}, "
+                    f"{self._inp.swds_diversion_fraction:.0%} of throughput diverted from SWDS"
+                ),
             )
         )
 

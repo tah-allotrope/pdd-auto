@@ -109,7 +109,7 @@ def _map_acm0022(pi: ProjectInput) -> tuple[dict[str, Any], list[str]] | None:
         bio_frac = 0.0
         warnings.append(
             "biomethanization_suitable_fraction absent; assumed 0.0 "
-            "(no anaerobic digestion pathway)"
+            "(no anaerobic digestion pathway; does not affect BE_CH4)"
         )
     else:
         bio_frac = tech.biomethanization_suitable_fraction
@@ -126,6 +126,10 @@ def _map_acm0022(pi: ProjectInput) -> tuple[dict[str, Any], list[str]] | None:
     mapped: dict[str, Any] = {
         "waste_streams": waste_streams,
         "biomethanization_fraction": bio_frac,
+        # All waste entering the project is diverted from landfill; ProjectInput
+        # carries no partial-diversion field, and every WTE project modelled here
+        # takes its whole throughput out of the SWDS baseline.
+        "swds_diversion_fraction": 1.0,
         "grid_emission_factor_tco2_per_mwh": quant.grid_emission_factor,
         "grid_emission_factor_source": quant.grid_emission_factor_source,
         "crediting_period_years": pi.dates.crediting_period_years,

@@ -40,6 +40,17 @@ class ACM0022CalcInput(BaseModel):
         le=1,
         description="Fraction of incoming waste suitable for biomethanization",
     )
+    swds_diversion_fraction: float = Field(
+        1.0,
+        ge=0,
+        le=1,
+        description=(
+            "Fraction of incoming waste diverted from a solid waste disposal site. "
+            "Drives BE_CH4 (avoided landfill methane). Distinct from "
+            "biomethanization_fraction, which drives only the anaerobic digestion "
+            "pathway (biogas, PE_CH4, LE_AD)."
+        ),
+    )
 
     # Biogas / energy parameters
     biogas_yield_m3_per_tonne: float = Field(
