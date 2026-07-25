@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Final Report :: Making the Carbon Numbers Defensible</title>
+  <meta name="color-scheme" content="dark light">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+
+    async function initMermaid() {
+      const blocks = document.querySelectorAll('.mermaid');
+      if (!blocks.length) {
+        return;
+      }
+
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: 'base',
+        securityLevel: 'loose',
+        themeVariables: {
+          primaryColor: '#f3ead9',
+          primaryTextColor: '#1f1912',
+          primaryBorderColor: '#9d6b37',
+          lineColor: '#3b6f76',
+          secondaryColor: '#efe4d0',
+          tertiaryColor: '#ffffff',
+          background: '#fbf7f1',
+          mainBkg: '#fbf7f1',
+          nodeBorder: '#9d6b37',
+          clusterBkg: '#f7efdf',
+          clusterBorder: '#3b6f76',
+          edgeLabelBackground: '#fbf7f1'
+        }
+      });
+
+      await mermaid.run({ nodes: blocks });
+    }
+
+    const run = () => initMermaid().catch((error) => console.error('Mermaid render failed', error));
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', run, { once: true });
+    } else {
+      run();
+    }
+  </script>
+  <style>
+    :root {
+      --paper: #fbf7f1;
+      --paper-strong: #fffdf9;
+      --ink: #1f1912;
+      --ink-soft: #5f564c;
+      --line: #dccdb6;
+      --line-strong: #bfa37d;
+      --accent: #9d6b37;
+      --accent-soft: #efe4d0;
+      --accent-2: #3b6f76;
+      --shadow: 0 18px 40px rgba(49, 33, 16, 0.08);
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --radius-sm: 12px;
+      --page-width: 1040px;
+      --display-font: Georgia, "Times New Roman", serif;
+      --body-font: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      --mono-font: "Cascadia Code", Consolas, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(157, 107, 55, 0.09), transparent 26%),
+        radial-gradient(circle at 88% 10%, rgba(59, 111, 118, 0.08), transparent 22%),
+        linear-gradient(180deg, #f7f1e7 0%, #fbf7f1 28%, #f6efe5 100%);
+      font-family: var(--body-font);
+      line-height: 1.65;
+      letter-spacing: 0.01em;
+    }
+
+    a {
+      color: var(--accent-2);
+    }
+
+    code,
+    pre,
+    .technical,
+    .meta-chip,
+    .section-index,
+    .eyebrow,
+    .stat-label,
+    .stat-value,
+    .mermaid {
+      font-family: var(--mono-font);
+    }
+
+    .page-shell {
+      width: min(var(--page-width), calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 28px 0 56px;
+    }
+
+    .hero {
+      padding: 34px;
+      border: 1px solid rgba(159, 123, 79, 0.28);
+      border-radius: 30px;
+      background:
+        linear-gradient(135deg, rgba(157, 107, 55, 0.1), transparent 34%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0.86)),
+        var(--paper-strong);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(260px, 0.85fr);
+      gap: 24px;
+      align-items: end;
+    }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .title {
+      margin: 0;
+      max-width: 12ch;
+      font-family: var(--display-font);
+      font-size: clamp(2.8rem, 5vw, 4.8rem);
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+      text-wrap: balance;
+    }
+
+    .lede {
+      margin: 18px 0 0;
+      max-width: 60ch;
+      color: var(--ink-soft);
+      font-size: 1rem;
+    }
+
+    .takeaway {
+      margin-top: 22px;
+      padding: 18px 20px;
+      border-left: 4px solid var(--accent-2);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      background: rgba(59, 111, 118, 0.08);
+      color: #20373a;
+      font-size: 1.02rem;
+    }
+
+    .meta-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .meta-card,
+    .section,
+    .subcard,
+    .empty-state {
+      border: 1px solid rgba(95, 72, 46, 0.12);
+      background: rgba(255, 253, 249, 0.88);
+      box-shadow: var(--shadow);
+    }
+
+    .meta-card {
+      padding: 16px 18px;
+      border-radius: var(--radius-md);
+    }
+
+    .meta-label {
+      color: var(--ink-soft);
+      font-size: 0.76rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .meta-chip {
+      margin-top: 8px;
+      color: var(--accent);
+      font-size: 1rem;
+      font-weight: 700;
+      word-break: break-word;
+    }
+
+    .section {
+      margin-top: 22px;
+      padding: 24px;
+      border-radius: var(--radius-lg);
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px 18px;
+      align-items: end;
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section-index {
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .section-title {
+      margin: 0;
+      font-family: var(--display-font);
+      font-size: clamp(1.45rem, 2vw, 2rem);
+      line-height: 1.05;
+    }
+
+    .summary-grid,
+    .dual-grid,
+    .phase-grid,
+    .stat-grid,
+    .appendix-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .summary-grid,
+    .dual-grid,
+    .phase-grid,
+    .appendix-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .subcard {
+      padding: 18px;
+      border-radius: var(--radius-md);
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .subcard h3,
+    .subcard h4 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+      line-height: 1.2;
+    }
+
+    .subcard p:first-child,
+    .subcard ul:first-child,
+    .subcard ol:first-child {
+      margin-top: 0;
+    }
+
+    .stat-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin-top: 16px;
+    }
+
+    .stat {
+      padding: 14px 16px;
+      border: 1px solid rgba(59, 111, 118, 0.16);
+      border-radius: var(--radius-sm);
+      background: rgba(59, 111, 118, 0.06);
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .stat-label {
+      color: var(--ink-soft);
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .stat-value {
+      margin-top: 8px;
+      color: var(--accent-2);
+      font-size: 1.18rem;
+      font-weight: 700;
+    }
+
+    .narrative,
+    .chart-frame,
+    .technical-frame,
+    .diagram-frame,
+    .viz-frame {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.54);
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .diagram-frame {
+      overflow-x: auto;
+      overflow-y: auto;
+      overscroll-behavior-x: contain;
+      overscroll-behavior-y: contain;
+      max-height: min(70vh, 720px);
+    }
+
+    .chart-frame,
+    .viz-frame {
+      overflow: hidden;
+    }
+
+    .mermaid {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      color: var(--ink);
+    }
+
+    .mermaid svg {
+      display: block;
+      width: auto !important;
+      min-width: 100%;
+      max-width: none !important;
+      height: auto !important;
+    }
+
+    .diagram-frame.compact-diagram {
+      padding: 12px;
+      max-height: min(62vh, 560px);
+    }
+
+    .diagram-frame.compact-diagram .mermaid {
+      min-width: 900px;
+    }
+
+    .chart-frame canvas,
+    .technical-frame > canvas,
+    .viz-frame canvas,
+    canvas.report-chart {
+      display: block;
+      width: 100% !important;
+      max-width: 100%;
+      height: 300px !important;
+      min-height: 300px;
+      max-height: 300px;
+    }
+
+    .technical-frame table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+    }
+
+    .technical-frame th,
+    .technical-frame td {
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+      text-align: left;
+    }
+
+    .technical-frame th {
+      color: var(--accent);
+      font-size: 0.76rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .empty-state {
+      padding: 20px;
+      border-radius: var(--radius-md);
+      text-align: center;
+      color: var(--ink-soft);
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .empty-state strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--accent);
+      font-size: 0.84rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    ul,
+    ol {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    p:last-child,
+    li:last-child {
+      margin-bottom: 0;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      color: rgba(95, 86, 76, 0.74);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      text-align: right;
+    }
+
+    @media (max-width: 920px) {
+      .hero-grid,
+      .summary-grid,
+      .dual-grid,
+      .phase-grid,
+      .stat-grid,
+      .appendix-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .title {
+        max-width: none;
+      }
+
+    }
+
+    @media (max-width: 640px) {
+      .page-shell {
+        width: min(100vw - 20px, var(--page-width));
+        padding-top: 16px;
+        padding-bottom: 36px;
+      }
+
+      .hero,
+      .section {
+        padding: 18px;
+        border-radius: 20px;
+      }
+
+      .title {
+        font-size: clamp(2.1rem, 12vw, 3.2rem);
+      }
+
+    }
+
+    @media print {
+      :root {
+        --paper: #ffffff;
+        --paper-strong: #ffffff;
+        --ink: #111111;
+        --ink-soft: #444444;
+        --line: #d6d1c8;
+      }
+
+      @page {
+        size: A4;
+        margin: 14mm;
+      }
+
+      body {
+        background: #ffffff;
+      }
+
+      .page-shell {
+        width: 100%;
+        max-width: none;
+        padding: 0;
+      }
+
+      .hero,
+      .meta-card,
+      .section,
+      .subcard,
+      .narrative,
+      .chart-frame,
+      .technical-frame,
+      .diagram-frame,
+      .viz-frame,
+      .empty-state,
+      .stat {
+        background: #ffffff;
+        box-shadow: none;
+      }
+
+      .hero,
+      .section {
+        margin-top: 0;
+        margin-bottom: 10mm;
+      }
+
+      .diagram-frame {
+        overflow: visible;
+        max-height: none;
+      }
+
+      .diagram-frame.compact-diagram .mermaid {
+        min-width: 0;
+      }
+
+      .section-header,
+      .takeaway {
+        break-after: avoid;
+        page-break-after: avoid;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page-shell">
+    <section class="hero" id="title-hero">
+      <div class="hero-grid">
+        <div>
+          <p class="eyebrow">Final Report / Shareable Analysis Artifact</p>
+          <h1 class="title">Making the Carbon Numbers Defensible</h1>
+          <p class="lede">
+            A presentation-ready synthesis of a multi-phase analysis, written for readers who need context, judgment, and a clear path forward.
+          </p>
+          <div class="takeaway">The emissions engine was understating the flagship methodology by a third against a real registered carbon-credit document. It is now within 10% on the reference project, and it is checked against published figures for the first time.</div>
+        </div>
+        <div class="meta-grid">
+          <div class="meta-card">
+            <div class="meta-label">Project</div>
+            <div class="meta-chip">pdd-agent</div>
+          </div>
+          <div class="meta-card">
+            <div class="meta-label">Repository</div>
+            <div class="meta-chip">pdd-auto</div>
+          </div>
+          <div class="meta-card">
+            <div class="meta-label">Date</div>
+            <div class="meta-chip">2026-07-25</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="executive-summary">
+      <div class="section-header">
+        <div>
+          <div class="section-index">01 / Executive Summary</div>
+          <h2 class="section-title">Executive Summary</h2>
+        </div>
+      </div>
+      <div class="summary-grid">
+        <p><strong>The problem.</strong> This project drafts Verra carbon-credit Project Design Documents
+(PDDs). Its calculation engine — the part that produces the tonnes of CO<sub>2</sub> a project can
+claim — was wired into the drafting pipeline last week and immediately began telling the language
+model that its numbers were <em>authoritative</em>. Nobody had checked whether they were correct.</p>
+
+<p><strong>What we found.</strong> They were not. For waste-to-energy projects, the engine computed
+<strong>zero</strong> avoided landfill methane — the single largest term, and the entire economic
+case for the project type. On the Soc Son reference project it produced 2,499,042 tCO<sub>2</sub>e
+against the <strong>3,808,082 tCO<sub>2</sub>e published in that project's own registered VCS
+document</strong>: a 34% shortfall. A second project could not be calculated at all.</p>
+
+<p><strong>What we did.</strong> Two of the plan's six phases are complete. The cause was a single
+line conflating two different fractions of the waste stream: the engine scaled avoided landfill
+methane by the share of waste sent to <em>anaerobic digestion</em> rather than the share diverted
+<em>from landfill</em>. A mass-burn incinerator digests nothing and still keeps its entire throughput
+out of the ground, so the term collapsed to zero by construction. Soc Son now lands at
+3,413,977 tCO<sub>2</sub>e — within 10% of the registered figure, down from 34%.</p>
+
+<p><strong>Why it matters beyond the fix.</strong> The more durable change is the test that caught
+it. The repository had 752 tests, all of which verified that the engine reproduced its own
+arithmetic. None compared it to a document a validator had actually approved. There is now a
+regression suite that checks engine output against figures published in real registered PDDs — the
+first evidence in this codebase that the quantification is defensible rather than merely
+self-consistent.</p>
+
+<p><strong>Honest status.</strong> One project still fails its check and we did not hide it. The
+remaining gap is understood precisely, is not a calculation error, and is scheduled work rather than
+an unknown — see <em>Findings</em>.</p>
+      </div>
+    </section>
+
+    <section class="section" id="background-objective">
+      <div class="section-header">
+        <div>
+          <div class="section-index">02 / Background &amp; Objective</div>
+          <h2 class="section-title">Background &amp; Objective</h2>
+        </div>
+      </div>
+      <div class="narrative">
+        <p>A Project Design Document is the filing that determines whether a carbon project earns credits.
+Its narrative sections can be drafted by a language model; its numbers cannot be — they must trace
+back to a published methodology, and a third-party validator will argue with every one of them.</p>
+
+<p>This repository has carried roughly 1,800 lines of methodology code (ACM0022 for waste-to-energy,
+plus rice, biochar and cookstove engines and seven CDM calculation tools) for months. Until commit
+<code>47a4faf</code> it was connected to nothing. That commit wired it into the drafting pipeline so
+the engine's output is injected into prompts as the authoritative source of quantification.</p>
+
+<p>An audit of that newly-connected engine — the brainstorm that produced this plan — found that
+connecting it was not the same as making it right. The objective of this push was therefore narrow
+and specific: <strong>establish whether the engine's numbers survive contact with reality, and fix
+them where they do not</strong>, before any further work is layered on top and before a paid
+real-model production run is commissioned against them.</p>
+      </div>
+    </section>
+
+    <section class="section" id="inputs-scope">
+      <div class="section-header">
+        <div>
+          <div class="section-index">03 / Inputs &amp; Scope</div>
+          <h2 class="section-title">Inputs &amp; Scope</h2>
+        </div>
+      </div>
+      <div class="dual-grid">
+        <p>The work was driven by a six-phase implementation plan derived from a codebase audit. Phases 01
+and 02 are the subject of this report.</p>
+
+<h3>Inputs</h3>
+<ul>
+  <li><strong>Plan:</strong> <code>plans/2026-07-25-calc-correctness-and-audit-trail-plan.md</code></li>
+  <li><strong>Audit brief:</strong> <code>research/2026-07-25-pdd-calc-audit-and-table-shaped-deliverable-brainstorm.md</code></li>
+  <li><strong>Ground truth:</strong> two registered VCS Project Design Documents already sitting in
+      the local corpus — Soc Son (Vietnam) and İnegöl (Türkiye) — carrying published emission
+      reduction totals</li>
+  <li><strong>Code under test:</strong> <code>src/pdd_agent/calc/</code>,
+      <code>src/pdd_agent/llm/output_normalize.py</code>,
+      <code>src/pdd_agent/retrieval/index.py</code>,
+      <code>src/pdd_agent/phase05/provider_scorecard.py</code></li>
+</ul>
+
+<h3>Delivered in scope</h3>
+<ul>
+  <li>PHASE-01 — pre-flight safety: output-normalizer data-loss fix, İnegöl made computable,
+      production retrieval index built, grounding provenance recorded</li>
+  <li>PHASE-02 — engine correctness: avoided-landfill-methane fix, validated against registered PDDs</li>
+</ul>
+
+<h3>Explicitly out of scope for this report</h3>
+<ul>
+  <li>PHASE-03 to PHASE-06 of the plan — year-by-year schedules, persisting the calculation into the
+      exported document, Verra-shaped tables, and the paid real-model production run</li>
+  <li>Packaging the tool for use outside a repository checkout</li>
+  <li>Registry ingestion for non-waste-to-energy methodologies</li>
+</ul>
+      </div>
+    </section>
+
+    <section class="section" id="assumptions-constraints">
+      <div class="section-header">
+        <div>
+          <div class="section-index">04 / Assumptions &amp; Constraints</div>
+          <h2 class="section-title">Assumptions &amp; Constraints</h2>
+        </div>
+      </div>
+      <div class="dual-grid">
+        <div class="subcard">
+  <h3>Methodology reading (material)</h3>
+  <p>We assume ACM0022's avoided-methane term applies to <em>all</em> waste diverted from landfill,
+  not only the portion routed to anaerobic digestion. This is the change's entire premise. It is
+  supported by the registered documents — the corrected engine moves toward them from every
+  direction — but it is a domain judgement a methodology specialist should confirm.</p>
+</div>
+<div class="subcard">
+  <h3>Tolerance band</h3>
+  <p>Engine output is accepted within <strong>±20%</strong> of the registered figure. The project
+  configuration files lack waste-composition splits and site-specific project emissions, so an exact
+  match is not achievable. 20% absorbs that while remaining tight enough that a structurally missing
+  term cannot hide inside it — the pre-fix errors of 34% and 68% both fail it.</p>
+</div>
+<div class="subcard">
+  <h3>Ground-truth extraction</h3>
+  <p>The four reference figures were read out of the registered documents' text and are hard-coded
+  as constants rather than re-parsed at test time, so the tests run without the (large, untracked)
+  corpus present. If a figure was misread, the test is wrong in a way the code cannot detect.</p>
+</div>
+<div class="subcard">
+  <h3>Unverifiable inputs</h3>
+  <p>İnegöl's anaerobic-digestion fraction is not published in its PDD; 0.35 was assumed and labelled
+  as an assumption in the configuration. It affects only the digestion pathway, not the corrected
+  methane term. No cost was incurred in this push — all work was offline and deterministic.</p>
+</div>
+      </div>
+    </section>
+
+    <section class="section" id="methodology">
+      <div class="section-header">
+        <div>
+          <div class="section-index">05 / Methodology</div>
+          <h2 class="section-title">Methodology</h2>
+        </div>
+      </div>
+      <div class="narrative">
+        <p>The push followed a strict test-first discipline, which mattered more than usual here because the
+failure being chased was a <em>silent</em> one — code that ran cleanly and produced confident, wrong
+numbers.</p>
+
+<ol>
+  <li><strong>Write the check before the fix.</strong> Both phases began by writing tests that
+  encoded the desired behaviour and running them to confirm they failed. The output-normalizer bug
+  and all four engine discrepancies were observed as red tests before any source file was edited.</li>
+
+  <li><strong>Use an external oracle, not internal consistency.</strong> The decisive move was
+  testing against published figures from documents that third-party validators had already approved.
+  A codebase can be perfectly self-consistent and uniformly wrong; only an outside reference
+  distinguishes the two.</li>
+
+  <li><strong>Diagnose before adjusting.</strong> When a check still failed after the fix, we
+  measured the cause rather than relaxing the threshold. That measurement produced a precise,
+  scheduled explanation instead of a passing test that meant nothing.</li>
+
+  <li><strong>Prove the mechanism, not just the outcome.</strong> Tests assert that the two waste
+  fractions are genuinely independent — changing the digestion fraction must leave avoided methane
+  untouched, while changing the diversion fraction must scale it proportionally. This prevents a
+  future refactor from silently re-coupling them.</li>
+</ol>
+      </div>
+      <div class="stat-grid">
+        <div class="stat">
+          <div class="stat-label">Orientation</div>
+          <div class="stat-value">multi-phase</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Audience</div>
+          <div class="stat-value">stakeholder-safe</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Evidence Rule</div>
+          <div class="stat-value">no invented data</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="phase-analysis">
+      <div class="section-header">
+        <div>
+          <div class="section-index">06 / Phase-by-Phase Analysis</div>
+          <h2 class="section-title">Phase-by-Phase Analysis</h2>
+        </div>
+      </div>
+      <div class="phase-grid">
+        <div class="subcard">
+  <h3>PHASE-01 — Pre-flight safety</h3>
+  <p>Four independent hazards, all of which would have corrupted a paid production run:</p>
+  <ul>
+    <li><strong>Silent content deletion.</strong> The routine that strips conversational filler from
+    model output scanned the whole document for closing phrases. "Note: I've applied the national
+    grid emission factor…" is how a PDD discloses an assumption, not chatter — so a two-section test
+    body lost 135 of 209 characters, including an entire subsection. Now a closing phrase is only
+    removed when it forms an unbroken block at the very end.</li>
+    <li><strong>An uncomputable flagship project.</strong> İnegöl returned no calculation at all for
+    want of a grid emission factor. The value did not need inventing: its own registered PDD
+    publishes the components (0.5 × 0.3541 + 0.5 × 0.7279 = <strong>0.5410</strong> tCO<sub>2</sub>/MWh).</li>
+    <li><strong>Grounding on 3 documents instead of 17.</strong> Retrieval silently fell back to a
+    3-document demo index whenever the production index was absent — which it was. Built the real
+    index (233 → <strong>1,015</strong> indexed rows) and made the fallback log loudly.</li>
+    <li><strong>Unrecorded provenance.</strong> Run scorecards now record which index and which
+    methodology backed the numbers.</li>
+  </ul>
+</div>
+<div class="subcard">
+  <h3>PHASE-02 — Engine correctness</h3>
+  <p>The oracle test was written first and failed on four of five assertions, reproducing the audit's
+  predictions exactly: −34.4% on Soc Son, −68.4% on İnegöl, and avoided methane of precisely zero.</p>
+  <p>The fix introduces <code>swds_diversion_fraction</code> (defaulting to the full throughput) and
+  scales avoided landfill methane by it, leaving the digestion fraction to govern only biogas and
+  digestion-related emissions. It is a small change with a large effect because it restores a term
+  that had been multiplied to nothing.</p>
+  <p>Notably, <strong>no existing test needed its expected value rewritten</strong> — none had been
+  pinned to the zero-methane result, which suggests the defect predated any deliberate calibration
+  rather than having been baked in.</p>
+</div>
+<div class="subcard">
+  <h3>The one that did not pass</h3>
+  <p>İnegöl improved from −68.4% to −51.4% but still failed. Rather than widen the threshold, we
+  measured it: the registered 104,285 tCO<sub>2</sub>e/yr is a <em>seven-year average</em>, while the
+  engine's headline figure describes <em>year one</em> of a decay curve — structurally the smallest
+  year. Year three (107,226) already brackets the published average almost exactly.</p>
+  <p>The two affected assertions are marked as known-failing with the measured numbers recorded in
+  the code. Summing a proper year-by-year schedule moves this from −51% to +22%, which is PHASE-03's
+  scheduled work.</p>
+</div>
+<div class="subcard">
+  <h3>What the sequence bought</h3>
+  <p>PHASE-01 was not merely housekeeping. Its grid-emission-factor work is what made İnegöl's
+  independent check possible at all, and that check is what proved the remaining gap was a
+  reporting-period artefact rather than a second calculation error. Had the phases run in the other
+  order, the İnegöl signal would have been unavailable and the year-one diagnosis far harder to
+  reach.</p>
+</div>
+      </div>
+      <div class="diagram-frame">
+        <pre class="mermaid">
+flowchart LR
+  A["Engine wired in<br/>47a4faf"] --> B{"Audit:<br/>are numbers right?"}
+  B -->|"No: -34% vs<br/>registered PDD"| C["PHASE-01<br/>pre-flight safety"]
+  C --> C1["Stop silent<br/>text deletion"]
+  C --> C2["Inegol grid factor<br/>0.5410"]
+  C --> C3["Real index<br/>233 to 1015 rows"]
+  C1 --> D["PHASE-02<br/>write oracle test"]
+  C2 --> D
+  C3 --> D
+  D --> E{"Red?"}
+  E -->|"4 of 5 fail"| F["Fix: methane tracks<br/>landfill diversion"]
+  F --> G{"Green?"}
+  G -->|"Soc Son -34% to -10%"| H["Pass"]
+  G -->|"Inegol still -51%"| I{"Widen<br/>tolerance?"}
+  I -->|"No"| J["Diagnose: year-1 vs<br/>7-year average"]
+  J --> K["Mark known-failing<br/>with measurements"]
+  K --> L["PHASE-03<br/>year-by-year schedule"]
+  H --> L
+        </pre>
+      </div>
+    </section>
+
+    <section class="section" id="findings-recommendation">
+      <div class="section-header">
+        <div>
+          <div class="section-index">07 / Findings &amp; Recommendation</div>
+          <h2 class="section-title">Findings &amp; Recommendation</h2>
+        </div>
+      </div>
+      <div class="narrative">
+        <h3>Finding 1 — The engine was the outlier, not the project data</h3>
+<p>This inverts the intuitive reading. The human-authored Soc Son configuration declares
+3,808,532 tCO<sub>2</sub>e against the registered document's 3,808,082 — a match to within 0.01%.
+The engine's 2,499,042 was the number out of line. Anyone reconciling the two by editing the
+configuration downward would have destroyed correct data to satisfy broken code.</p>
+
+<h3>Finding 2 — A missing term, not an imprecise one</h3>
+<p>Avoided landfill methane was not approximately wrong; it was exactly zero on every waste-to-energy
+project, because it was multiplied by a fraction that is legitimately zero for incineration plants.
+Errors of this shape do not announce themselves — the engine ran cleanly and reported confident
+totals throughout.</p>
+
+<h3>Finding 3 — Self-consistency had been mistaken for correctness</h3>
+<p>752 tests passed against an engine understating its flagship methodology by a third. Every one
+verified internal arithmetic. The single most valuable artefact from this push is not the fix but
+the external oracle that makes the class of error visible at all.</p>
+
+<h3>Tradeoffs and rejected options</h3>
+<ul>
+  <li><strong>Rejected: widening the tolerance to 40%</strong> so İnegöl would pass. This would have
+  produced a green suite that certified nothing. The known-failing marker preserves the signal and
+  carries the measured numbers forward.</li>
+  <li><strong>Rejected: the plan's own "last 3 lines" heuristic</strong> for the text-truncation fix.
+  On testing, the offending line <em>was</em> within the last three lines of the fixture. The
+  implemented rule — a closing phrase must form an unbroken block at the end — is simpler and
+  correct for the right reason. This is a deliberate deviation from the written plan.</li>
+  <li><strong>Accepted risk: the diversion fraction defaults to 100%</strong> of throughput. For
+  projects that divert only part of their intake this overstates the baseline; no current
+  configuration expresses partial diversion, and the field exists to carry it when one does.</li>
+</ul>
+
+<h3>Recommendation</h3>
+<p>Proceed to PHASE-03. The year-by-year schedule is now the highest-value remaining item for two
+independent reasons: it is required by the Verra template regardless, and it is the specific,
+measured thing standing between İnegöl and a passing independent check. Do not commission the paid
+production run (PHASE-06) until the calculation reaches the exported document in PHASE-04 — until
+then the numbers are computed but never shown to the human who must defend them.</p>
+      </div>
+      <div class="viz-frame">
+        <h3 style="margin-top:0;">Engine output vs. registered document (crediting-period total, tCO<sub>2</sub>e)</h3>
+        <canvas id="oracleChart" height="320"></canvas>
+      </div>
+      <div class="viz-frame">
+        <h3 style="margin-top:0;">Why year one understates: İnegöl avoided landfill methane by crediting year (tCO<sub>2</sub>e)</h3>
+        <canvas id="fodChart" height="320"></canvas>
+      </div>
+      <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+      <script>
+        (function () {
+          if (!window.Chart) return;
+          Chart.defaults.devicePixelRatio = 1;
+          Chart.defaults.animation = false;
+          Chart.defaults.resizeDelay = 150;
+          Chart.defaults.normalized = true;
+          Chart.defaults.maintainAspectRatio = false;
+
+          var common = {
+            animation: false, resizeDelay: 150, normalized: true,
+            maintainAspectRatio: false, responsive: true
+          };
+
+          new Chart(document.getElementById('oracleChart'), {
+            type: 'bar',
+            data: {
+              labels: ['Soc Son', 'Inegol'],
+              datasets: [
+                { label: 'Before fix', data: [2499042, 230399], backgroundColor: '#c2703d' },
+                { label: 'After fix', data: [3413977, 354833], backgroundColor: '#7a9b76' },
+                { label: 'Registered PDD', data: [3808082, 730000], backgroundColor: '#5f482e' }
+              ]
+            },
+            options: Object.assign({}, common, {
+              plugins: { legend: { position: 'bottom' } },
+              scales: { y: { beginAtZero: true, title: { display: true, text: 'tCO2e' } } }
+            })
+          });
+
+          new Chart(document.getElementById('fodChart'), {
+            type: 'line',
+            data: {
+              labels: ['Year 1','Year 2','Year 3','Year 4','Year 5','Year 6','Year 7'],
+              datasets: [{
+                label: 'Avoided landfill methane',
+                data: [32321, 61860, 88856, 113529, 136078, 156687, 175522],
+                borderColor: '#c2703d', backgroundColor: 'rgba(194,112,61,0.15)',
+                fill: true, tension: 0.25
+              }]
+            },
+            options: Object.assign({}, common, {
+              plugins: { legend: { position: 'bottom' } },
+              scales: { y: { beginAtZero: true, title: { display: true, text: 'tCO2e' } } }
+            })
+          });
+        })();
+      </script>
+    </section>
+
+    <section class="section" id="implementation-path">
+      <div class="section-header">
+        <div>
+          <div class="section-index">08 / Implementation Path</div>
+          <h2 class="section-title">Implementation Path</h2>
+        </div>
+      </div>
+      <div class="phase-grid">
+        <div class="subcard">
+  <h3>Next — PHASE-03: year-by-year schedule</h3>
+  <p>Emit a per-year emission-reduction series rather than one number multiplied by the period
+  length, and populate the four monitoring parameters the engine already knows but discards.
+  Expected to move İnegöl from −51% to roughly +22% and to flip the two known-failing assertions.
+  Dependency: none beyond what has landed. Offline; no cost.</p>
+</div>
+<div class="subcard">
+  <h3>Then — PHASE-04: carry the result into the document</h3>
+  <p>The calculation is currently discarded before export: it is not saved with the run, so the
+  export step — which runs later and separately — cannot recover it. Persist it and render an audit
+  appendix. This is what a validator actually reads. Offline; no cost.</p>
+</div>
+<div class="subcard">
+  <h3>Then — PHASE-05: tables and precedence</h3>
+  <p>Turn the calculation into the first producer of the eleven Verra-shaped tables that exist in the
+  exporter but have never been populated, and formalise which source wins when the engine and the
+  project file disagree. Offline; no cost.</p>
+</div>
+<div class="subcard">
+  <h3>Last — PHASE-06: the paid production run</h3>
+  <p>Approximately US$12–16 and about an hour, against a real language model. Gate it on PHASE-04 at
+  minimum. Set the cost ceiling explicitly; run one project, read the scorecard, then decide on the
+  second.</p>
+</div>
+      </div>
+    </section>
+
+    <section class="section" id="risks-open-questions">
+      <div class="section-header">
+        <div>
+          <div class="section-index">09 / Risks / Open Questions</div>
+          <h2 class="section-title">Risks / Open Questions</h2>
+        </div>
+      </div>
+      <div class="dual-grid">
+        <div class="subcard">
+  <h3>Open: is the methodology reading right?</h3>
+  <p>The fix rests on a domain judgement about what ACM0022's avoided-methane term covers. The
+  evidence is strong — the corrected engine moves toward two independent registered documents — but
+  a methodology specialist should confirm it before the numbers are shown to a client. This is the
+  single highest-value review this push could receive.</p>
+</div>
+<div class="subcard">
+  <h3>Open: project emissions are still zero</h3>
+  <p>Every waste-to-energy configuration reports zero project emissions and zero leakage, because
+  auxiliary fuel, grid draw and ash handling are not carried in the input schema. A filing asserting
+  an incinerator has no emissions of its own will not survive validation. Not addressed here.</p>
+</div>
+<div class="subcard">
+  <h3>Risk: the tolerance is a judgement, not a standard</h3>
+  <p>±20% was chosen deliberately and is documented in the test file, but it is our number, not
+  Verra's. It is loose enough that a real but moderate error could pass. Tighten it as the input
+  coverage improves.</p>
+</div>
+<div class="subcard">
+  <h3>Risk: two of six phases complete</h3>
+  <p>The engine is now more accurate, but its output still does not reach the exported document, and
+  the four remaining phases are unstarted. Nothing in this push changes what a client would receive
+  today. Treat these results as an internal correctness milestone, not a deliverable.</p>
+</div>
+      </div>
+    </section>
+
+    <section class="section" id="appendices-evidence">
+      <div class="section-header">
+        <div>
+          <div class="section-index">10 / Appendices / Evidence Notes</div>
+          <h2 class="section-title">Appendices / Evidence Notes</h2>
+        </div>
+      </div>
+      <div class="appendix-grid">
+        <div class="subcard">
+  <h3>A — Measured engine output</h3>
+  <p>Crediting-period totals, tCO<sub>2</sub>e:</p>
+  <table style="width:100%; border-collapse:collapse; font-size:0.85rem;">
+    <tr style="text-align:left; border-bottom:1px solid rgba(95,72,46,0.2);">
+      <th>Project</th><th>Before</th><th>After</th><th>Registered</th></tr>
+    <tr><td>Soc Son</td><td>2,499,042</td><td><strong>3,413,977</strong></td><td>3,808,082</td></tr>
+    <tr><td>İnegöl</td><td>uncomputable</td><td>354,833</td><td>730,000</td></tr>
+  </table>
+  <p>Annual avoided methane, Soc Son: 0 → <strong>130,705</strong>. Demo Soc Son net: 49,680 →
+  67,624.</p>
+</div>
+<div class="subcard">
+  <h3>B — Verification performed</h3>
+  <ul>
+    <li>Full suite: <strong>771 passed, 2 known-failing, 7 deselected</strong> (from 752 passed at
+    the start of the push)</li>
+    <li><code>ruff check</code> and <code>ruff format --check</code>: clean</li>
+    <li>Environment check reports the retrieval index healthy at 1,015 rows</li>
+    <li>Both phases committed only after a green suite</li>
+  </ul>
+</div>
+<div class="subcard">
+  <h3>C — Independent arithmetic check</h3>
+  <p>The İnegöl grid factor was validated end-to-end without reference to the engine's internals:
+  49,935.315 MWh × 0.5410 tCO<sub>2</sub>/MWh = <strong>27,015.01</strong> tCO<sub>2</sub>e/yr, which
+  the engine reproduces exactly. This is the one term checkable by hand, and it passing before the
+  methane fix is what isolated the defect to the methane term alone.</p>
+</div>
+<div class="subcard">
+  <h3>D — Commits</h3>
+  <ul>
+    <li><code>099db28</code> — audit brief and implementation plan</li>
+    <li><code>811953c</code> — phase-01: pre-flight safety and grounding provenance</li>
+    <li><code>a6b40da</code> — phase-02: avoided-methane fix against registered-PDD oracle</li>
+  </ul>
+  <p>Deviation from plan: the text-truncation fix uses a suffix-block rule rather than the planned
+  fixed-line window, and no existing golden test required updating (the plan anticipated several).</p>
+</div>
+      </div>
+      <div class="footer-note">designed for html first, printable without reconstruction</div>
+    </section>
+  </main>
+  <script>
+    (function() {
+      const chartCanvases = document.querySelectorAll('canvas');
+      chartCanvases.forEach((canvas) => {
+        canvas.classList.add('report-chart');
+        const parent = canvas.parentElement;
+        if (parent && parent.classList.contains('technical-frame') && !parent.classList.contains('chart-frame')) {
+          parent.classList.add('chart-frame');
+        }
+      });
+    })();
+
+    if (window.Chart) {
+      Chart.defaults.devicePixelRatio = 1;
+      Chart.defaults.animation = false;
+      Chart.defaults.resizeDelay = 150;
+      Chart.defaults.normalized = true;
+      Chart.defaults.maintainAspectRatio = false;
+      Chart.defaults.responsive = true;
+      window.__REPORT_CHART_DEFAULTS__ = {
+        animation: false,
+        resizeDelay: 150,
+        normalized: true,
+        maintainAspectRatio: false,
+        responsive: true
+      };
+    }
+  </script>
+</body>
+</html>
