@@ -1,7 +1,7 @@
 ---
 title: "PDD Review Word Delivery Gap Closure"
 date: "2026-04-29"
-status: "partially_implemented"
+status: "complete — export/review_package.py publishes reports/review-packages/<slug>/<run-id> plus latest alias, CLI --review-output-dir/--upload-review-docx wired, closed by reports/2026-04-29-final-pdd-review-word-delivery.html."
 request: "Despite implementation so far I've yet to see any Word documents on PDD for review; reconcile this gap with a multi-phase plan."
 plan_type: "multi-phase"
 research_inputs:
@@ -48,11 +48,11 @@ Close the gap between successful internal DOCX generation and reviewer-visible W
 Define what counts as a reviewer-visible PDD package and close the ambiguity between internal run storage and actual review delivery.
 
 **Tasks**
-- [ ] TASK-01-01: Trace the current `run-vietnam-pdd` output path from `run_vietnam_pdd_workflow()` through `export_run_to_docx()` and `docs/vietnam-pdd-validation.md`, and document where the path becomes invisible or stale for a reviewer.
-- [ ] TASK-01-02: Decide the reviewer-facing local publication directory, with `reports/review-packages/` as the default target, and specify naming for both an immutable run-scoped copy and a stable latest alias.
-- [ ] TASK-01-03: Define the minimum review package contents: published `.docx`, validation report, gap analysis, assumptions burden or assumptions YAML, project YAML, and a small manifest that ties them to one `run_id`.
-- [ ] TASK-01-04: Define whether human-facing reports should reference only published relative paths, or published paths plus internal `data/runs/` paths for debugging.
-- [ ] TASK-01-05: Document the publication contract in repo docs so "Word document for review" has one deterministic meaning.
+- [x] TASK-01-01: Trace the current `run-vietnam-pdd` output path from `run_vietnam_pdd_workflow()` through `export_run_to_docx()` and `docs/vietnam-pdd-validation.md`, and document where the path becomes invisible or stale for a reviewer.
+- [x] TASK-01-02: Decide the reviewer-facing local publication directory, with `reports/review-packages/` as the default target, and specify naming for both an immutable run-scoped copy and a stable latest alias.
+- [x] TASK-01-03: Define the minimum review package contents: published `.docx`, validation report, gap analysis, assumptions burden or assumptions YAML, project YAML, and a small manifest that ties them to one `run_id`.
+- [x] TASK-01-04: Define whether human-facing reports should reference only published relative paths, or published paths plus internal `data/runs/` paths for debugging.
+- [x] TASK-01-05: Document the publication contract in repo docs so "Word document for review" has one deterministic meaning.
 
 **Files / Surfaces**
 - `.gitignore` - Confirms why `data/runs/` is not an appropriate reviewer-facing default.
@@ -77,11 +77,11 @@ Define what counts as a reviewer-visible PDD package and close the ambiguity bet
 Make every successful review workflow publish a current Word draft into a stable, reviewer-facing location inside the workspace.
 
 **Tasks**
-- [ ] TASK-02-01: Add a thin publication helper, likely under `src/pdd_agent/export/review_package.py`, that copies or materializes the final `.docx` and companion artifacts into `reports/review-packages/<project-slug>/<run-id>/`.
-- [ ] TASK-02-02: Add a stable latest alias such as `reports/review-packages/<project-slug>/latest.docx` plus a small `latest.md` or `manifest.json` that points to the matching run-scoped package.
-- [ ] TASK-02-03: Update `run_vietnam_pdd_workflow()` so publication is part of the default success path, not an undocumented follow-up step.
-- [ ] TASK-02-04: Ensure the validation report records the published review-package paths and fails loudly if the published `.docx` does not exist after workflow completion.
-- [ ] TASK-02-05: Keep `data/runs/` as the internal source of truth for raw run JSON and review state, but treat the published package as the canonical review surface.
+- [x] TASK-02-01: Add a thin publication helper, likely under `src/pdd_agent/export/review_package.py`, that copies or materializes the final `.docx` and companion artifacts into `reports/review-packages/<project-slug>/<run-id>/`.
+- [x] TASK-02-02: Add a stable latest alias such as `reports/review-packages/<project-slug>/latest.docx` plus a small `latest.md` or `manifest.json` that points to the matching run-scoped package.
+- [x] TASK-02-03: Update `run_vietnam_pdd_workflow()` so publication is part of the default success path, not an undocumented follow-up step.
+- [x] TASK-02-04: Ensure the validation report records the published review-package paths and fails loudly if the published `.docx` does not exist after workflow completion.
+- [x] TASK-02-05: Keep `data/runs/` as the internal source of truth for raw run JSON and review state, but treat the published package as the canonical review surface.
 
 **Files / Surfaces**
 - `src/pdd_agent/export/docx_export.py` - May need a small extension to support explicit publication-oriented output control.
@@ -106,11 +106,11 @@ Make every successful review workflow publish a current Word draft into a stable
 Make published review packages easy to find from the command surface and easy to share beyond the local workspace.
 
 **Tasks**
-- [ ] TASK-03-01: Update `scripts/run_vietnam_pdd.py` and `pdd-agent run-vietnam-pdd` output so they print the published review-package path separately from internal run artifact paths.
-- [ ] TASK-03-02: Add CLI options for reviewer delivery behavior, such as `--review-output-dir`, `--publish-latest`, or an opt-in `--upload-review-docx`, without breaking the existing default workflow.
-- [ ] TASK-03-03: Integrate `src/pdd_agent/export/drive_upload.py` with the published package path so optional uploads share the reviewer-facing `.docx`, not only the internal `data/runs` copy.
-- [ ] TASK-03-04: Update validation and runbook reports to use relative local paths where possible and add the Drive URL when an upload occurs.
-- [ ] TASK-03-05: Update `pdd-agent export` so manual export can target the same review-package publication path instead of only defaulting to `data/runs/{run_id}.docx`.
+- [x] TASK-03-01: Update `scripts/run_vietnam_pdd.py` and `pdd-agent run-vietnam-pdd` output so they print the published review-package path separately from internal run artifact paths.
+- [x] TASK-03-02: Add CLI options for reviewer delivery behavior, such as `--review-output-dir`, `--publish-latest`, or an opt-in `--upload-review-docx`, without breaking the existing default workflow.
+- [x] TASK-03-03: Integrate `src/pdd_agent/export/drive_upload.py` with the published package path so optional uploads share the reviewer-facing `.docx`, not only the internal `data/runs` copy.
+- [x] TASK-03-04: Update validation and runbook reports to use relative local paths where possible and add the Drive URL when an upload occurs.
+- [x] TASK-03-05: Update `pdd-agent export` so manual export can target the same review-package publication path instead of only defaulting to `data/runs/{run_id}.docx`.
 
 **Files / Surfaces**
 - `src/pdd_agent/cli.py` - Needs argument surface and output/logging changes.
@@ -135,11 +135,11 @@ Make published review packages easy to find from the command surface and easy to
 Prove the new publication contract works and leave behind an actual Word package that is immediately reviewable in this workspace.
 
 **Tasks**
-- [ ] TASK-04-01: Add regression tests covering published review-package paths, latest-alias behavior, missing-file failures, and CLI surfacing of the published path.
-- [ ] TASK-04-02: Re-run the Vietnam workflow end to end with `python-docx` available and verify that the published `.docx` exists in the reviewer-facing directory.
-- [ ] TASK-04-03: Refresh `docs/vietnam-pdd-validation.md`, `docs/vietnam-pdd-gap-analysis.md`, and `docs/vietnam-pdd-runbook.md` so they reference the current published package rather than stale internal-only paths.
-- [ ] TASK-04-04: Manually open the published Word draft and confirm it is the same document described by the latest validation report.
-- [ ] TASK-04-05: Record the final published artifact paths in `activeContext.md` during implementation so the next agent can confirm the delivery gap is actually closed.
+- [x] TASK-04-01: Add regression tests covering published review-package paths, latest-alias behavior, missing-file failures, and CLI surfacing of the published path.
+- [x] TASK-04-02: Re-run the Vietnam workflow end to end with `python-docx` available and verify that the published `.docx` exists in the reviewer-facing directory.
+- [x] TASK-04-03: Refresh `docs/vietnam-pdd-validation.md`, `docs/vietnam-pdd-gap-analysis.md`, and `docs/vietnam-pdd-runbook.md` so they reference the current published package rather than stale internal-only paths.
+- [x] TASK-04-04: Manually open the published Word draft and confirm it is the same document described by the latest validation report.
+- [x] TASK-04-05: Record the final published artifact paths in `activeContext.md` during implementation so the next agent can confirm the delivery gap is actually closed.
 
 **Files / Surfaces**
 - `tests/test_docx_export.py` - Needs assertions for publication-aware export behavior.

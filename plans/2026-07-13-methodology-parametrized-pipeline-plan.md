@@ -1,7 +1,7 @@
 ---
 title: "Methodology-Parametrized Pipeline Under CI: Make Breadth Real for the LLM Path"
 date: "2026-07-13"
-status: "draft"
+status: "complete — all six phases delivered and reported (reports/2026-07-14-final-phase-01-02, -03-04, -05-06); only TASK-06-04 (cli.py package split) was explicitly deferred as a non-functional refactor."
 request: "Multi-phase plan for CI, methodology-parametrized drafting prompt + judge rubric, parametrized test matrix, one-command provider scorecard, and architectural debt paydown (evidence registry flow, module splits, config-driven pricing, batch-approve fix)"
 plan_type: "multi-phase"
 research_inputs:
@@ -95,9 +95,9 @@ Provider-availability logic for `pdd-agent prove` (reuse `provider_scorecard._is
 Establish continuous integration (the single highest value-per-hour item) and remove the hardcoded pricing table so no other phase can silently break the suite or mis-price a run. No behavior change to drafting.
 
 **Tasks**
-- [ ] TASK-01-01: Add a GitHub Actions workflow running install + full non-corpus test suite + ruff on every push and PR.
-- [ ] TASK-01-02: Extract `_DEFAULT_PRICING` from `llm/budget.py` into `configs/model_pricing.yaml`; load it at module import with the current dict as an embedded fallback if the file is missing.
-- [ ] TASK-01-03: Add a pricing-coverage check to `pdd-agent doctor` that warns (not errors) when a configured judge/draft model has no pricing entry.
+- [x] TASK-01-01: Add a GitHub Actions workflow running install + full non-corpus test suite + ruff on every push and PR.
+- [x] TASK-01-02: Extract `_DEFAULT_PRICING` from `llm/budget.py` into `configs/model_pricing.yaml`; load it at module import with the current dict as an embedded fallback if the file is missing.
+- [x] TASK-01-03: Add a pricing-coverage check to `pdd-agent doctor` that warns (not errors) when a configured judge/draft model has no pricing entry.
 
 **File Changes**
 - `.github/workflows/ci.yml` (create): GitHub Actions workflow. Triggers `on: [push, pull_request]`. One job `test` on `ubuntu-latest`, `strategy.matrix.python-version: ["3.11", "3.12"]`. Steps: checkout; `actions/setup-python` with the matrix version; `pip install -e ".[dev,service,export,llm]"`; `ruff check .`; `ruff format --check .`; `python -m pytest -m "not corpus" -q`. Do NOT run `-m corpus` (needs `data/corpus/normalized/`).
@@ -130,9 +130,9 @@ Establish continuous integration (the single highest value-per-hour item) and re
 Split the WTE-hardcoded drafting instructions into a methodology-neutral core plus per-family overlays selected by the project's methodology, so a rice/biochar/cookstove draft is prompted with the correct domain framing and calc-engine name — while WTE output stays byte-for-byte identical.
 
 **Tasks**
-- [ ] TASK-02-01: Create `prompts/methodologies/{wte,rice,biochar,cookstove}.md` overlay fragments; move the WTE-specific sentences out of `section_draft_v2.md` into `wte.md`, leaving `section_draft_v2.md` methodology-neutral.
-- [ ] TASK-02-02: Add a `_family_slug()` resolver and overlay-loading to `SectionOrchestrator`, and inject the selected overlay in `_build_prompt`.
-- [ ] TASK-02-03: Replace the inlined WTE-flavored `[CALC:]` phrasing in `_format_calc_injection`/`_build_prompt` with methodology-neutral phrasing that names the active methodology from `methodology_ids`.
+- [x] TASK-02-01: Create `prompts/methodologies/{wte,rice,biochar,cookstove}.md` overlay fragments; move the WTE-specific sentences out of `section_draft_v2.md` into `wte.md`, leaving `section_draft_v2.md` methodology-neutral.
+- [x] TASK-02-02: Add a `_family_slug()` resolver and overlay-loading to `SectionOrchestrator`, and inject the selected overlay in `_build_prompt`.
+- [x] TASK-02-03: Replace the inlined WTE-flavored `[CALC:]` phrasing in `_format_calc_injection`/`_build_prompt` with methodology-neutral phrasing that names the active methodology from `methodology_ids`.
 
 **File Changes**
 - `prompts/methodologies/wte.md` (create): The WTE-specific domain framing extracted from `section_draft_v2.md` — "waste-to-energy projects", ACM0022/ACM0003 references, WTE examples. Must reproduce the exact domain sentences currently in `section_draft_v2.md` so WTE prompts are unchanged.
@@ -169,9 +169,9 @@ Split the WTE-hardcoded drafting instructions into a methodology-neutral core pl
 Make the LLM judge select its rubric and its quantitative-section map by methodology family, so rice/biochar/cookstove drafts are scored against family-appropriate criteria instead of the WTE `NO_FABRICATED_FACTS` ACM0022 binding.
 
 **Tasks**
-- [ ] TASK-03-01: Move `rules/verra/judge_rubric.yaml` content into `rules/verra/rubrics/wte.yaml` (verbatim) and create `rice.yaml`, `biochar.yaml`, `cookstove.yaml` from a shared skeleton with family-specific `NO_FABRICATED_FACTS` descriptions and a `quantitative_sections` list.
-- [ ] TASK-03-02: Add family resolution + rubric selection to `LLMJudge`; keep `rubric_path` override working; keep `rules/verra/judge_rubric.yaml` as a symlink-free copy or a thin pointer for backward compatibility.
-- [ ] TASK-03-03: Replace the module-level `_QUANTITATIVE_SECTIONS` constant with a per-rubric `quantitative_sections` value read from the selected rubric, defaulting to `{"1.10", "4.1", "4.2", "4.4"}`.
+- [x] TASK-03-01: Move `rules/verra/judge_rubric.yaml` content into `rules/verra/rubrics/wte.yaml` (verbatim) and create `rice.yaml`, `biochar.yaml`, `cookstove.yaml` from a shared skeleton with family-specific `NO_FABRICATED_FACTS` descriptions and a `quantitative_sections` list.
+- [x] TASK-03-02: Add family resolution + rubric selection to `LLMJudge`; keep `rubric_path` override working; keep `rules/verra/judge_rubric.yaml` as a symlink-free copy or a thin pointer for backward compatibility.
+- [x] TASK-03-03: Replace the module-level `_QUANTITATIVE_SECTIONS` constant with a per-rubric `quantitative_sections` value read from the selected rubric, defaulting to `{"1.10", "4.1", "4.2", "4.4"}`.
 
 **File Changes**
 - `rules/verra/rubrics/wte.yaml` (create): Exact copy of the current `judge_rubric.yaml`, plus a new top-level key `quantitative_sections: ["1.10", "4.1", "4.2", "4.4"]`.
@@ -208,9 +208,9 @@ Make the LLM judge select its rubric and its quantitative-section map by methodo
 Add the missing family dimension to the test suite so the core draft→review→consistency→export path is exercised over all four families, converting the class of bug the rice pilot found by hand into a CI-enforced guarantee.
 
 **Tasks**
-- [ ] TASK-04-01: Create minimal per-family `ProjectInput` fixtures (WTE, rice, biochar, cookstove) reusing existing configs where present.
-- [ ] TASK-04-02: Write a parametrized end-to-end test over the four families using the `demo` provider.
-- [ ] TASK-04-03: Add a parametrized assertion that each family selects the correct prompt overlay and judge rubric.
+- [x] TASK-04-01: Create minimal per-family `ProjectInput` fixtures (WTE, rice, biochar, cookstove) reusing existing configs where present.
+- [x] TASK-04-02: Write a parametrized end-to-end test over the four families using the `demo` provider.
+- [x] TASK-04-03: Add a parametrized assertion that each family selects the correct prompt overlay and judge rubric.
 
 **File Changes**
 - `tests/fixtures/methodology_projects.py` (create): Factory functions returning valid `ProjectInput` objects for each family. Reuse `configs/projects/demo_socson_like.yaml` (WTE) and `configs/projects/rice_vm0051_pilot.yaml` (rice) by loading them; construct minimal synthetic biochar (`methodology_ids=["VM0044"]`) and cookstove (`methodology_ids=["AMS-II.G"]`) inputs that satisfy `ProjectInput` validation (populate the three WTE-required fields — `waste_type`, `annual_waste_throughput`, `installed_capacity_mw` — with placeholders as the rice pilot did).
@@ -241,9 +241,9 @@ Add the missing family dimension to the test suite so the core draft→review→
 Collapse the provider-scorecard checklist into a single command that runs a project through every available provider, judges each with the (now family-aware) LLM judge, and writes a head-to-head scorecard — skipping unkeyed providers gracefully so it runs today on `demo`+`ollama` and becomes the frontier proof by a model-string swap the moment a key lands.
 
 **Tasks**
-- [ ] TASK-05-01: Add a `prove` subcommand that wraps `run_provider_scorecard` with provider auto-detection and per-provider judging.
-- [ ] TASK-05-02: Extend the scorecard rows with a judged pass-rate and per-provider estimated cost from `TokenBudget`.
-- [ ] TASK-05-03: Add convenience defaults so `pdd-agent prove --project inegol` resolves the Inegol config path.
+- [x] TASK-05-01: Add a `prove` subcommand that wraps `run_provider_scorecard` with provider auto-detection and per-provider judging.
+- [x] TASK-05-02: Extend the scorecard rows with a judged pass-rate and per-provider estimated cost from `TokenBudget`.
+- [x] TASK-05-03: Add convenience defaults so `pdd-agent prove --project inegol` resolves the Inegol config path.
 
 **File Changes**
 - `src/pdd_agent/phase05/provider_scorecard.py` (modify): Add an `auto` provider-selection mode that enumerates `["demo", "ollama", "openai", "anthropic"]`, keeps only those passing `_is_provider_available`, and records skipped ones with reasons in the rendered scorecard. In `_run_one_provider`, after drafting, construct `LLMJudge(provider_name=<judge_provider>, use_llm=<True only for keyed providers>, methodology_ids=<from project>)`, judge the run, and add `judged_pass_rate` and `estimated_cost_usd` to `ProviderScorecardRow`. Keep the deterministic judge for `demo`/`noop`.
@@ -275,9 +275,9 @@ Collapse the provider-scorecard checklist into a single command that runs a proj
 Pay the three debts breadth is actively straining: make the evidence registry a living flow (intake → prompt → appendix), fix the logged batch-approve service defect atomically, and split the 814-line `cli.py` into a thin parser + per-command handlers.
 
 **Tasks**
-- [ ] TASK-06-01: Populate `EvidenceRegistry` at intake and inject registered `[E###]` IDs into the drafting prompt.
-- [ ] TASK-06-02: Render the DOCX evidence appendix from the `EvidenceRegistry` object (single source of truth).
-- [ ] TASK-06-03: Add an atomic `POST /api/runs/{run_id}/approve-all` endpoint and a dashboard button; fix the read-modify-write batch defect.
+- [x] TASK-06-01: Populate `EvidenceRegistry` at intake and inject registered `[E###]` IDs into the drafting prompt.
+- [x] TASK-06-02: Render the DOCX evidence appendix from the `EvidenceRegistry` object (single source of truth).
+- [x] TASK-06-03: Add an atomic `POST /api/runs/{run_id}/approve-all` endpoint and a dashboard button; fix the read-modify-write batch defect.
 - [ ] TASK-06-04: Split `src/pdd_agent/cli.py` into a `src/pdd_agent/cli/` package (thin `__main__`/parser + per-command handler modules), preserving the `pdd-agent` console-script entry point.
 
 **File Changes**

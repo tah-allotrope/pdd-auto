@@ -1,7 +1,7 @@
 ---
 +title: "Agentic Low-Cost WTE PDD Tool"
 +date: "2026-04-22"
-+status: "partially_implemented"
++status: "complete — all five phases implemented (CLI, Drive ingest, section schema, retrieval, review, DOCX/Drive export, benchmark) and reported in reports/2026-04-22-phase-01..04 + 2026-04-24-phase-05 + 2026-04-24-final; every named surface exists in the repo."
 +request: "Draft a detailed multi-phase plan for an agentic/AI tool that creates waste-to-energy carbon credit PDDs at zero/minimal cost using local research, a fresh research brief, and Google Workspace CLI (gws) against the provided Drive folder."
 +plan_type: "multi-phase"
 +research_inputs:
@@ -50,12 +50,12 @@
 +Stand up the minimal code structure and produce a trustworthy manifest of the Drive-based WTE corpus so every later phase works from a narrow, reproducible, and parseable document set.
 +
 +**Tasks**
-+- [ ] TASK-01-01: Initialize a lean Python CLI workspace with `pyproject.toml`, `src/pdd_agent/`, `tests/`, and a single entrypoint for ingestion and drafting commands.
-+- [ ] TASK-01-02: Wrap `gws drive files list` and `gws drive files get` in a thin ingestion layer that records file IDs, names, MIME types, modified timestamps, parent folders, and local cache paths in `data/corpus/manifest.jsonl`.
-+- [ ] TASK-01-03: Download or export the first corpus candidate set from the provided Drive folder into `data/corpus/raw/verra/` and store official reference material in `data/reference/verra/` and `data/reference/methodologies/`.
-+- [ ] TASK-01-04: Normalize each candidate document into plain text plus lightweight metadata in `data/corpus/normalized/`, preserving page numbers, heading lines, and parseability flags.
-+- [ ] TASK-01-05: Define `configs/corpus_buckets/verra-wte-initial.yaml` so the first drafting bucket is selected by methodology family, template generation, project structure, geography, and document quality rather than by filename only.
-+- [ ] TASK-01-06: Generate a corpus readiness report that marks which files are in-bucket, out-of-bucket, or blocked by poor extraction/OCR needs.
++- [x] TASK-01-01: Initialize a lean Python CLI workspace with `pyproject.toml`, `src/pdd_agent/`, `tests/`, and a single entrypoint for ingestion and drafting commands.
++- [x] TASK-01-02: Wrap `gws drive files list` and `gws drive files get` in a thin ingestion layer that records file IDs, names, MIME types, modified timestamps, parent folders, and local cache paths in `data/corpus/manifest.jsonl`.
++- [x] TASK-01-03: Download or export the first corpus candidate set from the provided Drive folder into `data/corpus/raw/verra/` and store official reference material in `data/reference/verra/` and `data/reference/methodologies/`.
++- [x] TASK-01-04: Normalize each candidate document into plain text plus lightweight metadata in `data/corpus/normalized/`, preserving page numbers, heading lines, and parseability flags.
++- [x] TASK-01-05: Define `configs/corpus_buckets/verra-wte-initial.yaml` so the first drafting bucket is selected by methodology family, template generation, project structure, geography, and document quality rather than by filename only.
++- [x] TASK-01-06: Generate a corpus readiness report that marks which files are in-bucket, out-of-bucket, or blocked by poor extraction/OCR needs.
 +
 +**Files / Surfaces**
 +- `pyproject.toml` - Minimal runtime and test dependencies for a local-first CLI tool.
@@ -88,12 +88,12 @@
 +Translate the Verra/WTE document structure into machine-usable schemas so the drafting system knows what each section needs, what can be reused, and what must come from project-specific evidence.
 +
 +**Tasks**
-+- [ ] TASK-02-01: Extract a canonical heading tree from `template/VCS_Soc Son_Project-Description.pdf` and 2-3 additional in-bucket documents, then reconcile heading drift into one normalized section map.
-+- [ ] TASK-02-02: Create `schemas/pdd_section_schema.yaml` with one record per section, including section type, expected evidence class, allowed boilerplate level, and review sensitivity.
-+- [ ] TASK-02-03: Build `schemas/project_input.schema.json` (or a Pydantic model) for structured project facts, numeric inputs, document references, and unresolved placeholders.
-+- [ ] TASK-02-04: Encode WTE-specific methodology hazards in a rules file, especially landfill-diversion vs fuel-substitution ownership, additionality, safeguards, and monitoring-plan requirements.
-+- [ ] TASK-02-05: Implement and test a section parser that maps normalized corpus text into the canonical section schema and records section coverage per document.
-+- [ ] TASK-02-06: Write a provenance policy that defines which generated statements may originate from user inputs, retrieved corpus examples, official references, or unresolved placeholders.
++- [x] TASK-02-01: Extract a canonical heading tree from `template/VCS_Soc Son_Project-Description.pdf` and 2-3 additional in-bucket documents, then reconcile heading drift into one normalized section map.
++- [x] TASK-02-02: Create `schemas/pdd_section_schema.yaml` with one record per section, including section type, expected evidence class, allowed boilerplate level, and review sensitivity.
++- [x] TASK-02-03: Build `schemas/project_input.schema.json` (or a Pydantic model) for structured project facts, numeric inputs, document references, and unresolved placeholders.
++- [x] TASK-02-04: Encode WTE-specific methodology hazards in a rules file, especially landfill-diversion vs fuel-substitution ownership, additionality, safeguards, and monitoring-plan requirements.
++- [x] TASK-02-05: Implement and test a section parser that maps normalized corpus text into the canonical section schema and records section coverage per document.
++- [x] TASK-02-06: Write a provenance policy that defines which generated statements may originate from user inputs, retrieved corpus examples, official references, or unresolved placeholders.
 +
 +**Files / Surfaces**
 +- `schemas/pdd_section_schema.yaml` - Canonical section taxonomy and drafting rules.
@@ -124,12 +124,12 @@
 +Build a low-cost section-by-section drafting engine that retrieves the right examples and references, writes only supported content, and leaves explicit review flags when evidence is missing.
 +
 +**Tasks**
-+- [ ] TASK-03-01: Implement a local retrieval layer using SQLite FTS/BM25 first, with optional local embeddings or reranking only if measured retrieval quality is insufficient.
-+- [ ] TASK-03-02: Create a section orchestrator that assembles, per section, the template requirements, methodology rule excerpts, top-matching corpus snippets, and project-specific inputs.
-+- [ ] TASK-03-03: Add a provider abstraction so the tool can run with a local model or low-cost API-backed model without changing orchestration logic.
-+- [ ] TASK-03-04: Emit structured outputs for each section that include drafted text, source snippets, source IDs, confidence, and unresolved issues.
-+- [ ] TASK-03-05: Enforce a hard rule that unsupported statements become placeholders or reviewer TODOs instead of free-form generated claims.
-+- [ ] TASK-03-06: Define CLI commands such as `inventory`, `normalize`, `parse`, `build-index`, `draft-section`, and `draft-pdd` so the workflow stays scriptable and inexpensive to rerun.
++- [x] TASK-03-01: Implement a local retrieval layer using SQLite FTS/BM25 first, with optional local embeddings or reranking only if measured retrieval quality is insufficient.
++- [x] TASK-03-02: Create a section orchestrator that assembles, per section, the template requirements, methodology rule excerpts, top-matching corpus snippets, and project-specific inputs.
++- [x] TASK-03-03: Add a provider abstraction so the tool can run with a local model or low-cost API-backed model without changing orchestration logic.
++- [x] TASK-03-04: Emit structured outputs for each section that include drafted text, source snippets, source IDs, confidence, and unresolved issues.
++- [x] TASK-03-05: Enforce a hard rule that unsupported statements become placeholders or reviewer TODOs instead of free-form generated claims.
++- [x] TASK-03-06: Define CLI commands such as `inventory`, `normalize`, `parse`, `build-index`, `draft-section`, and `draft-pdd` so the workflow stays scriptable and inexpensive to rerun.
 +
 +**Files / Surfaces**
 +- `src/pdd_agent/retrieval/index.py` - Local indexing pipeline for normalized corpus sections and reference docs.
@@ -160,11 +160,11 @@
 +Turn draft sections into a reviewable PDD package with explicit compliance checks, issue lists, and easy handoff back into the existing Drive-based workflow.
 +
 +**Tasks**
-+- [ ] TASK-04-01: Implement rule-based checks for required sections, missing evidence, double-counting flags, methodology eligibility, and unresolved quantitative inputs.
-+- [ ] TASK-04-02: Build a consistency checker that compares project inputs, generated sections, and reported numbers for obvious contradictions or missing units.
-+- [ ] TASK-04-03: Generate reviewer-friendly artifacts: section pack in Markdown/JSON, a consolidated issue report, and a DOCX export aligned to the target project-description format.
-+- [ ] TASK-04-04: Upload the draft package and review report back to Drive via `gws drive files create` so the workflow fits the same document-sharing surface already used by the team.
-+- [ ] TASK-04-05: Add a simple approval state model such as `drafted`, `needs-input`, `needs-domain-review`, and `ready-for-human-edit` so handoff is visible without building a web app.
++- [x] TASK-04-01: Implement rule-based checks for required sections, missing evidence, double-counting flags, methodology eligibility, and unresolved quantitative inputs.
++- [x] TASK-04-02: Build a consistency checker that compares project inputs, generated sections, and reported numbers for obvious contradictions or missing units.
++- [x] TASK-04-03: Generate reviewer-friendly artifacts: section pack in Markdown/JSON, a consolidated issue report, and a DOCX export aligned to the target project-description format.
++- [x] TASK-04-04: Upload the draft package and review report back to Drive via `gws drive files create` so the workflow fits the same document-sharing surface already used by the team.
++- [x] TASK-04-05: Add a simple approval state model such as `drafted`, `needs-input`, `needs-domain-review`, and `ready-for-human-edit` so handoff is visible without building a web app.
 +
 +**Files / Surfaces**
 +- `src/pdd_agent/review/checks.py` - Rule execution for section completeness and methodology risk flags.
@@ -194,11 +194,11 @@
 +Run a credible POC benchmark on a real WTE-like example, measure value vs cost, and decide whether to deepen the first bucket or expand into adjacent methodologies.
 +
 +**Tasks**
-+- [ ] TASK-05-01: Create a demo project configuration that approximates a Soc Son-like waste-to-power case using only facts that can be entered and reviewed cleanly.
-+- [ ] TASK-05-02: Run the full pipeline end-to-end and capture runtime, manual interventions, section coverage, unsupported-claim count, and any model/API spend.
-+- [ ] TASK-05-03: Compare generated sections against one real reference PDD and score them for factual grounding, structural correctness, and reviewer usefulness.
-+- [ ] TASK-05-04: Document what remained manual, which sections were strongest/weakest, and whether the near-zero-cost architecture is good enough for continued investment.
-+- [ ] TASK-05-05: Produce a short decision memo recommending one of three follow-ups: harden the same bucket, add a second WTE bucket, or pause and revisit architecture.
++- [x] TASK-05-01: Create a demo project configuration that approximates a Soc Son-like waste-to-power case using only facts that can be entered and reviewed cleanly.
++- [x] TASK-05-02: Run the full pipeline end-to-end and capture runtime, manual interventions, section coverage, unsupported-claim count, and any model/API spend.
++- [x] TASK-05-03: Compare generated sections against one real reference PDD and score them for factual grounding, structural correctness, and reviewer usefulness.
++- [x] TASK-05-04: Document what remained manual, which sections were strongest/weakest, and whether the near-zero-cost architecture is good enough for continued investment.
++- [x] TASK-05-05: Produce a short decision memo recommending one of three follow-ups: harden the same bucket, add a second WTE bucket, or pause and revisit architecture.
 +
 +**Files / Surfaces**
 +- `configs/projects/demo_socson_like.yaml` - Reproducible input set for the first benchmark run.

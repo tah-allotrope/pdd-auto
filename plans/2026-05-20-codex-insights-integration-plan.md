@@ -1,7 +1,7 @@
 ---
 title: "Codex Insights Integration and Inegol Demo Case"
 date: "2026-05-20"
-status: "partially_implemented"
+status: "complete — table_helpers.py, Inegol input/corpus, TBDTracker plus boundary/monitoring consistency checks, and both demo/comparison scripts all exist; closed by reports/2026-05-21-final-report-codex-inegol.html."
 request: "Improve the pdd-auto repo by incorporating insights from the staff Codex workflow (ref/ folder), upgrade DOCX export fidelity, strengthen review layer, and produce an end-to-end Inegol demo case."
 plan_type: "multi-phase"
 research_inputs:
@@ -60,8 +60,8 @@ Incorporate the high-quality domain content and DOCX formatting patterns discove
 Upgrade `src/pdd_agent/export/docx_export.py` to produce VCS v4.4-faithful structured tables matching the quality demonstrated in the Codex script, while preserving the existing review-friendly metadata layers (confidence badges, provenance, assumption appendices).
 
 **Tasks**
-- [ ] TASK-01-01: Add a `_table_helpers.py` module at `src/pdd_agent/export/table_helpers.py` implementing the Codex script's low-level OOXML patterns: `set_cell_shading()`, `set_cell_margin()`, `set_cell_text()` (with multi-line support), `set_row_cant_split()`, `set_row_repeat_header()`, and `add_styled_table()` (with header row formatting, column widths, and font size control). Use the existing `_docx_attr()` lazy-import pattern from `docx_export.py`.
-- [ ] TASK-01-02: Implement table renderer functions for each VCS v4.4 structured table type observed in the Codex output:
+- [x] TASK-01-01: Add a `_table_helpers.py` module at `src/pdd_agent/export/table_helpers.py` implementing the Codex script's low-level OOXML patterns: `set_cell_shading()`, `set_cell_margin()`, `set_cell_text()` (with multi-line support), `set_row_cant_split()`, `set_row_repeat_header()`, and `add_styled_table()` (with header row formatting, column widths, and font size control). Use the existing `_docx_attr()` lazy-import pattern from `docx_export.py`.
+- [x] TASK-01-02: Implement table renderer functions for each VCS v4.4 structured table type observed in the Codex output:
   - `render_cover_metadata_table()` — project title, ID, crediting period, version, prepared by (replaces current `_add_cover_metadata`)
   - `render_audit_history_table()` — audit type, period, program, VVB name, years
   - `render_proponent_table()` — organization, contact, title, address, phone, email
@@ -73,9 +73,9 @@ Upgrade `src/pdd_agent/export/docx_export.py` to produce VCS v4.4-faithful struc
   - `render_emissions_summary_table()` — vintage period, baseline, project, leakage, reductions, removals, VCUs
   - `render_sustainable_development_table()` — SD area, contribution, monitoring approach
   - `render_data_gaps_table()` — topic, gap/assumption, needed evidence
-- [ ] TASK-01-03: Refactor `export_run_to_docx()` to detect structured table data in `DraftSection` objects (keyed by `section.table_data` or `section.structured_content`) and dispatch to the appropriate table renderer instead of rendering all content as plain paragraphs.
-- [ ] TASK-01-04: Update `_set_base_styles()` to use Arial font (VCS standard) instead of Calibri, matching the Codex output's formatting. Add VCS-standard margins (1.7cm top, 1.6cm bottom, 1.8cm left/right).
-- [ ] TASK-01-05: Write unit tests in `tests/test_docx_export_tables.py` that verify each table renderer produces the expected row/column counts, header text, and cell shading for sample input data.
+- [x] TASK-01-03: Refactor `export_run_to_docx()` to detect structured table data in `DraftSection` objects (keyed by `section.table_data` or `section.structured_content`) and dispatch to the appropriate table renderer instead of rendering all content as plain paragraphs.
+- [x] TASK-01-04: Update `_set_base_styles()` to use Arial font (VCS standard) instead of Calibri, matching the Codex output's formatting. Add VCS-standard margins (1.7cm top, 1.6cm bottom, 1.8cm left/right).
+- [x] TASK-01-05: Write unit tests in `tests/test_docx_export_tables.py` that verify each table renderer produces the expected row/column counts, header text, and cell shading for sample input data.
 
 **Files / Surfaces**
 - `src/pdd_agent/export/table_helpers.py` — New module for OOXML table primitives
@@ -100,8 +100,8 @@ Upgrade `src/pdd_agent/export/docx_export.py` to produce VCS v4.4-faithful struc
 Create a validated Inegol `ProjectInput` YAML that maps the Codex script's project data into the existing Pydantic schema, and backport the Codex-extracted reference texts into the corpus for retrieval grounding.
 
 **Tasks**
-- [ ] TASK-02-01: Create `configs/demo/inegol_project_input.yaml` by extracting project facts from the Codex script's hardcoded data (project identity, location coordinates, technical design parameters, gas engine commissioning schedule, capacity figures, crediting period dates, methodology references) and mapping them to the `ProjectInput` schema fields. Mark fields not available in the Codex output with explicit `null` values and document why in inline YAML comments.
-- [ ] TASK-02-02: Extend `schemas/project_input.py` to support Inegol-specific fields that the current schema lacks but the Codex output demonstrates are needed for VCS v4.4 completeness:
+- [x] TASK-02-01: Create `configs/demo/inegol_project_input.yaml` by extracting project facts from the Codex script's hardcoded data (project identity, location coordinates, technical design parameters, gas engine commissioning schedule, capacity figures, crediting period dates, methodology references) and mapping them to the `ProjectInput` schema fields. Mark fields not available in the Codex output with explicit `null` values and document why in inline YAML comments.
+- [x] TASK-02-02: Extend `schemas/project_input.py` to support Inegol-specific fields that the current schema lacks but the Codex output demonstrates are needed for VCS v4.4 completeness:
   - `ProjectIdentity`: add `vcs_standard_version: str`, `prepared_by: str`, `audit_history: list[AuditHistoryEntry]`
   - `ProjectTechnology`: add `gas_engine_commissioning: list[EngineEntry]`, `rdf_capacity: RDFCapacity | None`, `biomethanization_suitable_fraction: float | None`
   - `ProjectLocation`: add `site_area_m2: float | None`, `grid_connection_point: str | None`, `boundary_coordinates: list[Coordinate]`
@@ -109,9 +109,9 @@ Create a validated Inegol `ProjectInput` YAML that maps the Codex script's proje
   - New sub-model `EngineEntry(engine_id, model, commissioning_date)`
   - New sub-model `RDFCapacity(max_capacity_tph, planned_2024_tpd, planned_2035_tpd)`
   - New sub-model `Coordinate(lat, lon)`
-- [ ] TASK-02-03: Write a validation test in `tests/test_inegol_input.py` that loads `configs/demo/inegol_project_input.yaml` and confirms it passes `ProjectInput` validation without errors.
-- [ ] TASK-02-04: Copy the 4 extracted text files from `ref/.../extracted_text/` to `data/corpus/normalized/` with standardized filenames: `bergama_vcs_joint_pd_v4.2.txt`, `hereko_vcs_pd_v4.1.txt`, `acm0022_v03.0_methodology.txt`, `inegol_draft_pd.txt`. Add entries for each to `data/corpus/manifest.jsonl` with source metadata.
-- [ ] TASK-02-05: Update `configs/corpus_buckets/verra-wte-initial.yaml` to include the newly added normalized text files in the WTE bucket, noting their provenance as "extracted via Codex staff workflow 2026-05-20."
+- [x] TASK-02-03: Write a validation test in `tests/test_inegol_input.py` that loads `configs/demo/inegol_project_input.yaml` and confirms it passes `ProjectInput` validation without errors.
+- [x] TASK-02-04: Copy the 4 extracted text files from `ref/.../extracted_text/` to `data/corpus/normalized/` with standardized filenames: `bergama_vcs_joint_pd_v4.2.txt`, `hereko_vcs_pd_v4.1.txt`, `acm0022_v03.0_methodology.txt`, `inegol_draft_pd.txt`. Add entries for each to `data/corpus/manifest.jsonl` with source metadata.
+- [x] TASK-02-05: Update `configs/corpus_buckets/verra-wte-initial.yaml` to include the newly added normalized text files in the WTE bucket, noting their provenance as "extracted via Codex staff workflow 2026-05-20."
 
 **Files / Surfaces**
 - `configs/demo/inegol_project_input.yaml` — New Inegol demo input file
@@ -140,12 +140,12 @@ Create a validated Inegol `ProjectInput` YAML that maps the Codex script's proje
 Add section-level TBD tracking (inspired by the Codex script's `[TBD]` markers) and boundary-aware compliance checks that the Codex output lacks, making the pipeline's review output strictly more informative than the Codex script's static markers.
 
 **Tasks**
-- [ ] TASK-03-01: Add a `TBDTracker` class to `src/pdd_agent/review/tbd_tracker.py` that scans drafted section text for TBD/placeholder patterns (regex: `\[TBD.*?\]`, `\[PLACEHOLDER\]`, `\[INSERT.*?\]`, `\[SOURCE.*?\]`, `\[EVIDENCE.*?\]`) and produces a structured report mapping each TBD to its section ID, surrounding context, and suggested evidence type (from the section schema's `evidence_required` field).
-- [ ] TASK-03-02: Integrate `TBDTracker` into the `SectionOrchestrator.run()` method in `src/pdd_agent/agent/section_orchestrator.py` so that every draft run automatically produces a TBD report alongside the consistency report.
-- [ ] TASK-03-03: Add a `_check_ghg_boundary_completeness()` function to `src/pdd_agent/review/consistency.py` that verifies all GHG sources listed in the section schema's boundary definition (section 3.3) are addressed in the drafted boundary table, flagging any missing source/gas combinations as HIGH severity.
-- [ ] TASK-03-04: Add a `_check_monitoring_parameter_coverage()` function to `src/pdd_agent/review/consistency.py` that cross-references the monitoring parameters in section 5.1/5.2 against the methodology rules' required parameter list from `rules/verra/wte_methodology_rules.yaml`, flagging missing parameters as MEDIUM severity.
-- [ ] TASK-03-05: Add a `render_tbd_appendix()` function to `src/pdd_agent/export/docx_export.py` that renders the TBD tracker output as "Appendix C - Data Gaps and Evidence Requirements" in the exported DOCX, mirroring but improving upon the Codex script's static Appendix 2.
-- [ ] TASK-03-06: Write tests in `tests/test_tbd_tracker.py` covering: detection of `[TBD]` markers, correct section attribution, and correct evidence type suggestion from schema.
+- [x] TASK-03-01: Add a `TBDTracker` class to `src/pdd_agent/review/tbd_tracker.py` that scans drafted section text for TBD/placeholder patterns (regex: `\[TBD.*?\]`, `\[PLACEHOLDER\]`, `\[INSERT.*?\]`, `\[SOURCE.*?\]`, `\[EVIDENCE.*?\]`) and produces a structured report mapping each TBD to its section ID, surrounding context, and suggested evidence type (from the section schema's `evidence_required` field).
+- [x] TASK-03-02: Integrate `TBDTracker` into the `SectionOrchestrator.run()` method in `src/pdd_agent/agent/section_orchestrator.py` so that every draft run automatically produces a TBD report alongside the consistency report.
+- [x] TASK-03-03: Add a `_check_ghg_boundary_completeness()` function to `src/pdd_agent/review/consistency.py` that verifies all GHG sources listed in the section schema's boundary definition (section 3.3) are addressed in the drafted boundary table, flagging any missing source/gas combinations as HIGH severity.
+- [x] TASK-03-04: Add a `_check_monitoring_parameter_coverage()` function to `src/pdd_agent/review/consistency.py` that cross-references the monitoring parameters in section 5.1/5.2 against the methodology rules' required parameter list from `rules/verra/wte_methodology_rules.yaml`, flagging missing parameters as MEDIUM severity.
+- [x] TASK-03-05: Add a `render_tbd_appendix()` function to `src/pdd_agent/export/docx_export.py` that renders the TBD tracker output as "Appendix C - Data Gaps and Evidence Requirements" in the exported DOCX, mirroring but improving upon the Codex script's static Appendix 2.
+- [x] TASK-03-06: Write tests in `tests/test_tbd_tracker.py` covering: detection of `[TBD]` markers, correct section attribution, and correct evidence type suggestion from schema.
 
 **Files / Surfaces**
 - `src/pdd_agent/review/tbd_tracker.py` — New module
@@ -172,7 +172,7 @@ Add section-level TBD tracking (inspired by the Codex script's `[TBD]` markers) 
 Execute the full pipeline (input validation → retrieval → section drafting → consistency check → TBD tracking → compliance review → DOCX export) for the Inegol project and produce a comparison report proving the pipeline output exceeds the standalone Codex script.
 
 **Tasks**
-- [ ] TASK-04-01: Create `scripts/run_inegol_demo.py` — a CLI script that:
+- [x] TASK-04-01: Create `scripts/run_inegol_demo.py` — a CLI script that:
   1. Loads `configs/demo/inegol_project_input.yaml` into `ProjectInput`
   2. Runs the `SectionOrchestrator` with the `demo` provider against the full section schema
   3. Runs the consistency checker against the draft
@@ -181,15 +181,15 @@ Execute the full pipeline (input validation → retrieval → section drafting �
   6. Exports the draft to DOCX at `data/runs/inegol-demo-{timestamp}.docx`
   7. Exports a JSON review package at `data/runs/inegol-demo-{timestamp}-review.json`
   8. Prints a summary comparing pipeline output metrics against baseline (Codex script output)
-- [ ] TASK-04-02: Create `scripts/compare_codex_vs_pipeline.py` that generates a structured comparison report (Markdown) covering:
+- [x] TASK-04-02: Create `scripts/compare_codex_vs_pipeline.py` that generates a structured comparison report (Markdown) covering:
   - Section coverage: number of VCS sections populated in each output
   - Table fidelity: structured tables vs plain text by section
   - Provenance: sections with corpus citations vs sections without
   - Review layers: consistency flags, TBD items, compliance check results (pipeline only)
   - Formatting: font, margins, page count comparison
   - Save to `reports/2026-05-20-codex-vs-pipeline-comparison.md`
-- [ ] TASK-04-03: Run the Inegol demo script and verify the output DOCX opens correctly, contains structured tables in the key sections, and includes all three appendices (Assumptions, Reviewer Issues, Data Gaps).
-- [ ] TASK-04-04: Generate a phase report using the `/report` skill documenting the integration results, demo output, and comparison findings.
+- [x] TASK-04-03: Run the Inegol demo script and verify the output DOCX opens correctly, contains structured tables in the key sections, and includes all three appendices (Assumptions, Reviewer Issues, Data Gaps).
+- [x] TASK-04-04: Generate a phase report using the `/report` skill documenting the integration results, demo output, and comparison findings.
 
 **Files / Surfaces**
 - `scripts/run_inegol_demo.py` — New demo runner script

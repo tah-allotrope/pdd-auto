@@ -1,7 +1,7 @@
 ---
 title: "Demo Output UX & Pre-built Artifacts"
 date: "2026-05-22"
-status: "partially_implemented"
+status: "complete — scripts/_demo_helpers.py banner, output/ copies, examples/example-inegol-demo.docx, and the --open flag all present; closed by reports/2026-05-25-sprint2-complete.html (all 4 phases)."
 request: "Sprint 2 implementation for colleague-testable demo: improve demo script output, copy DOCX to predictable paths, commit pre-built example DOCX (GAP-04, GAP-06)"
 plan_type: "multi-phase"
 research_inputs:
@@ -44,7 +44,7 @@ Improve the demo experience so colleagues immediately know where to find their g
 Both demo scripts print a clear, user-friendly summary with the DOCX path prominently highlighted, and copy the generated DOCX to `output/latest-demo.docx` for easy discovery.
 
 **Tasks**
-- [ ] TASK-01-01: Add a `_print_demo_banner(docx_path, run_id, sections_count, runtime)` helper function in a shared `scripts/_demo_helpers.py` module (or inline in each script if keeping things simple). The banner should print:
+- [x] TASK-01-01: Add a `_print_demo_banner(docx_path, run_id, sections_count, runtime)` helper function in a shared `scripts/_demo_helpers.py` module (or inline in each script if keeping things simple). The banner should print:
   ```
   ╔══════════════════════════════════════════════╗
   ║  PDD Agent Demo Complete                      ║
@@ -59,10 +59,10 @@ Both demo scripts print a clear, user-friendly summary with the DOCX path promin
   ║    <full path>                                ║
   ╚══════════════════════════════════════════════╝
   ```
-- [ ] TASK-01-02: In `scripts/run_demo.py`, after `run_demo_benchmark()` returns, copy `artifacts.demo_latest_docx` (or `artifacts.export_docx`) to `output/latest-demo.docx` using `shutil.copy2`. Create `output/` directory with `mkdir(parents=True, exist_ok=True)`.
-- [ ] TASK-01-03: In `scripts/run_inegol_demo.py`, after DOCX export, copy `docx_path` to `output/latest-inegol-demo.docx` using `shutil.copy2`.
-- [ ] TASK-01-04: Update both scripts to print the summary banner instead of raw path lines. Keep the detailed review/comparison output in Inegol script as secondary output below the banner.
-- [ ] TASK-01-05: Add `output/` to `.gitignore` (generated runtime artifacts, not tracked).
+- [x] TASK-01-02: In `scripts/run_demo.py`, after `run_demo_benchmark()` returns, copy `artifacts.demo_latest_docx` (or `artifacts.export_docx`) to `output/latest-demo.docx` using `shutil.copy2`. Create `output/` directory with `mkdir(parents=True, exist_ok=True)`.
+- [x] TASK-01-03: In `scripts/run_inegol_demo.py`, after DOCX export, copy `docx_path` to `output/latest-inegol-demo.docx` using `shutil.copy2`.
+- [x] TASK-01-04: Update both scripts to print the summary banner instead of raw path lines. Keep the detailed review/comparison output in Inegol script as secondary output below the banner.
+- [x] TASK-01-05: Add `output/` to `.gitignore` (generated runtime artifacts, not tracked).
 
 **Files / Surfaces**
 - `scripts/run_demo.py` — Add copy-to-output and banner printing
@@ -86,11 +86,11 @@ Both demo scripts print a clear, user-friendly summary with the DOCX path promin
 Commit a representative demo DOCX so colleagues can preview the tool's output without installing Python or running anything.
 
 **Tasks**
-- [ ] TASK-02-01: Run `python scripts/run_inegol_demo.py` locally and capture the output DOCX.
-- [ ] TASK-02-02: Create `examples/` directory at repo root.
-- [ ] TASK-02-03: Copy the generated DOCX to `examples/example-inegol-demo.docx`.
-- [ ] TASK-02-04: Create `examples/README.md` with a brief explanation: what the file is, that it's a synthetic demo (not a real PDD), when it was generated, and how to regenerate it (`python scripts/run_inegol_demo.py`).
-- [ ] TASK-02-05: Add a line in the main `README.md` under a new "Example Output" section (before "Architecture"): "To preview what the tool produces without running it, open `examples/example-inegol-demo.docx`. This is a synthetic demo — see the cover page disclaimer."
+- [x] TASK-02-01: Run `python scripts/run_inegol_demo.py` locally and capture the output DOCX.
+- [x] TASK-02-02: Create `examples/` directory at repo root.
+- [x] TASK-02-03: Copy the generated DOCX to `examples/example-inegol-demo.docx`.
+- [x] TASK-02-04: Create `examples/README.md` with a brief explanation: what the file is, that it's a synthetic demo (not a real PDD), when it was generated, and how to regenerate it (`python scripts/run_inegol_demo.py`).
+- [x] TASK-02-05: Add a line in the main `README.md` under a new "Example Output" section (before "Architecture"): "To preview what the tool produces without running it, open `examples/example-inegol-demo.docx`. This is a synthetic demo — see the cover page disclaimer."
 
 **Files / Surfaces**
 - `examples/example-inegol-demo.docx` — New committed binary artifact (~225 KB)
@@ -114,10 +114,10 @@ Commit a representative demo DOCX so colleagues can preview the tool's output wi
 Update the QUICKSTART.md (from Sprint 1) to reference the new `output/` paths and example file, and add an optional `--open` flag to demo scripts.
 
 **Tasks**
-- [ ] TASK-03-01: Update `QUICKSTART.md` "What You Get" section to reference `output/latest-demo.docx` and `output/latest-inegol-demo.docx` as the primary output locations.
-- [ ] TASK-03-02: Add a note in QUICKSTART.md: "To preview without running: open `examples/example-inegol-demo.docx`."
-- [ ] TASK-03-03: Add an `--open` CLI flag to both demo scripts. When passed, use `os.startfile()` on Windows, `subprocess.run(["open", path])` on macOS, or `subprocess.run(["xdg-open", path])` on Linux to open the DOCX after generation. Default is off.
-- [ ] TASK-03-04: Document the `--open` flag in QUICKSTART.md as an optional convenience.
+- [x] TASK-03-01: Update `QUICKSTART.md` "What You Get" section to reference `output/latest-demo.docx` and `output/latest-inegol-demo.docx` as the primary output locations.
+- [x] TASK-03-02: Add a note in QUICKSTART.md: "To preview without running: open `examples/example-inegol-demo.docx`."
+- [x] TASK-03-03: Add an `--open` CLI flag to both demo scripts. When passed, use `os.startfile()` on Windows, `subprocess.run(["open", path])` on macOS, or `subprocess.run(["xdg-open", path])` on Linux to open the DOCX after generation. Default is off.
+- [x] TASK-03-04: Document the `--open` flag in QUICKSTART.md as an optional convenience.
 
 **Files / Surfaces**
 - `QUICKSTART.md` — Update output paths and add preview note
@@ -141,12 +141,12 @@ Update the QUICKSTART.md (from Sprint 1) to reference the new `output/` paths an
 Run both demo scripts end to end, verify output locations, and confirm the pre-built example matches current pipeline output.
 
 **Tasks**
-- [ ] TASK-04-01: Run `python scripts/run_demo.py` and verify `output/latest-demo.docx` exists and is valid.
-- [ ] TASK-04-02: Run `python scripts/run_inegol_demo.py` and verify `output/latest-inegol-demo.docx` exists and is valid.
-- [ ] TASK-04-03: Open both DOCX files and confirm 36 sections, synthetic disclosure, no placeholders.
-- [ ] TASK-04-04: Verify `examples/example-inegol-demo.docx` opens and matches current Inegol output.
-- [ ] TASK-04-05: Run `pytest` to confirm no regressions.
-- [ ] TASK-04-06: Update `activeContext.md` with Sprint 2 completion status.
+- [x] TASK-04-01: Run `python scripts/run_demo.py` and verify `output/latest-demo.docx` exists and is valid.
+- [x] TASK-04-02: Run `python scripts/run_inegol_demo.py` and verify `output/latest-inegol-demo.docx` exists and is valid.
+- [x] TASK-04-03: Open both DOCX files and confirm 36 sections, synthetic disclosure, no placeholders.
+- [x] TASK-04-04: Verify `examples/example-inegol-demo.docx` opens and matches current Inegol output.
+- [x] TASK-04-05: Run `pytest` to confirm no regressions.
+- [x] TASK-04-06: Update `activeContext.md` with Sprint 2 completion status.
 
 **Files / Surfaces**
 - `output/` — Verify generated files

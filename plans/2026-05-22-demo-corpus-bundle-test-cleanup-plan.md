@@ -1,7 +1,7 @@
 ---
 title: "Demo Corpus Bundle & Test Cleanup"
 date: "2026-05-22"
-status: "partially_implemented"
+status: "complete — demo/corpus/ bundle, demo_setup.build_demo_index with pdd-agent demo-setup, once-per-session degraded warning, and the corpus pytest marker all present; closed by reports/2026-05-30-sprint3-complete.html (all 5 phases)."
 request: "Sprint 3 implementation for colleague-testable demo: bundle small demo corpus subset for provenance, add degraded-mode warnings, clean up stale test skip guards (GAP-02, GAP-07)"
 plan_type: "multi-phase"
 research_inputs:
@@ -46,15 +46,15 @@ Bundle a small demo corpus subset so colleagues see realistic corpus-backed prov
 Choose 2-3 normalized corpus documents that provide meaningful retrieval context for both the Soc Son and Inegol demo cases, and commit them under `demo/corpus/`.
 
 **Tasks**
-- [ ] TASK-01-01: Review the 18 normalized docs in `data/corpus/normalized/` and select:
+- [x] TASK-01-01: Review the 18 normalized docs in `data/corpus/normalized/` and select:
   - `VCS_Soc_Son_Project-Description.norm.json` — direct reference for Soc Son demo
   - `VCS_Inegol_Project-Description.norm.json` — direct reference for Inegol demo
   - `VCS_Bergama_Project-Description.norm.json` — Turkish WTE project, provides comparative context for both cases
-- [ ] TASK-01-02: Create `demo/corpus/` directory at repo root.
-- [ ] TASK-01-03: Copy the 3 selected `.norm.json` files into `demo/corpus/`.
-- [ ] TASK-01-04: Verify the files don't contain sensitive information beyond what's publicly available on the Verra registry (project names, locations, methodology parameters, quantification approaches).
-- [ ] TASK-01-05: Create `demo/corpus/README.md` explaining: what these files are, where they came from (Verra VCS public registry), why only 3 are included (demo subset), and how to build the full corpus (`pdd-agent ingest`).
-- [ ] TASK-01-06: Verify total size of the 3 files is reasonable (each is ~50-200 KB of JSON text).
+- [x] TASK-01-02: Create `demo/corpus/` directory at repo root.
+- [x] TASK-01-03: Copy the 3 selected `.norm.json` files into `demo/corpus/`.
+- [x] TASK-01-04: Verify the files don't contain sensitive information beyond what's publicly available on the Verra registry (project names, locations, methodology parameters, quantification approaches).
+- [x] TASK-01-05: Create `demo/corpus/README.md` explaining: what these files are, where they came from (Verra VCS public registry), why only 3 are included (demo subset), and how to build the full corpus (`pdd-agent ingest`).
+- [x] TASK-01-06: Verify total size of the 3 files is reasonable (each is ~50-200 KB of JSON text).
 
 **Files / Surfaces**
 - `demo/corpus/VCS_Soc_Son_Project-Description.norm.json` — New tracked file
@@ -79,15 +79,15 @@ Choose 2-3 normalized corpus documents that provide meaningful retrieval context
 Add the ability to build a temporary FTS5 index from the demo corpus, and add warning logs when the retrieval layer operates without any index.
 
 **Tasks**
-- [ ] TASK-02-01: Add a `build_demo_index()` function in a new `src/pdd_agent/demo_setup.py` module that:
+- [x] TASK-02-01: Add a `build_demo_index()` function in a new `src/pdd_agent/demo_setup.py` module that:
   - Locates `demo/corpus/` relative to repo root
   - Creates a temporary FTS5 index at `data/index/demo.fts.db` using `RetrievalIndex.build(normalized_dir=demo_corpus_dir)`
   - Returns the `RetrievalIndex` instance
   - Logs a clear message: "Built demo index from {n} documents in demo/corpus/"
-- [ ] TASK-02-02: Add a `pdd-agent demo-setup` CLI command in `src/pdd_agent/cli.py` that calls `build_demo_index()` and prints success.
-- [ ] TASK-02-03: Add a warning log in `src/pdd_agent/retrieval/search.py` at each graceful-degradation point (`search()`, `get_examples_for_section()`, `get_section_heading_examples()`) that fires once per session: "Retrieval index not available — demo running without corpus-backed provenance. Run 'pdd-agent demo-setup' to build a demo index."
-- [ ] TASK-02-04: Use a module-level flag (`_INDEX_WARNING_SHOWN = False`) to ensure the warning only fires once, not per-section.
-- [ ] TASK-02-05: Write a unit test verifying `build_demo_index()` creates a valid FTS5 index from `demo/corpus/` files and that `is_built()` returns True afterward.
+- [x] TASK-02-02: Add a `pdd-agent demo-setup` CLI command in `src/pdd_agent/cli.py` that calls `build_demo_index()` and prints success.
+- [x] TASK-02-03: Add a warning log in `src/pdd_agent/retrieval/search.py` at each graceful-degradation point (`search()`, `get_examples_for_section()`, `get_section_heading_examples()`) that fires once per session: "Retrieval index not available — demo running without corpus-backed provenance. Run 'pdd-agent demo-setup' to build a demo index."
+- [x] TASK-02-04: Use a module-level flag (`_INDEX_WARNING_SHOWN = False`) to ensure the warning only fires once, not per-section.
+- [x] TASK-02-05: Write a unit test verifying `build_demo_index()` creates a valid FTS5 index from `demo/corpus/` files and that `is_built()` returns True afterward.
 
 **Files / Surfaces**
 - `src/pdd_agent/demo_setup.py` — New module with `build_demo_index()`
@@ -112,11 +112,11 @@ Add the ability to build a temporary FTS5 index from the demo corpus, and add wa
 Make both demo scripts automatically use the demo index if available, so provenance citations appear in output without manual setup.
 
 **Tasks**
-- [ ] TASK-03-01: In `scripts/run_demo.py`, before calling `run_demo_benchmark()`, check if `data/index/demo.fts.db` exists. If not, and if `demo/corpus/` exists, call `build_demo_index()` automatically. Log: "Auto-building demo index for corpus provenance..."
-- [ ] TASK-03-02: In `scripts/run_inegol_demo.py`, add the same auto-build logic before the orchestrator run.
-- [ ] TASK-03-03: Ensure the auto-built demo index is used by the `SectionOrchestrator` during the run. This may require updating `get_retrieval_index()` in `src/pdd_agent/retrieval/index.py` to check for `demo.fts.db` as a fallback when `corpus.fts.db` doesn't exist.
-- [ ] TASK-03-04: Verify that demo DOCX output now includes non-empty provenance citations when the demo index is available.
-- [ ] TASK-03-05: Run both demo scripts and confirm the output DOCX has corpus-backed provenance in at least some sections.
+- [x] TASK-03-01: In `scripts/run_demo.py`, before calling `run_demo_benchmark()`, check if `data/index/demo.fts.db` exists. If not, and if `demo/corpus/` exists, call `build_demo_index()` automatically. Log: "Auto-building demo index for corpus provenance..."
+- [x] TASK-03-02: In `scripts/run_inegol_demo.py`, add the same auto-build logic before the orchestrator run.
+- [x] TASK-03-03: Ensure the auto-built demo index is used by the `SectionOrchestrator` during the run. This may require updating `get_retrieval_index()` in `src/pdd_agent/retrieval/index.py` to check for `demo.fts.db` as a fallback when `corpus.fts.db` doesn't exist.
+- [x] TASK-03-04: Verify that demo DOCX output now includes non-empty provenance citations when the demo index is available.
+- [x] TASK-03-05: Run both demo scripts and confirm the output DOCX has corpus-backed provenance in at least some sections.
 
 **Files / Surfaces**
 - `scripts/run_demo.py` — Add auto-build demo index logic
@@ -140,23 +140,23 @@ Make both demo scripts automatically use the demo index if available, so provena
 Remove stale test skip guards and add explicit corpus markers so the test suite is self-explanatory on fresh clones.
 
 **Tasks**
-- [ ] TASK-04-01: In `tests/test_docx_export.py`, remove the `python-docx` import skip guards at lines ~140 and ~159. Since `python-docx>=1.1.0` is a core dependency in `pyproject.toml`, these guards are stale.
-- [ ] TASK-04-02: In `tests/test_section_parser.py`, add `@pytest.mark.corpus` decorator to all tests in `TestParseCorpus` and `TestCorpusSectionIndex` classes that check for `corpus_dir.exists()`.
-- [ ] TASK-04-03: Register the `corpus` marker in `pyproject.toml` under `[tool.pytest.ini_options]`:
+- [x] TASK-04-01: In `tests/test_docx_export.py`, remove the `python-docx` import skip guards at lines ~140 and ~159. Since `python-docx>=1.1.0` is a core dependency in `pyproject.toml`, these guards are stale.
+- [x] TASK-04-02: In `tests/test_section_parser.py`, add `@pytest.mark.corpus` decorator to all tests in `TestParseCorpus` and `TestCorpusSectionIndex` classes that check for `corpus_dir.exists()`.
+- [x] TASK-04-03: Register the `corpus` marker in `pyproject.toml` under `[tool.pytest.ini_options]`:
   ```toml
   markers = [
       "corpus: tests that require the normalized corpus in data/corpus/normalized/",
   ]
   ```
-- [ ] TASK-04-04: Update the skip logic in corpus-dependent tests to use the marker + runtime check pattern:
+- [x] TASK-04-04: Update the skip logic in corpus-dependent tests to use the marker + runtime check pattern:
   ```python
   @pytest.mark.corpus
   def test_parses_all_documents(self, corpus_dir):
       if not corpus_dir.exists():
           pytest.skip("Normalized corpus not available")
   ```
-- [ ] TASK-04-05: Add a note in `QUICKSTART.md` (or update the existing one from Sprint 1): "Run `pytest -m 'not corpus'` to skip corpus-dependent tests on a fresh clone."
-- [ ] TASK-04-06: Run `pytest` and verify: (a) corpus-dependent tests skip with clear messages, (b) python-docx tests no longer skip, (c) no regressions.
+- [x] TASK-04-05: Add a note in `QUICKSTART.md` (or update the existing one from Sprint 1): "Run `pytest -m 'not corpus'` to skip corpus-dependent tests on a fresh clone."
+- [x] TASK-04-06: Run `pytest` and verify: (a) corpus-dependent tests skip with clear messages, (b) python-docx tests no longer skip, (c) no regressions.
 
 **Files / Surfaces**
 - `tests/test_docx_export.py` — Remove stale skip guards
@@ -181,12 +181,12 @@ Remove stale test skip guards and add explicit corpus markers so the test suite 
 End-to-end verification of the full demo experience with corpus provenance, and update documentation.
 
 **Tasks**
-- [ ] TASK-05-01: On a clean environment (no full corpus), run `python scripts/run_demo.py` and verify: (a) demo index auto-builds, (b) DOCX has provenance citations, (c) output banner shows the DOCX path.
-- [ ] TASK-05-02: On a clean environment, run `python scripts/run_inegol_demo.py` and verify the same.
-- [ ] TASK-05-03: Run `pytest` and verify test count matches expectations (skipped corpus tests, no python-docx skips).
-- [ ] TASK-05-04: Run `pytest -m 'not corpus'` and verify 0 skipped.
-- [ ] TASK-05-05: Update `QUICKSTART.md` to add an optional "Enhanced Demo" section: "For richer output with corpus-backed provenance, run `pdd-agent demo-setup` before the demo scripts."
-- [ ] TASK-05-06: Update `activeContext.md` with Sprint 3 completion status.
+- [x] TASK-05-01: On a clean environment (no full corpus), run `python scripts/run_demo.py` and verify: (a) demo index auto-builds, (b) DOCX has provenance citations, (c) output banner shows the DOCX path.
+- [x] TASK-05-02: On a clean environment, run `python scripts/run_inegol_demo.py` and verify the same.
+- [x] TASK-05-03: Run `pytest` and verify test count matches expectations (skipped corpus tests, no python-docx skips).
+- [x] TASK-05-04: Run `pytest -m 'not corpus'` and verify 0 skipped.
+- [x] TASK-05-05: Update `QUICKSTART.md` to add an optional "Enhanced Demo" section: "For richer output with corpus-backed provenance, run `pdd-agent demo-setup` before the demo scripts."
+- [x] TASK-05-06: Update `activeContext.md` with Sprint 3 completion status.
 
 **Files / Surfaces**
 - `QUICKSTART.md` — Add enhanced demo section

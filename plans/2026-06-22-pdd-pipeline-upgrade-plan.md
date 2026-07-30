@@ -1,7 +1,7 @@
 ---
 title: "PDD Pipeline Upgrade to Audit-Ready Completeness"
 date: "2026-06-22"
-status: "partially_implemented"
+status: "superseded — PHASE-01..03 fully implemented (29/29 tasks); the explicitly deferred PHASE-04 registry-API work now lives in plans/2026-07-12-pdd-reality-gap-plan.md (PHASE-05 downloader, delivered) and plans/2026-07-23-run-real-model-proof-plan.md (PHASE-04 live search-API capture)."
 request: "Based on research and brainstorm reports, create a multi-phase implementation plan to upgrade pdd-auto from demo-quality to audit-ready PDD generation"
 plan_type: "multi-phase"
 research_inputs:

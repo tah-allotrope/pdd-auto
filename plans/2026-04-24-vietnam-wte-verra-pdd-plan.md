@@ -1,7 +1,7 @@
 ---
 title: "Vietnam WTE Verra PDD Word Workflow"
 date: "2026-04-24"
-status: "partially_implemented"
+status: "complete — PHASE-01..05 shipped (phase06/spreadsheet_mapper.py, assumptions.py, vietnam_workflow.py, run-vietnam-pdd CLI, docs/vietnam-pdd-*.md) and closed by reports/2026-04-28-vietnam-phase05-completion.html."
 request: "Create a multi-phase plan for a workflow that can produce a Verra-template Word PDD using Vietnam waste-to-energy project information from the provided Drive spreadsheet, while using synthetic assumptions for missing information."
 plan_type: "multi-phase"
 research_inputs:
@@ -49,11 +49,11 @@ Create a reproducible workflow in this repo that turns Vietnam waste-to-energy p
 Bring the provided Drive spreadsheet into the repo as a reproducible source artifact, inspect its workbook structure, and formalize how Vietnam candidate rows are selected for downstream PDD generation.
 
 **Tasks**
-- [ ] TASK-01-01: Add a spreadsheet acquisition path that downloads the workbook `1tMcKxUGE5aIs-3BQ7sJtjKHeOdSLUhKG` through `gws` into a stable local cache such as `data/source_inputs/spreadsheets/`.
-- [ ] TASK-01-02: Create a workbook profiling utility that records sheet names, dimensions, header rows, and sample cells so the repo can detect tab drift without manually opening Excel.
-- [ ] TASK-01-03: Add a row-selection config for the `Projects` sheet that identifies Vietnam WTE candidates, starting with the `Soc Son waste to power plant project` row and its ACM0022 / annual ER / electricity / capacity columns.
-- [ ] TASK-01-04: Persist a normalized JSON snapshot of the chosen row plus workbook metadata so later phases can run offline and deterministically.
-- [ ] TASK-01-05: Capture which workbook tabs are informative but non-authoritative for PDD drafting, including `Model`, `Projects`, `DOXACO`, and `Claude Log`, and document which of them may feed facts versus assumptions versus audit notes.
+- [x] TASK-01-01: Add a spreadsheet acquisition path that downloads the workbook `1tMcKxUGE5aIs-3BQ7sJtjKHeOdSLUhKG` through `gws` into a stable local cache such as `data/source_inputs/spreadsheets/`.
+- [x] TASK-01-02: Create a workbook profiling utility that records sheet names, dimensions, header rows, and sample cells so the repo can detect tab drift without manually opening Excel.
+- [x] TASK-01-03: Add a row-selection config for the `Projects` sheet that identifies Vietnam WTE candidates, starting with the `Soc Son waste to power plant project` row and its ACM0022 / annual ER / electricity / capacity columns.
+- [x] TASK-01-04: Persist a normalized JSON snapshot of the chosen row plus workbook metadata so later phases can run offline and deterministically.
+- [x] TASK-01-05: Capture which workbook tabs are informative but non-authoritative for PDD drafting, including `Model`, `Projects`, `DOXACO`, and `Claude Log`, and document which of them may feed facts versus assumptions versus audit notes.
 
 **Files / Surfaces**
 - `src/pdd_agent/ingest/drive.py` - Existing Drive download logic should be extended or reused for workbook acquisition.
@@ -81,12 +81,12 @@ Bring the provided Drive spreadsheet into the repo as a reproducible source arti
 Convert one Vietnam workbook row into a valid `ProjectInput` payload while making every missing or inferred field explicit through an assumption registry instead of hidden defaults.
 
 **Tasks**
-- [ ] TASK-02-01: Create a spreadsheet-to-`ProjectInput` mapper that fills available fields such as project name, country, methodology, throughput/capacity-like metrics, electricity generation, annual ER, and crediting period.
-- [ ] TASK-02-02: Define an `assumption register` structure for unresolved fields required by `schemas/project_input.py`, including location precision, proponent identity, contact email, ownership wording, landfill coordinates, grid emission factor source text, safeguards evidence, and monitoring-plan details.
-- [ ] TASK-02-03: Implement tiered fill rules: direct spreadsheet values first, reusable repo/demo defaults second when clearly generic, synthetic assumptions third with a label, rationale, and confidence tag.
-- [ ] TASK-02-04: Produce a first Vietnam project YAML such as `configs/projects/vietnam_socson_from_sheet.yaml` plus a companion assumptions file.
-- [ ] TASK-02-05: Add validation tests showing that the generated project YAML passes `ProjectInput.model_validate()` while preserving machine-readable traceability for every inferred value.
-- [ ] TASK-02-06: Encode rules that prohibit synthetic assumptions from silently resolving double-counting-sensitive claims, methodology deviations, or unsupported quantitative formulas.
+- [x] TASK-02-01: Create a spreadsheet-to-`ProjectInput` mapper that fills available fields such as project name, country, methodology, throughput/capacity-like metrics, electricity generation, annual ER, and crediting period.
+- [x] TASK-02-02: Define an `assumption register` structure for unresolved fields required by `schemas/project_input.py`, including location precision, proponent identity, contact email, ownership wording, landfill coordinates, grid emission factor source text, safeguards evidence, and monitoring-plan details.
+- [x] TASK-02-03: Implement tiered fill rules: direct spreadsheet values first, reusable repo/demo defaults second when clearly generic, synthetic assumptions third with a label, rationale, and confidence tag.
+- [x] TASK-02-04: Produce a first Vietnam project YAML such as `configs/projects/vietnam_socson_from_sheet.yaml` plus a companion assumptions file.
+- [x] TASK-02-05: Add validation tests showing that the generated project YAML passes `ProjectInput.model_validate()` while preserving machine-readable traceability for every inferred value.
+- [x] TASK-02-06: Encode rules that prohibit synthetic assumptions from silently resolving double-counting-sensitive claims, methodology deviations, or unsupported quantitative formulas.
 
 **Files / Surfaces**
 - `schemas/project_input.py` - Existing required-field contract that the spreadsheet mapper must satisfy.
@@ -115,12 +115,12 @@ Convert one Vietnam workbook row into a valid `ProjectInput` payload while makin
 Make the drafting pipeline understand the difference between real project facts, retrieved corpus patterns, and synthetic assumptions so the produced PDD text remains reviewable rather than deceptively complete.
 
 **Tasks**
-- [ ] TASK-03-01: Extend the drafting input model so each fact can carry provenance type such as `spreadsheet`, `corpus`, `methodology`, `synthetic_assumption`, or `demo_default`.
-- [ ] TASK-03-02: Update section prompt assembly to surface assumption-backed fields explicitly and instruct the provider to label them in output prose or notes when they influence a section.
-- [ ] TASK-03-03: Add review checks that downgrade confidence or force issue flags when HIGH_REVIEW or CRITICAL sections depend on synthetic assumptions.
-- [ ] TASK-03-04: Modify run persistence so section outputs store which sentences or tables relied on synthetic inputs.
-- [ ] TASK-03-05: Add a report artifact summarizing assumption burden by section, distinguishing harmless boilerplate fills from material domain gaps.
-- [ ] TASK-03-06: Re-run the existing demo benchmark style checks with the new Vietnam config to verify the pipeline produces better disclosure even if final factual support remains incomplete.
+- [x] TASK-03-01: Extend the drafting input model so each fact can carry provenance type such as `spreadsheet`, `corpus`, `methodology`, `synthetic_assumption`, or `demo_default`.
+- [x] TASK-03-02: Update section prompt assembly to surface assumption-backed fields explicitly and instruct the provider to label them in output prose or notes when they influence a section.
+- [x] TASK-03-03: Add review checks that downgrade confidence or force issue flags when HIGH_REVIEW or CRITICAL sections depend on synthetic assumptions.
+- [x] TASK-03-04: Modify run persistence so section outputs store which sentences or tables relied on synthetic inputs.
+- [x] TASK-03-05: Add a report artifact summarizing assumption burden by section, distinguishing harmless boilerplate fills from material domain gaps.
+- [x] TASK-03-06: Re-run the existing demo benchmark style checks with the new Vietnam config to verify the pipeline produces better disclosure even if final factual support remains incomplete.
 
 **Files / Surfaces**
 - `src/pdd_agent/agent/section_orchestrator.py` - Needs provenance-rich prompt assembly and section output persistence.
@@ -149,12 +149,12 @@ Make the drafting pipeline understand the difference between real project facts,
 Turn the assumption-aware draft into a Word document that looks and navigates like a Verra-style PDD, while exposing synthetic content and review issues in a controlled reviewer-friendly format.
 
 **Tasks**
-- [ ] TASK-04-01: Inspect `template/VCS_Soc Son_Project-Description.pdf` and the Verra section schema to define a stronger DOCX layout contract for title page, numbered sections, subsection headings, metadata tables, and appendices.
-- [ ] TASK-04-02: Enhance `src/pdd_agent/export/docx_export.py` so it can render a Vietnam project PDD with clearer heading hierarchy, cover metadata, methodology labels, and section-level provenance formatting.
-- [ ] TASK-04-03: Add an assumption appendix that lists each synthetic field, its rationale, and where it affects the document.
-- [ ] TASK-04-04: Add a reviewer issues appendix summarizing unresolved evidence gaps, CRITICAL sections needing domain sign-off, and any sections that still mirror placeholder/demo language.
-- [ ] TASK-04-05: Ensure the exporter can optionally insert a front-matter disclaimer such as `Internal draft for review; contains synthetic assumptions for missing project data`.
-- [ ] TASK-04-06: Verify `python-docx` installation and add runtime checks/documentation so Word export is not skipped silently.
+- [x] TASK-04-01: Inspect `template/VCS_Soc Son_Project-Description.pdf` and the Verra section schema to define a stronger DOCX layout contract for title page, numbered sections, subsection headings, metadata tables, and appendices.
+- [x] TASK-04-02: Enhance `src/pdd_agent/export/docx_export.py` so it can render a Vietnam project PDD with clearer heading hierarchy, cover metadata, methodology labels, and section-level provenance formatting.
+- [x] TASK-04-03: Add an assumption appendix that lists each synthetic field, its rationale, and where it affects the document.
+- [x] TASK-04-04: Add a reviewer issues appendix summarizing unresolved evidence gaps, CRITICAL sections needing domain sign-off, and any sections that still mirror placeholder/demo language.
+- [x] TASK-04-05: Ensure the exporter can optionally insert a front-matter disclaimer such as `Internal draft for review; contains synthetic assumptions for missing project data`.
+- [x] TASK-04-06: Verify `python-docx` installation and add runtime checks/documentation so Word export is not skipped silently.
 
 **Files / Surfaces**
 - `src/pdd_agent/export/docx_export.py` - Primary DOCX rendering surface to upgrade.
@@ -182,11 +182,11 @@ Turn the assumption-aware draft into a Word document that looks and navigates li
 Run the full workflow on one Vietnam WTE project and leave behind a concrete review package that you can inspect later, including Word output, assumptions, and validation artifacts.
 
 **Tasks**
-- [ ] TASK-05-01: Create a single command or script that performs workbook fetch/profile, project mapping, assumption generation, drafting, review, and DOCX export for the selected Vietnam project.
-- [ ] TASK-05-02: Execute the workflow for Soc Son first, using the spreadsheet row plus the existing repo corpus/template context.
-- [ ] TASK-05-03: Generate a review bundle containing project YAML, assumption YAML, draft run JSON, review-state JSON, Word PDD, and at least one human-readable validation report.
-- [ ] TASK-05-04: Add a gap analysis that lists which missing data points most reduced document confidence and which new external documents would improve the draft fastest.
-- [ ] TASK-05-05: Document the exact operator steps for rerunning the Vietnam PDD workflow on later spreadsheet revisions or a second Vietnam candidate.
+- [x] TASK-05-01: Create a single command or script that performs workbook fetch/profile, project mapping, assumption generation, drafting, review, and DOCX export for the selected Vietnam project.
+- [x] TASK-05-02: Execute the workflow for Soc Son first, using the spreadsheet row plus the existing repo corpus/template context.
+- [x] TASK-05-03: Generate a review bundle containing project YAML, assumption YAML, draft run JSON, review-state JSON, Word PDD, and at least one human-readable validation report.
+- [x] TASK-05-04: Add a gap analysis that lists which missing data points most reduced document confidence and which new external documents would improve the draft fastest.
+- [x] TASK-05-05: Document the exact operator steps for rerunning the Vietnam PDD workflow on later spreadsheet revisions or a second Vietnam candidate.
 
 **Files / Surfaces**
 - `scripts/run_vietnam_pdd.py` - One-command runner for the spreadsheet-to-DOCX flow.

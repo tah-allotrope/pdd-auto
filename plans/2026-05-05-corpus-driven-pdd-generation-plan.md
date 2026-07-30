@@ -1,7 +1,7 @@
 ---
 title: "Corpus-Driven PDD Generation to Reduce Synthetic Gibberish"
 date: "2026-05-05"
-status: "partially_implemented"
+status: "superseded — plans/2026-06-22-pdd-pipeline-upgrade-plan.md PHASE-02 replaced corpus fact-substitution with real-LLM drafting over RAG-injected corpus evidence; the unbuilt coverage map and gibberish scorer were never picked up."
 request: "use existing pdd docs as input for a new word doc to reduce the % of gibberish given that wte projects both old and new will have similar writing in certain section, evoke plan skill for multiphase then git commit push"
 plan_type: "multi-phase"
 research_inputs:

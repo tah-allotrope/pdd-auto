@@ -1,7 +1,7 @@
 ---
 title: "Demo Quickstart & Setup Hardening"
 date: "2026-05-22"
-status: "partially_implemented"
+status: "complete — QUICKSTART.md, _check_gws_available() guard with tests/test_drive_guard.py, .gitkeep exceptions, and split README prerequisites all present; closed by reports/2026-05-24-sprint1-complete.html (all 4 phases)."
 request: "Sprint 1 implementation for colleague-testable demo: quickstart docs, directory creation fixes, gws error guards (GAP-01, GAP-03, GAP-05)"
 plan_type: "multi-phase"
 research_inputs:
@@ -44,9 +44,9 @@ Create a frictionless "clone → install → run → see DOCX" path so colleague
 Create a standalone quickstart document that takes a colleague from zero to a working DOCX in 4 steps, with no assumptions beyond Python 3.11+ and git.
 
 **Tasks**
-- [ ] TASK-01-01: Create `QUICKSTART.md` at repo root with these sections: (1) Prerequisites (Python 3.11+, pip, git — explicitly state no Node/gws/API keys needed), (2) Setup (clone, create venv, `pip install -e .`), (3) Run Soc Son Demo (`python scripts/run_demo.py`), (4) Run Inegol Demo (`python scripts/run_inegol_demo.py`), (5) What You Get (expected output paths, what the DOCX contains), (6) Run Tests (`pytest`), (7) Next Steps (link to full README for production workflows).
-- [ ] TASK-01-02: Add a prominent "Demo Quickstart" link at the very top of `README.md` (before the existing "What This Tool Does" section) pointing to `QUICKSTART.md`.
-- [ ] TASK-01-03: Add a one-line note in the QUICKSTART explaining that 6-7 corpus-dependent tests skip gracefully on fresh clones and this is expected.
+- [x] TASK-01-01: Create `QUICKSTART.md` at repo root with these sections: (1) Prerequisites (Python 3.11+, pip, git — explicitly state no Node/gws/API keys needed), (2) Setup (clone, create venv, `pip install -e .`), (3) Run Soc Son Demo (`python scripts/run_demo.py`), (4) Run Inegol Demo (`python scripts/run_inegol_demo.py`), (5) What You Get (expected output paths, what the DOCX contains), (6) Run Tests (`pytest`), (7) Next Steps (link to full README for production workflows).
+- [x] TASK-01-02: Add a prominent "Demo Quickstart" link at the very top of `README.md` (before the existing "What This Tool Does" section) pointing to `QUICKSTART.md`.
+- [x] TASK-01-03: Add a one-line note in the QUICKSTART explaining that 6-7 corpus-dependent tests skip gracefully on fresh clones and this is expected.
 
 **Files / Surfaces**
 - `QUICKSTART.md` — New file, primary demo entry point
@@ -68,9 +68,9 @@ Create a standalone quickstart document that takes a colleague from zero to a wo
 Replace the cryptic subprocess error when `gws` is not installed with a clear, actionable message that distinguishes demo paths (no `gws` needed) from full-pipeline paths.
 
 **Tasks**
-- [ ] TASK-02-01: Add a `_check_gws_available()` function in `src/pdd_agent/ingest/drive.py` that checks whether the resolved `GWS` path is executable (e.g., `shutil.which(GWS)` or a quick subprocess test). If not found, raise a `RuntimeError` with the message: `"gws CLI not found. Install it with 'npm install -g @googleworkspace/cli && gws auth setup'. Note: gws is only required for corpus ingestion and Drive upload — demo workflows (scripts/run_demo.py, scripts/run_inegol_demo.py) do not need it."`.
-- [ ] TASK-02-02: Call `_check_gws_available()` at the top of `_run()` (the subprocess wrapper at `drive.py:26`) so every `gws`-dependent operation fails early with the helpful message.
-- [ ] TASK-02-03: Add a unit test in `tests/test_drive_inventory.py` (or a new `tests/test_drive_guard.py`) that mocks `shutil.which` returning `None` and verifies the `RuntimeError` is raised with the expected message.
+- [x] TASK-02-01: Add a `_check_gws_available()` function in `src/pdd_agent/ingest/drive.py` that checks whether the resolved `GWS` path is executable (e.g., `shutil.which(GWS)` or a quick subprocess test). If not found, raise a `RuntimeError` with the message: `"gws CLI not found. Install it with 'npm install -g @googleworkspace/cli && gws auth setup'. Note: gws is only required for corpus ingestion and Drive upload — demo workflows (scripts/run_demo.py, scripts/run_inegol_demo.py) do not need it."`.
+- [x] TASK-02-02: Call `_check_gws_available()` at the top of `_run()` (the subprocess wrapper at `drive.py:26`) so every `gws`-dependent operation fails early with the helpful message.
+- [x] TASK-02-03: Add a unit test in `tests/test_drive_inventory.py` (or a new `tests/test_drive_guard.py`) that mocks `shutil.which` returning `None` and verifies the `RuntimeError` is raised with the expected message.
 
 **Files / Surfaces**
 - `src/pdd_agent/ingest/drive.py` — Add guard function, call it in `_run()`
@@ -92,10 +92,10 @@ Replace the cryptic subprocess error when `gws` is not installed with a clear, a
 Ensure `.gitkeep` sentinel files are actually tracked for `data/runs/` and `data/index/`, and restructure the README's prerequisites section to clearly separate demo vs. full-pipeline requirements.
 
 **Tasks**
-- [ ] TASK-03-01: Update `.gitignore` to add exception patterns for `.gitkeep` files: add `!data/runs/.gitkeep` after the `data/runs/` ignore line, and `!data/index/.gitkeep` after the `data/index/` ignore line.
-- [ ] TASK-03-02: Verify that `data/runs/.gitkeep` and `data/index/.gitkeep` exist. Create them if missing.
-- [ ] TASK-03-03: Run `git status` to confirm the `.gitkeep` files are now tracked.
-- [ ] TASK-03-04: Restructure the README "Prerequisites" section into two subsections: "Demo Prerequisites" (Python 3.11+ only) and "Full Pipeline Prerequisites" (Python 3.11+, Node.js 18+, `gws` authenticated, Drive folder access).
+- [x] TASK-03-01: Update `.gitignore` to add exception patterns for `.gitkeep` files: add `!data/runs/.gitkeep` after the `data/runs/` ignore line, and `!data/index/.gitkeep` after the `data/index/` ignore line.
+- [x] TASK-03-02: Verify that `data/runs/.gitkeep` and `data/index/.gitkeep` exist. Create them if missing.
+- [x] TASK-03-03: Run `git status` to confirm the `.gitkeep` files are now tracked.
+- [x] TASK-03-04: Restructure the README "Prerequisites" section into two subsections: "Demo Prerequisites" (Python 3.11+ only) and "Full Pipeline Prerequisites" (Python 3.11+, Node.js 18+, `gws` authenticated, Drive folder access).
 
 **Files / Surfaces**
 - `.gitignore` — Add `.gitkeep` exception patterns
@@ -119,13 +119,13 @@ Ensure `.gitkeep` sentinel files are actually tracked for `data/runs/` and `data
 Simulate a fresh clone experience and verify the entire quickstart flow works end to end.
 
 **Tasks**
-- [ ] TASK-04-01: Clone the repo into a temporary directory (or use `git worktree add`).
-- [ ] TASK-04-02: Create a fresh venv, run `pip install -e .`, verify no errors.
-- [ ] TASK-04-03: Run `python scripts/run_demo.py` and verify it produces a DOCX at the expected path.
-- [ ] TASK-04-04: Run `python scripts/run_inegol_demo.py` and verify it produces a DOCX.
-- [ ] TASK-04-05: Run `pytest` and verify tests pass with only corpus-dependent tests skipping (no unexpected failures).
-- [ ] TASK-04-06: Run `pdd-agent ingest` without `gws` and verify the helpful error message appears.
-- [ ] TASK-04-07: Update `activeContext.md` with Sprint 1 completion status.
+- [x] TASK-04-01: Clone the repo into a temporary directory (or use `git worktree add`).
+- [x] TASK-04-02: Create a fresh venv, run `pip install -e .`, verify no errors.
+- [x] TASK-04-03: Run `python scripts/run_demo.py` and verify it produces a DOCX at the expected path.
+- [x] TASK-04-04: Run `python scripts/run_inegol_demo.py` and verify it produces a DOCX.
+- [x] TASK-04-05: Run `pytest` and verify tests pass with only corpus-dependent tests skipping (no unexpected failures).
+- [x] TASK-04-06: Run `pdd-agent ingest` without `gws` and verify the helpful error message appears.
+- [x] TASK-04-07: Update `activeContext.md` with Sprint 1 completion status.
 
 **Files / Surfaces**
 - Temporary clone directory — verification target

@@ -1,7 +1,7 @@
 ---
 title: "PDD Next Level: Real-LLM Proof, Judge Loop, Internal Service, Methodology Breadth"
 date: "2026-07-05"
-status: "draft"
+status: "superseded — plans/2026-07-12-pdd-reality-gap-plan.md carried its decisions forward and re-scoped the unproven parts; the build-out landed (anthropic provider, judge/redraft/export gate, FastAPI service, four calc families) but the real-LLM proof runs moved to the 07-12/07-23/07-25 plans."
 request: "pdd-next-level (from research/2026-07-05_pdd-next-level-brainstorm.md)"
 plan_type: "multi-phase"
 research_inputs:
@@ -54,10 +54,10 @@ Produce a VVB-desk-review-grade PDD for Inegol using real LLM drafting (OpenAI g
 Run the full Inegol PDD draft through real LLMs — the existing OpenAI provider and a new Anthropic provider — and pick the default model from an empirical head-to-head scorecard.
 
 **Tasks**
-- [ ] TASK-01-01: Write failing tests for `AnthropicProvider` (mirror `tests/` coverage of `openai_provider.py`: client init, retry/backoff, token/cost tracking, `DraftSection` contract with provenance markers preserved).
-- [ ] TASK-01-02: Implement `src/pdd_agent/llm/anthropic_provider.py` subclassing `BaseProvider` (model default `claude-sonnet-5`, configurable to `claude-opus-4-8`), mirroring `openai_provider.py` structure; register in `configure_provider()` in `llm/provider.py`.
-- [ ] TASK-01-03: Add `anthropic` provider choice to CLI `draft` / `run-vietnam-pdd` arguments in `src/pdd_agent/cli.py`; wire API keys via env vars (`OPENAI_API_KEY`, `ANTHROPIC_API_KEY`) into `ModelConfig`.
-- [ ] TASK-01-04: Verify token-budget enforcement (`llm/budget.py`) applies to both providers; add per-run cost ceiling with hard stop and clear log line.
+- [x] TASK-01-01: Write failing tests for `AnthropicProvider` (mirror `tests/` coverage of `openai_provider.py`: client init, retry/backoff, token/cost tracking, `DraftSection` contract with provenance markers preserved).
+- [x] TASK-01-02: Implement `src/pdd_agent/llm/anthropic_provider.py` subclassing `BaseProvider` (model default `claude-sonnet-5`, configurable to `claude-opus-4-8`), mirroring `openai_provider.py` structure; register in `configure_provider()` in `llm/provider.py`.
+- [x] TASK-01-03: Add `anthropic` provider choice to CLI `draft` / `run-vietnam-pdd` arguments in `src/pdd_agent/cli.py`; wire API keys via env vars (`OPENAI_API_KEY`, `ANTHROPIC_API_KEY`) into `ModelConfig`.
+- [x] TASK-01-04: Verify token-budget enforcement (`llm/budget.py`) applies to both providers; add per-run cost ceiling with hard stop and clear log line.
 - [ ] TASK-01-05: Run the full Inegol draft (all sections) with `--provider openai` and `--provider anthropic`; persist both runs under `data/runs/` with cost/token telemetry.
 - [ ] TASK-01-06: Extend `phase05/benchmark.py` to compare two draft runs against the registered Inegol reference (coverage, grounding/citation density, review-flag burden, cost, latency); emit `reports/provider-scorecard.md`.
 - [ ] TASK-01-07: Pick the default drafting model from the scorecard; record decision + rationale in the plan file and `configs/`.
@@ -89,15 +89,15 @@ Run the full Inegol PDD draft through real LLMs — the existing OpenAI provider
 Turn structural QA into prose-faithfulness QA: an LLM-judge scores each section against a VVB desk-review rubric, failures auto-redraft (capped), export is tiered-gated, and a human expert signs off the Inegol PDD — the VVB-desk-review-grade proof (DEC-002).
 
 **Tasks**
-- [ ] TASK-02-01: Define the judge rubric as config (`rules/verra/judge_rubric.yaml`): completeness vs section schema, evidence-citation validity (cited `[E###]` IDs must exist in the evidence registry), methodology conformance, no fabricated facts (spot-check against `ProjectInput` + calc results), marker hygiene.
-- [ ] TASK-02-02: Write failing tests for `review/judge.py` (rubric loading, per-section scoring output shape, deterministic failure categories: `critical` vs `advisory`).
-- [ ] TASK-02-03: Implement `src/pdd_agent/review/judge.py`: LLM-judge callable via the provider registry (judge model configurable, default = cheaper tier, e.g. `gpt-4o-mini`/`claude-haiku-4-5-20251001`), scoring each `DraftSection` against the rubric with the registered Inegol PDD as reference when available.
-- [ ] TASK-02-04: Add the redraft loop to `agent/section_orchestrator.py:draft_section`: on judge failure, re-prompt with judge findings appended, max 2–3 attempts (configurable), then transition the section to `needs-domain-review` in `review/states.py`. Record attempts + costs on the `DraftRun`.
-- [ ] TASK-02-05: Implement the tiered export gate in `export/docx_export.py` (or a pre-export check in `review/`): hard-block on (a) numbers contradicting `calc` results per `review/consistency.py`, (b) citations to nonexistent evidence IDs, (c) unresolved `[MISSING]` in Sections 3–4; everything else exports as watermarked DRAFT with markers in the reviewer appendix. Add `--force` escape hatch that logs an override.
-- [ ] TASK-02-06: Add CLI `judge` subcommand (run judge standalone on an existing run) and integrate judge into the `draft` flow behind `--judge/--no-judge`.
+- [x] TASK-02-01: Define the judge rubric as config (`rules/verra/judge_rubric.yaml`): completeness vs section schema, evidence-citation validity (cited `[E###]` IDs must exist in the evidence registry), methodology conformance, no fabricated facts (spot-check against `ProjectInput` + calc results), marker hygiene.
+- [x] TASK-02-02: Write failing tests for `review/judge.py` (rubric loading, per-section scoring output shape, deterministic failure categories: `critical` vs `advisory`).
+- [x] TASK-02-03: Implement `src/pdd_agent/review/judge.py`: LLM-judge callable via the provider registry (judge model configurable, default = cheaper tier, e.g. `gpt-4o-mini`/`claude-haiku-4-5-20251001`), scoring each `DraftSection` against the rubric with the registered Inegol PDD as reference when available.
+- [x] TASK-02-04: Add the redraft loop to `agent/section_orchestrator.py:draft_section`: on judge failure, re-prompt with judge findings appended, max 2–3 attempts (configurable), then transition the section to `needs-domain-review` in `review/states.py`. Record attempts + costs on the `DraftRun`.
+- [x] TASK-02-05: Implement the tiered export gate in `export/docx_export.py` (or a pre-export check in `review/`): hard-block on (a) numbers contradicting `calc` results per `review/consistency.py`, (b) citations to nonexistent evidence IDs, (c) unresolved `[MISSING]` in Sections 3–4; everything else exports as watermarked DRAFT with markers in the reviewer appendix. Add `--force` escape hatch that logs an override.
+- [x] TASK-02-06: Add CLI `judge` subcommand (run judge standalone on an existing run) and integrate judge into the `draft` flow behind `--judge/--no-judge`.
 - [ ] TASK-02-07: Run the full loop on Inegol with the default model from PHASE-01; iterate prompts/rubric until the judge pass-rate stabilizes.
 - [ ] TASK-02-08: Expert review: deliver the gated DOCX to the user + Tinh via the existing `export/review_package.py`; collect sign-off or itemized defects; iterate once if needed.
-- [ ] TASK-02-09: Check off the Phase-2/3 acceptance criteria in `plans/2026-06-22-pdd-pipeline-upgrade-plan.md` that this proof satisfies; reconcile `activeContext.md` status.
+- [x] TASK-02-09: Check off the Phase-2/3 acceptance criteria in `plans/2026-06-22-pdd-pipeline-upgrade-plan.md` that this proof satisfies; reconcile `activeContext.md` status.
 
 **Files / Surfaces**
 - `src/pdd_agent/review/judge.py` - new LLM-judge module.
@@ -128,12 +128,12 @@ Turn structural QA into prose-faithfulness QA: an LLM-judge scores each section 
 Wrap the pipeline in a local FastAPI service with a web UI that makes the 5-state review machine first-class: upload intake, watch runs, review/approve/edit/redraft sections, download gated DOCX. One-command setup so Tinh can run his own instance (DEC-013/015).
 
 **Tasks**
-- [ ] TASK-03-01: Scaffold `src/pdd_agent/service/` FastAPI app: routes for intake upload (spreadsheet/document → existing `phase06/spreadsheet_mapper.py` / `ingest/extract.py`), run creation/status (wrapping `SectionOrchestrator.run`), section listing with state/judge findings/provenance, and gated DOCX download.
-- [ ] TASK-03-02: Run execution in a background worker (FastAPI `BackgroundTasks` or a simple thread + run-state polling from `data/runs/`); no external queue.
-- [ ] TASK-03-03: Section review endpoints: approve, inline edit (persisted as human-edit provenance on the section), send-back-for-redraft (re-invokes the PHASE-02 loop for that section); all transitions through `review/states.py`.
-- [ ] TASK-03-04: Minimal web UI (server-rendered templates or a small static SPA — keep self-contained, no build pipeline if avoidable): run dashboard, per-section review screen showing state badge, judge findings, evidence citations, provenance, and text diff after edits.
-- [ ] TASK-03-05: One-command setup script (`scripts/setup_service.py` or `make serve`): venv, deps, optional-dep checks (LibreOffice, `gws`), env-key validation, launch on localhost. Document in `README`.
-- [ ] TASK-03-06: Tests: API contract tests with the `demo` provider (no API cost); state-transition tests through the endpoints.
+- [x] TASK-03-01: Scaffold `src/pdd_agent/service/` FastAPI app: routes for intake upload (spreadsheet/document → existing `phase06/spreadsheet_mapper.py` / `ingest/extract.py`), run creation/status (wrapping `SectionOrchestrator.run`), section listing with state/judge findings/provenance, and gated DOCX download.
+- [x] TASK-03-02: Run execution in a background worker (FastAPI `BackgroundTasks` or a simple thread + run-state polling from `data/runs/`); no external queue.
+- [x] TASK-03-03: Section review endpoints: approve, inline edit (persisted as human-edit provenance on the section), send-back-for-redraft (re-invokes the PHASE-02 loop for that section); all transitions through `review/states.py`.
+- [x] TASK-03-04: Minimal web UI (server-rendered templates or a small static SPA — keep self-contained, no build pipeline if avoidable): run dashboard, per-section review screen showing state badge, judge findings, evidence citations, provenance, and text diff after edits.
+- [x] TASK-03-05: One-command setup script (`scripts/setup_service.py` or `make serve`): venv, deps, optional-dep checks (LibreOffice, `gws`), env-key validation, launch on localhost. Document in `README`.
+- [x] TASK-03-06: Tests: API contract tests with the `demo` provider (no API cost); state-transition tests through the endpoints.
 - [ ] TASK-03-07: Onboard Tinh: he runs the setup on his machine, executes one full Inegol review cycle through the UI; capture friction as issues.
 
 **Files / Surfaces**
@@ -161,10 +161,10 @@ Extend the pipeline from WTE-only to four families. Per DEC-011 this runs **in p
 
 **Tasks**
 Common groundwork:
-- [ ] TASK-04-01: Extract a pluggable methodology interface `src/pdd_agent/calc/methodology.py` (protocol: inputs schema fragment, `baseline/project/leakage/net` computation, per-parameter provenance, required-monitoring params) by refactoring `calc/acm0022.py` behind it without behavior change (existing 313 tests stay green).
-- [ ] TASK-04-02: Add a public-registry corpus source: `ingest/registry_download.py` fetching registered PDD PDFs from the Verra registry for a given methodology, feeding the existing `normalize.py` → `bucket.py` → `retrieval/index.py` chain (per-family index or family-tagged corpus).
-- [ ] TASK-04-03: Generalize `rules/verra/` layout to per-family rule files; extend `domain/methodology_screen.py` to load multiple families.
-- [ ] TASK-04-04: Extend `schemas/project_input.py` with per-family input extensions (rice hydrology/cultivation params, biochar feedstock/pyrolysis params, cookstove fleet/fuel params) without breaking the WTE contract.
+- [x] TASK-04-01: Extract a pluggable methodology interface `src/pdd_agent/calc/methodology.py` (protocol: inputs schema fragment, `baseline/project/leakage/net` computation, per-parameter provenance, required-monitoring params) by refactoring `calc/acm0022.py` behind it without behavior change (existing 313 tests stay green).
+- [x] TASK-04-02: Add a public-registry corpus source: `ingest/registry_download.py` fetching registered PDD PDFs from the Verra registry for a given methodology, feeding the existing `normalize.py` → `bucket.py` → `retrieval/index.py` chain (per-family index or family-tagged corpus).
+- [x] TASK-04-03: Generalize `rules/verra/` layout to per-family rule files; extend `domain/methodology_screen.py` to load multiple families.
+- [x] TASK-04-04: Extend `schemas/project_input.py` with per-family input extensions (rice hydrology/cultivation params, biochar feedstock/pyrolysis params, cookstove fleet/fuel params) without breaking the WTE contract.
 
 Per-family tracks (each: corpus → rules → calc engine → golden test):
 - [ ] TASK-04-05: **Cookstoves** (default AMS-II.G, pending Q-001): ingest ≥8 registered PDDs; screening rules; calc engine (fuel savings × fNRB × EF) + tests validated against one registered PDD's published numbers.
@@ -202,7 +202,7 @@ Confirm greenfield capability on Seraphin when its data arrives, close the conve
 - [ ] TASK-05-01: When Seraphin data lands: intake via `ingest/extract.py` (document path) or spreadsheet mapper, full draft+judge+gate run, expert sign-off pass (same bar as Inegol).
 - [ ] TASK-05-02: Run `scripts/compare_codex_vs_pipeline.py` on a shared project as the convergence test (DEC-013); record results in `docs/`.
 - [ ] TASK-05-03: Retire or archive the parallel Codex-track artifacts in agreement with Tinh; update `docs/2026-06-15-tinh-track-vs-repo-comparison.md` with a convergence conclusion.
-- [ ] TASK-05-04: Status hygiene: reconcile `activeContext.md`, README claims ("second project" caveat), remove stray `tmp_wte_model.xlsx`; final `/report`-style summary of the 8-week push.
+- [x] TASK-05-04: Status hygiene: reconcile `activeContext.md`, README claims ("second project" caveat), remove stray `tmp_wte_model.xlsx`; final `/report`-style summary of the 8-week push.
 
 **Files / Surfaces**
 - `scripts/compare_codex_vs_pipeline.py` - convergence test.

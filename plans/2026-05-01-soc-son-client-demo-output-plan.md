@@ -1,7 +1,7 @@
 ---
 +title: "Soc Son Client Demo Output Upgrade"
 +date: "2026-05-01"
-+status: "phase-04-complete"
++status: "complete — DemoProvider plus the reports/demo-packages/ contract shipped and verified end-to-end (run-20260504104319-5e2a70), closed by reports/2026-05-04-final-soc-son-client-demo-upgrade.html."
 +request: "review word or pdf soc son output from implementation of the last plan and understand why it contain so much gibberish, evoke plan skill for multiphase so next sample word output will contain synthetic info suffice for a demo with client"
 +plan_type: "multi-phase"
 +research_inputs:
@@ -141,11 +141,11 @@
 +Prove the new demo contract works by generating a fresh Soc Son client-demo package and confirming it is readable enough for a live client conversation.
 
 +**Tasks**
-+- [ ] TASK-04-01: Add regression tests covering zero-placeholder demo output, aligned quantification numbers, demo-package publication, and CLI/script surfacing of the published path.
-+- [ ] TASK-04-02: Run the refreshed demo workflow end to end and publish a fresh DOCX under `reports/demo-packages/`.
++- [x] TASK-04-01: Add regression tests covering zero-placeholder demo output, aligned quantification numbers, demo-package publication, and CLI/script surfacing of the published path.
++- [x] TASK-04-02: Run the refreshed demo workflow end to end and publish a fresh DOCX under `reports/demo-packages/`.
 +- [ ] TASK-04-03: If a local converter is available, publish a matching PDF and verify that it mirrors the DOCX content rather than the old review-package content.
-+- [ ] TASK-04-04: Refresh README examples and any demo-facing reports so the repo points users to the client-demo package rather than the internal review package when the goal is a sample output.
-+- [ ] TASK-04-05: Manually inspect the generated artifact and confirm that the cover disclosure, body prose, quantitative totals, and appendix summary would all be understandable in a client demo without extra apology or translation.
++- [x] TASK-04-04: Refresh README examples and any demo-facing reports so the repo points users to the client-demo package rather than the internal review package when the goal is a sample output.
++- [x] TASK-04-05: Manually inspect the generated artifact and confirm that the cover disclosure, body prose, quantitative totals, and appendix summary would all be understandable in a client demo without extra apology or translation.
 
 +**Files / Surfaces**
 +- `tests/test_phase05_demo.py` - Needs end-to-end assertions for the demo artifact contract.
