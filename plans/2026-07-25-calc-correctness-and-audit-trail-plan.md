@@ -1,7 +1,7 @@
 ---
 title: "Calc Correctness, the Audit Trail, and the First Real-Model Proof"
 date: "2026-07-25"
-status: "draft"
+status: "open — PHASE-01 and PHASE-02 landed (811953c, a6b40da); PHASE-03..06 (annual ER schedule + monitoring params, DraftRun calc persistence, calc-driven structured tables, real-model proof) are unimplemented in the codebase."
 request: "Pre-flight fixes (truncating preamble stripper, Inegol grid emission factor, build production index, grounding provenance in scorecard), engine correctness (BE_CH4 decoupling, ACM0022 monitoring params, year-by-year ER schedule, validation against registered PDDs), carry calc to the deliverable (persist in DraftRun, wire to all export call sites, surface warnings, define numeric precedence), calc-driven structured_content tables, and the real-model proof run as the closing phase."
 plan_type: "multi-phase"
 research_inputs:
@@ -356,13 +356,13 @@ everything here is a precondition for trusting PHASE-06.
 
 **Tasks**
 
-- [ ] TASK-01-01: Bound the trailer scan in `strip_assistant_preamble` to the tail of the body.
-- [ ] TASK-01-02: Add regression tests for the truncation bug using the literal body from the
+- [x] TASK-01-01: Bound the trailer scan in `strip_assistant_preamble` to the tail of the body.
+- [x] TASK-01-02: Add regression tests for the truncation bug using the literal body from the
       research brief.
-- [ ] TASK-01-03: Populate the İnegöl config's grid emission factor and biomethanization fraction.
-- [ ] TASK-01-04: Log the retrieval-index fallback at WARNING and expose the selected path.
-- [ ] TASK-01-05: Add grounding-provenance fields to `ProviderScorecardRow` and render them.
-- [ ] TASK-01-06: Build the production FTS5 index from the 17 normalized corpus documents.
+- [x] TASK-01-03: Populate the İnegöl config's grid emission factor and biomethanization fraction.
+- [x] TASK-01-04: Log the retrieval-index fallback at WARNING and expose the selected path.
+- [x] TASK-01-05: Add grounding-provenance fields to `ProviderScorecardRow` and render them.
+- [x] TASK-01-06: Build the production FTS5 index from the 17 normalized corpus documents.
 
 **File Changes**
 
@@ -475,14 +475,14 @@ Write the oracle test **first**, watch it fail, then make it pass.
 
 **Tasks**
 
-- [ ] TASK-02-01: Create `tests/test_registered_pdd_oracle.py` asserting engine output against the
+- [x] TASK-02-01: Create `tests/test_registered_pdd_oracle.py` asserting engine output against the
       four registered-PDD constants. Run it and confirm it **fails** before changing any engine code.
-- [ ] TASK-02-02: Add `swds_diversion_fraction` to `ACM0022CalcInput`.
-- [ ] TASK-02-03: Change the `BE_CH4` loop in `ACM0022Calculator.calculate()` to use it.
-- [ ] TASK-02-04: Map the new field in `dispatch._map_acm0022` and drop the now-misleading
+- [x] TASK-02-02: Add `swds_diversion_fraction` to `ACM0022CalcInput`.
+- [x] TASK-02-03: Change the `BE_CH4` loop in `ACM0022Calculator.calculate()` to use it.
+- [x] TASK-02-04: Map the new field in `dispatch._map_acm0022` and drop the now-misleading
       "biomethanization absent" warning from the `BE_CH4` path.
-- [ ] TASK-02-05: Update existing ACM0022 golden tests whose expected values change.
-- [ ] TASK-02-06: Add a mass-burn regression test asserting `BE_CH4 > 0` when
+- [x] TASK-02-05: Update existing ACM0022 golden tests whose expected values change.
+- [x] TASK-02-06: Add a mass-burn regression test asserting `BE_CH4 > 0` when
       `biomethanization_fraction == 0`.
 
 **File Changes**

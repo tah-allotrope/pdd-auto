@@ -1,7 +1,7 @@
 ---
 title: "Calc Spine, Cost Truth, and the First Real-Model Proof"
 date: "2026-07-25"
-status: "draft"
+status: "superseded — PHASE-01..05 landed in 47a4faf (final report reports/2026-07-25-calc-spine-cost-truth-final-report.md); the only remaining phase, PHASE-06 (build the production index + first real-model proof), is re-specified and extended by plans/2026-07-25-calc-correctness-and-audit-trail-plan.md, whose PHASE-01 already built data/index/corpus.fts.db and whose PHASE-06 covers the proof run."
 request: "Implement Track A1-A4 (claude-code token/cost truth, provider preamble stripping, build the production index, run the first real-model proof) and Track B1-B4 (calc dispatch layer, generalized per-family calc injection, wire calc into the three orchestrator entry points, pdd-agent calc command), with Track F1-F4 documentation truth-sync and hygiene riding along."
 plan_type: "multi-phase"
 research_inputs:
@@ -212,14 +212,14 @@ Set `PDD_MAX_COST_USD=15` for the PHASE-06 runs: above the two-project no-redraf
 `TokenBudget` counts every token class the Claude Code CLI bills for, and records the CLI's own `total_cost_usd` as authoritative, so `PDD_MAX_COST_USD` and `max_tokens` actually stop a runaway run and the scorecard's cost column is true.
 
 **Tasks**
-- [ ] TASK-01-01: Add `cache_creation_tokens: int = 0` and `cache_read_tokens: int = 0` to `CallRecord` in `src/pdd_agent/llm/budget.py`.
-- [ ] TASK-01-02: Add a `total_cache_tokens` property to `TokenBudget` and include it in `total_tokens`. Because both new `CallRecord` fields default to `0`, every existing provider's accounting is unchanged.
-- [ ] TASK-01-03: Extend `TokenBudget.record()` with `cache_creation_tokens: int = 0`, `cache_read_tokens: int = 0`, and `cost_usd: float | None = None`. When `cost_usd` is not `None`, store it verbatim; otherwise fall back to `_estimate_cost(...)` exactly as today.
-- [ ] TASK-01-04: Add `total_cache_tokens` to the dict returned by `TokenBudget.summary()`, positioned immediately after `total_output_tokens`. Leave every existing key and its rounding unchanged.
-- [ ] TASK-01-05: In `ClaudeCodeProvider._call_cli`, parse `usage.cache_creation_input_tokens` and `usage.cache_read_input_tokens` (default `0`) and top-level `total_cost_usd` (default `None`). Set `LLMResponse.tokens_used` to the sum of all four token classes and `LLMResponse.cost_usd` to `total_cost_usd or 0.0`; carry all five values in `LLMResponse.raw`.
-- [ ] TASK-01-06: In `ClaudeCodeProvider.draft_section`, pass the two cache-token counts and `cost_usd=response.raw.get("cost_usd")` through to `self._budget.record(...)`.
-- [ ] TASK-01-07: Update the comment block above the `claude-code` entry in `configs/model_pricing.yaml` to state that cost now comes from the CLI's reported `total_cost_usd` and that the `0.0` rates are the fallback used only when that field is absent. Do not change the numeric values.
-- [ ] TASK-01-08: Update the module docstring of `src/pdd_agent/llm/claude_code_provider.py` (lines 18–25), which currently says `total_cost_usd` is "not used here".
+- [x] TASK-01-01: Add `cache_creation_tokens: int = 0` and `cache_read_tokens: int = 0` to `CallRecord` in `src/pdd_agent/llm/budget.py`.
+- [x] TASK-01-02: Add a `total_cache_tokens` property to `TokenBudget` and include it in `total_tokens`. Because both new `CallRecord` fields default to `0`, every existing provider's accounting is unchanged.
+- [x] TASK-01-03: Extend `TokenBudget.record()` with `cache_creation_tokens: int = 0`, `cache_read_tokens: int = 0`, and `cost_usd: float | None = None`. When `cost_usd` is not `None`, store it verbatim; otherwise fall back to `_estimate_cost(...)` exactly as today.
+- [x] TASK-01-04: Add `total_cache_tokens` to the dict returned by `TokenBudget.summary()`, positioned immediately after `total_output_tokens`. Leave every existing key and its rounding unchanged.
+- [x] TASK-01-05: In `ClaudeCodeProvider._call_cli`, parse `usage.cache_creation_input_tokens` and `usage.cache_read_input_tokens` (default `0`) and top-level `total_cost_usd` (default `None`). Set `LLMResponse.tokens_used` to the sum of all four token classes and `LLMResponse.cost_usd` to `total_cost_usd or 0.0`; carry all five values in `LLMResponse.raw`.
+- [x] TASK-01-06: In `ClaudeCodeProvider.draft_section`, pass the two cache-token counts and `cost_usd=response.raw.get("cost_usd")` through to `self._budget.record(...)`.
+- [x] TASK-01-07: Update the comment block above the `claude-code` entry in `configs/model_pricing.yaml` to state that cost now comes from the CLI's reported `total_cost_usd` and that the `0.0` rates are the fallback used only when that field is absent. Do not change the numeric values.
+- [x] TASK-01-08: Update the module docstring of `src/pdd_agent/llm/claude_code_provider.py` (lines 18–25), which currently says `total_cost_usd` is "not used here".
 
 **File Changes**
 - `src/pdd_agent/llm/budget.py` (modify): extend `CallRecord`, `TokenBudget.record()`, `total_tokens`, `summary()`; add `total_cache_tokens`. Leave `_load_pricing`, `_FALLBACK_PRICING`, `_estimate_cost`, `check_budget`, `utilization`, `remaining`, and `BudgetExhaustedError` untouched.
@@ -257,10 +257,10 @@ Set `PDD_MAX_COST_USD=15` for the PHASE-06 runs: above the two-project no-redraf
 Section bodies produced by real providers start at the content, not at "I'll draft…", and do not end with "Let me know if…".
 
 **Tasks**
-- [ ] TASK-02-01: Create `src/pdd_agent/llm/output_normalize.py` implementing `strip_assistant_preamble` exactly per `## Specification` §2, with the two module-level compiled regexes (`_PREAMBLE_RE`, `_TRAILER_RE`) and the horizontal-rule set `{"---", "***", "___"}`.
-- [ ] TASK-02-02: In `src/pdd_agent/llm/claude_code_provider.py:210`, change `text = response.text[:max_chars]` to `text = strip_assistant_preamble(response.text)[:max_chars]`.
-- [ ] TASK-02-03: Apply the identical change at `src/pdd_agent/llm/openai_provider.py:190`, `src/pdd_agent/llm/anthropic_provider.py:197`, and `src/pdd_agent/llm/ollama_provider.py:181`.
-- [ ] TASK-02-04: Create `tests/test_output_normalize.py` covering the specs below.
+- [x] TASK-02-01: Create `src/pdd_agent/llm/output_normalize.py` implementing `strip_assistant_preamble` exactly per `## Specification` §2, with the two module-level compiled regexes (`_PREAMBLE_RE`, `_TRAILER_RE`) and the horizontal-rule set `{"---", "***", "___"}`.
+- [x] TASK-02-02: In `src/pdd_agent/llm/claude_code_provider.py:210`, change `text = response.text[:max_chars]` to `text = strip_assistant_preamble(response.text)[:max_chars]`.
+- [x] TASK-02-03: Apply the identical change at `src/pdd_agent/llm/openai_provider.py:190`, `src/pdd_agent/llm/anthropic_provider.py:197`, and `src/pdd_agent/llm/ollama_provider.py:181`.
+- [x] TASK-02-04: Create `tests/test_output_normalize.py` covering the specs below.
 - [ ] TASK-02-05: Add one case to `tests/test_claude_code_provider.py` proving the normalizer is wired into `draft_section` (mocked subprocess, preamble-bearing payload).
 
 **File Changes**
@@ -300,12 +300,12 @@ Section bodies produced by real providers start at the content, not at "I'll dra
 One function turns a `ProjectInput` into a computed, family-agnostic quantification result — or into a clear `None` with the missing field paths logged — and the orchestrator can format any family's result without WTE-specific attribute access.
 
 **Tasks**
-- [ ] TASK-03-01: Create `src/pdd_agent/calc/dispatch.py` with `CalcComponent`, `PddCalcResult`, `ENGINE_BY_METHODOLOGY`, `build_engine_inputs`, and `compute_for`, implementing `## Specification` §1 exactly.
-- [ ] TASK-03-02: Implement `PddCalcResult.to_prompt_block()` per `## Specification` §3.
-- [ ] TASK-03-03: Generalize `SectionOrchestrator._format_calc_injection` into the three-branch dispatch of `## Specification` §3, keeping the existing ACM0022 body verbatim as branch 3 and reading it from `raw_result` when present.
-- [ ] TASK-03-04: Guard `_check_calc_result_internal` in `src/pdd_agent/review/consistency.py` (line 411) so its ACM0022-specific decomposition check (`baseline_methane_swds_tco2e + baseline_electricity_tco2e`, line 440) runs only when **both** attributes exist: `if hasattr(calc_result, "baseline_methane_swds_tco2e") and hasattr(calc_result, "baseline_electricity_tco2e"):`. The generic baseline/project/leakage/net arithmetic check above it stays unconditional.
+- [x] TASK-03-01: Create `src/pdd_agent/calc/dispatch.py` with `CalcComponent`, `PddCalcResult`, `ENGINE_BY_METHODOLOGY`, `build_engine_inputs`, and `compute_for`, implementing `## Specification` §1 exactly.
+- [x] TASK-03-02: Implement `PddCalcResult.to_prompt_block()` per `## Specification` §3.
+- [x] TASK-03-03: Generalize `SectionOrchestrator._format_calc_injection` into the three-branch dispatch of `## Specification` §3, keeping the existing ACM0022 body verbatim as branch 3 and reading it from `raw_result` when present.
+- [x] TASK-03-04: Guard `_check_calc_result_internal` in `src/pdd_agent/review/consistency.py` (line 411) so its ACM0022-specific decomposition check (`baseline_methane_swds_tco2e + baseline_electricity_tco2e`, line 440) runs only when **both** attributes exist: `if hasattr(calc_result, "baseline_methane_swds_tco2e") and hasattr(calc_result, "baseline_electricity_tco2e"):`. The generic baseline/project/leakage/net arithmetic check above it stays unconditional.
 - [ ] TASK-03-05: Update the `calc_result` type annotations and docstrings in `src/pdd_agent/review/consistency.py` (lines 92, 100, 415) from `ACM0022CalcResult` to `ACM0022CalcResult | PddCalcResult`, using a `TYPE_CHECKING`-guarded import so no runtime import cycle is introduced.
-- [ ] TASK-03-06: Create `tests/test_calc_dispatch.py` covering the specs below.
+- [x] TASK-03-06: Create `tests/test_calc_dispatch.py` covering the specs below.
 
 **File Changes**
 - `src/pdd_agent/calc/dispatch.py` (create): the whole dispatch layer. Imports only from `pdd_agent.calc.*` and `schemas.project_input`, plus `structlog`. Must not import `pdd_agent.agent.*` (that direction would be circular).
@@ -348,13 +348,13 @@ One function turns a `ProjectInput` into a computed, family-agnostic quantificat
 Real-provider runs compute their quantification with the engine, inject it into Section 4 prompts, and cross-check draft numbers against it — while every `demo`/`noop` artifact stays byte-identical. A standalone `pdd-agent calc` command exposes the breakdown with zero LLM calls.
 
 **Tasks**
-- [ ] TASK-04-01: In `src/pdd_agent/cli.py:_run_draft`, after `project_input` is resolved and before the orchestrator is constructed, compute `calc_result = compute_for(project_input) if args.provider not in ("demo", "noop") else None`, pass it as `SectionOrchestrator(calc_result=calc_result, ...)`, and log `calc_engine_ready` with `methodology_id` and `net_tco2e` (or `calc_engine_skipped` with `reason`).
-- [ ] TASK-04-02: Apply the same rule in `src/pdd_agent/phase05/provider_scorecard.py:_run_one_provider`, reusing the existing `provider_name not in ("demo", "noop")` idiom already present there for the judge.
-- [ ] TASK-04-03: Apply the same rule in `src/pdd_agent/service/main.py:_execute_run`, gating on the resolved provider name.
-- [ ] TASK-04-04: In `SectionOrchestrator.run_review` (line 935), pass `calc_result=self._calc_result` to `check_quantitative_consistency(...)`. Change nothing else in that method.
-- [ ] TASK-04-05: Add a `calc` subcommand to `build_parser` in `src/pdd_agent/cli.py` with `--input` (required, path to a ProjectInput YAML) and `--output` (optional path; when given, write the result as JSON). Register it by adding `"calc": lambda: _run_calc(args, log),` to the `commands` dict inside `main()` (the dict starting at `src/pdd_agent/cli.py:407`, dispatched at line 434 via `commands[args.command]()`).
-- [ ] TASK-04-06: Implement `_run_calc(args, log)` printing the methodology id, the five summary values, the component breakdown, the monitoring-parameter count, and any warnings; exit with a clear message when `compute_for` returns `None`.
-- [ ] TASK-04-07: Add a `| pdd-agent calc | Compute methodology quantification for a ProjectInput without any LLM call |` row to the CLI table in `README.md`.
+- [x] TASK-04-01: In `src/pdd_agent/cli.py:_run_draft`, after `project_input` is resolved and before the orchestrator is constructed, compute `calc_result = compute_for(project_input) if args.provider not in ("demo", "noop") else None`, pass it as `SectionOrchestrator(calc_result=calc_result, ...)`, and log `calc_engine_ready` with `methodology_id` and `net_tco2e` (or `calc_engine_skipped` with `reason`).
+- [x] TASK-04-02: Apply the same rule in `src/pdd_agent/phase05/provider_scorecard.py:_run_one_provider`, reusing the existing `provider_name not in ("demo", "noop")` idiom already present there for the judge.
+- [x] TASK-04-03: Apply the same rule in `src/pdd_agent/service/main.py:_execute_run`, gating on the resolved provider name.
+- [x] TASK-04-04: In `SectionOrchestrator.run_review` (line 935), pass `calc_result=self._calc_result` to `check_quantitative_consistency(...)`. Change nothing else in that method.
+- [x] TASK-04-05: Add a `calc` subcommand to `build_parser` in `src/pdd_agent/cli.py` with `--input` (required, path to a ProjectInput YAML) and `--output` (optional path; when given, write the result as JSON). Register it by adding `"calc": lambda: _run_calc(args, log),` to the `commands` dict inside `main()` (the dict starting at `src/pdd_agent/cli.py:407`, dispatched at line 434 via `commands[args.command]()`).
+- [x] TASK-04-06: Implement `_run_calc(args, log)` printing the methodology id, the five summary values, the component breakdown, the monitoring-parameter count, and any warnings; exit with a clear message when `compute_for` returns `None`.
+- [x] TASK-04-07: Add a `| pdd-agent calc | Compute methodology quantification for a ProjectInput without any LLM call |` row to the CLI table in `README.md`.
 - [ ] TASK-04-08: Create `tests/test_calc_wiring.py` covering the specs below.
 
 **File Changes**
@@ -395,14 +395,14 @@ Real-provider runs compute their quantification with the engine, inject it into 
 Every status claim in the repo's front-door documents matches what the code does, so the next reader's first hour is not spent discovering that the known-gaps list is stale.
 
 **Tasks**
-- [ ] TASK-05-01: In `README.md:5`, replace the test-count sentence with the count produced by running the suite at this phase (`python -m pytest -m "not corpus" -q | tail -1`). Quote the exact numbers reported.
-- [ ] TASK-05-02: In `README.md:311`, correct the `llm/ollama_provider.py` description — it is a working HTTP client against `{OLLAMA_BASE_URL}/api/chat`, not a stub.
-- [ ] TASK-05-03: In `README.md` "Known Gaps" (around line 328), delete the claim that the FastAPI service "forces the `demo` provider and disables corpus retrieval regardless of configuration" and replace it with the two gaps that are actually true today: (a) `_get_provider` does not recognize `claude-code`, so that provider silently falls back to `demo` with `reason="unknown_provider"`; (b) `/dashboard` and `/api/runs` scan and `stat()` every `run-*.json` in the runs directory on each request, with no pagination or retention policy.
+- [x] TASK-05-01: In `README.md:5`, replace the test-count sentence with the count produced by running the suite at this phase (`python -m pytest -m "not corpus" -q | tail -1`). Quote the exact numbers reported.
+- [x] TASK-05-02: In `README.md:311`, correct the `llm/ollama_provider.py` description — it is a working HTTP client against `{OLLAMA_BASE_URL}/api/chat`, not a stub.
+- [x] TASK-05-03: In `README.md` "Known Gaps" (around line 328), delete the claim that the FastAPI service "forces the `demo` provider and disables corpus retrieval regardless of configuration" and replace it with the two gaps that are actually true today: (a) `_get_provider` does not recognize `claude-code`, so that provider silently falls back to `demo` with `reason="unknown_provider"`; (b) `/dashboard` and `/api/runs` scan and `stat()` every `run-*.json` in the runs directory on each request, with no pagination or retention policy.
 - [ ] TASK-05-04: Add a "Quantification engines" subsection to `README.md` under Architecture describing `pdd-agent calc`, `compute_for`, the four supported methodology ids, and the demo/noop exclusion rule (ASM-002).
-- [ ] TASK-05-05: In `CLAUDE.md`, update the "Where to look" pointer from `plans/2026-07-12-pdd-reality-gap-plan.md` to this plan's path.
-- [ ] TASK-05-06: Rewrite `activeContext.md` to describe this plan: its six phases as checkable items, the current test count, and the remaining external blockers (no `OPENAI_API_KEY`/`ANTHROPIC_API_KEY`; Ollama not installed; Verra registry live search still uncaptured).
-- [ ] TASK-05-07: Delete the unused `_PROJECT_ALIASES` dict at `src/pdd_agent/cli.py:188`. Verify first that the live dict at `_run_prove` (line 684) is the one actually consulted: `grep -n "_PROJECT_ALIASES\|project_aliases" src/pdd_agent/cli.py`.
-- [ ] TASK-05-08: Delete the leaked test artifact `data/index/__nonexistent_test.fts.db` and confirm it is not tracked (`git ls-files data/index/`). If a test creates it, make that test use `tmp_path`.
+- [x] TASK-05-05: In `CLAUDE.md`, update the "Where to look" pointer from `plans/2026-07-12-pdd-reality-gap-plan.md` to this plan's path.
+- [x] TASK-05-06: Rewrite `activeContext.md` to describe this plan: its six phases as checkable items, the current test count, and the remaining external blockers (no `OPENAI_API_KEY`/`ANTHROPIC_API_KEY`; Ollama not installed; Verra registry live search still uncaptured).
+- [x] TASK-05-07: Delete the unused `_PROJECT_ALIASES` dict at `src/pdd_agent/cli.py:188`. Verify first that the live dict at `_run_prove` (line 684) is the one actually consulted: `grep -n "_PROJECT_ALIASES\|project_aliases" src/pdd_agent/cli.py`.
+- [x] TASK-05-08: Delete the leaked test artifact `data/index/__nonexistent_test.fts.db` and confirm it is not tracked (`git ls-files data/index/`). If a test creates it, make that test use `tmp_path`.
 
 **File Changes**
 - `README.md` (modify): status line, Ollama description, Known Gaps, new quantification-engines subsection, plus the `calc` CLI row from PHASE-04 if not already added.
@@ -438,7 +438,7 @@ Produce the repo's first real-model artifacts: two completed `pdd-agent prove` r
 
 **Tasks**
 - [ ] TASK-06-01: Confirm the environment: `python --version` (expect 3.11+), `which claude` (or `where claude` on Windows) must resolve, and `pdd-agent doctor` must report the `claude` CLI as found.
-- [ ] TASK-06-02: Build the production retrieval index: `pdd-agent build-index --corpus-dir data/corpus/normalized --index-db data/index/corpus.fts.db`. Confirm `data/index/corpus.fts.db` exists and is larger than `data/index/demo.fts.db`.
+- [x] TASK-06-02: Build the production retrieval index: `pdd-agent build-index --corpus-dir data/corpus/normalized --index-db data/index/corpus.fts.db`. Confirm `data/index/corpus.fts.db` exists and is larger than `data/index/demo.fts.db`.
 - [ ] TASK-06-03: Record a pre-flight note listing which index file `get_retrieval_index()` will select (`corpus.fts.db` when present, else `demo.fts.db`) and the document count indexed.
 - [ ] TASK-06-04: Run the Inegol proof with a bound cost ceiling: `PDD_MAX_COST_USD=15 pdd-agent prove --project inegol --providers claude-code --output reports/prove-inegol-claude-code.md` (PowerShell: `$env:PDD_MAX_COST_USD='15'; pdd-agent prove --project inegol --providers claude-code --output reports/prove-inegol-claude-code.md`). Expect ≈22 minutes and ≈$6.
 - [ ] TASK-06-05: Run the rice proof: same command with `--project rice --output reports/prove-rice-claude-code.md`. This is the run where the calc spine fires (ASM-005).

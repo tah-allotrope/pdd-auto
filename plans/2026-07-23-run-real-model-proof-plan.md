@@ -1,7 +1,7 @@
 ---
 title: "Fix Self-Judging Redraft Loop, Run the First Real-Model Proof, Capture the Verra Registry API"
 date: "2026-07-23"
-status: "draft"
+status: "open — PHASE-01/02 (judge-selection extraction, in-loop self-judging fix) landed in 4266be1/aae79b3 and PHASE-03's proof run is now carried by plans/2026-07-25-calc-correctness-and-audit-trail-plan.md PHASE-06, but PHASE-04 (live Verra registry search-API capture) is explicitly out of scope in every later plan and remains unbuilt — registry_download.py still runs in manual-download fallback mode."
 request: "Scope the plan to Track A1 (fix in-loop redraft self-judging in section_orchestrator.py) + A2 (run pdd-agent prove --project inegol --providers claude-code) + A3 (run --project rice) as the primary sequence, with Track B1 (Verra registry search-API capture via browser devtools) as an independent parallel phase."
 plan_type: "multi-phase"
 research_inputs:
@@ -242,12 +242,12 @@ new shared module so `section_orchestrator.py` can use the identical logic in PH
 circular import and without duplicating the availability-probing code a second time.
 
 **Tasks**
-- [ ] TASK-01-01: Create `src/pdd_agent/llm/judge_selection.py` containing the relocated
+- [x] TASK-01-01: Create `src/pdd_agent/llm/judge_selection.py` containing the relocated
       `JUDGE_PREFERENCE_ORDER` constant, `probe_ollama_available()`, `is_provider_available()`, and
       `select_judge_provider()` — moved verbatim (same behavior) from `provider_scorecard.py`, plus a
       new `resolve_judge_provider()` convenience function for single-call-site use (see Function
       Signatures below).
-- [ ] TASK-01-02: Modify `src/pdd_agent/phase05/provider_scorecard.py` to delete its local
+- [x] TASK-01-02: Modify `src/pdd_agent/phase05/provider_scorecard.py` to delete its local
       `_JUDGE_PREFERENCE_ORDER`, `_probe_ollama_available`, `_is_provider_available`,
       `_select_judge_provider` definitions and instead import the relocated functions from
       `judge_selection.py`, binding them to the same private names (`_is_provider_available =
@@ -256,14 +256,14 @@ circular import and without duplicating the availability-probing code a second t
       now-unused `import shutil`, `import urllib.error`, `import urllib.request` lines (verify via
       `ruff check src/pdd_agent/phase05/provider_scorecard.py` that nothing else in the file still
       references them before removing).
-- [ ] TASK-01-03: Create `tests/test_judge_selection.py`. Move the existing `TestIsProviderAvailable`
+- [x] TASK-01-03: Create `tests/test_judge_selection.py`. Move the existing `TestIsProviderAvailable`
       and `TestSelectJudgeProvider` test classes from `tests/test_provider_scorecard.py` into this new
       file, updating imports to `from pdd_agent.llm.judge_selection import (is_provider_available,
       select_judge_provider)` and updating every `monkeypatch.setattr("pdd_agent.phase05.
       provider_scorecard.shutil.which", ...)` call to target
       `"pdd_agent.llm.judge_selection.shutil.which"` instead (see `## Gotchas` for why this exact
       string must change). Add new test coverage for `resolve_judge_provider()` (see Test Specs).
-- [ ] TASK-01-04: Modify `tests/test_provider_scorecard.py`: delete the `TestIsProviderAvailable` and
+- [x] TASK-01-04: Modify `tests/test_provider_scorecard.py`: delete the `TestIsProviderAvailable` and
       `TestSelectJudgeProvider` classes (now live in `test_judge_selection.py`). Leave the module-level
       import of `_is_provider_available` and `_select_judge_provider` from
       `pdd_agent.phase05.provider_scorecard` unchanged — they are still used directly by
@@ -368,13 +368,13 @@ once per orchestrator run, and thread the run's `TokenBudget` into the in-loop j
 is counted (matching what `provider_scorecard.py`'s post-hoc judging pass already does correctly).
 
 **Tasks**
-- [ ] TASK-02-01: Add `from pdd_agent.llm.judge_selection import resolve_judge_provider` to the imports
+- [x] TASK-02-01: Add `from pdd_agent.llm.judge_selection import resolve_judge_provider` to the imports
       in `src/pdd_agent/agent/section_orchestrator.py`.
-- [ ] TASK-02-02: Add a `self._judge_provider_cache: tuple[str, bool] | None = None` instance
+- [x] TASK-02-02: Add a `self._judge_provider_cache: tuple[str, bool] | None = None` instance
       attribute in `SectionOrchestrator.__init__` (alongside the existing `self.redraft_count: int = 0`
       line), and a new private method `_resolve_judge_provider(self, drafting_provider_name: str) ->
       tuple[str, bool]` that lazily computes and caches the result of `resolve_judge_provider(...)`.
-- [ ] TASK-02-03: In `_run_judge_redraft_loop`, replace the two lines
+- [x] TASK-02-03: In `_run_judge_redraft_loop`, replace the two lines
       ```python
       drafting_provider_name = getattr(self._provider, "name", "demo")
       judge_provider_name = os.environ.get("PDD_JUDGE_PROVIDER", drafting_provider_name)
@@ -389,16 +389,16 @@ is counted (matching what `provider_scorecard.py`'s post-hoc judging pass alread
       `token_budget=self._budget` as a new keyword argument (this is the ASM-008-equivalent fix noted
       in the source brainstorm's Track C3: judge-call tokens were previously excluded from the
       in-loop judge's cost accounting).
-- [ ] TASK-02-04: Remove the now-dead local `import os` statement inside `_run_judge_redraft_loop`
+- [x] TASK-02-04: Remove the now-dead local `import os` statement inside `_run_judge_redraft_loop`
       (it was only used for the line replaced in TASK-02-03; confirm via `ruff check` that no other
       `os.` reference remains in that function before deleting the import).
-- [ ] TASK-02-05: Update `tests/test_section_orchestrator.py`'s existing
+- [x] TASK-02-05: Update `tests/test_section_orchestrator.py`'s existing
       `test_judge_redraft_loop_parks_failed_section` test to explicitly force deterministic judge
       fallback (see `## Gotchas` for why this is required — the reference dev machine has `claude` on
       `PATH`, which would otherwise make this test actually shell out): add a `monkeypatch` parameter
       and the four explicit unavailability patches listed in ASM-004 before constructing the
       orchestrator.
-- [ ] TASK-02-06: Add new regression tests to `tests/test_section_orchestrator.py` proving the fix
+- [x] TASK-02-06: Add new regression tests to `tests/test_section_orchestrator.py` proving the fix
       (see Test Specs below): the judge provider must never equal the drafting provider when an
       alternative is available, and must fall back to `demo` (never silently defaulting back to the
       drafting provider) when nothing else is available.
