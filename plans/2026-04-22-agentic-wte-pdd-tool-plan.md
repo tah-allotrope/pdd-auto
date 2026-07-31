@@ -1,4 +1,8 @@
 ---
+status: "complete — bulk-corrected 2026-07-31 per directive: plan predates 2026-07-20 and is presumed fully implemented (NOT individually verified against git/code evidence)"
+---
+
+---
 +title: "Agentic Low-Cost WTE PDD Tool"
 +date: "2026-04-22"
 +status: "complete — all five phases implemented (CLI, Drive ingest, section schema, retrieval, review, DOCX/Drive export, benchmark) and reported in reports/2026-04-22-phase-01..04 + 2026-04-24-phase-05 + 2026-04-24-final; every named surface exists in the repo."
