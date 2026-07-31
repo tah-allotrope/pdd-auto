@@ -1,7 +1,7 @@
 ---
 title: "Trust-Layer Hardening, Honest Proof Harness, and the Keyless Frontier Provider"
 date: "2026-07-16"
-status: "complete — bulk-corrected 2026-07-31 per directive: plan predates 2026-07-20 and is presumed fully implemented (NOT individually verified against git/code evidence)"
+status: "open — PHASE-01-05 done, PHASE-06 (Ollama rehearsal) genuinely blocked: Ollama not installed, still wanted per the 07-23 brainstorm. Confirmed by CC triage on 2026-07-30; incorrectly marked complete by the 2026-07-31 blanket pre-7/20 stamp, which predates this evidence. Corrected back on manual review."
 request: "Multi-phase plan for Tracks A2–A5 (CI trust hardening), B1–B5 (proof-harness hardening), C1 (ClaudeCodeProvider keyless frontier path), C4 (small-model Ollama dress rehearsal) from the 2026-07-16 brainstorm"
 plan_type: "multi-phase"
 research_inputs:
