@@ -482,3 +482,63 @@ class TestCalcResultPersistence:
 
         loaded = DraftRun.load("legacy-no-calc", output_dir=run_dir)
         assert loaded.calc_result is None
+
+
+class TestCalcStructuredContent:
+    def _soc_son_calc_result(self):
+        import yaml
+
+        from schemas.project_input import ProjectInput
+        from pdd_agent.calc.dispatch import compute_for
+
+        root = Path(__file__).parent.parent
+        with open(
+            root / "configs" / "projects" / "vietnam_socson_from_sheet.yaml", encoding="utf-8"
+        ) as f:
+            pi = ProjectInput.model_validate(yaml.safe_load(f))
+        return compute_for(pi)
+
+    def test_emissions_summary_table_from_annual_schedule(self):
+        orch = SectionOrchestrator(provider=NoopProvider())
+        orch.set_calc_result(self._soc_son_calc_result())
+
+        result = orch._build_calc_structured_content("4.4")
+
+        assert result["table_type"] == "emissions_summary"
+        assert len(result["data"]["entries"]) == 7
+        assert result["data"]["entries"][0]["period"] == 1
+
+    def test_monitoring_tracked_params_table_from_calc_result(self):
+        orch = SectionOrchestrator(provider=NoopProvider())
+        orch.set_calc_result(self._soc_son_calc_result())
+
+        result = orch._build_calc_structured_content("5.2")
+
+        assert result["table_type"] == "monitoring_tracked_params"
+        assert len(result["data"]["entries"]) == 4
+        assert result["data"]["entries"][0]["parameter"] == "Annual waste throughput"
+
+    def test_non_calc_section_returns_none(self):
+        orch = SectionOrchestrator(provider=NoopProvider())
+        orch.set_calc_result(self._soc_son_calc_result())
+
+        assert orch._build_calc_structured_content("2.1") is None
+
+    def test_no_calc_result_returns_none(self):
+        orch = SectionOrchestrator(provider=NoopProvider())
+
+        assert orch._build_calc_structured_content("4.4") is None
+
+
+class TestQuantificationSectionScope:
+    def test_section_1_subsections_are_quantification_sections(self):
+        orch = SectionOrchestrator(provider=NoopProvider())
+        assert orch._is_quantification_section("1", "1.10") is True
+
+    def test_section_4_subsections_are_quantification_sections(self):
+        orch = SectionOrchestrator(provider=NoopProvider())
+        assert orch._is_quantification_section("4", "4.4") is True
+
+    def test_section_3_is_not_a_quantification_section(self):
+        orch = SectionOrchestrator(provider=NoopProvider())
+        assert orch._is_quantification_section("3", "3.1") is False

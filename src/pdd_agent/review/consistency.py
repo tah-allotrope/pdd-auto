@@ -487,7 +487,15 @@ def _check_calc_vs_project_input(
     project_input: ProjectInput,
     report: ConsistencyReport,
 ) -> None:
-    """Cross-check calc result against ProjectInput quantification fields."""
+    """Cross-check calc result against ProjectInput quantification fields (S-3).
+
+    Skips any scalar whose ProjectInput declaration is None (an absent
+    declaration is not a disagreement). Flags any surviving relative
+    disagreement > 5% (delta = abs(calc - declared) / max(abs(declared), 1.0))
+    as HIGH severity — advisory, exports as a watermarked DRAFT rather than
+    hard-blocking (downgraded from CRITICAL; see docs/README "Quantification
+    precedence").
+    """
     qi = project_input.quantification
 
     pairs: list[tuple[str, float | None, float | None]] = [
@@ -517,7 +525,8 @@ def _check_calc_vs_project_input(
     for field_name, qi_val, calc_val in pairs:
         if qi_val is None:
             continue
-        if abs(qi_val - calc_val) > 0.01:
+        delta = abs(calc_val - qi_val) / max(abs(qi_val), 1.0)
+        if delta > 0.05:
             report.flags.append(
                 ConsistencyFlag(
                     section_a="ProjectInput.quantification",
@@ -526,11 +535,12 @@ def _check_calc_vs_project_input(
                     value_a=qi_val,
                     value_b=calc_val,
                     expected=calc_val,
-                    tolerance=0.01,
-                    severity="CRITICAL",
+                    tolerance=0.05,
+                    severity="HIGH",
                     message=(
                         f"ProjectInput.quantification.{field_name} ({qi_val:,.2f}) "
-                        f"does not match CalcResult ({calc_val:,.2f}). "
+                        f"does not match CalcResult ({calc_val:,.2f}) "
+                        f"(relative disagreement {delta:.1%}). "
                         f"Update ProjectInput via QuantificationInputs.from_calc_result()."
                     ),
                 )

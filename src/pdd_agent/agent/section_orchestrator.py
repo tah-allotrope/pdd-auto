@@ -229,7 +229,61 @@ class SectionOrchestrator:
         return True
 
     def _is_quantification_section(self, section_id: str, sub_section_id: str | None) -> bool:
-        return section_id == "4" or (sub_section_id or "").startswith("4.")
+        if section_id in ("1", "4"):
+            return True
+        ssid = sub_section_id or ""
+        return ssid.startswith("1.") or ssid.startswith("4.")
+
+    def _calc_is_authoritative(self) -> bool:
+        """Whether calc scalars override ProjectInput.quantification for prompt facts.
+
+        Read at call time (not cached), matching the rest of the module's
+        environment-variable convention, so tests can monkeypatch it freely.
+        """
+        import os
+
+        return os.environ.get("PDD_CALC_AUTHORITATIVE") == "1"
+
+    def _build_calc_structured_content(self, section_key: str) -> dict[str, Any] | None:
+        """The structured_content payload for a calc-driven table section.
+
+        Returns None for every section other than "4.4" (emissions_summary) and
+        "5.2" (monitoring_tracked_params), and whenever no calc result is
+        attached — restricted to exactly these two sections per RISK-05-01:
+        structured_content suppresses a section's prose in the exporter, so
+        widening this beyond the two calc-native tables would silently delete
+        narrative text elsewhere.
+        """
+        if not self._calc_result:
+            return None
+        cr = self._calc_result
+        if section_key == "4.4":
+            schedule = getattr(cr, "annual_schedule", [])
+            if not schedule:
+                return None
+            entries = [{"period": e.year, "value": f"{e.net_tco2e:,.0f}"} for e in schedule]
+            total = sum(e.net_tco2e for e in schedule)
+            return {
+                "table_type": "emissions_summary",
+                "data": {"entries": entries, "total": f"{total:,.0f}"},
+            }
+        if section_key == "5.2":
+            params = getattr(cr, "monitoring_params", [])
+            if not params:
+                return None
+            entries = [
+                {
+                    "parameter": p.get("name", ""),
+                    "unit": p.get("unit", ""),
+                    "description": p.get("name", ""),
+                    "frequency": p.get("frequency", ""),
+                    "equipment": p.get("source", ""),
+                    "qa_qc": "Per methodology monitoring plan",
+                }
+                for p in params
+            ]
+            return {"table_type": "monitoring_tracked_params", "data": {"entries": entries}}
+        return None
 
     def _format_calc_injection(self) -> str:
         """Format calc results for injection into Section 4 prompts.
@@ -473,7 +527,10 @@ class SectionOrchestrator:
         if not self._project:
             return "ProjectInput not available.\n"
         p = self._project
-        net = p.quantification.net_emissions_tco2e_per_year
+        if self._calc_is_authoritative() and self._calc_result is not None:
+            net = self._calc_result.net_emission_reductions_tco2e
+        else:
+            net = p.quantification.net_emissions_tco2e_per_year
         net_str = f"{net:,.0f}" if net is not None else "TBD"
         parts = [
             f"- Project: {p.project.project_name}",
@@ -633,6 +690,7 @@ class SectionOrchestrator:
         draft.output_references = [output_reference]
         draft.review_sensitivity = sensitivity
         draft.content_class = content_class
+        draft.structured_content = self._build_calc_structured_content(draft.sub_section_id)
 
         if sensitivity in ("HIGH", "CRITICAL") and not provenance:
             draft.issues.append(

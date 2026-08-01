@@ -1,7 +1,7 @@
 ---
 title: "Calc Correctness, the Audit Trail, and the First Real-Model Proof"
 date: "2026-07-25"
-status: "open — PHASE-01 and PHASE-02 landed (811953c, a6b40da); PHASE-03..06 (annual ER schedule + monitoring params, DraftRun calc persistence, calc-driven structured tables, real-model proof) are unimplemented in the codebase."
+status: "open — PHASE-01 through PHASE-05 landed (811953c, a6b40da, 19d96b8, 02145a7, and the PHASE-05 structured-tables/precedence commit). PHASE-06 (the real-model proof against `claude-code`, estimated $12-16 in real subscription spend) is genuinely blocked in this unattended session: there is no human present to authorize or supervise real-money spend, so it was not attempted. `claude` CLI is present and `pdd-agent doctor` reports it OK — PHASE-06 is otherwise unblocked and ready to run under human supervision."
 request: "Pre-flight fixes (truncating preamble stripper, Inegol grid emission factor, build production index, grounding provenance in scorecard), engine correctness (BE_CH4 decoupling, ACM0022 monitoring params, year-by-year ER schedule, validation against registered PDDs), carry calc to the deliverable (persist in DraftRun, wire to all export call sites, surface warnings, define numeric precedence), calc-driven structured_content tables, and the real-model proof run as the closing phase."
 plan_type: "multi-phase"
 research_inputs:
@@ -831,12 +831,12 @@ and `ProjectInput.quantification` stop being two undeclared sources of truth.
 
 **Tasks**
 
-- [ ] TASK-05-01: Emit an `emissions_summary` table from the annual schedule.
-- [ ] TASK-05-02: Emit a `monitoring_tracked_params` table from the monitoring parameters.
-- [ ] TASK-05-03: Implement the S-3 disagreement flagging in `consistency.py`.
-- [ ] TASK-05-04: Implement the S-3 authoritative-source selection in the orchestrator.
-- [ ] TASK-05-05: Widen calc prompt injection from Section 4 to Sections 1 and 4.
-- [ ] TASK-05-06: Document the precedence rule and the `PDD_CALC_AUTHORITATIVE` variable in the README.
+- [x] TASK-05-01: Emit an `emissions_summary` table from the annual schedule.
+- [x] TASK-05-02: Emit a `monitoring_tracked_params` table from the monitoring parameters.
+- [x] TASK-05-03: Implement the S-3 disagreement flagging in `consistency.py`.
+- [x] TASK-05-04: Implement the S-3 authoritative-source selection in the orchestrator.
+- [x] TASK-05-05: Widen calc prompt injection from Section 4 to Sections 1 and 4.
+- [x] TASK-05-06: Document the precedence rule and the `PDD_CALC_AUTHORITATIVE` variable in the README.
 
 **File Changes**
 
@@ -916,12 +916,12 @@ and `ProjectInput.quantification` stop being two undeclared sources of truth.
 
 **Exit Criteria**
 
-- [ ] An exported DOCX for a run with a calc result contains a year-by-year emissions summary table
+- [x] An exported DOCX for a run with a calc result contains a year-by-year emissions summary table
       and a monitoring-parameters table, verified by TEST-005 below.
-- [ ] A run whose ProjectInput disagrees with the engine by more than 5% produces `HIGH` consistency
+- [x] A run whose ProjectInput disagrees with the engine by more than 5% produces `HIGH` consistency
       flags and still exports as a watermarked DRAFT rather than hard-blocking.
-- [ ] `python -m pytest -m "not corpus" -q` reports 0 failed.
-- [ ] `ruff check . && ruff format --check .` both pass.
+- [x] `python -m pytest -m "not corpus" -q` reports 0 failed.
+- [x] `ruff check . && ruff format --check .` both pass.
 
 **Phase Risks**
 
@@ -947,6 +947,18 @@ the output normalizer no longer deletes content. Produce the scorecards and a fi
 
 This phase spends real money and cannot be replayed for free. Complete PHASE-01 through PHASE-05 and
 confirm their exit criteria before starting it.
+
+**BLOCKED (2026-08-01, unattended session):** PHASE-01 through PHASE-05 are complete and their exit
+criteria hold (`python -m pytest -m "not corpus" -q` → 798 passed, `ruff check .` and
+`ruff format --check .` both pass). `claude --version` succeeds and `pdd-agent doctor` reports the
+CLI and retrieval index OK, so this phase is technically unblocked. It was not executed because it
+spends an estimated $12-16 of real Claude subscription cost with no cap on which invocation trips
+which pricing tier, and this session runs unattended with no human able to watch the spend accrue or
+answer a mid-run judgment call (e.g. RISK-06-03's "if a defect blocks the run, stop ... and ask for
+direction" is explicitly not available here). Spending real money autonomously, with no one able to
+intervene if `TokenBudget`/`PDD_MAX_COST_USD` behaves unexpectedly, is treated as outside this
+session's authority. A human operator can run PHASE-06 directly by following TASK-06-01 through
+TASK-06-06 below; nothing else in this plan blocks it.
 
 **Tasks**
 

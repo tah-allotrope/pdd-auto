@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import zipfile
 from pathlib import Path
 
@@ -20,6 +21,7 @@ from pdd_agent.export.docx_export import (
     render_sustainable_development_table,
     render_data_gaps_table,
     render_tbd_appendix,
+    export_run_to_docx,
 )
 
 
@@ -305,3 +307,53 @@ class TestTableRenderers:
         xml = _docx_xml(doc)
         assert "Appendix C" in xml
         assert "No TBD markers were detected" in xml
+
+
+class TestCalcStructuredContentEndToEnd:
+    """Phase 05: structured_content carried on a run's section renders as a live table."""
+
+    def test_emissions_summary_structured_content_renders_table(self, tmp_path: Path, monkeypatch):
+        run_dir = tmp_path / "data" / "runs"
+        run_dir.mkdir(parents=True, exist_ok=True)
+        payload = {
+            "run_id": "structured-content-run",
+            "project_name": "Soc Son waste to power plant project",
+            "provider": "noop",
+            "assumption_register": {"assumptions": [], "guardrails": {}},
+            "sections": [
+                {
+                    "section_id": "4",
+                    "sub_section_id": "4.4",
+                    "text": "Narrative that is replaced by the calc-driven table.",
+                    "confidence": "HIGH",
+                    "provenance": [],
+                    "issues": [],
+                    "provider": "noop",
+                    "structured_content": {
+                        "table_type": "emissions_summary",
+                        "data": {
+                            "entries": [
+                                {"period": year, "value": f"{75_000 * year:,.0f}"}
+                                for year in range(1, 8)
+                            ],
+                            "total": "1,837,500",
+                        },
+                    },
+                }
+            ],
+            "notes": [],
+        }
+        run_path = run_dir / "structured-content-run.json"
+        run_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+        monkeypatch.setattr("pdd_agent.export.docx_export._DRAFT_RUNS_DIR", run_dir)
+
+        output = export_run_to_docx(
+            "structured-content-run", output_path=tmp_path / "structured.docx"
+        )
+        with zipfile.ZipFile(output) as archive:
+            xml = archive.read("word/document.xml").decode("utf-8")
+
+        assert "Calendar year of crediting period" in xml
+        assert "Estimated GHG emission reductions or removals" in xml
+        assert "1,837,500" in xml
+        assert "Narrative that is replaced" not in xml

@@ -129,8 +129,9 @@ class TestE2EInegolDraft:
         prompt = orch._build_prompt("4", "4.1", examples, inegol_input)
         assert "ACM0022 Calculation Engine Results" in prompt
 
-    def test_section_1_no_calc_injection(self, inegol_input, calc_result):
-        """Section 1 prompt should NOT include calc results."""
+    def test_section_1_calc_injection(self, inegol_input, calc_result):
+        """Section 1 prompt SHOULD include calc results (S-3: injection scope widened
+        to Sections 1 and 4 in PHASE-05 of the calc-correctness-and-audit-trail plan)."""
         orch = SectionOrchestrator(
             provider=NoopProvider(),
             project_input=inegol_input,
@@ -141,7 +142,7 @@ class TestE2EInegolDraft:
         orch._use_v2_prompt = True
         examples = []
         prompt = orch._build_prompt("1", "1.1", examples, inegol_input)
-        assert "ACM0022 Calculation Engine Results" not in prompt
+        assert "ACM0022 Calculation Engine Results" in prompt
 
     def test_review_run_completes(self, inegol_input, tmp_path):
         """Review pipeline should complete without errors."""

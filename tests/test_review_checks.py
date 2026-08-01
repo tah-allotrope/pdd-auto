@@ -228,6 +228,69 @@ class TestCheckQuantitativeConsistency:
         assert len(report.critical_flags) == 2
 
 
+def _make_calc_result(**overrides):
+    from dataclasses import dataclass
+
+    @dataclass
+    class _StubCalcResult:
+        baseline_emissions_tco2e: float = 0.0
+        project_emissions_tco2e: float = 0.0
+        leakage_tco2e: float = 0.0
+        net_emission_reductions_tco2e: float = 0.0
+        crediting_period_total_tco2e: float = 0.0
+
+    return _StubCalcResult(**overrides)
+
+
+class TestCalcVsProjectInputPrecedence:
+    def _mock_input(self, **quant_overrides):
+        from unittest.mock import MagicMock
+
+        mock_input = MagicMock()
+        mock_input.quantification.baseline_emissions_tco2e_per_year = None
+        mock_input.quantification.project_emissions_tco2e_per_year = None
+        mock_input.quantification.leakage_tco2e_per_year = None
+        mock_input.quantification.net_emissions_tco2e_per_year = None
+        mock_input.quantification.crediting_period_total_tco2e = None
+        for key, value in quant_overrides.items():
+            setattr(mock_input.quantification, key, value)
+        return mock_input
+
+    def test_disagreement_above_5pct_flags_high(self):
+        mock_input = self._mock_input(net_emissions_tco2e_per_year=544_076.0)
+        calc_result = _make_calc_result(net_emission_reductions_tco2e=357_006.0)
+
+        report = check_quantitative_consistency([], mock_input, "run-1", calc_result=calc_result)
+        flags = [f for f in report.flags if f.field_name == "net_emissions"]
+        assert len(flags) == 1
+        assert flags[0].severity == "HIGH"
+        assert "544,076" in flags[0].message
+        assert "357,006" in flags[0].message
+
+    def test_within_tolerance_no_flag(self):
+        mock_input = self._mock_input(net_emissions_tco2e_per_year=100_000.0)
+        calc_result = _make_calc_result(net_emission_reductions_tco2e=102_000.0)
+
+        report = check_quantitative_consistency([], mock_input, "run-1", calc_result=calc_result)
+        assert [f for f in report.flags if f.field_name == "net_emissions"] == []
+
+    def test_just_outside_tolerance_flags_high(self):
+        mock_input = self._mock_input(net_emissions_tco2e_per_year=100_000.0)
+        calc_result = _make_calc_result(net_emission_reductions_tco2e=105_001.0)
+
+        report = check_quantitative_consistency([], mock_input, "run-1", calc_result=calc_result)
+        flags = [f for f in report.flags if f.field_name == "net_emissions"]
+        assert len(flags) == 1
+        assert flags[0].severity == "HIGH"
+
+    def test_absent_declaration_no_flag(self):
+        mock_input = self._mock_input(net_emissions_tco2e_per_year=None)
+        calc_result = _make_calc_result(net_emission_reductions_tco2e=357_006.0)
+
+        report = check_quantitative_consistency([], mock_input, "run-1", calc_result=calc_result)
+        assert [f for f in report.flags if f.field_name == "net_emissions"] == []
+
+
 class TestReviewStateStore:
     def test_init_review_state_creates_all_sections(self):
         section_ids = [("1", "1"), ("1", "2"), ("3", "4")]

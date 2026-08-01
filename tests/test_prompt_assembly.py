@@ -143,7 +143,9 @@ class TestCalcInjection:
         assert "80,000.00" in prompt
         assert "[CALC: net_ER]" in prompt
 
-    def test_no_calc_injection_in_section_1(self):
+    def test_calc_injection_in_section_1(self):
+        """S-3: injection scope was widened from Section 4 only to Sections 1 and 4
+        in PHASE-05 of the calc-correctness-and-audit-trail plan."""
         project = _mock_project_input()
         calc = _mock_calc_result()
         orch = SectionOrchestrator(
@@ -156,7 +158,7 @@ class TestCalcInjection:
         orch._use_v2_prompt = True
         examples = [_mock_retrieval_result()]
         prompt = orch._build_prompt("1", "1.1", examples, project)
-        assert "ACM0022 Calculation Engine Results" not in prompt
+        assert "ACM0022 Calculation Engine Results" in prompt
 
     def test_no_calc_injection_without_result(self):
         project = _mock_project_input()
