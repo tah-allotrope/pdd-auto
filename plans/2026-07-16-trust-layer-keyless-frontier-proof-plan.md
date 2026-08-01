@@ -102,10 +102,10 @@ Judge-provider selection for `prove` (PHASE-04), evaluated once per drafting-pro
 Make a red CI impossible to miss and a stale lockfile impossible to commit unnoticed, and bring the README's recorded claims back in line with reality. No product-code behavior change.
 
 **Tasks**
-- [ ] TASK-01-01: Add the CI status badge as the first line under the H1 in `README.md`.
-- [ ] TASK-01-02: Add a `lock-reproducibility` job to `.github/workflows/ci.yml` that enforces `uv.lock` and runs the suite from a locked sync.
-- [ ] TASK-01-03: Apply branch protection to `main` requiring the three CI checks (non-strict, admins exempt).
-- [ ] TASK-01-04: Truth-sync `README.md`: test count, stale "Ollama provider is a stub" and "LLM-judge is a thin stub" claims in Known Gaps, and the missing `prove` command in the CLI table.
+- [x] TASK-01-01: Add the CI status badge as the first line under the H1 in `README.md`.
+- [x] TASK-01-02: Add a `lock-reproducibility` job to `.github/workflows/ci.yml` that enforces `uv.lock` and runs the suite from a locked sync.
+- [x] TASK-01-03: Apply branch protection to `main` requiring the three CI checks (non-strict, admins exempt).
+- [x] TASK-01-04: Truth-sync `README.md`: test count, stale "Ollama provider is a stub" and "LLM-judge is a thin stub" claims in Known Gaps, and the missing `prove` command in the CLI table.
 
 **File Changes**
 - `.github/workflows/ci.yml` (modify): Keep the existing `test` job unchanged. Append a second job:
@@ -174,10 +174,10 @@ None — no testable behavior changes in this phase (CI config and docs only; ve
 Teach `pdd-agent doctor` to diagnose the three environment failures that caused or masked the CI outage: missing fresh-install dependencies, PYTHONPATH pollution shadowing the venv, and a stale `uv.lock`. All new checks WARN (never FAIL) per the doctor's existing contract.
 
 **Tasks**
-- [ ] TASK-02-01: Add `check_test_deps()` verifying importability of the declared dev/service dependencies that a fresh install needs.
-- [ ] TASK-02-02: Add `check_pythonpath()` warning when the `PYTHONPATH` env var is set.
-- [ ] TASK-02-03: Add `check_uv_lock()` running `uv lock --check` when `uv` is on PATH and `uv.lock` exists.
-- [ ] TASK-02-04: Wire all three into `run_doctor()` and extend `tests/test_doctor.py`.
+- [x] TASK-02-01: Add `check_test_deps()` verifying importability of the declared dev/service dependencies that a fresh install needs.
+- [x] TASK-02-02: Add `check_pythonpath()` warning when the `PYTHONPATH` env var is set.
+- [x] TASK-02-03: Add `check_uv_lock()` running `uv lock --check` when `uv` is on PATH and `uv.lock` exists.
+- [x] TASK-02-04: Wire all three into `run_doctor()` and extend `tests/test_doctor.py`.
 
 **File Changes**
 - `src/pdd_agent/doctor.py` (modify): Add the three check functions below, following the existing `(status, message)` tuple style, and append them in `run_doctor()` after `check_package_imports()`. Do not change any existing check.
@@ -211,10 +211,10 @@ Teach `pdd-agent doctor` to diagnose the three environment failures that caused 
 Remove the last known WTE-shaped landmine on the real-model path: the hardcoded "for waste-to-energy projects" system prompt in `openai_provider.py`, `anthropic_provider.py`, and `ollama_provider.py`. The orchestrator becomes the single owner of system-prompt text, pushed into providers via an optional hook; WTE output stays byte-identical (CON-003).
 
 **Tasks**
-- [ ] TASK-03-01: Add `_FAMILY_SYSTEM_DESCRIPTOR` and `system_prompt_for(methodology_ids)` to `src/pdd_agent/agent/section_orchestrator.py`, implementing the Specification exactly.
-- [ ] TASK-03-02: Call the new `set_system_prompt` hook from `SectionOrchestrator.__init__` alongside the existing `set_budget`/`set_project_input` hooks.
-- [ ] TASK-03-03: Add `set_system_prompt()` to the three real providers; replace each hardcoded constant usage with the stored value, keeping the current WTE text as the internal default.
-- [ ] TASK-03-04: Extend the methodology test matrix so a non-WTE system prompt containing "waste-to-energy" fails CI.
+- [x] TASK-03-01: Add `_FAMILY_SYSTEM_DESCRIPTOR` and `system_prompt_for(methodology_ids)` to `src/pdd_agent/agent/section_orchestrator.py`, implementing the Specification exactly.
+- [x] TASK-03-02: Call the new `set_system_prompt` hook from `SectionOrchestrator.__init__` alongside the existing `set_budget`/`set_project_input` hooks.
+- [x] TASK-03-03: Add `set_system_prompt()` to the three real providers; replace each hardcoded constant usage with the stored value, keeping the current WTE text as the internal default.
+- [x] TASK-03-04: Extend the methodology test matrix so a non-WTE system prompt containing "waste-to-energy" fails CI.
 
 **File Changes**
 - `src/pdd_agent/agent/section_orchestrator.py` (modify): Below the existing `family_slug_for()`, add module-level
@@ -268,11 +268,11 @@ Remove the last known WTE-shaped landmine on the real-model path: the hardcoded 
 Fix every known way `pdd-agent prove` can emit a misleading scorecard: phantom Ollama availability, error-placeholder sections counted as drafted, a dead redraft column, judge cost excluded from totals, self-judging, one provider's crash killing the whole run, and the wrong `inegol` alias.
 
 **Tasks**
-- [ ] TASK-04-01: Real availability probes in `_is_provider_available` (Ollama HTTP probe; cost-ceiling requirement for keyed providers).
-- [ ] TASK-04-02: Per-row error isolation and failed-section counting in `_run_one_provider`.
-- [ ] TASK-04-03: Cross-judge selection (`_select_judge_provider`) and judge budget threading (`LLMJudge` gains `token_budget`).
-- [ ] TASK-04-04: Real redraft counting via an orchestrator counter; enable the judge/redraft loop in `prove` for real providers.
-- [ ] TASK-04-05: Render `Sections failed` and `Judge` columns; fix the `inegol` alias in `cli.py`.
+- [x] TASK-04-01: Real availability probes in `_is_provider_available` (Ollama HTTP probe; cost-ceiling requirement for keyed providers).
+- [x] TASK-04-02: Per-row error isolation and failed-section counting in `_run_one_provider`.
+- [x] TASK-04-03: Cross-judge selection (`_select_judge_provider`) and judge budget threading (`LLMJudge` gains `token_budget`).
+- [x] TASK-04-04: Real redraft counting via an orchestrator counter; enable the judge/redraft loop in `prove` for real providers.
+- [x] TASK-04-05: Render `Sections failed` and `Judge` columns; fix the `inegol` alias in `cli.py`.
 
 **File Changes**
 - `src/pdd_agent/phase05/provider_scorecard.py` (modify):
@@ -321,11 +321,11 @@ Fix every known way `pdd-agent prove` can emit a misleading scorecard: phantom O
 Add a drafting provider that shells out to the locally installed Claude Code CLI in headless one-shot mode, giving the pipeline a frontier Anthropic model with zero API key. Fully mocked in tests; graceful degradation when the CLI is absent.
 
 **Tasks**
-- [ ] TASK-05-01: Verify the installed CLI's headless contract once (`claude --help`; `echo "say hi" | claude -p --output-format json`) and pin the flags per ASM-003/ASM-004.
-- [ ] TASK-05-02: Implement `src/pdd_agent/llm/claude_code_provider.py`.
-- [ ] TASK-05-03: Register the provider (`configure_provider`, `configure_provider_from_env`, scorecard `_ALL_PROVIDERS`, availability check) and add pricing.
-- [ ] TASK-05-04: Add a `claude` CLI check to `doctor`.
-- [ ] TASK-05-05: Write `tests/test_claude_code_provider.py` (all subprocess mocked).
+- [x] TASK-05-01: Verify the installed CLI's headless contract once (`claude --help`; `echo "say hi" | claude -p --output-format json`) and pin the flags per ASM-003/ASM-004.
+- [x] TASK-05-02: Implement `src/pdd_agent/llm/claude_code_provider.py`.
+- [x] TASK-05-03: Register the provider (`configure_provider`, `configure_provider_from_env`, scorecard `_ALL_PROVIDERS`, availability check) and add pricing.
+- [x] TASK-05-04: Add a `claude` CLI check to `doctor`.
+- [x] TASK-05-05: Write `tests/test_claude_code_provider.py` (all subprocess mocked).
 
 **File Changes**
 - `src/pdd_agent/llm/claude_code_provider.py` (create): Mirror `ollama_provider.py`'s structure (module docstring explaining the CLI contract and the verified flag set, `_MAX_RETRIES = 2`, error-section fallback, `_assess_confidence`/`_extract_issues` logic copied or imported). Core call:
