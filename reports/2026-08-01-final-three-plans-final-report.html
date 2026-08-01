@@ -1,0 +1,544 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDD-Agent: Three-Plan Delivery Report — Aug 2026</title>
+<style>
+  :root {
+    --bg: #0b0d12;
+    --panel: #12151d;
+    --panel-2: #171b26;
+    --border: #262b3a;
+    --text: #e7e9ef;
+    --text-dim: #a3a9bb;
+    --accent: #6ea8fe;
+    --accent-2: #7ee2b8;
+    --warn: #f3c969;
+    --danger: #f28b82;
+    --done: #7ee2b8;
+    --blocked: #f3c969;
+    --radius: 10px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #f7f8fb;
+      --panel: #ffffff;
+      --panel-2: #f0f2f7;
+      --border: #dde1ea;
+      --text: #1b1f2a;
+      --text-dim: #565e70;
+      --accent: #2563eb;
+      --accent-2: #0f9d63;
+      --warn: #b5820a;
+      --danger: #c0392b;
+      --done: #0f9d63;
+      --blocked: #b5820a;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0b0d12; --panel: #12151d; --panel-2: #171b26; --border: #262b3a;
+    --text: #e7e9ef; --text-dim: #a3a9bb; --accent: #6ea8fe; --accent-2: #7ee2b8;
+    --warn: #f3c969; --danger: #f28b82; --done: #7ee2b8; --blocked: #f3c969;
+  }
+  :root[data-theme="light"] {
+    --bg: #f7f8fb; --panel: #ffffff; --panel-2: #f0f2f7; --border: #dde1ea;
+    --text: #1b1f2a; --text-dim: #565e70; --accent: #2563eb; --accent-2: #0f9d63;
+    --warn: #b5820a; --danger: #c0392b; --done: #0f9d63; --blocked: #b5820a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.55;
+  }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 1.25rem 4rem; }
+  .hero {
+    padding: 3.5rem 1.25rem 2.5rem;
+    background: linear-gradient(180deg, var(--panel-2), var(--bg));
+    border-bottom: 1px solid var(--border);
+  }
+  .hero-inner { max-width: 980px; margin: 0 auto; }
+  .kicker {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.75rem;
+    color: var(--accent);
+    font-weight: 700;
+  }
+  h1 { font-size: 2.1rem; margin: 0.4rem 0 0.6rem; letter-spacing: -0.01em; }
+  .meta-row { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; color: var(--text-dim); font-size: 0.92rem; margin-bottom: 1rem; }
+  .takeaway {
+    font-size: 1.15rem;
+    color: var(--text);
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 1rem 1.2rem;
+  }
+  h2 {
+    font-size: 1.35rem;
+    margin: 2.6rem 0 0.9rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  h3 { font-size: 1.05rem; margin: 1.4rem 0 0.5rem; color: var(--text); }
+  p { color: var(--text); }
+  .dim { color: var(--text-dim); }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.1rem 1.3rem;
+    margin-bottom: 1rem;
+  }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.9rem; }
+  @media (max-width: 720px) { .grid-3 { grid-template-columns: 1fr; } }
+  .stat { text-align: center; }
+  .stat .n { font-size: 1.9rem; font-weight: 800; color: var(--accent-2); }
+  .stat .l { font-size: 0.82rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; }
+  table { width: 100%; border-collapse: collapse; margin: 0.6rem 0 1.2rem; font-size: 0.92rem; }
+  th, td { text-align: left; padding: 0.55rem 0.7rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--text-dim); font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.03em; }
+  .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius); }
+  .table-wrap table { margin: 0; }
+  .badge {
+    display: inline-block;
+    padding: 0.15rem 0.55rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+  .badge-done { background: color-mix(in srgb, var(--done) 22%, transparent); color: var(--done); }
+  .badge-blocked { background: color-mix(in srgb, var(--blocked) 22%, transparent); color: var(--blocked); }
+  .badge-scope { background: color-mix(in srgb, var(--text-dim) 20%, transparent); color: var(--text-dim); }
+  code {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.08rem 0.35rem;
+    font-size: 0.88em;
+    font-family: "SF Mono", Consolas, monospace;
+  }
+  pre {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0.9rem 1rem;
+    overflow-x: auto;
+    font-size: 0.85rem;
+    font-family: "SF Mono", Consolas, monospace;
+  }
+  ul, ol { padding-left: 1.3rem; }
+  li { margin-bottom: 0.35rem; }
+  .chart-frame {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem;
+    height: 320px;
+    margin-bottom: 1rem;
+  }
+  .mermaid-frame {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem;
+    max-height: 620px;
+    overflow: auto;
+    margin-bottom: 1rem;
+  }
+  .mermaid-frame svg { max-width: 100%; height: auto; }
+  .footer { color: var(--text-dim); font-size: 0.85rem; text-align: center; margin-top: 3rem; }
+  @media print {
+    body { background: #fff; color: #000; }
+    .hero { background: none; border-bottom: 2px solid #000; }
+    .card, .table-wrap, .chart-frame, .mermaid-frame { break-inside: avoid; box-shadow: none; }
+    a { color: inherit; text-decoration: underline; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="kicker">Final Report · pdd-agent</div>
+    <h1>Three-Plan Delivery Report: Real-Model Proof, Calc Correctness, and the Trust Layer</h1>
+    <div class="meta-row">
+      <span>Repository: <strong>pdd-auto</strong></span>
+      <span>Report date: <strong>2026-08-01</strong></span>
+      <span>Branch: <strong>main</strong></span>
+      <span>Latest commit: <code>6cca5e9</code></span>
+    </div>
+    <div class="takeaway">
+      All code-level work across the three plans is complete and merged to <code>main</code>: 798 tests
+      pass, Ruff is clean, and every phase that could be executed unsupervised has been. Two phases —
+      one per plan — remain genuinely blocked by conditions outside this session's control: a missing
+      local Ollama install, and the absence of a human to authorize roughly $12&ndash;16 of real
+      subscription spend for the first live multi-provider drafting run. Both are one external action
+      away from completion; nothing in the codebase blocks them.
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <h2>Executive Summary</h2>
+  <p>
+    This work picked up a multi-plan implementation effort that had been interrupted mid-phase by a
+    session budget limit. The immediate task was to finish an in-progress, uncommitted unit of work
+    (S-3 quantification-precedence flagging) and then carry three ordered plans &mdash;
+    <strong>run-real-model-proof</strong>, <strong>calc-correctness-and-audit-trail</strong>, and
+    <strong>trust-layer-keyless-frontier-proof</strong> &mdash; to completion or to a documented stop.
+  </p>
+  <p>
+    The uncommitted work turned out to be the start of PHASE-05 of the calc-correctness plan: making
+    the calc engine the authoritative producer of two previously-dead Verra table renderers, and
+    defining the numeric precedence rule between the calc engine and hand-entered project data. That
+    phase is now finished, tested, and committed. Across all three plans, every phase whose completion
+    depends only on writing and testing code is done. Two phases remain open, and both are
+    infrastructure/authorization blockers rather than code problems:
+  </p>
+  <ul>
+    <li><strong>Trust-layer PHASE-06</strong> (Ollama dress rehearsal) &mdash; blocked because Ollama is
+      not installed on this machine.</li>
+    <li><strong>Calc-correctness PHASE-06</strong> (first real-model proof run against
+      <code>claude-code</code>) &mdash; blocked because it spends an estimated $12&ndash;16 of real
+      Claude subscription cost, and this session ran unattended with no one able to authorize that
+      spend or intervene if it went sideways.</li>
+  </ul>
+  <p>
+    The run-real-model-proof plan's own remaining phase (PHASE-03, the proof run) was already
+    consolidated into calc-correctness PHASE-06 by an earlier planning pass, and its PHASE-04 (live
+    Verra registry API capture) was independently marked out of scope in every later plan. Both facts
+    were re-verified rather than taken on faith.
+  </p>
+
+  <div class="grid-3">
+    <div class="card stat"><div class="n">798</div><div class="l">tests passing</div></div>
+    <div class="card stat"><div class="n">0</div><div class="l">ruff violations</div></div>
+    <div class="card stat"><div class="n">2 / 16</div><div class="l">phases blocked, not failed</div></div>
+  </div>
+
+  <h2>Background &amp; Objective</h2>
+  <p>
+    <strong>pdd-agent</strong> is a Python pipeline that drafts Verra VCS Project Design Documents
+    (waste-to-energy under ACM0022, plus rice/biochar/cookstove methodologies) by combining corpus
+    retrieval, an LLM drafting layer, and a deterministic calculation engine, with a rule-based review
+    layer gating what can export. The project has repeatedly deferred its first full-scale, real-model
+    (non-demo, non-noop) drafting run while it closed correctness and trust gaps that would have made
+    that run misleading if executed early: a truncating output-normalizer bug, an under-grounded
+    retrieval index, a mis-modeled baseline methane term, an in-loop judge that could judge its own
+    output, and calc numbers that were never carried into the exported document at all.
+  </p>
+  <p>
+    The objective handed to this session was to finish whatever unit of work was interrupted, then
+    execute all three standing plans in the specified order &mdash; proof-readiness fixes, then calc
+    correctness and audit trail, then the CI/trust layer &mdash; verifying via git history and each
+    plan's own checkboxes rather than assuming prior status notes were current.
+  </p>
+
+  <h2>Inputs &amp; Scope</h2>
+  <ul>
+    <li><strong>Plan:</strong> <code>plans/2026-07-23-run-real-model-proof-plan.md</code> &mdash; fixes
+      the in-loop redraft judge's self-judging bug, runs the first real-model proof, and (independently)
+      captures the live Verra registry search API.</li>
+    <li><strong>Plan:</strong> <code>plans/2026-07-25-calc-correctness-and-audit-trail-plan.md</code>
+      &mdash; six phases from pre-flight safety fixes through calc-driven structured tables to the real
+      proof run itself.</li>
+    <li><strong>Plan:</strong> <code>plans/2026-07-16-trust-layer-keyless-frontier-proof-plan.md</code>
+      &mdash; six phases from CI hardening through a keyless <code>claude-code</code> provider to an
+      Ollama dress rehearsal.</li>
+    <li><strong>In scope this session:</strong> finishing the uncommitted S-3 precedence work; every
+      phase of all three plans that is achievable without a live browser session against Verra's
+      registry, an Ollama install, or unsupervised real-money spend.</li>
+    <li><strong>Out of scope (inherited from prior sessions, re-confirmed rather than re-litigated):</strong>
+      live Verra registry API capture (needs a real browser devtools session against the live site);
+      branch-protection API calls and badge-render verification in a browser (partially completed by a
+      prior session; not re-attempted here).</li>
+  </ul>
+
+  <h2>Assumptions &amp; Constraints</h2>
+  <ul>
+    <li><strong>No human in the loop.</strong> This was an unattended run: no question could be asked
+      and no answer could arrive mid-task. Where a judgment call was required, the most conservative,
+      already-precedented option was taken and the assumption recorded inline.</li>
+    <li><strong>Real-money spend requires supervision.</strong> Calc-correctness PHASE-06 is explicitly
+      scoped in its own plan text as spending real subscription cost with no cap on which invocation
+      trips which pricing tier. Treating that as authorized by default, with no one able to watch it
+      accrue or intervene on an unexpected failure mode, was judged to be outside this session's
+      authority &mdash; consistent with the same plan's own PHASE-06 risk note that a blocking defect
+      should stop the run and ask a human for direction, which is not possible here.</li>
+    <li><strong>Infrastructure the session cannot install.</strong> Ollama is not present on this
+      machine (verified live: the PATH entry for it points at a directory that does not exist), and
+      installing a several-GB local model runtime unsupervised was judged out of scope for the same
+      reason as above &mdash; it is a multi-hour, resource-consuming operation with no one present to
+      confirm it's welcome.</li>
+    <li><strong>Environment quirks worked around, not fixed.</strong> The dev machine's default
+      <code>python</code>/<code>pip</code> resolve into an unrelated, polluted virtualenv
+      (<code>hermes-agent</code>) with a stale <code>PYTHONPATH</code>; all verification in this session
+      used <code>PYTHONPATH</code> cleared and <code>uv run --no-sync</code>, per this repo's own
+      documented convention.</li>
+  </ul>
+
+  <h2>Methodology</h2>
+  <p>
+    Work proceeded by evidence, not by trusting stale status text. For each plan: git log was
+    cross-referenced against the plan's own checkbox state to find what was actually merged versus
+    what a status line merely claimed; deliverables named in "File Changes" sections were confirmed to
+    exist and match their specified contracts; and the full non-corpus test suite
+    (<code>python -m pytest -m "not corpus" -q</code>) plus <code>ruff check .</code> /
+    <code>ruff format --check .</code> were run before any commit, never after. The one phase found
+    genuinely in progress (calc-correctness PHASE-05) was finished by continuing its existing pattern
+    &mdash; two tests already existed to model the S-3 precedence contract, so the remaining scope
+    (structured-content table producers, injection-scope widening, README documentation) was implemented
+    to match the plan's own "Test Specs" section literally, then verified against it test-by-test.
+  </p>
+
+  <h2>Phase-by-Phase Analysis</h2>
+
+  <div class="chart-frame"><canvas id="phaseChart"></canvas></div>
+
+  <h3>1. run-real-model-proof (2026-07-23)</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Phase</th><th>Status</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td>PHASE-01 — Extract shared judge-selection logic</td><td><span class="badge badge-done">DONE</span></td><td>Landed <code>4266be1</code>.</td></tr>
+        <tr><td>PHASE-02 — Fix in-loop redraft self-judging</td><td><span class="badge badge-done">DONE</span></td><td>Landed <code>aae79b3</code>.</td></tr>
+        <tr><td>PHASE-03 — Run the first real-model multi-family proof</td><td><span class="badge badge-blocked">DELEGATED</span></td><td>Superseded by calc-correctness PHASE-06 (same underlying proof run, run once against the now-corrected calc engine).</td></tr>
+        <tr><td>PHASE-04 — Capture the live Verra registry search API</td><td><span class="badge badge-scope">OUT OF SCOPE</span></td><td>Explicitly deprioritized in every later plan; needs a live browser devtools capture against the real Verra site.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>2. calc-correctness-and-audit-trail (2026-07-25)</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Phase</th><th>Status</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td>PHASE-01 — Pre-flight safety and grounding provenance</td><td><span class="badge badge-done">DONE</span></td><td><code>811953c</code></td></tr>
+        <tr><td>PHASE-02 — Fix ACM0022 baseline methane vs. registered-PDD oracle</td><td><span class="badge badge-done">DONE</span></td><td><code>a6b40da</code></td></tr>
+        <tr><td>PHASE-03 — Year-by-year ER schedule + monitoring params</td><td><span class="badge badge-done">DONE</span></td><td><code>19d96b8</code></td></tr>
+        <tr><td>PHASE-04 — Persist calc result, carry into exports</td><td><span class="badge badge-done">DONE</span></td><td><code>02145a7</code></td></tr>
+        <tr><td>PHASE-05 — Calc-driven structured tables + S-3 precedence rule</td><td><span class="badge badge-done">DONE (this session)</span></td><td><code>d08cfe8</code></td></tr>
+        <tr><td>PHASE-06 — Run the first real-model proof</td><td><span class="badge badge-blocked">BLOCKED</span></td><td>Real subscription spend ($12&ndash;16 est.); no human present to authorize/supervise.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>3. trust-layer-keyless-frontier-proof (2026-07-16)</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Phase</th><th>Status</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td>PHASE-01 — CI trust layer</td><td><span class="badge badge-done">DONE</span></td><td>CI badge, lock-reproducibility job, README truth-sync landed.</td></tr>
+        <tr><td>PHASE-02 — Doctor environment-integrity checks</td><td><span class="badge badge-done">DONE</span></td><td><code>check_test_deps</code>/<code>check_pythonpath</code>/<code>check_uv_lock</code> present and wired.</td></tr>
+        <tr><td>PHASE-03 — Family-aware provider system prompts</td><td><span class="badge badge-done">DONE</span></td><td><code>system_prompt_for()</code> present, wired into orchestrator init.</td></tr>
+        <tr><td>PHASE-04 — Honest proof harness</td><td><span class="badge badge-done">DONE</span></td><td>Real availability probes, per-row error isolation, cross-judge selection all present.</td></tr>
+        <tr><td>PHASE-05 — <code>claude-code</code> keyless frontier provider</td><td><span class="badge badge-done">DONE</span></td><td><code>claude_code_provider.py</code> present, tested, registered.</td></tr>
+        <tr><td>PHASE-06 — Small-model Ollama dress rehearsal</td><td><span class="badge badge-blocked">BLOCKED</span></td><td>Ollama is not installed on this machine (re-verified live this session).</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Findings &amp; Recommendation</h2>
+  <h3>What PHASE-05 of calc-correctness actually changed</h3>
+  <p>
+    Three of the eleven Verra DOCX table renderers were dead code &mdash; implemented, tested in
+    isolation, but with nothing in the drafting pipeline ever populating the
+    <code>structured_content</code> field that triggers them. PHASE-05 wires the calc engine as the
+    producer for two of them:
+  </p>
+  <ul>
+    <li><strong>Section 4.4 (emissions summary)</strong> now renders a live year-by-year table
+      straight from the calc engine's annual ER schedule, instead of staying prose-only.</li>
+    <li><strong>Section 5.2 (monitoring parameters)</strong> now renders a live table from the calc
+      engine's required-monitoring-parameters list.</li>
+  </ul>
+  <p>
+    Alongside that, the plan required resolving a latent ambiguity: the calc engine and the
+    human-entered <code>ProjectInput.quantification</code> fields are two independently-populated
+    sources for the same four numbers, and nothing previously declared which one wins or when a
+    disagreement between them mattered. The fix implemented here (per the plan's own S-3
+    specification): a missing declaration is not a disagreement (skip it); any surviving relative
+    delta above 5% raises a <code>HIGH</code>-severity consistency flag (downgraded from the previous
+    <code>CRITICAL</code>, so it produces a watermarked draft export rather than a hard block); and an
+    explicit opt-in environment variable, <code>PDD_CALC_AUTHORITATIVE=1</code>, lets the calc engine's
+    numbers override the human-entered ones in drafting prompts when set.
+  </p>
+  <table>
+    <thead><tr><th>Rule</th><th>Behavior</th></tr></thead>
+    <tbody>
+      <tr><td>ProjectInput field is <code>None</code></td><td>No flag (absence isn't disagreement)</td></tr>
+      <tr><td>Relative delta &le; 5%</td><td>No flag</td></tr>
+      <tr><td>Relative delta &gt; 5%</td><td><code>HIGH</code> flag, exports as watermarked DRAFT</td></tr>
+      <tr><td><code>PDD_CALC_AUTHORITATIVE</code> unset</td><td>Prompts use <code>ProjectInput.quantification</code></td></tr>
+      <tr><td><code>PDD_CALC_AUTHORITATIVE=1</code></td><td>Prompts use calc engine scalars</td></tr>
+    </tbody>
+  </table>
+  <p>
+    Two pre-existing tests (<code>test_no_calc_injection_in_section_1</code> in both
+    <code>test_prompt_assembly.py</code> and <code>test_e2e_inegol_draft.py</code>) asserted the old,
+    narrower injection scope (calc facts visible only in Section 4). Widening injection to Sections 1
+    and 4 was an explicit plan requirement (S-3 step 6), so both tests were updated to assert the new,
+    intended behavior rather than left red or deleted.
+  </p>
+
+  <h3>Recommendation</h3>
+  <p>
+    Both remaining blockers are ready to clear with a single external action each, not further
+    engineering:
+  </p>
+  <ol>
+    <li><strong>Trust-layer PHASE-06:</strong> install Ollama on a machine with a few GB free, pull
+      <code>llama3.2:3b</code>, and follow the runbook already written at
+      <code>docs/ollama-dress-rehearsal.md</code>.</li>
+    <li><strong>Calc-correctness PHASE-06:</strong> with a human present to watch cost and answer any
+      mid-run judgment call, run <code>pdd-agent prove --project inegol --providers claude-code</code>
+      and the equivalent for <code>rice</code>, per TASK-06-01 through TASK-06-06 in the plan. All of
+      that phase's prerequisites are met: <code>claude --version</code> succeeds, and
+      <code>pdd-agent doctor</code> reports both the CLI and the retrieval index OK.</li>
+  </ol>
+
+  <h2>Implementation Path</h2>
+  <div class="mermaid-frame">
+    <pre class="mermaid">
+flowchart LR
+    A[Resume mid-phase] --> B[Finish uncommitted PHASE-05 work]
+    B --> C[Add missing structured-content + injection-scope tests]
+    C --> D[Update README precedence docs]
+    D --> E[Full suite: 798 passed]
+    E --> F[Commit phase-05]
+    F --> G{Plan 1: run-real-model-proof}
+    F --> H{Plan 2: calc-correctness}
+    F --> I{Plan 3: trust-layer}
+    G --> G1[PHASE-01/02 done]
+    G --> G2[PHASE-03 delegated to Plan 2 PHASE-06]
+    G --> G3[PHASE-04 out of scope]
+    H --> H1[PHASE-01..05 done]
+    H --> H2[PHASE-06 blocked: real spend, no supervisor]
+    I --> I1[PHASE-01..05 done]
+    I --> I2[PHASE-06 blocked: Ollama not installed]
+    H2 -.human runs prove.-> J[Real-model proof scorecards]
+    I2 -.human installs Ollama.-> K[Ollama rehearsal findings]
+    </pre>
+  </div>
+  <p>
+    Both blocked phases are independent of each other and of any further code change &mdash; either can
+    be run in any order once its external precondition is met, and neither touches the other's files.
+  </p>
+
+  <h2>Risks / Open Questions</h2>
+  <ul>
+    <li><strong>Calc-correctness PHASE-06 cost risk (open).</strong> The plan estimates $12&ndash;16 for
+      both projects combined but notes no hard cap on which invocation trips which pricing tier;
+      <code>PDD_MAX_COST_USD</code> should be set explicitly and the scorecard read after the first
+      project before running the second, exactly as the plan's own RISK-06-01 already prescribes.</li>
+    <li><strong>Calc-correctness PHASE-06 judge risk (open, expected).</strong> With no
+      <code>ANTHROPIC_API_KEY</code>/<code>OPENAI_API_KEY</code> and no Ollama, the in-loop judge will
+      fall back to the deterministic rule-based judge, not a real LLM judge. The plan's RISK-06-02
+      already requires the findings doc to say this plainly rather than imply the judge was validated.</li>
+    <li><strong>Trust-layer PHASE-01 exit criteria (partially unverified).</strong> This session did not
+      re-confirm the live CI run, branch-protection API state, or badge rendering in a browser &mdash;
+      those require GitHub Actions / browser access this session did not exercise. The task checkboxes
+      for PHASE-01 were ticked based on file-level evidence (the badge markdown and the
+      <code>lock-reproducibility</code> job both exist in the repo as committed), but the phase's own
+      "Exit Criteria" bullets (live run status, branch protection API state) were left unticked as
+      genuinely unverified by this session.</li>
+    <li><strong>Eight of eleven Verra table renderers remain prose-only.</strong> PHASE-05 wired two of
+      them (plus the pre-existing cover-metadata producer); <code>audit_history</code>,
+      <code>proponent</code>, <code>ghg_boundary</code>, <code>applicability</code>,
+      <code>monitoring_fixed_params</code>, <code>risk_assessment</code>,
+      <code>sustainable_development</code>, and <code>data_gaps</code> still have no producer wiring
+      <code>structured_content</code> for them. This is now documented as a known gap in README rather
+      than a silent omission.</li>
+  </ul>
+
+  <h2>Appendices / Evidence Notes</h2>
+  <h3>Verification commands run this session</h3>
+  <pre>python -m pytest -m "not corpus" -q
+=&gt; 798 passed, 7 deselected, 3 xfailed in 241.77s
+
+ruff check .
+=&gt; All checks passed!
+
+ruff format --check .
+=&gt; 137 files already formatted</pre>
+
+  <h3>Commits landed this session</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Commit</th><th>Summary</th></tr></thead>
+      <tbody>
+        <tr><td><code>d08cfe8</code></td><td>phase-05: calc-driven structured tables and the S-3 precedence rule</td></tr>
+        <tr><td><code>6cca5e9</code></td><td>plans: tick trust-layer PHASE-01..05 task checkboxes, confirm PHASE-06 still blocked</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Files touched</h3>
+  <ul>
+    <li><code>src/pdd_agent/agent/section_orchestrator.py</code> &mdash; <code>_build_calc_structured_content</code>, <code>_calc_is_authoritative</code>, widened <code>_is_quantification_section</code>.</li>
+    <li><code>src/pdd_agent/review/consistency.py</code> &mdash; rewritten <code>_check_calc_vs_project_input</code> (S-3 rule).</li>
+    <li><code>tests/test_review_checks.py</code>, <code>tests/test_section_orchestrator.py</code>, <code>tests/test_docx_export_tables.py</code>, <code>tests/test_prompt_assembly.py</code>, <code>tests/test_e2e_inegol_draft.py</code> &mdash; new and updated coverage.</li>
+    <li><code>README.md</code> &mdash; new "Quantification precedence" subsection; Known Gaps updated.</li>
+    <li><code>plans/2026-07-25-calc-correctness-and-audit-trail-plan.md</code>, <code>plans/2026-07-16-trust-layer-keyless-frontier-proof-plan.md</code> &mdash; checkbox and status updates.</li>
+  </ul>
+
+  <div class="footer">Generated 2026-08-01 &middot; pdd-agent / pdd-auto &middot; report skill, final mode</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+  function currentTheme() {
+    var attr = document.documentElement.getAttribute('data-theme');
+    if (attr === 'dark' || attr === 'light') return attr;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+
+  mermaid.initialize({ startOnLoad: true, theme: currentTheme() === 'dark' ? 'dark' : 'default', securityLevel: 'loose' });
+
+  Chart.defaults.devicePixelRatio = 1;
+  Chart.defaults.animation = false;
+  Chart.defaults.resizeDelay = 150;
+  Chart.defaults.normalized = true;
+  Chart.defaults.maintainAspectRatio = false;
+
+  var isDark = currentTheme() === 'dark';
+  var gridColor = isDark ? 'rgba(231,233,239,0.08)' : 'rgba(27,31,42,0.08)';
+  var textColor = isDark ? '#a3a9bb' : '#565e70';
+
+  var ctx = document.getElementById('phaseChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['run-real-model-proof', 'calc-correctness', 'trust-layer'],
+      datasets: [
+        { label: 'Done', data: [2, 5, 5], backgroundColor: '#7ee2b8', stack: 's', animation: false, resizeDelay: 150, normalized: true },
+        { label: 'Blocked (external)', data: [0, 1, 1], backgroundColor: '#f3c969', stack: 's', animation: false, resizeDelay: 150, normalized: true },
+        { label: 'Delegated / out of scope', data: [2, 0, 0], backgroundColor: '#6b7280', stack: 's', animation: false, resizeDelay: 150, normalized: true }
+      ]
+    },
+    options: {
+      animation: false,
+      resizeDelay: 150,
+      maintainAspectRatio: false,
+      plugins: {
+        title: { display: true, text: 'Phase status by plan (16 phases total)', color: textColor },
+        legend: { position: 'bottom', labels: { color: textColor } }
+      },
+      scales: {
+        x: { stacked: true, ticks: { color: textColor }, grid: { color: gridColor } },
+        y: { stacked: true, beginAtZero: true, ticks: { color: textColor, precision: 0 }, grid: { color: gridColor } }
+      }
+    }
+  });
+</script>
+</body>
+</html>
