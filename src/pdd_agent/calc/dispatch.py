@@ -40,6 +40,15 @@ class CalcComponent:
 
 
 @dataclass
+class AnnualErEntry:
+    year: int
+    baseline_tco2e: float
+    project_tco2e: float
+    leakage_tco2e: float
+    net_tco2e: float
+
+
+@dataclass
 class PddCalcResult:
     methodology_id: str
     baseline_emissions_tco2e: float
@@ -52,6 +61,7 @@ class PddCalcResult:
     monitoring_params: list[dict] = field(default_factory=list)
     warnings: list[str] = field(default_factory=list)
     raw_result: Any = None
+    annual_schedule: list[AnnualErEntry] = field(default_factory=list)
 
     def to_prompt_block(self) -> str:
         lines = [
@@ -74,6 +84,11 @@ class PddCalcResult:
         ]
         for comp in self.components:
             lines.append(f"- {comp.name}: {comp.value_tco2e:,.2f} {comp.unit} — {comp.formula}")
+        if self.annual_schedule:
+            lines.append("")
+            lines.append("### Year-by-Year Emission Reductions")
+            for entry in self.annual_schedule[:30]:
+                lines.append(f"- Year {entry.year}: {entry.net_tco2e:,.2f} tCO2e")
         if self.warnings:
             lines.append("")
             lines.append("### Calculation Warnings")
@@ -252,18 +267,41 @@ def compute_for(project_input: ProjectInput) -> PddCalcResult | None:
             )
             for c in raw.components
         ]
+
+        # Year-by-year schedule: BE_CH4 (and therefore BE_y) varies with the
+        # crediting-period year under the FOD model; PE_y and LE_y do not, since
+        # none of their inputs are time-varying in ProjectInput.
+        schedule: list[AnnualErEntry] = []
+        for y in range(1, cpy + 1):
+            year_inputs = dict(engine_inputs)
+            year_inputs["calculation_year"] = y
+            year_raw = ACM0022Calculator(ACM0022CalcInput(**year_inputs)).calculate()
+            schedule.append(
+                AnnualErEntry(
+                    year=y,
+                    baseline_tco2e=year_raw.baseline_emissions_tco2e,
+                    project_tco2e=year_raw.project_emissions_tco2e,
+                    leakage_tco2e=year_raw.leakage_tco2e,
+                    net_tco2e=year_raw.net_emission_reductions_tco2e,
+                )
+            )
+        crediting_period_total = sum(e.net_tco2e for e in schedule)
+
         return PddCalcResult(
             methodology_id="ACM0022",
             baseline_emissions_tco2e=raw.baseline_emissions_tco2e,
             project_emissions_tco2e=raw.project_emissions_tco2e,
             leakage_tco2e=raw.leakage_tco2e,
             net_emission_reductions_tco2e=raw.net_emission_reductions_tco2e,
-            crediting_period_total_tco2e=raw.crediting_period_total_tco2e,
+            crediting_period_total_tco2e=crediting_period_total,
             crediting_period_years=raw.crediting_period_years,
             components=components,
-            monitoring_params=[],
+            monitoring_params=ACM0022Calculator(calc_input).required_monitoring_params(
+                engine_inputs
+            ),
             warnings=warnings,
             raw_result=raw,
+            annual_schedule=schedule,
         )
 
     if mid == "VM0051":
@@ -313,6 +351,19 @@ def compute_for(project_input: ProjectInput) -> PddCalcResult | None:
     ]
     mon_params = engine.required_monitoring_params(engine_inputs)
 
+    # No time dynamic for these families: every year is identical, so the
+    # schedule is flat and its sum reduces to the existing net * cpy product.
+    schedule = [
+        AnnualErEntry(
+            year=y,
+            baseline_tco2e=baseline_r.value,
+            project_tco2e=project_r.value,
+            leakage_tco2e=leakage_r.value,
+            net_tco2e=net_r.value,
+        )
+        for y in range(1, cpy + 1)
+    ]
+
     return PddCalcResult(
         methodology_id=mid,
         baseline_emissions_tco2e=baseline_r.value,
@@ -324,4 +375,5 @@ def compute_for(project_input: ProjectInput) -> PddCalcResult | None:
         components=components,
         monitoring_params=mon_params,
         warnings=warnings,
+        annual_schedule=schedule,
     )

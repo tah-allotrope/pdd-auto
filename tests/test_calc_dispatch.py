@@ -58,6 +58,79 @@ class TestComputeFor:
         assert compute_for(pi) is None
 
 
+class TestAnnualSchedule:
+    def test_soc_son_schedule_length_and_bounds(self):
+        pi = _load_pi("configs/projects/vietnam_socson_from_sheet.yaml")
+        result = compute_for(pi)
+        assert result is not None
+        assert pi.dates.crediting_period_years == 7
+        assert len(result.annual_schedule) == 7
+        assert result.annual_schedule[0].year == 1
+        assert result.annual_schedule[-1].year == 7
+
+    def test_soc_son_baseline_monotonic_increase(self):
+        pi = _load_pi("configs/projects/vietnam_socson_from_sheet.yaml")
+        result = compute_for(pi)
+        assert result is not None
+        assert result.annual_schedule[6].baseline_tco2e > result.annual_schedule[0].baseline_tco2e
+
+    def test_schedule_sum_matches_crediting_period_total(self):
+        pi = _load_pi("configs/projects/vietnam_socson_from_sheet.yaml")
+        result = compute_for(pi)
+        assert result is not None
+        assert (
+            abs(
+                sum(e.net_tco2e for e in result.annual_schedule)
+                - result.crediting_period_total_tco2e
+            )
+            < 0.01
+        )
+
+    def test_scalar_fields_describe_year_one(self):
+        pi = _load_pi("configs/projects/vietnam_socson_from_sheet.yaml")
+        result = compute_for(pi)
+        assert result is not None
+        assert result.baseline_emissions_tco2e == pytest.approx(
+            result.annual_schedule[0].baseline_tco2e
+        )
+
+    def test_rice_flat_schedule(self):
+        pi = _load_pi("configs/projects/rice_vm0051_pilot.yaml")
+        result = compute_for(pi)
+        assert result is not None
+        values = [e.net_tco2e for e in result.annual_schedule]
+        assert all(abs(v - values[0]) < 0.01 for v in values)
+        assert abs(sum(values) - result.crediting_period_total_tco2e) < 0.01
+
+    def test_monitoring_params_populated_for_acm0022(self):
+        pi = _load_pi("configs/projects/vietnam_socson_from_sheet.yaml")
+        result = compute_for(pi)
+        assert result is not None
+        assert len(result.monitoring_params) == 4
+        assert [p["id"] for p in result.monitoring_params] == [
+            "ACM0022-PARAM-01",
+            "ACM0022-PARAM-02",
+            "ACM0022-PARAM-03",
+            "ACM0022-PARAM-04",
+        ]
+
+    def test_prompt_block_contains_schedule_heading(self):
+        pi = _load_pi("configs/projects/vietnam_socson_from_sheet.yaml")
+        result = compute_for(pi)
+        assert result is not None
+        assert "Year-by-Year Emission Reductions" in result.to_prompt_block()
+
+    def test_single_year_crediting_period(self):
+        pi = _load_pi("configs/projects/rice_vm0051_pilot.yaml")
+        pi.dates.crediting_period_years = 1
+        result = compute_for(pi)
+        assert result is not None
+        assert len(result.annual_schedule) == 1
+        assert result.crediting_period_total_tco2e == pytest.approx(
+            result.annual_schedule[0].net_tco2e
+        )
+
+
 class TestPddCalcResultPromptBlock:
     def test_vm0051_prompt_block(self):
         result = PddCalcResult(

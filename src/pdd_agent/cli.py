@@ -591,6 +591,15 @@ def _run_calc(args, log) -> None:
     for comp in result.components:
         print(f"  - {comp.name}: {comp.value_tco2e:,.2f} {comp.unit} — {comp.formula}")
     print(f"\nMonitoring parameters: {len(result.monitoring_params)}")
+    for param in result.monitoring_params:
+        print(
+            f"  - {param.get('id', '')}: {param.get('name', '')} "
+            f"({param.get('unit', '')}, {param.get('frequency', '')})"
+        )
+    if result.annual_schedule:
+        print(f"\nAnnual schedule ({len(result.annual_schedule)} years):")
+        for entry in result.annual_schedule:
+            print(f"Year {entry.year}: {entry.net_tco2e:,.2f} tCO2e")
     if result.warnings:
         print(f"\nWarnings ({len(result.warnings)}):")
         for w in result.warnings:
@@ -618,6 +627,17 @@ def _run_calc(args, log) -> None:
                 for c in result.components
             ],
             "warnings": result.warnings,
+            "monitoring_params": result.monitoring_params,
+            "annual_schedule": [
+                {
+                    "year": e.year,
+                    "baseline_tco2e": e.baseline_tco2e,
+                    "project_tco2e": e.project_tco2e,
+                    "leakage_tco2e": e.leakage_tco2e,
+                    "net_tco2e": e.net_tco2e,
+                }
+                for e in result.annual_schedule
+            ],
         }
         output_path.write_text(_json.dumps(data, indent=2), encoding="utf-8")
         log.info("calc_output_written", path=str(output_path))
