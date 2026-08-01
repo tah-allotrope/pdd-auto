@@ -97,6 +97,67 @@ class PddCalcResult:
         lines.append("")
         return "\n".join(lines)
 
+    def to_dict(self) -> dict[str, Any]:
+        """JSON-safe mapping of this result, excluding `raw_result`.
+
+        `raw_result` holds a Pydantic ACM0022CalcResult for ACM0022 (and None for
+        the other families) and is not JSON-serializable via a plain dict/list
+        walk; downstream consumers (DraftRun persistence, export) never need it.
+        """
+        return {
+            "methodology_id": self.methodology_id,
+            "baseline_emissions_tco2e": self.baseline_emissions_tco2e,
+            "project_emissions_tco2e": self.project_emissions_tco2e,
+            "leakage_tco2e": self.leakage_tco2e,
+            "net_emission_reductions_tco2e": self.net_emission_reductions_tco2e,
+            "crediting_period_total_tco2e": self.crediting_period_total_tco2e,
+            "crediting_period_years": self.crediting_period_years,
+            "components": [
+                {
+                    "name": c.name,
+                    "value_tco2e": c.value_tco2e,
+                    "unit": c.unit,
+                    "formula": c.formula,
+                    "notes": c.notes,
+                }
+                for c in self.components
+            ],
+            "monitoring_params": self.monitoring_params,
+            "warnings": self.warnings,
+            "annual_schedule": [
+                {
+                    "year": e.year,
+                    "baseline_tco2e": e.baseline_tco2e,
+                    "project_tco2e": e.project_tco2e,
+                    "leakage_tco2e": e.leakage_tco2e,
+                    "net_tco2e": e.net_tco2e,
+                }
+                for e in self.annual_schedule
+            ],
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "PddCalcResult":
+        """Reconstruct a PddCalcResult from `to_dict` output.
+
+        Tolerates missing keys by falling back to the dataclass defaults, so a
+        run JSON written before a field existed still loads cleanly.
+        """
+        return cls(
+            methodology_id=data.get("methodology_id", ""),
+            baseline_emissions_tco2e=data.get("baseline_emissions_tco2e", 0.0),
+            project_emissions_tco2e=data.get("project_emissions_tco2e", 0.0),
+            leakage_tco2e=data.get("leakage_tco2e", 0.0),
+            net_emission_reductions_tco2e=data.get("net_emission_reductions_tco2e", 0.0),
+            crediting_period_total_tco2e=data.get("crediting_period_total_tco2e", 0.0),
+            crediting_period_years=data.get("crediting_period_years", 0),
+            components=[CalcComponent(**c) for c in data.get("components", [])],
+            monitoring_params=data.get("monitoring_params", []),
+            warnings=data.get("warnings", []),
+            raw_result=None,
+            annual_schedule=[AnnualErEntry(**e) for e in data.get("annual_schedule", [])],
+        )
+
 
 def _map_acm0022(pi: ProjectInput) -> tuple[dict[str, Any], list[str]] | None:
     tech = pi.technology

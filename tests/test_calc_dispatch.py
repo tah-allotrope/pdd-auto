@@ -1,5 +1,6 @@
 """Tests for family-agnostic calc dispatch."""
 
+import json
 from pathlib import Path
 
 import pytest
@@ -129,6 +130,32 @@ class TestAnnualSchedule:
         assert result.crediting_period_total_tco2e == pytest.approx(
             result.annual_schedule[0].net_tco2e
         )
+
+
+class TestPddCalcResultSerialization:
+    def test_to_dict_json_safe(self):
+        pi = _load_pi("configs/projects/vietnam_socson_from_sheet.yaml")
+        result = compute_for(pi)
+        assert result is not None
+        json.dumps(result.to_dict())  # must not raise TypeError (raw_result excluded)
+
+    def test_round_trip_preserves_scalars_and_schedule(self):
+        pi = _load_pi("configs/projects/vietnam_socson_from_sheet.yaml")
+        result = compute_for(pi)
+        assert result is not None
+        restored = PddCalcResult.from_dict(result.to_dict())
+        assert restored.methodology_id == result.methodology_id
+        assert restored.net_emission_reductions_tco2e == pytest.approx(
+            result.net_emission_reductions_tco2e
+        )
+        assert len(restored.annual_schedule) == len(result.annual_schedule)
+        assert restored.raw_result is None
+
+    def test_from_dict_tolerates_missing_keys(self):
+        restored = PddCalcResult.from_dict({"methodology_id": "ACM0022"})
+        assert restored.methodology_id == "ACM0022"
+        assert restored.components == []
+        assert restored.annual_schedule == []
 
 
 class TestPddCalcResultPromptBlock:

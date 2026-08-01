@@ -435,3 +435,50 @@ class TestRedraftJudgeSelection:
         orch.draft_section("1", "1.2")
 
         assert len(resolve_calls) == 1
+
+
+class TestCalcResultPersistence:
+    def _soc_son_project_input(self):
+        import yaml
+
+        from schemas.project_input import ProjectInput
+
+        root = Path(__file__).parent.parent
+        with open(
+            root / "configs" / "projects" / "vietnam_socson_from_sheet.yaml", encoding="utf-8"
+        ) as f:
+            return ProjectInput.model_validate(yaml.safe_load(f))
+
+    def test_calc_result_round_trips_through_run_json(self, tmp_path: Path):
+        from pdd_agent.calc.dispatch import compute_for
+
+        pi = self._soc_son_project_input()
+        calc_result = compute_for(pi)
+        assert calc_result is not None
+
+        orch = SectionOrchestrator(provider=NoopProvider(), project_input=pi, runs_dir=tmp_path)
+        orch.set_calc_result(calc_result)
+        orch.run()
+        orch.draft_run.save(output_dir=tmp_path)
+
+        loaded = DraftRun.load(orch.run_id, output_dir=tmp_path)
+        assert loaded.calc_result is not None
+        assert loaded.calc_result["methodology_id"] == "ACM0022"
+        assert len(loaded.calc_result["components"]) == 8
+
+    def test_calc_result_absent_key_loads_as_none(self, tmp_path: Path):
+        import json
+
+        run_dir = tmp_path
+        run_dir.mkdir(parents=True, exist_ok=True)
+        legacy_payload = {
+            "run_id": "legacy-no-calc",
+            "project_name": "Legacy Project",
+            "provider": "noop",
+            "sections": [],
+            "notes": [],
+        }
+        (run_dir / "legacy-no-calc.json").write_text(json.dumps(legacy_payload), encoding="utf-8")
+
+        loaded = DraftRun.load("legacy-no-calc", output_dir=run_dir)
+        assert loaded.calc_result is None

@@ -201,6 +201,89 @@ def test_export_run_to_docx_honors_explicit_runs_dir(tmp_path: Path):
     assert output_path.exists()
 
 
+_CALC_RESULT_DICT = {
+    "methodology_id": "ACM0022",
+    "baseline_emissions_tco2e": 487710.99,
+    "project_emissions_tco2e": 0.0,
+    "leakage_tco2e": 0.0,
+    "net_emission_reductions_tco2e": 487710.99,
+    "crediting_period_total_tco2e": 5312566.21,
+    "crediting_period_years": 7,
+    "components": [
+        {
+            "name": "BE_CH4 (methane from SWDS)",
+            "value_tco2e": 130704.99,
+            "unit": "tCO2e/year",
+            "formula": "ACM0022 Eq.1 + Tool 04 Eq.2",
+            "notes": "",
+        },
+    ],
+    "monitoring_params": [],
+    "warnings": ["waste split evenly across N declared waste types"],
+    "annual_schedule": [],
+}
+
+
+def test_export_run_to_docx_without_calc_omits_appendix(tmp_path: Path, monkeypatch):
+    run_path = _write_run(tmp_path, run_id="no-calc-run")
+    monkeypatch.setattr("pdd_agent.export.docx_export._DRAFT_RUNS_DIR", run_path.parent)
+
+    output = export_run_to_docx("no-calc-run", output_path=tmp_path / "no-calc.docx")
+    xml = _read_docx_xml(output)
+
+    assert "Appendix — Quantification Audit Trail" not in xml
+
+
+def test_export_run_to_docx_with_calc_renders_appendix(tmp_path: Path, monkeypatch):
+    run_path = _write_run(tmp_path, run_id="calc-run")
+    payload = json.loads(run_path.read_text(encoding="utf-8"))
+    payload["calc_result"] = _CALC_RESULT_DICT
+    run_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    monkeypatch.setattr("pdd_agent.export.docx_export._DRAFT_RUNS_DIR", run_path.parent)
+
+    output = export_run_to_docx("calc-run", output_path=tmp_path / "calc.docx")
+    xml = _read_docx_xml(output)
+
+    assert "Appendix — Quantification Audit Trail" in xml
+    assert "Component" in xml
+    assert "Value (tCO2e/yr)" in xml
+    assert "Unit" in xml
+    assert "Formula reference" in xml
+    assert "CALC: waste split evenly across N declared waste types" in xml
+
+
+def test_export_run_to_docx_calc_explicit_override(tmp_path: Path, monkeypatch):
+    run_path = _write_run(tmp_path, run_id="calc-override-run")
+    payload = json.loads(run_path.read_text(encoding="utf-8"))
+    payload["calc_result"] = _CALC_RESULT_DICT
+    run_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    monkeypatch.setattr("pdd_agent.export.docx_export._DRAFT_RUNS_DIR", run_path.parent)
+
+    other_calc_dict = {
+        **_CALC_RESULT_DICT,
+        "components": [
+            {
+                "name": "OVERRIDE_COMPONENT",
+                "value_tco2e": 1.0,
+                "unit": "tCO2e/year",
+                "formula": "override",
+                "notes": "",
+            }
+        ],
+        "warnings": [],
+    }
+
+    output = export_run_to_docx(
+        "calc-override-run",
+        output_path=tmp_path / "calc-override.docx",
+        calc_result=other_calc_dict,
+    )
+    xml = _read_docx_xml(output)
+
+    assert "OVERRIDE_COMPONENT" in xml
+    assert "BE_CH4" not in xml
+
+
 def test_export_run_to_docx_raises_clear_error_when_run_missing(tmp_path: Path, monkeypatch):
     monkeypatch.setattr("pdd_agent.export.docx_export._DRAFT_RUNS_DIR", tmp_path / "runs")
 

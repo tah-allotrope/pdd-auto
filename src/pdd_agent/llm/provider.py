@@ -309,6 +309,7 @@ class DraftRun:
     provider: str = "noop"
     notes: list[str] = field(default_factory=list)
     assumption_register: dict[str, Any] | None = None
+    calc_result: dict[str, Any] | None = None
 
     def add(self, section: DraftSection) -> None:
         self.sections.append(section)
@@ -319,6 +320,7 @@ class DraftRun:
             "project_name": self.project_name,
             "provider": self.provider,
             "assumption_register": self.assumption_register,
+            "calc_result": self.calc_result,
             "sections": [
                 {
                     "section_id": s.section_id,
@@ -370,6 +372,7 @@ class DraftRun:
             provider=data.get("provider", "noop"),
             notes=data.get("notes", []),
             assumption_register=data.get("assumption_register"),
+            calc_result=data.get("calc_result"),
         )
 
     def summary(self) -> dict[str, Any]:

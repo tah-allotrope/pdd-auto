@@ -159,6 +159,7 @@ def export_run_to_docx(
     project_input: ProjectInput | None = None,
     force: bool = False,
     runs_dir: Path | None = None,
+    calc_result: Any | None = None,
 ) -> Path:
     """Export a DraftRun JSON to a review-friendly DOCX file.
 
@@ -169,6 +170,10 @@ def export_run_to_docx(
     locate the run JSON and, when ``output_path`` is not given, to place the
     exported DOCX — callers with a redirected run persistence directory (e.g.
     the service's ``PDD_SERVICE_RUNS_DIR``) must pass it explicitly.
+
+    ``calc_result`` defaults to whatever the run JSON's ``calc_result`` field
+    carries (reconstructed via ``PddCalcResult.from_dict``); an explicit
+    argument overrides that.
     """
     effective_runs_dir = runs_dir or _DRAFT_RUNS_DIR
     run_path = effective_runs_dir / f"{run_id}.json"
@@ -189,7 +194,21 @@ def export_run_to_docx(
     with open(run_path, encoding="utf-8") as handle:
         run_data = json.load(handle)
 
-    gate = check_export_gate(run_data, project_input=project_input, force=force)
+    from pdd_agent.calc.dispatch import PddCalcResult
+
+    if calc_result is None:
+        calc_result_dict = run_data.get("calc_result")
+        calc_result_obj = PddCalcResult.from_dict(calc_result_dict) if calc_result_dict else None
+    elif hasattr(calc_result, "to_dict"):
+        calc_result_dict = calc_result.to_dict()
+        calc_result_obj = calc_result
+    else:
+        calc_result_dict = calc_result
+        calc_result_obj = PddCalcResult.from_dict(calc_result_dict) if calc_result_dict else None
+
+    gate = check_export_gate(
+        run_data, project_input=project_input, calc_result=calc_result_obj, force=force
+    )
     if gate.blocked and not force:
         logger.error("export_gate_blocked", run_id=run_id, hard_blocks=gate.hard_blocks)
         raise ExportBlockedError(f"Export blocked for {run_id}. Hard blocks: {gate.hard_blocks}")
@@ -280,8 +299,9 @@ def export_run_to_docx(
                     run.font.color.rgb = _docx_attr("docx.shared", "RGBColor")(0xB4, 0x23, 0x18)
 
     _add_assumption_appendix(doc, assumption_register, sections, blocked_paths, is_demo=is_demo)
+    _add_calc_audit_appendix(doc, calc_result_dict)
     if not is_demo:
-        _add_reviewer_issues_appendix(doc, run_data, sections, blocked_paths)
+        _add_reviewer_issues_appendix(doc, run_data, sections, blocked_paths, calc_result_dict)
 
     tbd_report = run_data.get("tbd")
     if tbd_report:
@@ -845,20 +865,59 @@ def _add_assumption_appendix(
             _safe_paragraph_style(p, "List Bullet")
 
 
+def _add_calc_audit_appendix(doc: Any, calc_result: dict[str, Any] | None) -> None:
+    """Render the quantification audit-trail appendix from a calc_result dict.
+
+    No-op when calc_result is None — most legacy runs (demo/noop, or any run
+    predating calc persistence) have no calc result to render.
+    """
+    if not calc_result:
+        return
+
+    doc.add_page_break()
+    doc.add_heading("Appendix — Quantification Audit Trail", level=1)
+    doc.add_paragraph(f"Methodology: {calc_result.get('methodology_id', '')}")
+
+    table = doc.add_table(rows=1, cols=4)
+    _safe_set_table_style(table)
+    headers = ["Component", "Value (tCO2e/yr)", "Unit", "Formula reference"]
+    for index, header in enumerate(headers):
+        table.rows[0].cells[index].text = header
+        table.rows[0].cells[index].paragraphs[0].runs[0].bold = True
+
+    for comp in calc_result.get("components", []):
+        cells = table.add_row().cells
+        cells[0].text = str(comp.get("name", ""))
+        cells[1].text = f"{comp.get('value_tco2e', 0.0):,.2f}"
+        cells[2].text = str(comp.get("unit", ""))
+        cells[3].text = str(comp.get("formula", ""))
+
+
 def _add_reviewer_issues_appendix(
     doc: Any,
     run_data: dict[str, Any],
     sections: list[dict[str, Any]],
     blocked_paths: dict[str, str],
+    calc_result: dict[str, Any] | None = None,
 ) -> None:
     doc.add_page_break()
     doc.add_heading("Appendix B - Reviewer Issues", level=1)
 
+    calc_warnings = (calc_result or {}).get("warnings", [])
     flagged_sections = [
         section for section in sections if section.get("issues") or section.get("synthetic_uses")
     ]
-    if not flagged_sections:
+    if not flagged_sections and not calc_warnings:
         doc.add_paragraph("No reviewer issues were recorded.")
+        return
+
+    if calc_warnings:
+        doc.add_heading("Calculation Engine", level=2)
+        for warning in calc_warnings:
+            p = doc.add_paragraph(f"CALC: {warning}")
+            _safe_paragraph_style(p, "List Bullet")
+
+    if not flagged_sections:
         return
 
     summary = doc.add_table(rows=1, cols=5)

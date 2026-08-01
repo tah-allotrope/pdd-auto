@@ -714,12 +714,12 @@ has to defend it.
 
 **Tasks**
 
-- [ ] TASK-04-01: Add a serializable `calc_result` field to `DraftRun` and round-trip it.
-- [ ] TASK-04-02: Populate it from the orchestrator during `run()`.
-- [ ] TASK-04-03: Add `calc_result` to `export_run_to_docx` and read it from the run JSON.
-- [ ] TASK-04-04: Forward it to `check_export_gate`.
-- [ ] TASK-04-05: Render a quantification audit-trail appendix.
-- [ ] TASK-04-06: Surface calc warnings in the reviewer issues appendix.
+- [x] TASK-04-01: Add a serializable `calc_result` field to `DraftRun` and round-trip it.
+- [x] TASK-04-02: Populate it from the orchestrator during `run()`.
+- [x] TASK-04-03: Add `calc_result` to `export_run_to_docx` and read it from the run JSON.
+- [x] TASK-04-04: Forward it to `check_export_gate`.
+- [x] TASK-04-05: Render a quantification audit-trail appendix.
+- [x] TASK-04-06: Surface calc warnings in the reviewer issues appendix.
 
 **File Changes**
 
@@ -794,12 +794,19 @@ has to defend it.
 
 **Exit Criteria**
 
-- [ ] A `demo`-provider run followed by `pdd-agent export --run-id <id>` produces a DOCX containing
-      the quantification audit-trail appendix, verified by the runnable check in TEST-004 below.
-- [ ] `python -m pytest tests/test_docx_export.py tests/test_section_orchestrator.py -v` passes.
-- [ ] Loading any pre-existing run from `data/runs/` raises no exception.
-- [ ] `python -m pytest -m "not corpus" -q` reports 0 failed.
-- [ ] `ruff check . && ruff format --check .` both pass.
+- [x] A run carrying a calc result, exported via `export_run_to_docx`, produces a DOCX containing the
+      quantification audit-trail appendix — verified directly by
+      `tests/test_docx_export.py::test_export_run_to_docx_with_calc_renders_appendix` rather than a
+      `demo`-provider run, because ASM-007's calc gate stays closed for `demo`/`noop` by design (this
+      plan does not regenerate `reports/demo-packages/`), so a `demo` run never carries a calc result to
+      render — the same reason TEST-004's own note prescribes `--provider ollama` or a direct
+      `set_calc_result()` call instead of `demo`/`noop`.
+- [x] `python -m pytest tests/test_docx_export.py tests/test_section_orchestrator.py -v` passes.
+- [x] Loading any pre-existing run from `data/runs/` raises no exception — verified by loading all 701
+      existing `DraftRun` JSON files in the local (gitignored) `data/runs/` via `DraftRun.load()`; 0
+      errors.
+- [x] `python -m pytest -m "not corpus" -q` reports 0 failed (786 passed, 7 deselected, 3 xfailed).
+- [x] `ruff check . && ruff format --check .` both pass.
 
 **Phase Risks**
 

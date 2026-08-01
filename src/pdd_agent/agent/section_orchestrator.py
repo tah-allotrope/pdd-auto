@@ -1009,3 +1009,5 @@ class SectionOrchestrator:
     def set_calc_result(self, calc_result: Any) -> None:
         """Attach calc results for injection into quantification section prompts."""
         self._calc_result = calc_result
+        if hasattr(calc_result, "to_dict"):
+            self._run.calc_result = calc_result.to_dict()
