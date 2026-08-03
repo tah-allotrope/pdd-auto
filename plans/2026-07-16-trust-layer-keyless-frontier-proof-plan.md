@@ -1,7 +1,7 @@
 ---
 title: "Trust-Layer Hardening, Honest Proof Harness, and the Keyless Frontier Provider"
 date: "2026-07-16"
-status: "open — PHASE-01-05 done, PHASE-06 (Ollama rehearsal) genuinely blocked: Ollama not installed, still wanted per the 07-23 brainstorm. Confirmed by CC triage on 2026-07-30; incorrectly marked complete by the 2026-07-31 blanket pre-7/20 stamp, which predates this evidence. Corrected back on manual review."
+status: "open — PHASE-01-05 done; PHASE-06 TASK-06-01 (runbook `docs/ollama-dress-rehearsal.md`) is done and now ticked, but TASK-06-02/03 remain blocked: re-verified 2026-08-03 that `ollama` is still not on PATH and no `reports/prove-*-ollama.md` or findings doc exists. Still wanted — the 07-23 brainstorm calls the rehearsal 'genuinely blocked, not just deferred', never dropped. (Earlier note: incorrectly marked complete by the 2026-07-31 blanket pre-7/20 stamp; corrected back on manual review.)"
 request: "Multi-phase plan for Tracks A2–A5 (CI trust hardening), B1–B5 (proof-harness hardening), C1 (ClaudeCodeProvider keyless frontier path), C4 (small-model Ollama dress rehearsal) from the 2026-07-16 brainstorm"
 plan_type: "multi-phase"
 research_inputs:
@@ -402,7 +402,7 @@ All tests patch `subprocess.run` (and `shutil.which` where relevant); none touch
 Complete the first full 36-section local-model run (never achieved — prior attempts timed out on an 8B model on CPU) using a ~3B model, to shake out nondeterministic-output bugs on free tokens and produce a documented findings artifact. This phase is operational: one small runbook doc plus executed commands; code changes only if the run surfaces bugs (fix in place, with tests).
 
 **Tasks**
-- [ ] TASK-06-01: Write `docs/ollama-dress-rehearsal.md` (runbook: prerequisites, commands, expected durations, where results land).
+- [x] TASK-06-01: Write `docs/ollama-dress-rehearsal.md` (runbook: prerequisites, commands, expected durations, where results land).
 - [ ] TASK-06-02: Execute the rehearsal on a machine with Ollama installed: pull the model, run `prove` for the Inegol (WTE) and rice projects through the `ollama` provider.
 - [ ] TASK-06-03: Record findings in `docs/<YYYY-MM-DD>-ollama-dress-rehearsal-findings.md` (use the run date): sections drafted/failed, redraft counts, marker-parsing anomalies, wall-clock, and any bugs found (each bug gets a fix + regression test in the same change).
 
