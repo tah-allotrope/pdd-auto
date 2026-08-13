@@ -1,7 +1,7 @@
 ---
 title: "Trust-Layer Hardening, Honest Proof Harness, and the Keyless Frontier Provider"
 date: "2026-07-16"
-status: "open — PHASE-01-05 done; PHASE-06 TASK-06-01 (runbook `docs/ollama-dress-rehearsal.md`) is done and now ticked, but TASK-06-02/03 remain blocked: re-verified 2026-08-03 that `ollama` is still not on PATH and no `reports/prove-*-ollama.md` or findings doc exists. Still wanted — the 07-23 brainstorm calls the rehearsal 'genuinely blocked, not just deferred', never dropped. (Earlier note: incorrectly marked complete by the 2026-07-31 blanket pre-7/20 stamp; corrected back on manual review.)"
+status: "abandoned — closed by explicit user request on 2026-08-05 to clear the backlog and start fresh. PHASE-01-05 and PHASE-06 TASK-06-01 (runbook) were genuinely done; TASK-06-02/03 (execute + record findings) were never run because Ollama is not installed on the dev machine. If the Ollama rehearsal is wanted later, re-plan it fresh rather than resuming this file."
 request: "Multi-phase plan for Tracks A2–A5 (CI trust hardening), B1–B5 (proof-harness hardening), C1 (ClaudeCodeProvider keyless frontier path), C4 (small-model Ollama dress rehearsal) from the 2026-07-16 brainstorm"
 plan_type: "multi-phase"
 research_inputs:

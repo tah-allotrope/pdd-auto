@@ -1,7 +1,7 @@
 ---
 title: "Fix Self-Judging Redraft Loop, Run the First Real-Model Proof, Capture the Verra Registry API"
 date: "2026-07-23"
-status: "open — PHASE-01/02 (judge-selection extraction, in-loop self-judging fix) landed in 4266be1/aae79b3 and PHASE-03's proof run is now carried by plans/2026-07-25-calc-correctness-and-audit-trail-plan.md PHASE-06, but PHASE-04 (live Verra registry search-API capture) is explicitly out of scope in every later plan and remains unbuilt. Re-verified 2026-08-03: `registry_download.py`'s module docstring still states the OData request shape 'could not be fully reconstructed ... without browser devtools', `_search_projects()` still posts a guessed payload behind a manual-download fallback, and no captured search-response fixture exists under tests/. Only part of this plan was superseded, so it stays open."
+status: "abandoned — closed by explicit user request on 2026-08-05 to clear the backlog and start fresh. PHASE-01/02 (judge-selection extraction, in-loop self-judging fix) were genuinely done (4266be1/aae79b3); PHASE-03's proof run was carried forward by plans/2026-07-25-calc-correctness-and-audit-trail-plan.md PHASE-06; PHASE-04 (live Verra registry search-API capture via browser devtools) was never built. If the registry capture is wanted later, re-plan it fresh rather than resuming this file."
 request: "Scope the plan to Track A1 (fix in-loop redraft self-judging in section_orchestrator.py) + A2 (run pdd-agent prove --project inegol --providers claude-code) + A3 (run --project rice) as the primary sequence, with Track B1 (Verra registry search-API capture via browser devtools) as an independent parallel phase."
 plan_type: "multi-phase"
 research_inputs:
