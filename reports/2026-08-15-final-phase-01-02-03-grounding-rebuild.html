@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Final Report :: Grounding Rebuild & Verra Tables</title>
+  <meta name="color-scheme" content="dark light">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+
+    async function initMermaid() {
+      const blocks = document.querySelectorAll('.mermaid');
+      if (!blocks.length) {
+        return;
+      }
+
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: 'base',
+        securityLevel: 'loose',
+        themeVariables: {
+          primaryColor: '#f3ead9',
+          primaryTextColor: '#1f1912',
+          primaryBorderColor: '#9d6b37',
+          lineColor: '#3b6f76',
+          secondaryColor: '#efe4d0',
+          tertiaryColor: '#ffffff',
+          background: '#fbf7f1',
+          mainBkg: '#fbf7f1',
+          nodeBorder: '#9d6b37',
+          clusterBkg: '#f7efdf',
+          clusterBorder: '#3b6f76',
+          edgeLabelBackground: '#fbf7f1'
+        }
+      });
+
+      await mermaid.run({ nodes: blocks });
+    }
+
+    const run = () => initMermaid().catch((error) => console.error('Mermaid render failed', error));
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', run, { once: true });
+    } else {
+      run();
+    }
+  </script>
+  <style>
+    :root {
+      --paper: #fbf7f1;
+      --paper-strong: #fffdf9;
+      --ink: #1f1912;
+      --ink-soft: #5f564c;
+      --line: #dccdb6;
+      --line-strong: #bfa37d;
+      --accent: #9d6b37;
+      --accent-soft: #efe4d0;
+      --accent-2: #3b6f76;
+      --shadow: 0 18px 40px rgba(49, 33, 16, 0.08);
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --radius-sm: 12px;
+      --page-width: 1040px;
+      --display-font: Georgia, "Times New Roman", serif;
+      --body-font: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      --mono-font: "Cascadia Code", Consolas, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(157, 107, 55, 0.09), transparent 26%),
+        radial-gradient(circle at 88% 10%, rgba(59, 111, 118, 0.08), transparent 22%),
+        linear-gradient(180deg, #f7f1e7 0%, #fbf7f1 28%, #f6efe5 100%);
+      font-family: var(--body-font);
+      line-height: 1.65;
+      letter-spacing: 0.01em;
+    }
+
+    a {
+      color: var(--accent-2);
+    }
+
+    code,
+    pre,
+    .technical,
+    .meta-chip,
+    .section-index,
+    .eyebrow,
+    .stat-label,
+    .stat-value,
+    .mermaid {
+      font-family: var(--mono-font);
+    }
+
+    .page-shell {
+      width: min(var(--page-width), calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 28px 0 56px;
+    }
+
+    .hero {
+      padding: 34px;
+      border: 1px solid rgba(159, 123, 79, 0.28);
+      border-radius: 30px;
+      background:
+        linear-gradient(135deg, rgba(157, 107, 55, 0.1), transparent 34%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0.86)),
+        var(--paper-strong);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(260px, 0.85fr);
+      gap: 24px;
+      align-items: end;
+    }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .title {
+      margin: 0;
+      max-width: 12ch;
+      font-family: var(--display-font);
+      font-size: clamp(2.8rem, 5vw, 4.8rem);
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+      text-wrap: balance;
+    }
+
+    .lede {
+      margin: 18px 0 0;
+      max-width: 60ch;
+      color: var(--ink-soft);
+      font-size: 1rem;
+    }
+
+    .takeaway {
+      margin-top: 22px;
+      padding: 18px 20px;
+      border-left: 4px solid var(--accent-2);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      background: rgba(59, 111, 118, 0.08);
+      color: #20373a;
+      font-size: 1.02rem;
+    }
+
+    .meta-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .meta-card,
+    .section,
+    .subcard,
+    .empty-state {
+      border: 1px solid rgba(95, 72, 46, 0.12);
+      background: rgba(255, 253, 249, 0.88);
+      box-shadow: var(--shadow);
+    }
+
+    .meta-card {
+      padding: 16px 18px;
+      border-radius: var(--radius-md);
+    }
+
+    .meta-label {
+      color: var(--ink-soft);
+      font-size: 0.76rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .meta-chip {
+      margin-top: 8px;
+      color: var(--accent);
+      font-size: 1rem;
+      font-weight: 700;
+      word-break: break-word;
+    }
+
+    .section {
+      margin-top: 22px;
+      padding: 24px;
+      border-radius: var(--radius-lg);
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px 18px;
+      align-items: end;
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section-index {
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .section-title {
+      margin: 0;
+      font-family: var(--display-font);
+      font-size: clamp(1.45rem, 2vw, 2rem);
+      line-height: 1.05;
+    }
+
+    .summary-grid,
+    .dual-grid,
+    .phase-grid,
+    .stat-grid,
+    .appendix-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .summary-grid,
+    .dual-grid,
+    .phase-grid,
+    .appendix-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .subcard {
+      padding: 18px;
+      border-radius: var(--radius-md);
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .subcard h3,
+    .subcard h4 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+      line-height: 1.2;
+    }
+
+    .subcard p:first-child,
+    .subcard ul:first-child,
+    .subcard ol:first-child {
+      margin-top: 0;
+    }
+
+    .stat-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin-top: 16px;
+    }
+
+    .stat {
+      padding: 14px 16px;
+      border: 1px solid rgba(59, 111, 118, 0.16);
+      border-radius: var(--radius-sm);
+      background: rgba(59, 111, 118, 0.06);
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .stat-label {
+      color: var(--ink-soft);
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .stat-value {
+      margin-top: 8px;
+      color: var(--accent-2);
+      font-size: 1.18rem;
+      font-weight: 700;
+    }
+
+    .narrative,
+    .chart-frame,
+    .technical-frame,
+    .diagram-frame,
+    .viz-frame {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.54);
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .diagram-frame {
+      overflow-x: auto;
+      overflow-y: auto;
+      overscroll-behavior-x: contain;
+      overscroll-behavior-y: contain;
+      max-height: min(70vh, 720px);
+    }
+
+    .chart-frame,
+    .viz-frame {
+      overflow: hidden;
+    }
+
+    .mermaid {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      color: var(--ink);
+    }
+
+    .mermaid svg {
+      display: block;
+      width: auto !important;
+      min-width: 100%;
+      max-width: none !important;
+      height: auto !important;
+    }
+
+    .diagram-frame.compact-diagram {
+      padding: 12px;
+      max-height: min(62vh, 560px);
+    }
+
+    .diagram-frame.compact-diagram .mermaid {
+      min-width: 900px;
+    }
+
+    .chart-frame canvas,
+    .technical-frame > canvas,
+    .viz-frame canvas,
+    canvas.report-chart {
+      display: block;
+      width: 100% !important;
+      max-width: 100%;
+      height: 300px !important;
+      min-height: 300px;
+      max-height: 300px;
+    }
+
+    .technical-frame table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+    }
+
+    .technical-frame th,
+    .technical-frame td {
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+      text-align: left;
+    }
+
+    .technical-frame th {
+      color: var(--accent);
+      font-size: 0.76rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .empty-state {
+      padding: 20px;
+      border-radius: var(--radius-md);
+      text-align: center;
+      color: var(--ink-soft);
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .empty-state strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--accent);
+      font-size: 0.84rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .tag {
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(157, 107, 55, 0.35);
+      background: rgba(157, 107, 55, 0.08);
+      color: var(--accent);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .tag.gap {
+      border-color: rgba(178, 58, 46, 0.35);
+      background: rgba(178, 58, 46, 0.08);
+      color: #a53a2c;
+    }
+
+    .tag.done {
+      border-color: rgba(59, 111, 118, 0.35);
+      background: rgba(59, 111, 118, 0.08);
+      color: var(--accent-2);
+    }
+
+    ul,
+    ol {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    p:last-child,
+    li:last-child {
+      margin-bottom: 0;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      color: rgba(95, 86, 76, 0.74);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      text-align: right;
+    }
+
+    @media (max-width: 920px) {
+      .hero-grid,
+      .summary-grid,
+      .dual-grid,
+      .phase-grid,
+      .stat-grid,
+      .appendix-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .title {
+        max-width: none;
+      }
+
+    }
+
+    @media (max-width: 640px) {
+      .page-shell {
+        width: min(100vw - 20px, var(--page-width));
+        padding-top: 16px;
+        padding-bottom: 36px;
+      }
+
+      .hero,
+      .section {
+        padding: 18px;
+        border-radius: 20px;
+      }
+
+      .title {
+        font-size: clamp(2.1rem, 12vw, 3.2rem);
+      }
+
+    }
+
+    @media print {
+      :root {
+        --paper: #ffffff;
+        --paper-strong: #ffffff;
+        --ink: #111111;
+        --ink-soft: #444444;
+        --line: #d6d1c8;
+      }
+
+      @page {
+        size: A4;
+        margin: 14mm;
+      }
+
+      body {
+        background: #ffffff;
+      }
+
+      .page-shell {
+        width: 100%;
+        max-width: none;
+        padding: 0;
+      }
+
+      .hero,
+      .meta-card,
+      .section,
+      .subcard,
+      .narrative,
+      .chart-frame,
+      .technical-frame,
+      .diagram-frame,
+      .viz-frame,
+      .empty-state,
+      .stat {
+        background: #ffffff;
+        box-shadow: none;
+      }
+
+      .hero,
+      .section {
+        margin-top: 0;
+        margin-bottom: 10mm;
+      }
+
+      .diagram-frame {
+        overflow: visible;
+        max-height: none;
+      }
+
+      .diagram-frame.compact-diagram .mermaid {
+        min-width: 0;
+      }
+
+      .section-header,
+      .takeaway {
+        break-after: avoid;
+        page-break-after: avoid;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page-shell">
+    <section class="hero" id="title-hero">
+      <div class="hero-grid">
+        <div>
+          <p class="eyebrow">Final Report / Shareable Analysis Artifact</p>
+          <h1 class="title">Grounding Rebuild &amp; Verra Tables</h1>
+          <p class="lede">
+            A presentation-ready synthesis of a multi-phase analysis, written for readers who need context, judgment, and a clear path forward.
+          </p>
+          <div class="takeaway">The retrieval index that grounds every citation in this pipeline was rebuilt on real section text instead of duplicated 500-character page fragments — duplication fell from 73.4% to 2.7% and the exported DOCX now carries prose <em>and</em> table together in 8 of 11 Verra table types (was 3). One honest gap remains open: 4 of 17 source documents, including the ACM0022 methodology text itself, still don't make it into the index, traced to an upstream PDF-extraction defect outside this push's scope.</div>
+        </div>
+        <div class="meta-grid">
+          <div class="meta-card">
+            <div class="meta-label">Project</div>
+            <div class="meta-chip">pdd-agent — Verra VCS PDD drafting pipeline</div>
+          </div>
+          <div class="meta-card">
+            <div class="meta-label">Repository</div>
+            <div class="meta-chip">pdd-auto</div>
+          </div>
+          <div class="meta-card">
+            <div class="meta-label">Date</div>
+            <div class="meta-chip">2026-08-15</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="executive-summary">
+      <div class="section-header">
+        <div>
+          <div class="section-index">01 / Executive Summary</div>
+          <h2 class="section-title">Executive Summary</h2>
+        </div>
+      </div>
+      <div class="summary-grid">
+        <div class="subcard">
+          <h3>What was done</h3>
+          <p>Three of the six phases in the 2026-08-13 grounding-rebuild plan were implemented, tested, and merged to <code>main</code>: PHASE-01 (a one-command corpus-health report), PHASE-02 (rebuilding the retrieval index on real section text instead of truncated page fragments, with methodology-family filtering), and PHASE-03 (making the exported DOCX render narrative prose <em>and</em> its structured table together, and wiring five more of Verra's eleven table types). All three landed with the full non-corpus test suite green — 823 passed, 0 failed, up from a baseline of 798 — and <code>ruff check</code> / <code>ruff format --check</code> clean throughout.</p>
+        </div>
+        <div class="subcard">
+          <h3>What matters</h3>
+          <p>The retrieval substrate every provenance citation and grounding metric in this system depends on was measurably broken — 73.4% of indexed text was duplicate running headers and page numbers, and one of every four corpus documents contributed nothing. That is now largely fixed for 13 of 17 documents. The remaining 4 — including the ACM0022 methodology text itself — fail for a different, upstream reason (PDF heading extraction in <code>ingest/normalize.py</code>), which this push root-caused but deliberately did not fix, since it falls outside PHASE-02's declared scope. The plan's real-money smoke test (PHASE-04) and everything gated behind it (PHASE-05 calc-composition fix, PHASE-06 table-aware ingestion) were explicitly deferred at the user's direction before implementation began.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="background-objective">
+      <div class="section-header">
+        <div>
+          <div class="section-index">02 / Background &amp; Objective</div>
+          <h2 class="section-title">Background &amp; Objective</h2>
+        </div>
+      </div>
+      <div class="narrative">
+        <p>pdd-agent drafts Verra VCS Project Design Documents for waste-to-energy projects, grounding its output in a corpus of registered VCS PDDs via a "corpus-bucketed RAG" retrieval index — a name that, going into this push, no longer described the system's actual behavior. A 2026-08-13 research brief measured the index directly: 1,015 rows held only 270 distinct texts (73.4% duplication), 97.7% of rows were exactly 500 characters, and 4 of 17 normalized source documents contributed zero rows — because the indexer read a whole PDF <em>page</em> per heading and truncated it, so every heading sharing a page collapsed to one byte-identical, often irrelevant, string (running headers, page numbers). Separately, the exported DOCX's structured-table renderers were found to <em>delete</em> a section's narrative the moment a table was attached, and the ACM0022 calculation engine was silently dropping a third of a project's declared waste throughput. The resulting plan, <code>plans/2026-08-13-grounding-rebuild-and-calc-inputs-plan.md</code>, laid out six phases to address all of this plus a bounded real-model smoke test. This push's objective was to execute the three phases that rebuild trust in retrieval and export — the foundation the calc and real-model phases depend on — cleanly and verifiably, and to be honest about what still doesn't work rather than declaring victory early.</p>
+      </div>
+    </section>
+
+    <section class="section" id="inputs-scope">
+      <div class="section-header">
+        <div>
+          <div class="section-index">03 / Inputs &amp; Scope</div>
+          <h2 class="section-title">Inputs &amp; Scope</h2>
+        </div>
+      </div>
+      <div class="dual-grid">
+        <div class="subcard">
+          <h3>Inputs</h3>
+          <ul>
+            <li><code>plans/2026-08-13-grounding-rebuild-and-calc-inputs-plan.md</code> — the six-phase implementation plan, with binding assumptions (ASM-001..009), decisions (DEC-001..004), and an exact chunking/mapping specification (S-1, S-2, S-3).</li>
+            <li><code>research/2026-08-13-pdd-hollow-grounding-and-calc-inputs-brainstorm.md</code> — the measured-evidence brief the plan was built from.</li>
+            <li><code>data/corpus/normalized/</code> — 17 registered VCS PDDs as pre-parsed JSON (gitignored, present locally), the raw material for the retrieval index.</li>
+            <li>The existing test suite (798 passing at baseline) as the regression floor for every change.</li>
+          </ul>
+        </div>
+        <div class="subcard">
+          <h3>Scope boundary</h3>
+          <p><strong>In scope, delivered:</strong></p>
+          <div class="tag-row">
+            <span class="tag done">PHASE-01 index-report</span>
+            <span class="tag done">PHASE-02 section-span chunking</span>
+            <span class="tag done">PHASE-03 prose+tables</span>
+          </div>
+          <p style="margin-top:14px"><strong>Explicitly deferred at user direction, before implementation:</strong></p>
+          <div class="tag-row">
+            <span class="tag gap">PHASE-04 real-model spend</span>
+            <span class="tag gap">PHASE-05 calc composition</span>
+            <span class="tag gap">PHASE-06 table ingestion</span>
+          </div>
+          <p style="margin-top:14px">PHASE-04 requires a real, billed <code>claude-code</code> subscription call (capped at $1); PHASE-05 and PHASE-06 were both gated behind it in the original plan's dependency chain, so all three were cut from this push's scope in one decision rather than three.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="assumptions-constraints">
+      <div class="section-header">
+        <div>
+          <div class="section-index">04 / Assumptions &amp; Constraints</div>
+          <h2 class="section-title">Assumptions &amp; Constraints</h2>
+        </div>
+      </div>
+      <div class="dual-grid">
+        <div class="subcard">
+          <h3>Binding assumptions carried from the plan</h3>
+          <ul>
+            <li><strong>ASM-001/002:</strong> a document's <code>text_blocks</code> and <code>headings</code> are aligned by construction, one block per heading; chunks cap at 2,000 characters with 200-character overlap and an 80-character minimum.</li>
+            <li><strong>ASM-003/004:</strong> any corpus document not explicitly mapped in <code>configs/corpus_families.yaml</code> defaults to the <code>wte</code> methodology family; a family-filtered search that returns nothing falls back to an unfiltered search with a loud warning, rather than failing silently.</li>
+            <li><strong>DEC-003:</strong> the legacy page-fragment fallback (<code>_find_content_page</code>) is retained, not deleted — some documents' alignment check fails and must still degrade gracefully rather than yielding nothing.</li>
+          </ul>
+        </div>
+        <div class="subcard">
+          <h3>Constraints held throughout</h3>
+          <ul>
+            <li>Every phase except the (deferred) real-model phase had to be fully verifiable offline — no API keys, no network calls, no Ollama dependency.</li>
+            <li><code>ruff check .</code> and <code>ruff format --check .</code> are CI gates and had to pass clean at the end of every phase.</li>
+            <li>A stray <code>PYTHONPATH</code> from an unrelated local tool (a "hermes" agent venv) silently redirects Python imports to the wrong site-packages on this machine; every test invocation in this push explicitly cleared it first.</li>
+            <li><code>data/index/</code> and <code>data/corpus/</code> are both gitignored — rebuilding the index changes no file the repository tracks, so the numbers in this report are locally measured, not committed artifacts.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="methodology">
+      <div class="section-header">
+        <div>
+          <div class="section-index">05 / Methodology</div>
+          <h2 class="section-title">Methodology</h2>
+        </div>
+      </div>
+      <div class="narrative">
+        <p>Each phase was assigned to a separate agent working in its own isolated git worktree, so PHASE-01 (retrieval diagnostics) and PHASE-03 (export rendering) — independent per the plan — could run concurrently without file collisions, while PHASE-02 (which depends on PHASE-01's code) was launched only after PHASE-01 was committed to the branch it forked from. Every phase followed red/green TDD: the plan's own test specifications were implemented first, run to confirm they failed against the old code, then made to pass with the minimum implementation the specification called for. Each phase's diff was reviewed, merged into <code>main</code>, re-verified against the full test suite and linter <em>on the integrated tree</em> (not just in isolation), and committed separately before the next dependent phase began — so a failure at any point would leave the tree at a known-good prior commit rather than a half-merged state.</p>
+      </div>
+      <div class="stat-grid">
+        <div class="stat">
+          <div class="stat-label">Orientation</div>
+          <div class="stat-value">3 of 6 phases</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Execution</div>
+          <div class="stat-value">parallel worktrees</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Evidence Rule</div>
+          <div class="stat-value">no invented data</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="phase-analysis">
+      <div class="section-header">
+        <div>
+          <div class="section-index">06 / Phase-by-Phase Analysis</div>
+          <h2 class="section-title">Phase-by-Phase Analysis</h2>
+        </div>
+      </div>
+      <div class="phase-grid">
+        <div class="subcard">
+          <h3>PHASE-01 — Make Corpus Health Measurable <span class="tag done" style="margin-left:6px">commit 8b77742</span></h3>
+          <p>Before touching the indexer, built the instrument to prove whether later changes worked: <code>RetrievalIndex.build()</code> now tracks rows-per-document and surfaces any document that yields zero indexable sections as a loud warning instead of vanishing silently; a new <code>index_health()</code> diagnostic and <code>pdd-agent index-report</code> CLI command report duplication rate, truncation, and document coverage on demand. Run against the pre-rebuild index, it reproduced the research brief's numbers exactly: 1,015 rows, 270 distinct texts, 73.4% duplication, 13 of 17 documents. 16 new tests, all passing.</p>
+        </div>
+        <div class="subcard">
+          <h3>PHASE-03 — Render Prose <em>and</em> Tables <span class="tag done" style="margin-left:6px">commit fdc32f5</span></h3>
+          <p>Fixed a real defect: attaching a structured table to a section used to <em>replace</em> its narrative text entirely, which is why calc tables had been restricted to only two sections. Prose now always renders first, with any resolvable table following it. Added audit-history front matter and four new table producers (proponent, applicability, GHG project-boundary, fixed monitoring parameters) driven by the plan's S-3 specification, taking the DOCX from 3 of 11 Verra table types wired to 8 of 11. 70 targeted tests passing, manually verified end-to-end on a Soc Son export.</p>
+        </div>
+        <div class="subcard">
+          <h3>PHASE-02 — Rebuild the Index on Real Section Spans <span class="tag done" style="margin-left:6px">commit d595e31</span></h3>
+          <p>The core fix. Replaced whole-page indexing with true section-span chunking sourced from each document's pre-parsed <code>text_blocks</code>, keeping the old page-fragment path as a documented per-document fallback. Added methodology-family filtering (so a rice project stops citing waste-to-energy PDDs as provenance) and finally populated two index columns that had silently always been empty. Duplication fell from 73.4% to 2.7%; mean chunk length rose from 498 to 1,068 characters. One retrieval-diversity regression, caused by the new multi-chunk-per-document reality colliding with an old single-chunk-per-document query assumption, was caught and fixed directly in <code>main</code> before commit (see Findings).</p>
+        </div>
+        <div class="subcard">
+          <h3>Deferred — PHASE-04, 05, 06 <span class="tag gap" style="margin-left:6px">not started</span></h3>
+          <p>PHASE-04 (one real, $1-capped <code>claude-code</code> section draft), PHASE-05 (feeding the ACM0022 engine real waste-composition data and fixing a mass-conservation bug), and PHASE-06 (table-aware PDF ingestion behind an optional dependency) remain exactly as specified in the plan file, untouched. PHASE-04 was a spend-bounded smoke check rather than a hard code dependency for PHASE-05 — a future session pulling PHASE-05 forward should re-read its own Dependencies note before assuming it still needs PHASE-04 to have run first.</p>
+        </div>
+      </div>
+      <div class="diagram-frame compact-diagram">
+        <pre class="mermaid">
+flowchart LR
+    P1["PHASE-01\nindex-report\nmeasurement tool"] --> P2["PHASE-02\nreal section-span\nchunking"]
+    P3["PHASE-03\nprose + tables\n(independent)"]
+    P2 --> P4["PHASE-04\n$1 real-model\nsmoke test"]
+    P3 --> P4
+    P4 --> P5["PHASE-05\ncalc composition\n+ mass conservation"]
+    P5 --> P6["PHASE-06\ntable-aware\ningestion"]
+    style P1 fill:#efe4d0,stroke:#9d6b37
+    style P2 fill:#efe4d0,stroke:#9d6b37
+    style P3 fill:#efe4d0,stroke:#9d6b37
+    style P4 fill:#fdf3ef,stroke:#a53a2c,stroke-dasharray: 4 3
+    style P5 fill:#fdf3ef,stroke:#a53a2c,stroke-dasharray: 4 3
+    style P6 fill:#fdf3ef,stroke:#a53a2c,stroke-dasharray: 4 3
+        </pre>
+      </div>
+    </section>
+
+    <section class="section" id="findings-recommendation">
+      <div class="section-header">
+        <div>
+          <div class="section-index">07 / Findings &amp; Recommendation</div>
+          <h2 class="section-title">Findings &amp; Recommendation</h2>
+        </div>
+      </div>
+      <div class="narrative">
+        <p><strong>The core retrieval defect is fixed for 13 of 17 documents.</strong> Duplication rate dropped from 73.4% to 2.7%, well inside the plan's ≤15% target; mean indexed chunk length rose from 498 to 1,068 characters, above the plan's 800-character target. A live check of section 4.4's example retrieval went from 2 distinct texts drawn from 1 document to 5 distinct texts across 5 documents.</p>
+        <p><strong>An orchestrator-level fix beyond the phase's own diff.</strong> The PHASE-02 implementation surfaced, rather than silently patched over, a genuine tension in the plan's own specification: <code>get_section_examples()</code>'s query ranked results alphabetically by document name and took the first <em>k</em> — a design that assumed roughly one chunk per document per subsection, true before this phase, false after it. Once a document could legitimately contribute several chunks to one subsection, the alphabetically-first document(s) could exhaust the result budget before a second document was ever reached, which is exactly what was measured (2 distinct documents, below the plan's own ≥3 threshold). This was fixed directly on <code>main</code>: results are now ranked <em>within</em> each document by chunk position before slicing to <em>k</em>, so the top-k spans documents before it takes a second chunk from the same one. Re-measured afterward: 5 distinct documents.</p>
+        <p><strong>An honest, unresolved gap: 4 of 17 documents still yield nothing, including the methodology text itself.</strong> These four <code>.norm.json</code> files were found to carry a single collapsed one-block body alongside an unrelated 50-entry heading list left over from an older extraction pass — the two never had real content to align in the first place. PHASE-02's own alignment check correctly detects this and falls back to the legacy page-fragment path, which also fails for the same underlying reason. The defect lives in <code>ingest/normalize.py</code>'s heading detection for these specific PDFs, a layer explicitly out of scope for this phase (and one the plan's own risk register anticipated by name). No attempt was made to patch around it from inside the retrieval layer — the recommendation is to fix heading extraction at the source, not to loosen a downstream check to hide the gap.</p>
+        <p><strong>The export defect is fixed cleanly.</strong> Structured tables no longer delete the prose they were meant to accompany; the DOCX now reflects what registered PDDs actually look like — narrative and table together — in 8 of 11 Verra table sections.</p>
+      </div>
+      <div class="chart-frame">
+        <canvas id="beforeAfterChart"></canvas>
+      </div>
+      <script>
+        window.addEventListener('DOMContentLoaded', function () {
+          if (!window.Chart) { return; }
+          var ctx = document.getElementById('beforeAfterChart');
+          if (!ctx) { return; }
+          new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: ['Duplication rate (%)', 'Mean chunk length (chars, /10)', 'Documents indexed', '4.4 distinct example docs'],
+              datasets: [
+                {
+                  label: 'Before PHASE-02',
+                  data: [73.4, 49.8, 13, 1],
+                  backgroundColor: 'rgba(178, 58, 46, 0.55)',
+                  borderColor: 'rgba(178, 58, 46, 0.9)',
+                  borderWidth: 1,
+                  animation: false
+                },
+                {
+                  label: 'After PHASE-02',
+                  data: [2.7, 106.8, 13, 5],
+                  backgroundColor: 'rgba(59, 111, 118, 0.55)',
+                  borderColor: 'rgba(59, 111, 118, 0.9)',
+                  borderWidth: 1,
+                  animation: false
+                }
+              ]
+            },
+            options: {
+              animation: false,
+              resizeDelay: 150,
+              normalized: true,
+              maintainAspectRatio: false,
+              responsive: true,
+              plugins: {
+                legend: { position: 'bottom' },
+                title: { display: true, text: 'Retrieval index: measured before / after (mean chunk length shown /10 for scale)' }
+              },
+              scales: {
+                y: { beginAtZero: true }
+              }
+            }
+          });
+        });
+      </script>
+    </section>
+
+    <section class="section" id="implementation-path">
+      <div class="section-header">
+        <div>
+          <div class="section-index">08 / Implementation Path</div>
+          <h2 class="section-title">Implementation Path</h2>
+        </div>
+      </div>
+      <div class="phase-grid">
+        <div class="subcard">
+          <h3>Next: fix heading detection in <code>normalize.py</code></h3>
+          <p>The 4-document gap is now root-caused, not just observed. The next concrete step is a targeted, evidence-driven look at why <code>_build_headings_and_blocks()</code> finds zero real headings in these four specific PDFs while a separate, older extraction path still finds 50 — likely a PDF-structure edge case (image-based headings, unusual font encoding, or a layout this parser doesn't expect). This is squarely a <code>normalize.py</code> change, independent of anything in this push.</p>
+        </div>
+        <div class="subcard">
+          <h3>Then: resume PHASE-04 when ready to spend</h3>
+          <p>With PHASE-02 and PHASE-03 both landed, the plan's <code>--only-section</code> smoke-test flag is unblocked. Running it (~$0.20 against a real Claude subscription, capped at $1) is the cheapest way to catch the class of output defect that only ever surfaces on real model output — as it did twice before in this project's history.</p>
+        </div>
+        <div class="subcard">
+          <h3>Then: PHASE-05, the calc mass-conservation fix</h3>
+          <p>Independently valuable and not code-blocked by PHASE-04 (only originally sequenced after it). Fixes a real, previously measured bug: 33% of Soc Son's declared waste throughput is silently dropped before it reaches the emissions engine, and gives the engine the registered PDD's own published waste composition instead of guessing an even split.</p>
+        </div>
+        <div class="subcard">
+          <h3>Last: PHASE-06, table-aware ingestion</h3>
+          <p>Lowest priority in the original plan and the only phase adding a new dependency (<code>pdfplumber</code>). Worth revisiting once the four-document gap above is closed, since better table extraction may also help recover heading structure in those same problem documents.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="risks-open-questions">
+      <div class="section-header">
+        <div>
+          <div class="section-index">09 / Risks / Open Questions</div>
+          <h2 class="section-title">Risks / Open Questions</h2>
+        </div>
+      </div>
+      <div class="dual-grid">
+        <div class="subcard">
+          <h3>Open questions</h3>
+          <ul>
+            <li>Is the normalize.py heading-detection failure specific to these 4 PDFs' structure, or a broader class the other 13 happened to avoid? Not yet investigated.</li>
+            <li>Now that retrieval draws from real, longer section text, has drafted-section quality on a real model materially changed? Untestable without running PHASE-04.</li>
+            <li>Does the S-3 GHG project-boundary table (authored from methodology knowledge, per the plan's ASM-005) actually match the ACM0022 source document's Section 5? It cannot be verified until the 4-document gap is closed and that document is retrievable — currently unverified.</li>
+          </ul>
+        </div>
+        <div class="subcard">
+          <h3>Risks carried forward</h3>
+          <ul>
+            <li>Re-chunking changed the text injected into every drafting prompt. No committed artifact depends on it today (<code>data/index/</code> is gitignored, the demo provider ignores retrieval content), but any future real-model run will see materially different grounding than past runs did.</li>
+            <li>The retrieval-diversity fix (ranking by chunk position per document) was made and verified by the orchestrating session, not by the phase agent that authored the surrounding diff — it is a small, isolated, well-tested change, but it sits slightly outside the original per-phase review boundary and is worth a second look.</li>
+            <li>PHASE-05's mass-conservation fix is expected to move Soc Son's crediting-period total in a currently unpredictable net direction (the plan's own risk register flags this explicitly) — deferring it here means that uncertainty is still fully open.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="appendices-evidence">
+      <div class="section-header">
+        <div>
+          <div class="section-index">10 / Appendices / Evidence Notes</div>
+          <h2 class="section-title">Appendices / Evidence Notes</h2>
+        </div>
+      </div>
+      <div class="appendix-grid">
+        <div class="technical-frame" style="grid-column: 1 / -1;">
+          <table>
+            <thead>
+              <tr><th>Commit</th><th>Phase</th><th>Scope</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>8b77742</code></td><td>PHASE-01</td><td>Corpus health measurement: <code>index_health()</code>, <code>pdd-agent index-report</code>, zero-yield document warnings</td></tr>
+              <tr><td><code>fdc32f5</code></td><td>PHASE-03</td><td>Prose+table dispatch, audit-history front matter, S-3 GHG boundary rows, 4 new table producers, 5.1/5.2 monitoring-parameter split</td></tr>
+              <tr><td><code>d595e31</code></td><td>PHASE-02</td><td>S-1 section-span chunking, document_family/chunk_index columns, family-filtered retrieval, content_class/review_sensitivity population, retrieval-diversity fix</td></tr>
+              <tr><td><code>7f9fb56</code></td><td>Docs</td><td>Plan/research files tracked, <code>activeContext.md</code> results recorded</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="subcard">
+          <h3>Test suite state</h3>
+          <p>Baseline: 798 passed, 7 deselected, 3 xfailed. Final: <strong>823 passed, 7 deselected, 3 xfailed, 0 failed</strong> — +25 net new tests across the three phases, no regressions, no widened tolerances, no deleted assertions. <code>ruff check .</code> and <code>ruff format --check .</code> clean on the final tree.</p>
+        </div>
+        <div class="subcard">
+          <h3>Index metrics, measured directly</h3>
+          <p>Local <code>data/index/corpus.fts.db</code> (gitignored, not a committed artifact): 1,015 → 2,660 rows; 270 → 2,588 distinct texts; 73.4% → 2.7% duplication; 498.0 → 1,068.1 mean chars; 13 → 13 documents (4 still missing, root-caused above).</p>
+        </div>
+      </div>
+      <div class="footer-note">designed for html first, printable without reconstruction</div>
+    </section>
+  </main>
+  <script>
+    (function() {
+      const chartCanvases = document.querySelectorAll('canvas');
+      chartCanvases.forEach((canvas) => {
+        canvas.classList.add('report-chart');
+        const parent = canvas.parentElement;
+        if (parent && parent.classList.contains('technical-frame') && !parent.classList.contains('chart-frame')) {
+          parent.classList.add('chart-frame');
+        }
+      });
+    })();
+
+    if (window.Chart) {
+      Chart.defaults.devicePixelRatio = 1;
+      Chart.defaults.animation = false;
+      Chart.defaults.resizeDelay = 150;
+      Chart.defaults.normalized = true;
+      Chart.defaults.maintainAspectRatio = false;
+      Chart.defaults.responsive = true;
+      window.__REPORT_CHART_DEFAULTS__ = {
+        animation: false,
+        resizeDelay: 150,
+        normalized: true,
+        maintainAspectRatio: false,
+        responsive: true
+      };
+    }
+  </script>
+</body>
+</html>
