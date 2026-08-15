@@ -70,6 +70,52 @@ def _best_match(heading: str, alias_index: dict[str, tuple[str, str]]) -> tuple[
     return None
 
 
+_CHUNK_MAX_CHARS = 2000
+_CHUNK_OVERLAP_CHARS = 200
+_CHUNK_MIN_CHARS = 80
+
+
+def _chunk_block(body: str) -> list[str]:
+    """Split one section block's text into indexable chunks (S-1, ASM-002).
+
+    At most ``_CHUNK_MAX_CHARS`` characters per chunk, carrying
+    ``_CHUNK_OVERLAP_CHARS`` characters from the tail of the previous chunk
+    into the next so a sentence spanning a chunk boundary stays retrievable.
+    Chunks shorter than ``_CHUNK_MIN_CHARS`` are discarded unless the body
+    yields only a single chunk.
+    """
+    if len(body) <= _CHUNK_MAX_CHARS:
+        return [body]
+
+    chunks: list[str] = []
+    buffer = ""
+
+    def _push(text: str) -> None:
+        nonlocal buffer
+        remaining = text
+        while remaining:
+            candidate = buffer + remaining
+            if len(candidate) <= _CHUNK_MAX_CHARS:
+                buffer = candidate
+                return
+            room = _CHUNK_MAX_CHARS - len(buffer)
+            if room > 0:
+                buffer += remaining[:room]
+                remaining = remaining[room:]
+            chunks.append(buffer)
+            buffer = buffer[-_CHUNK_OVERLAP_CHARS:]
+
+    for paragraph in body.split("\n"):
+        _push(("\n" if buffer else "") + paragraph)
+
+    if buffer:
+        chunks.append(buffer)
+
+    if len(chunks) > 1:
+        chunks = [c for c in chunks if len(c) >= _CHUNK_MIN_CHARS]
+    return chunks
+
+
 def parse_document(
     norm_json_path: Path,
     schema_path: Path | None = None,
@@ -83,6 +129,11 @@ def parse_document(
       - sections_mapped: list of matched section info
       - sections_unmapped: list of unmapped headings
       - coverage_summary: dict mapping section_id -> coverage_level
+      - section_spans: list of chunked section-body texts built from real
+        section spans (S-1), one entry per (heading, chunk) pair. Empty when
+        the document's `text_blocks`/`headings` do not align (S-1 step 3);
+        callers should fall back to `sections_mapped`/`text_preview` in that
+        case.
     """
     if schema_path is None:
         schema_path = (
@@ -170,6 +221,60 @@ def parse_document(
                 }
             )
 
+    section_spans: list[dict[str, Any]] = []
+    text_blocks: list[dict[str, Any]] = doc.get("text_blocks", [])
+    blocks = text_blocks
+    if blocks and blocks[0].get("heading", "") == "":
+        blocks = blocks[1:]
+
+    aligned = len(blocks) == len(headings) and all(
+        blocks[k].get("heading", "") == headings[k]["text"] for k in range(len(headings))
+    )
+    if not aligned:
+        logger.warning(
+            "corpus_block_alignment_failed",
+            document=doc_name,
+            blocks=len(blocks),
+            headings=len(headings),
+        )
+    else:
+        for k, h in enumerate(headings):
+            body = blocks[k].get("text", "").strip()
+            if not body:
+                continue
+            h_page: int = h.get("page", 1)
+            if _is_toc_page(page_texts.get(h_page, "")):
+                continue
+            match = _best_match(h["text"], alias_index)
+            if match:
+                sid, ssid = match
+                span_heading = (
+                    sections[sid]["sub_sections"][ssid]["heading"]
+                    if ssid and ssid in sections[sid]["sub_sections"]
+                    else sections[sid]["canonical_heading"]
+                )
+            else:
+                # No canonical PDD section matches this heading — e.g. a
+                # methodology document (ACM0022) whose own numbered headings
+                # ("5. Baseline Methodology") never appear in the WTE PDD
+                # schema. Still index the body under an empty section_id so
+                # full-text search (unfiltered by section_id) can find it;
+                # section-scoped lookups correctly skip it since it isn't a
+                # match for any canonical section.
+                sid, ssid = "", ""
+                span_heading = h["text"]
+            for chunk_index, chunk_text in enumerate(_chunk_block(body)):
+                section_spans.append(
+                    {
+                        "canonical_section_id": sid,
+                        "canonical_sub_section_id": ssid or None,
+                        "canonical_heading": span_heading,
+                        "heading_text": h["text"],
+                        "chunk_index": chunk_index,
+                        "text": chunk_text,
+                    }
+                )
+
     coverage: dict[str, str] = {}
     for sid in sections:
         sub_count = len(sections[sid]["sub_sections"])
@@ -197,6 +302,7 @@ def parse_document(
         "sections_mapped": sections_mapped,
         "sections_unmapped": sections_unmapped,
         "coverage": coverage,
+        "section_spans": section_spans,
     }
 
 

@@ -13,10 +13,11 @@ from pathlib import Path
 from typing import Any
 
 import sqlite3
+import yaml
 
 logger = structlog.get_logger()
 
-_SCHEMA_VERSION = "1"
+_SCHEMA_VERSION = "2"
 
 
 def _row_to_doc(row: tuple) -> dict[str, Any]:
@@ -29,7 +30,34 @@ def _row_to_doc(row: tuple) -> dict[str, Any]:
         "text": row[5],
         "content_class": row[6],
         "review_sensitivity": row[7],
+        "document_family": row[8],
+        "chunk_index": row[9],
     }
+
+
+def load_corpus_families(path: Path | None = None) -> tuple[str, dict[str, str]]:
+    """Load the document-stem -> methodology-family-slug mapping (ASM-003).
+
+    Returns ``(default_family, mapping)``. Missing file -> ``("wte", {})``;
+    never raises.
+    """
+    if path is None:
+        path = Path(__file__).parent.parent.parent.parent / "configs" / "corpus_families.yaml"
+    path = Path(path)
+
+    if not path.exists():
+        return "wte", {}
+
+    try:
+        with open(path, encoding="utf-8") as f:
+            raw = yaml.safe_load(f) or {}
+    except (OSError, yaml.YAMLError) as exc:
+        logger.warning("corpus_families_load_failed", path=str(path), error=str(exc))
+        return "wte", {}
+
+    default_family = raw.get("default_family") or "wte"
+    documents = raw.get("documents") or {}
+    return default_family, documents
 
 
 class RetrievalIndex:
@@ -69,7 +97,7 @@ class RetrievalIndex:
         self, normalized_dir: Path | None = None, schema_path: Path | None = None
     ) -> dict[str, Any]:
         """Walk the normalized corpus, extract text blocks, and index into FTS5."""
-        from pdd_agent.parse.section_parser import parse_corpus
+        from pdd_agent.parse.section_parser import _load_schema, parse_corpus
 
         if normalized_dir is None:
             normalized_dir = (
@@ -93,12 +121,26 @@ class RetrievalIndex:
                 text,
                 content_class,
                 review_sensitivity,
+                document_family,
+                chunk_index,
                 tokenize='porter unicode61'
             )
             """
         )
 
         parsed = parse_corpus(normalized_dir, schema_path)
+        schema_sections = _load_schema(schema_path)
+        default_family, family_map = load_corpus_families()
+
+        def _classification(sid: str, ssid: str) -> tuple[str, str]:
+            sec = schema_sections.get(sid, {})
+            sub = sec.get("sub_sections", {}).get(ssid, {}) if ssid else {}
+            content_class = sub.get("content_class") or sec.get("content_class") or ""
+            review_sensitivity = (
+                sub.get("review_sensitivity") or sec.get("review_sensitivity") or ""
+            )
+            return content_class, review_sensitivity
+
         docs_indexed = 0
         chunks_indexed = 0
         rows_by_document: dict[str, int] = {}
@@ -112,24 +154,70 @@ class RetrievalIndex:
             docs_indexed += 1
             doc_name = doc_result["document_name"]
             rows_by_document[doc_name] = 0
-            for entry in doc_result.get("sections_mapped", []):
-                sid = entry["canonical_section_id"]
-                ssid = entry.get("canonical_sub_section_id") or ""
-                heading = entry.get("canonical_heading", "")
-                text_preview = entry.get("text_preview", "")
-                if not text_preview:
-                    continue
-                text_snippet = text_preview[:500]
-                conn.execute(
-                    """
-                    INSERT INTO sections_fts
-                        (section_id, sub_section_id, document_name, canonical_heading, text, content_class, review_sensitivity)
-                    VALUES (?, ?, ?, ?, ?, ?, ?)
-                    """,
-                    (sid, ssid, doc_name, heading, text_snippet, "", ""),
-                )
-                chunks_indexed += 1
-                rows_by_document[doc_name] += 1
+            family = family_map.get(doc_name, default_family)
+
+            spans = doc_result.get("section_spans") or []
+            if spans:
+                for entry in spans:
+                    sid = entry["canonical_section_id"]
+                    ssid = entry.get("canonical_sub_section_id") or ""
+                    heading = entry.get("canonical_heading", "")
+                    text = entry.get("text", "")
+                    if not text:
+                        continue
+                    content_class, review_sensitivity = _classification(sid, ssid)
+                    conn.execute(
+                        """
+                        INSERT INTO sections_fts
+                            (section_id, sub_section_id, document_name, canonical_heading, text,
+                             content_class, review_sensitivity, document_family, chunk_index)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        """,
+                        (
+                            sid,
+                            ssid,
+                            doc_name,
+                            heading,
+                            text,
+                            content_class,
+                            review_sensitivity,
+                            family,
+                            entry.get("chunk_index", 0),
+                        ),
+                    )
+                    chunks_indexed += 1
+                    rows_by_document[doc_name] += 1
+            else:
+                for entry in doc_result.get("sections_mapped", []):
+                    sid = entry["canonical_section_id"]
+                    ssid = entry.get("canonical_sub_section_id") or ""
+                    heading = entry.get("canonical_heading", "")
+                    text_preview = entry.get("text_preview", "")
+                    if not text_preview:
+                        continue
+                    text_snippet = text_preview[:500]
+                    content_class, review_sensitivity = _classification(sid, ssid)
+                    conn.execute(
+                        """
+                        INSERT INTO sections_fts
+                            (section_id, sub_section_id, document_name, canonical_heading, text,
+                             content_class, review_sensitivity, document_family, chunk_index)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        """,
+                        (
+                            sid,
+                            ssid,
+                            doc_name,
+                            heading,
+                            text_snippet,
+                            content_class,
+                            review_sensitivity,
+                            family,
+                            0,
+                        ),
+                    )
+                    chunks_indexed += 1
+                    rows_by_document[doc_name] += 1
 
         conn.execute("INSERT INTO sections_fts(sections_fts) VALUES('optimize')")
         conn.commit()
@@ -155,6 +243,7 @@ class RetrievalIndex:
         query: str,
         section_id: str | None = None,
         content_class: str | None = None,
+        document_family: str | None = None,
         k: int = 5,
     ) -> list[dict[str, Any]]:
         """BM25 full-text search with optional filters.
@@ -177,12 +266,16 @@ class RetrievalIndex:
         if content_class:
             where_parts.append("content_class = ?")
             args.append(content_class)
+        if document_family:
+            where_parts.append("document_family = ?")
+            args.append(document_family)
 
-        where_clause = "WHERE " + " AND ".join(where_parts) if where_parts else ""
+        where_clause = " AND " + " AND ".join(where_parts) if where_parts else ""
 
         sql = f"""
             SELECT rowid, section_id, sub_section_id, document_name,
                    canonical_heading, text, content_class, review_sensitivity,
+                   document_family, chunk_index,
                    {rank} AS score
               FROM sections_fts
              WHERE sections_fts MATCH ?
@@ -191,7 +284,7 @@ class RetrievalIndex:
              LIMIT ?
         """
         rows = conn.execute(sql, [query, *args, k]).fetchall()
-        return [_row_to_doc(row[:8]) | {"score": row[8]} for row in rows]
+        return [_row_to_doc(row[:10]) | {"score": row[10]} for row in rows]
 
     def search_by_heading(
         self,
@@ -205,7 +298,8 @@ class RetrievalIndex:
         rows = conn.execute(
             """
             SELECT rowid, section_id, sub_section_id, document_name,
-                   canonical_heading, text, content_class, review_sensitivity
+                   canonical_heading, text, content_class, review_sensitivity,
+                   document_family, chunk_index
               FROM sections_fts
              WHERE canonical_heading LIKE ?
              ORDER BY document_name
@@ -219,35 +313,48 @@ class RetrievalIndex:
         self,
         section_id: str,
         sub_section_id: str | None = None,
+        document_family: str | None = None,
         k: int = 5,
     ) -> list[dict[str, Any]]:
         """Retrieve example text for a given section/sub-section across corpus docs."""
         conn = self._open()
 
+        where_parts = ["section_id = ?"]
+        args: list[Any] = [section_id]
         if sub_section_id:
-            rows = conn.execute(
-                """
+            where_parts.append("sub_section_id = ?")
+            args.append(sub_section_id)
+        if document_family:
+            where_parts.append("document_family = ?")
+            args.append(document_family)
+
+        where_clause = " AND ".join(where_parts)
+        # One heading/sub-section can now yield several chunks per document (S-1
+        # chunking), so a plain `ORDER BY document_name LIMIT k` can exhaust k on
+        # the alphabetically-first document(s) alone. Rank rows within each
+        # document by chunk_index first, so the top-k spans documents before it
+        # takes a second chunk from the same one.
+        rows = conn.execute(
+            f"""
+            WITH ranked AS (
                 SELECT rowid, section_id, sub_section_id, document_name,
-                       canonical_heading, text, content_class, review_sensitivity
+                       canonical_heading, text, content_class, review_sensitivity,
+                       document_family, chunk_index,
+                       ROW_NUMBER() OVER (
+                           PARTITION BY document_name ORDER BY chunk_index
+                       ) AS doc_rank
                   FROM sections_fts
-                 WHERE section_id = ? AND sub_section_id = ?
-                 ORDER BY document_name
-                 LIMIT ?
-                """,
-                [section_id, sub_section_id, k],
-            ).fetchall()
-        else:
-            rows = conn.execute(
-                """
-                SELECT rowid, section_id, sub_section_id, document_name,
-                       canonical_heading, text, content_class, review_sensitivity
-                  FROM sections_fts
-                 WHERE section_id = ?
-                 ORDER BY document_name
-                 LIMIT ?
-                """,
-                [section_id, k],
-            ).fetchall()
+                 WHERE {where_clause}
+            )
+            SELECT rowid, section_id, sub_section_id, document_name,
+                   canonical_heading, text, content_class, review_sensitivity,
+                   document_family, chunk_index
+              FROM ranked
+             ORDER BY doc_rank, document_name
+             LIMIT ?
+            """,
+            [*args, k],
+        ).fetchall()
         return [_row_to_doc(row) for row in rows]
 
     def stats(self) -> dict[str, Any]:

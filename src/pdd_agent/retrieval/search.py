@@ -109,6 +109,7 @@ def search(
     content_class: str | None = None,
     k: int = DEFAULT_K,
     index: RetrievalIndex | None = None,
+    document_family: str | None = None,
 ) -> list[RetrievalResult]:
     """Run BM25 search against the corpus index.
 
@@ -117,6 +118,9 @@ def search(
     content_class       — filter by content class (e.g. "METHODOLOGY_DEPENDENT")
     k                  — number of results to return (max 50)
     index              — optional index instance (default: global singleton)
+    document_family    — filter to a methodology family (e.g. "rice"); falls back
+                          to an unfiltered search with a warning when the
+                          filtered search returns nothing (ASM-004)
     """
     if index is None:
         index = get_retrieval_index()
@@ -132,11 +136,8 @@ def search(
     k = min(k, MAX_K)
     terms = cleaned.split()
 
-    raw = index.search(cleaned, section_id=section_id, content_class=content_class, k=k)
-
-    results: list[RetrievalResult] = []
-    for hit in raw:
-        results.append(
+    def _to_results(raw: list[dict[str, Any]]) -> list[RetrievalResult]:
+        return [
             RetrievalResult(
                 section_id=hit["section_id"],
                 sub_section_id=hit.get("sub_section_id") or "",
@@ -148,7 +149,23 @@ def search(
                 score=hit.get("score", 0.0),
                 matched_terms=terms,
             )
-        )
+            for hit in raw
+        ]
+
+    raw = index.search(
+        cleaned,
+        section_id=section_id,
+        content_class=content_class,
+        document_family=document_family,
+        k=k,
+    )
+    results = _to_results(raw)
+
+    if not results and document_family:
+        logger.warning("retrieval_family_fallback", family=document_family, section_id=section_id)
+        raw = index.search(cleaned, section_id=section_id, content_class=content_class, k=k)
+        results = _to_results(raw)
+
     return results
 
 
@@ -157,8 +174,14 @@ def get_examples_for_section(
     sub_section_id: str | None = None,
     k: int = DEFAULT_K,
     index: RetrievalIndex | None = None,
+    document_family: str | None = None,
 ) -> list[RetrievalResult]:
-    """Get non-ranked example texts for a specific section/sub-section."""
+    """Get non-ranked example texts for a specific section/sub-section.
+
+    document_family — filter to a methodology family; falls back to an
+    unfiltered lookup with a warning when the filtered lookup returns
+    nothing (ASM-004).
+    """
     if index is None:
         index = get_retrieval_index()
 
@@ -168,10 +191,17 @@ def get_examples_for_section(
         _warn_no_index_once()
         return []
 
-    if sub_section_id:
-        raw = index.get_section_examples(section_id, sub_section_id=sub_section_id, k=k)
-    else:
-        raw = index.get_section_examples(section_id, k=k)
+    def _fetch(family: str | None) -> list[dict[str, Any]]:
+        if sub_section_id:
+            return index.get_section_examples(
+                section_id, sub_section_id=sub_section_id, document_family=family, k=k
+            )
+        return index.get_section_examples(section_id, document_family=family, k=k)
+
+    raw = _fetch(document_family)
+    if not raw and document_family:
+        logger.warning("retrieval_family_fallback", family=document_family, section_id=section_id)
+        raw = _fetch(None)
 
     return [
         RetrievalResult(

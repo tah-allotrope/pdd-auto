@@ -5,12 +5,15 @@ from __future__ import annotations
 import json
 import sqlite3
 
+import structlog.testing
+
 from pdd_agent.retrieval.search import (
     _clean_query,
     _highlight,
     RetrievalResult,
     get_examples_for_section,
     get_section_heading_examples,
+    search,
 )
 
 
@@ -222,6 +225,129 @@ class TestIndexHealth:
 
         assert report["rows_at_500_chars"] == 2
         assert report["median_text_chars"] == 500
+
+
+def _make_fts_db_v2(path, rows):
+    """Create a `sections_fts` table at `path` including the PHASE-02 columns.
+
+    Each row is a 9-tuple: (section_id, sub_section_id, document_name,
+    canonical_heading, text, content_class, review_sensitivity,
+    document_family, chunk_index) — matching the FTS5 column order used by
+    ``RetrievalIndex.build()`` after PHASE-02.
+    """
+    conn = sqlite3.connect(str(path))
+    conn.execute(
+        """
+        CREATE VIRTUAL TABLE sections_fts USING fts5(
+            section_id,
+            sub_section_id,
+            document_name,
+            canonical_heading,
+            text,
+            content_class,
+            review_sensitivity,
+            document_family,
+            chunk_index,
+            tokenize='porter unicode61'
+        )
+        """
+    )
+    conn.executemany(
+        """
+        INSERT INTO sections_fts
+            (section_id, sub_section_id, document_name, canonical_heading, text,
+             content_class, review_sensitivity, document_family, chunk_index)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        rows,
+    )
+    conn.commit()
+    conn.close()
+
+
+class TestDocumentFamilyFilter:
+    """Tests for the `document_family` filter and its ASM-004 fallback."""
+
+    def test_family_filter_restricts_results(self, tmp_path):
+        from pdd_agent.retrieval.index import RetrievalIndex
+
+        db_path = tmp_path / "family.fts.db"
+        _make_fts_db_v2(
+            db_path,
+            [
+                ("1", "", "alpha", "Heading", "waste management text alpha", "", "", "wte", 0),
+                ("1", "", "beta", "Heading", "waste management text beta", "", "", "rice", 0),
+            ],
+        )
+
+        idx = RetrievalIndex(db_path=db_path)
+        try:
+            results = idx.search("waste", document_family="rice")
+            assert results
+            assert all(r["document_name"] == "beta" for r in results)
+        finally:
+            idx.close()
+
+    def test_family_fallback_when_filtered_search_empty(self, tmp_path):
+        from pdd_agent.retrieval.index import RetrievalIndex
+
+        db_path = tmp_path / "fallback.fts.db"
+        _make_fts_db_v2(
+            db_path,
+            [
+                (
+                    "1",
+                    "",
+                    "alpha",
+                    "Heading",
+                    "termpresentonlyinwte content",
+                    "",
+                    "",
+                    "wte",
+                    0,
+                ),
+            ],
+        )
+
+        idx = RetrievalIndex(db_path=db_path)
+        try:
+            with structlog.testing.capture_logs() as logs:
+                results = search("termpresentonlyinwte", document_family="rice", index=idx)
+            assert len(results) > 0
+            assert any(entry.get("event") == "retrieval_family_fallback" for entry in logs)
+        finally:
+            idx.close()
+
+    def test_content_class_filter_returns_results(self, tmp_path):
+        """Regression: content_class was always inserted as "" (index.py:126),
+        so a content_class filter always returned zero results. PHASE-02 fixes
+        the population, so this filter must now find a matching row."""
+        from pdd_agent.retrieval.index import RetrievalIndex
+
+        db_path = tmp_path / "content_class.fts.db"
+        _make_fts_db_v2(
+            db_path,
+            [
+                (
+                    "3",
+                    "3.2",
+                    "doc",
+                    "Applicability",
+                    "waste applicability conditions text",
+                    "METHODOLOGY_DEPENDENT",
+                    "HIGH",
+                    "wte",
+                    0,
+                ),
+            ],
+        )
+
+        idx = RetrievalIndex(db_path=db_path)
+        try:
+            results = idx.search("waste", content_class="METHODOLOGY_DEPENDENT")
+            assert len(results) >= 1
+        finally:
+            idx.close()
 
 
 class TestRetrievalIndexBuildStats:

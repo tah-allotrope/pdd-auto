@@ -24,7 +24,7 @@ def built_index(tmp_path: Path) -> RetrievalIndex:
         """
         CREATE VIRTUAL TABLE sections_fts USING fts5(
             section_id, sub_section_id, document_name, canonical_heading,
-            text, content_class, review_sensitivity,
+            text, content_class, review_sensitivity, document_family, chunk_index,
             tokenize='porter unicode61'
         )
         """
@@ -32,9 +32,10 @@ def built_index(tmp_path: Path) -> RetrievalIndex:
     conn.execute(
         """
         INSERT INTO sections_fts
-            (section_id, sub_section_id, document_name, canonical_heading, text, content_class, review_sensitivity)
+            (section_id, sub_section_id, document_name, canonical_heading, text, content_class,
+             review_sensitivity, document_family, chunk_index)
         VALUES ('3', '3.3', 'test_doc', 'Project Boundary',
-                'waste incineration facility project boundary', '', '')
+                'waste incineration facility project boundary', '', '', 'wte', 0)
         """
     )
     conn.commit()

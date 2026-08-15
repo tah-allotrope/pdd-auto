@@ -129,7 +129,7 @@ Both are synthetic demos with a bold cover-page disclaimer — not real PDDs. Se
 - **`docs/vietnam-pdd-runbook.md`** — Operator rerun instructions for spreadsheet refreshes and future Vietnam candidates.
 
 ### Retrieval & Drafting (PHASE-03)
-- **`src/pdd_agent/retrieval/index.py`** — SQLite FTS5 BM25 index. `RetrievalIndex.build()` indexes the corpus once; `search()` and `get_section_examples()` query it.
+- **`src/pdd_agent/retrieval/index.py`** — SQLite FTS5 BM25 index. `RetrievalIndex.build()` indexes the corpus once, chunking real section spans at 2,000 characters with 200-character overlap (S-1) rather than truncated page fragments, and carries a `document_family` column for methodology-scoped retrieval; `search()` and `get_section_examples()` query it.
 - **`src/pdd_agent/retrieval/search.py`** — Query cleaning, BM25 ranking, centered excerpt highlighting.
 - **`src/pdd_agent/llm/provider.py`** — `BaseProvider` ABC, `NoopProvider` (placeholder), `DraftRun` persistence, and section-level provenance / synthetic-use metadata.
 - **`src/pdd_agent/phase06/assumptions.py`** — Companion assumptions-register loader plus section routing and assumption-burden reporting helpers.

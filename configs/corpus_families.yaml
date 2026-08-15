@@ -1,0 +1,5 @@
+# Maps a normalized corpus document stem (the .norm.json filename without its
+# extension) to a methodology-family slug: wte | rice | biochar | cookstove.
+# Any document not listed here defaults to "wte" (see default_family).
+default_family: wte
+documents: {}

@@ -2,16 +2,20 @@
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import pytest
+import structlog.testing
 
 from pdd_agent.parse.section_parser import (
     _build_alias_index,
     _best_match,
+    _chunk_block,
     _load_schema,
     _normalize_heading,
     parse_corpus,
+    parse_document,
     build_corpus_section_index,
     get_section_texts,
 )
@@ -184,3 +188,109 @@ class TestCoverageLevels:
         matched_subs = 3
         total_subs = sub_count
         assert 0 < matched_subs < total_subs
+
+
+class TestChunkBlock:
+    """Tests for `_chunk_block` (S-1 chunking: 2000/200/80 char rules)."""
+
+    def test_short_body_single_chunk(self):
+        body = "x" * 1500
+        chunks = _chunk_block(body)
+        assert len(chunks) == 1
+        assert chunks[0] == body
+
+    def test_long_body_multiple_chunks_with_overlap(self):
+        body = "x" * 5000
+        chunks = _chunk_block(body)
+        assert len(chunks) >= 3
+        assert all(len(c) <= 2000 for c in chunks)
+        assert chunks[1].startswith(chunks[0][-200:])
+
+    def test_minimum_length_does_not_suppress_only_chunk(self):
+        assert _chunk_block("short") == ["short"]
+
+
+def _write_norm_doc(path: Path, headings, text_blocks, pages) -> None:
+    path.write_text(
+        json.dumps({"headings": headings, "text_blocks": text_blocks, "pages": pages}),
+        encoding="utf-8",
+    )
+
+
+class TestSectionSpans:
+    """Tests for the S-1 section-span chunking pipeline in `parse_document`."""
+
+    def test_single_heading_produces_one_span(self, tmp_path):
+        doc_path = tmp_path / "solo.norm.json"
+        _write_norm_doc(
+            doc_path,
+            headings=[{"text": "1.1 Summary", "level": 1, "page": 1}],
+            text_blocks=[
+                {"heading": "", "text": "preamble"},
+                {"heading": "1.1 Summary", "text": "Body text about the project."},
+            ],
+            pages=[{"page": 1, "text": "1.1 Summary\nBody text about the project."}],
+        )
+
+        result = parse_document(doc_path, SCHEMA_PATH)
+
+        assert len(result["section_spans"]) == 1
+        entry = result["section_spans"][0]
+        assert entry["text"] == "Body text about the project."
+        assert entry["chunk_index"] == 0
+
+    def test_alignment_mismatch_falls_back_and_warns(self, tmp_path):
+        doc_path = tmp_path / "misaligned.norm.json"
+        _write_norm_doc(
+            doc_path,
+            headings=[{"text": "1.1 Summary", "level": 1, "page": 1}],
+            text_blocks=[
+                {"heading": "", "text": "preamble"},
+                {"heading": "1.2 Something Else Entirely", "text": "Body text."},
+            ],
+            pages=[{"page": 1, "text": "1.1 Summary\nBody text."}],
+        )
+
+        with structlog.testing.capture_logs() as logs:
+            result = parse_document(doc_path, SCHEMA_PATH)
+
+        assert result["section_spans"] == []
+        assert result["sections_mapped"] != []
+        assert any(entry.get("event") == "corpus_block_alignment_failed" for entry in logs)
+
+    def test_toc_page_heading_skipped(self, tmp_path):
+        doc_path = tmp_path / "toc.norm.json"
+        _write_norm_doc(
+            doc_path,
+            headings=[{"text": "1.1 Summary", "level": 1, "page": 1}],
+            text_blocks=[
+                {"heading": "", "text": "preamble"},
+                {"heading": "1.1 Summary", "text": "Real body text about the project."},
+            ],
+            pages=[
+                {
+                    "page": 1,
+                    "text": "TABLE OF CONTENTS\n1.1 Summary .... 4\n1.2 Other .... 5",
+                }
+            ],
+        )
+
+        result = parse_document(doc_path, SCHEMA_PATH)
+
+        assert result["section_spans"] == []
+
+    def test_blank_block_text_skipped(self, tmp_path):
+        doc_path = tmp_path / "blank.norm.json"
+        _write_norm_doc(
+            doc_path,
+            headings=[{"text": "1.1 Summary", "level": 1, "page": 1}],
+            text_blocks=[
+                {"heading": "", "text": "preamble"},
+                {"heading": "1.1 Summary", "text": "   "},
+            ],
+            pages=[{"page": 1, "text": "1.1 Summary\nSome page text"}],
+        )
+
+        result = parse_document(doc_path, SCHEMA_PATH)
+
+        assert result["section_spans"] == []

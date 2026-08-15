@@ -707,7 +707,9 @@ class SectionOrchestrator:
         if examples is None:
             if self._should_inject_retrieval():
                 heading = self._section_info(section_id, sub_section_id).get("heading", "")
-                examples = get_examples_for_section(section_id, sub_section_id, k=k)
+                examples = get_examples_for_section(
+                    section_id, sub_section_id, k=k, document_family=self._family_slug()
+                )
                 if len(examples) < 2 and heading:
                     extras = get_section_heading_examples(heading, k=min(3, k))
                     seen = {
@@ -721,7 +723,9 @@ class SectionOrchestrator:
                         ) not in seen:
                             examples.append(ex)
             else:
-                examples = get_examples_for_section(section_id, sub_section_id, k=k)
+                examples = get_examples_for_section(
+                    section_id, sub_section_id, k=k, document_family=self._family_slug()
+                )
         examples = list(examples)
         fact_entries = relevant_fact_entries(
             self._assumption_register(), section_id, sub_section_id
