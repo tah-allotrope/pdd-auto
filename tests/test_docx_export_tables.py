@@ -356,4 +356,82 @@ class TestCalcStructuredContentEndToEnd:
         assert "Calendar year of crediting period" in xml
         assert "Estimated GHG emission reductions or removals" in xml
         assert "1,837,500" in xml
-        assert "Narrative that is replaced" not in xml
+        # PHASE-03 fix: structured_content used to delete the section's prose
+        # (old contract asserted `"Narrative that is replaced" not in xml`).
+        # Prose and table now render together.
+        assert "Narrative that is replaced" in xml
+
+    def test_nonexistent_table_type_renders_prose_only_and_does_not_raise(
+        self, tmp_path: Path, monkeypatch
+    ):
+        """Section 3.3 test spec: an unresolved table_type still renders the
+        section's prose and adds no table; export must not raise."""
+        run_dir = tmp_path / "data" / "runs"
+        run_dir.mkdir(parents=True, exist_ok=True)
+        payload = {
+            "run_id": "unresolved-table-type-run",
+            "project_name": "Soc Son waste to power plant project",
+            "provider": "noop",
+            "assumption_register": {"assumptions": [], "guardrails": {}},
+            "sections": [
+                {
+                    "section_id": "3",
+                    "sub_section_id": "3.3",
+                    "text": "Narrative that must survive an unresolved table type.",
+                    "confidence": "HIGH",
+                    "provenance": [],
+                    "issues": [],
+                    "provider": "noop",
+                    "structured_content": {"table_type": "nonexistent_type", "data": {}},
+                }
+            ],
+            "notes": [],
+        }
+        run_path = run_dir / "unresolved-table-type-run.json"
+        run_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+        monkeypatch.setattr("pdd_agent.export.docx_export._DRAFT_RUNS_DIR", run_dir)
+
+        output = export_run_to_docx(
+            "unresolved-table-type-run", output_path=tmp_path / "unresolved.docx"
+        )
+        with zipfile.ZipFile(output) as archive:
+            xml = archive.read("word/document.xml").decode("utf-8")
+
+        assert "Narrative that must survive an unresolved table type." in xml
+
+    def test_section_without_structured_content_renders_prose_only(
+        self, tmp_path: Path, monkeypatch
+    ):
+        """Unchanged behaviour: a section with no structured_content renders
+        just its prose paragraph, as before this phase."""
+        run_dir = tmp_path / "data" / "runs"
+        run_dir.mkdir(parents=True, exist_ok=True)
+        payload = {
+            "run_id": "no-structured-content-run",
+            "project_name": "Soc Son waste to power plant project",
+            "provider": "noop",
+            "assumption_register": {"assumptions": [], "guardrails": {}},
+            "sections": [
+                {
+                    "section_id": "2",
+                    "sub_section_id": "2.1",
+                    "text": "No net harm.",
+                    "confidence": "HIGH",
+                    "provenance": [],
+                    "issues": [],
+                    "provider": "noop",
+                }
+            ],
+            "notes": [],
+        }
+        run_path = run_dir / "no-structured-content-run.json"
+        run_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+        monkeypatch.setattr("pdd_agent.export.docx_export._DRAFT_RUNS_DIR", run_dir)
+
+        output = export_run_to_docx(
+            "no-structured-content-run", output_path=tmp_path / "no-structured.docx"
+        )
+        with zipfile.ZipFile(output) as archive:
+            xml = archive.read("word/document.xml").decode("utf-8")
+
+        assert "No net harm." in xml

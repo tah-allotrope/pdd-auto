@@ -485,24 +485,36 @@ class TestCalcResultPersistence:
 
 
 class TestCalcStructuredContent:
-    def _soc_son_calc_result(self):
+    def _soc_son_project_input(self):
         import yaml
 
         from schemas.project_input import ProjectInput
-        from pdd_agent.calc.dispatch import compute_for
 
         root = Path(__file__).parent.parent
         with open(
             root / "configs" / "projects" / "vietnam_socson_from_sheet.yaml", encoding="utf-8"
         ) as f:
-            pi = ProjectInput.model_validate(yaml.safe_load(f))
-        return compute_for(pi)
+            return ProjectInput.model_validate(yaml.safe_load(f))
+
+    def _rice_project_input(self):
+        import yaml
+
+        from schemas.project_input import ProjectInput
+
+        root = Path(__file__).parent.parent
+        with open(root / "configs" / "projects" / "rice_vm0051_pilot.yaml", encoding="utf-8") as f:
+            return ProjectInput.model_validate(yaml.safe_load(f))
+
+    def _soc_son_calc_result(self):
+        from pdd_agent.calc.dispatch import compute_for
+
+        return compute_for(self._soc_son_project_input())
 
     def test_emissions_summary_table_from_annual_schedule(self):
         orch = SectionOrchestrator(provider=NoopProvider())
         orch.set_calc_result(self._soc_son_calc_result())
 
-        result = orch._build_calc_structured_content("4.4")
+        result = orch._build_structured_content("4.4")
 
         assert result["table_type"] == "emissions_summary"
         assert len(result["data"]["entries"]) == 7
@@ -512,22 +524,71 @@ class TestCalcStructuredContent:
         orch = SectionOrchestrator(provider=NoopProvider())
         orch.set_calc_result(self._soc_son_calc_result())
 
-        result = orch._build_calc_structured_content("5.2")
+        result = orch._build_structured_content("5.2")
 
         assert result["table_type"] == "monitoring_tracked_params"
-        assert len(result["data"]["entries"]) == 4
+        # PHASE-03: ACM0022-PARAM-04 (grid emission factor) moved to the 5.1
+        # fixed-parameters table, so 5.2 now carries 3 tracked params, not 4
+        # (old locked-in assertion was `== 4`).
+        assert len(result["data"]["entries"]) == 3
         assert result["data"]["entries"][0]["parameter"] == "Annual waste throughput"
+        assert all(e["parameter"] != "Grid emission factor" for e in result["data"]["entries"])
 
     def test_non_calc_section_returns_none(self):
         orch = SectionOrchestrator(provider=NoopProvider())
         orch.set_calc_result(self._soc_son_calc_result())
 
-        assert orch._build_calc_structured_content("2.1") is None
+        assert orch._build_structured_content("2.1") is None
 
     def test_no_calc_result_returns_none(self):
         orch = SectionOrchestrator(provider=NoopProvider())
 
-        assert orch._build_calc_structured_content("4.4") is None
+        assert orch._build_structured_content("4.4") is None
+
+    def test_proponent_table_from_project_input(self):
+        pi = self._rice_project_input()
+        orch = SectionOrchestrator(provider=NoopProvider(), project_input=pi)
+
+        result = orch._build_structured_content("1.5")
+
+        assert result["table_type"] == "proponent"
+        assert result["data"]["org_name"] == "Mekong Delta Rice Sustainability Company"
+
+    def test_proponent_table_none_when_no_project(self):
+        orch = SectionOrchestrator(provider=NoopProvider())
+
+        assert orch._build_structured_content("1.5") is None
+
+    def test_applicability_table_for_acm0022_project(self):
+        pi = self._soc_son_project_input()
+        orch = SectionOrchestrator(provider=NoopProvider(), project_input=pi)
+
+        result = orch._build_structured_content("3.2")
+
+        assert result["table_type"] == "applicability"
+        assert len(result["data"]["entries"]) == 3
+        assert result["data"]["entries"][0]["methodology"] == "ACM0022"
+
+    def test_ghg_boundary_table_for_acm0022_project(self):
+        pi = self._soc_son_project_input()
+        orch = SectionOrchestrator(provider=NoopProvider(), project_input=pi)
+
+        result = orch._build_structured_content("3.3")
+
+        assert result["table_type"] == "ghg_boundary"
+        assert len(result["data"]["entries"]) == 11
+        assert all(e["included"] in ("Yes", "No") for e in result["data"]["entries"])
+
+    def test_monitoring_fixed_params_table_from_calc_result(self):
+        pi = self._soc_son_project_input()
+        orch = SectionOrchestrator(provider=NoopProvider(), project_input=pi)
+        orch.set_calc_result(self._soc_son_calc_result())
+
+        result = orch._build_structured_content("5.1")
+
+        assert result["table_type"] == "monitoring_fixed_params"
+        assert len(result["data"]["entries"]) == 1
+        assert result["data"]["entries"][0]["parameter"] == "Grid emission factor"
 
 
 class TestQuantificationSectionScope:

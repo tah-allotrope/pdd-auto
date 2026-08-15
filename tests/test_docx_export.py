@@ -295,6 +295,60 @@ def test_export_run_to_docx_raises_clear_error_when_run_missing(tmp_path: Path, 
         raise AssertionError("Expected FileNotFoundError")
 
 
+def _minimal_project_input(audit_history=None):
+    from tests.test_input_schema import make_minimal_input
+    from schemas.project_input import ProjectInput
+
+    data = make_minimal_input()
+    if audit_history is not None:
+        data["project"]["audit_history"] = audit_history
+    return ProjectInput(**data)
+
+
+def test_export_run_to_docx_no_audit_history_omits_heading(tmp_path: Path, monkeypatch):
+    run_path = _write_run(tmp_path, run_id="no-audit-history-run")
+    monkeypatch.setattr("pdd_agent.export.docx_export._DRAFT_RUNS_DIR", run_path.parent)
+    project_input = _minimal_project_input()
+    assert project_input.project.audit_history == []
+
+    output = export_run_to_docx(
+        "no-audit-history-run",
+        output_path=tmp_path / "no-audit-history.docx",
+        project_input=project_input,
+    )
+    xml = _read_docx_xml(output)
+
+    assert "Audit History" not in xml
+
+
+def test_export_run_to_docx_with_audit_history_renders_table(tmp_path: Path, monkeypatch):
+    run_path = _write_run(tmp_path, run_id="audit-history-run")
+    monkeypatch.setattr("pdd_agent.export.docx_export._DRAFT_RUNS_DIR", run_path.parent)
+    project_input = _minimal_project_input(
+        audit_history=[
+            {
+                "audit_type": "Validation",
+                "period": "2020-2027",
+                "program": "VCS",
+                "vvb_name": "Earthood",
+                "number_of_years": 7,
+            }
+        ]
+    )
+
+    output = export_run_to_docx(
+        "audit-history-run",
+        output_path=tmp_path / "audit-history.docx",
+        project_input=project_input,
+    )
+    xml = _read_docx_xml(output)
+
+    assert "Audit History" in xml
+    assert "Validation" in xml
+    assert "Earthood" in xml
+    assert "VCS" in xml
+
+
 def test_upload_review_package_docx_prefers_published_artifact(tmp_path: Path):
     from pdd_agent.export.drive_upload import upload_review_package_docx
 

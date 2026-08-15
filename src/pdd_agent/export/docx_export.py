@@ -242,6 +242,7 @@ def export_run_to_docx(
 
     cover_data = run_data.get("structured_cover") or _infer_cover_data(run_data)
     render_cover_metadata_table(doc, cover_data)
+    _add_audit_history_front_matter(doc, run_data, project_input)
 
     for sec_def in schema.get("sections", []):
         sid = sec_def["section_id"]
@@ -260,33 +261,17 @@ def export_run_to_docx(
 
             _add_section_metadata(doc, section)
 
+            # PHASE-03 fix: structured_content used to *replace* the section's
+            # prose (renderer called instead of the text paragraphs). Prose is
+            # now rendered unconditionally first, and the table (when its
+            # table_type resolves to a renderer) follows it.
+            _add_section_prose(doc, section, is_demo)
+
             structured = section.get("structured_content")
             if structured and isinstance(structured, dict):
                 renderer = _TABLE_RENDERERS.get(structured.get("table_type", ""))
                 if renderer:
                     renderer(doc, structured.get("data", {}))
-                else:
-                    text = section.get("text", "")
-                    if text:
-                        for paragraph_text in _split_paragraphs(text):
-                            paragraph = doc.add_paragraph(paragraph_text)
-                            if not is_demo and section.get("confidence") in {"LOW", "UNSUPPORTED"}:
-                                _highlight_paragraph(paragraph, "FFF2CC")
-                    else:
-                        _safe_paragraph_style(
-                            doc.add_paragraph("[No content drafted yet]"), "Intense Quote"
-                        )
-            else:
-                text = section.get("text", "")
-                if text:
-                    for paragraph_text in _split_paragraphs(text):
-                        paragraph = doc.add_paragraph(paragraph_text)
-                        if not is_demo and section.get("confidence") in {"LOW", "UNSUPPORTED"}:
-                            _highlight_paragraph(paragraph, "FFF2CC")
-                else:
-                    _safe_paragraph_style(
-                        doc.add_paragraph("[No content drafted yet]"), "Intense Quote"
-                    )
 
             issues = section.get("issues", [])
             if issues and not is_demo:
@@ -1010,6 +995,54 @@ def _truncate_value(value: Any, limit: int = 80) -> str:
     if len(text) <= limit:
         return text
     return f"{text[: limit - 3]}..."
+
+
+def _add_section_prose(doc: Any, section: dict[str, Any], is_demo: bool) -> None:
+    """Append a section's narrative paragraphs (or a placeholder when empty).
+
+    Extracted from the two identical arms of the old structured/unstructured
+    dispatch (PHASE-03 of the 2026-08-13 grounding-rebuild plan) so prose
+    renders unconditionally, independent of whether a table follows it.
+    """
+    text = section.get("text", "")
+    if text:
+        for paragraph_text in _split_paragraphs(text):
+            paragraph = doc.add_paragraph(paragraph_text)
+            if not is_demo and section.get("confidence") in {"LOW", "UNSUPPORTED"}:
+                _highlight_paragraph(paragraph, "FFF2CC")
+    else:
+        _safe_paragraph_style(doc.add_paragraph("[No content drafted yet]"), "Intense Quote")
+
+
+def _add_audit_history_front_matter(
+    doc: Any, run_data: dict[str, Any], project_input: ProjectInput | None
+) -> None:
+    """Render an "Audit History" heading and table as front matter.
+
+    No-op (adds no heading) when project_input is None or carries no
+    audit_history entries.
+    """
+    if project_input is None:
+        return
+    audit_history = getattr(project_input.project, "audit_history", None)
+    if not audit_history:
+        return
+    doc.add_heading("Audit History", level=2)
+    render_audit_history_table(
+        doc,
+        {
+            "audits": [
+                {
+                    "audit_type": entry.audit_type,
+                    "period": entry.period,
+                    "program": entry.program,
+                    "vvb_name": entry.vvb_name,
+                    "number_of_years": entry.number_of_years,
+                }
+                for entry in audit_history
+            ]
+        },
+    )
 
 
 def _split_paragraphs(text: str) -> list[str]:

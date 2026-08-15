@@ -341,12 +341,12 @@ src/pdd_agent/
 - The Soc Son spreadsheet mapper intentionally blocks review-sensitive quantitative splits, coordinates, and safeguards fields when they rely on synthetic assumptions
 - `ingest/registry_download.py` (public Verra/CDM registry PDD downloader) is a stub — the rice/AMS-II.G/biochar calc engines have golden tests against synthetic-but-documented values, not real registered-PDD corpora
 - The FastAPI service's `_get_provider` does not recognize `claude-code`, so that provider silently falls back to `demo` with `reason="unknown_provider"`; `/dashboard` and `/api/runs` scan every `run-*.json` in the runs directory on each request, with no pagination or retention policy
-- Eight of the eleven Verra table renderers in `docx_export.py` still have no producer wiring
-  `structured_content` for them (only `cover_metadata`, `emissions_summary`, and
-  `monitoring_tracked_params` are populated — the first from run metadata, the latter two from the
-  calc engine); `audit_history`, `proponent`, `ghg_boundary`, `applicability`,
-  `monitoring_fixed_params`, `risk_assessment`, `sustainable_development`, and `data_gaps` remain
-  prose-only sections
+- Three of the eleven Verra table renderers in `docx_export.py` still have no producer wiring
+  `structured_content` for them: `risk_assessment`, `sustainable_development`, and `data_gaps`. These
+  require model-generated content with schema validation, which is out of scope for the current push.
+  The other eight (`cover_metadata`, `audit_history`, `proponent`, `ghg_boundary`, `applicability`,
+  `monitoring_fixed_params`, `monitoring_tracked_params`, `emissions_summary`) are wired: prose and
+  table now render together in the same subsection instead of the table replacing the narrative.
 - Corpus normalization discards table structure from ingested source PDDs — retrieved provenance
   excerpts are always flattened prose, even where the original document had a table
 

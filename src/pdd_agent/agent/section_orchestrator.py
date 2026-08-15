@@ -244,46 +244,156 @@ class SectionOrchestrator:
 
         return os.environ.get("PDD_CALC_AUTHORITATIVE") == "1"
 
-    def _build_calc_structured_content(self, section_key: str) -> dict[str, Any] | None:
-        """The structured_content payload for a calc-driven table section.
+    def _build_structured_content(self, section_key: str) -> dict[str, Any] | None:
+        """The structured_content payload for a table-bearing section.
 
-        Returns None for every section other than "4.4" (emissions_summary) and
-        "5.2" (monitoring_tracked_params), and whenever no calc result is
-        attached — restricted to exactly these two sections per RISK-05-01:
-        structured_content suppresses a section's prose in the exporter, so
-        widening this beyond the two calc-native tables would silently delete
-        narrative text elsewhere.
+        PHASE-03 (2026-08-13 grounding-rebuild plan): now that the exporter
+        renders prose *and* table together instead of the table replacing the
+        prose, this method was widened from the two calc-native sections
+        ("4.4", "5.2") to also cover "1.5" (proponent), "3.2"
+        (applicability), "3.3" (ghg_boundary), and "5.1"
+        (monitoring_fixed_params). Returns None for every other section key,
+        and whenever the data a given key needs is absent.
         """
+        if section_key == "4.4":
+            return self._structured_emissions_summary()
+        if section_key == "5.2":
+            return self._structured_monitoring_tracked_params()
+        if section_key == "1.5":
+            return self._structured_proponent()
+        if section_key == "3.2":
+            return self._structured_applicability()
+        if section_key == "3.3":
+            return self._structured_ghg_boundary()
+        if section_key == "5.1":
+            return self._structured_monitoring_fixed_params()
+        return None
+
+    def _structured_emissions_summary(self) -> dict[str, Any] | None:
         if not self._calc_result:
             return None
-        cr = self._calc_result
-        if section_key == "4.4":
-            schedule = getattr(cr, "annual_schedule", [])
-            if not schedule:
-                return None
-            entries = [{"period": e.year, "value": f"{e.net_tco2e:,.0f}"} for e in schedule]
-            total = sum(e.net_tco2e for e in schedule)
-            return {
-                "table_type": "emissions_summary",
-                "data": {"entries": entries, "total": f"{total:,.0f}"},
+        schedule = getattr(self._calc_result, "annual_schedule", [])
+        if not schedule:
+            return None
+        entries = [{"period": e.year, "value": f"{e.net_tco2e:,.0f}"} for e in schedule]
+        total = sum(e.net_tco2e for e in schedule)
+        return {
+            "table_type": "emissions_summary",
+            "data": {"entries": entries, "total": f"{total:,.0f}"},
+        }
+
+    def _structured_monitoring_tracked_params(self) -> dict[str, Any] | None:
+        if not self._calc_result:
+            return None
+        params = getattr(self._calc_result, "monitoring_params", [])
+        tracked = [p for p in params if p.get("section_ref") == "5.2"]
+        if not tracked:
+            return None
+        entries = [
+            {
+                "parameter": p.get("name", ""),
+                "unit": p.get("unit", ""),
+                "description": p.get("name", ""),
+                "frequency": p.get("frequency", ""),
+                "equipment": p.get("source", ""),
+                "qa_qc": "Per methodology monitoring plan",
             }
-        if section_key == "5.2":
-            params = getattr(cr, "monitoring_params", [])
-            if not params:
-                return None
-            entries = [
+            for p in tracked
+        ]
+        return {"table_type": "monitoring_tracked_params", "data": {"entries": entries}}
+
+    def _structured_monitoring_fixed_params(self) -> dict[str, Any] | None:
+        if not self._calc_result:
+            return None
+        params = getattr(self._calc_result, "monitoring_params", [])
+        fixed = [p for p in params if p.get("section_ref") != "5.2"]
+        if not fixed:
+            return None
+        entries = []
+        for p in fixed:
+            value = "-"
+            if p.get("id") == "ACM0022-PARAM-04" and self._project is not None:
+                gef = self._project.quantification.grid_emission_factor
+                if gef is not None:
+                    value = str(gef)
+            entries.append(
                 {
                     "parameter": p.get("name", ""),
                     "unit": p.get("unit", ""),
                     "description": p.get("name", ""),
-                    "frequency": p.get("frequency", ""),
-                    "equipment": p.get("source", ""),
-                    "qa_qc": "Per methodology monitoring plan",
+                    "value": value,
+                    "source": p.get("source", ""),
+                    "comments": "Fixed at validation",
                 }
-                for p in params
-            ]
-            return {"table_type": "monitoring_tracked_params", "data": {"entries": entries}}
-        return None
+            )
+        return {"table_type": "monitoring_fixed_params", "data": {"entries": entries}}
+
+    def _primary_methodology_id(self) -> str | None:
+        if not self._project or not self._project.technology.methodology_ids:
+            return None
+        return self._project.technology.methodology_ids[0]
+
+    def _structured_proponent(self) -> dict[str, Any] | None:
+        if not self._project:
+            return None
+        p = self._project
+        address = f"{p.location.city}, {p.location.region}, {p.location.country}"
+        return {
+            "table_type": "proponent",
+            "data": {
+                "org_name": p.project.proponent_name,
+                "contact_name": "-",
+                "title": "-",
+                "address": address,
+                "telephone": "-",
+                "email": p.project.proponent_contact_email,
+            },
+        }
+
+    def _structured_applicability(self) -> dict[str, Any] | None:
+        mid = self._primary_methodology_id()
+        if not mid:
+            return None
+        conditions = self._methodology_rules.applicability_conditions(mid)
+        if not conditions:
+            return None
+        checklist = self._project.methodology_applicability.eligibility_checklist
+        entries = []
+        for condition in conditions:
+            checked = checklist.get(condition.get("id", ""))
+            if checked is True:
+                justification = "Confirmed"
+            elif checked is False:
+                justification = "Not confirmed — see Section 3.6"
+            else:
+                justification = "Not assessed"
+            entries.append(
+                {
+                    "methodology": mid,
+                    "condition": condition.get("text", ""),
+                    "justification": justification,
+                }
+            )
+        return {"table_type": "applicability", "data": {"entries": entries}}
+
+    def _structured_ghg_boundary(self) -> dict[str, Any] | None:
+        mid = self._primary_methodology_id()
+        if not mid:
+            return None
+        rows = self._methodology_rules.ghg_boundary(mid)
+        if not rows:
+            return None
+        entries = [
+            {
+                "scenario": row.get("scenario", ""),
+                "source": row.get("source", ""),
+                "gas": row.get("gas", ""),
+                "included": "Yes" if row.get("included") else "No",
+                "justification": row.get("justification", ""),
+            }
+            for row in rows
+        ]
+        return {"table_type": "ghg_boundary", "data": {"entries": entries}}
 
     def _format_calc_injection(self) -> str:
         """Format calc results for injection into Section 4 prompts.
@@ -690,7 +800,7 @@ class SectionOrchestrator:
         draft.output_references = [output_reference]
         draft.review_sensitivity = sensitivity
         draft.content_class = content_class
-        draft.structured_content = self._build_calc_structured_content(draft.sub_section_id)
+        draft.structured_content = self._build_structured_content(draft.sub_section_id)
 
         if sensitivity in ("HIGH", "CRITICAL") and not provenance:
             draft.issues.append(

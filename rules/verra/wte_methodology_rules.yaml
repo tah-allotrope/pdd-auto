@@ -142,6 +142,79 @@ methodologies:
           calc_module: "pdd_agent.calc.acm0022.ACM0022Calculator.calculate"
           section_ref: "4.4"
 
+    # GHG project-boundary rows (S-3 in the 2026-08-13 grounding-rebuild plan,
+    # per ASM-005). Authored from methodology knowledge, not yet extracted
+    # from the ACM0022 document itself — verify against
+    # EB111_repan07_ACM0022_v03.0 once it is retrievable and correct any row
+    # that disagrees, recording the correction in the commit message.
+    ghg_boundary:
+      - scenario: "Baseline"
+        source: "Decomposition of waste at the solid waste disposal site"
+        gas: "CH4"
+        included: true
+        justification: "Dominant baseline source; quantified as BE_CH4 using the CDM Tool 04 first-order-decay model."
+        source_ref: "ACM0022 v03.0 Section 5 (Project Boundary)"
+      - scenario: "Baseline"
+        source: "Decomposition of waste at the solid waste disposal site"
+        gas: "CO2"
+        included: false
+        justification: "CO2 from decomposition of organic waste is of biogenic origin and is not accounted under ACM0022."
+        source_ref: "ACM0022 v03.0 Section 5 (Project Boundary)"
+      - scenario: "Baseline"
+        source: "Decomposition of waste at the solid waste disposal site"
+        gas: "N2O"
+        included: false
+        justification: "Excluded for simplification. This exclusion is conservative."
+        source_ref: "ACM0022 v03.0 Section 5 (Project Boundary)"
+      - scenario: "Baseline"
+        source: "Electricity generation in the grid displaced by the project"
+        gas: "CO2"
+        included: true
+        justification: "Quantified as BE_EC using the combined-margin grid emission factor derived per CDM Tool 07."
+        source_ref: "ACM0022 v03.0 Section 5 (Project Boundary)"
+      - scenario: "Baseline"
+        source: "Electricity generation in the grid displaced by the project"
+        gas: "CH4, N2O"
+        included: false
+        justification: "Excluded for simplification. This exclusion is conservative."
+        source_ref: "ACM0022 v03.0 Section 5 (Project Boundary)"
+      - scenario: "Project"
+        source: "On-site fossil fuel consumption (auxiliary firing, site vehicles)"
+        gas: "CO2"
+        included: true
+        justification: "Quantified as PE_FC."
+        source_ref: "ACM0022 v03.0 Section 5 (Project Boundary)"
+      - scenario: "Project"
+        source: "On-site electricity consumption"
+        gas: "CO2"
+        included: true
+        justification: "Quantified as PE_EC."
+        source_ref: "ACM0022 v03.0 Section 5 (Project Boundary)"
+      - scenario: "Project"
+        source: "Anaerobic digestion and biogas handling"
+        gas: "CH4"
+        included: true
+        justification: "Physical methane leakage from digesters and gas handling; quantified as PE_CH4."
+        source_ref: "ACM0022 v03.0 Section 5 (Project Boundary)"
+      - scenario: "Project"
+        source: "Flaring of residual biogas"
+        gas: "CH4"
+        included: true
+        justification: "Quantified as PE_FLARE."
+        source_ref: "ACM0022 v03.0 Section 5 (Project Boundary)"
+      - scenario: "Project"
+        source: "Combustion of waste or refuse-derived fuel"
+        gas: "CO2"
+        included: false
+        justification: "The biogenic fraction is excluded; any fossil fraction is addressed under the methodology governing an RDF fuel-substitution claim."
+        source_ref: "ACM0022 v03.0 Section 5 (Project Boundary)"
+      - scenario: "Project"
+        source: "Combustion of waste or refuse-derived fuel"
+        gas: "N2O"
+        included: false
+        justification: "Excluded for simplification. This exclusion is conservative."
+        source_ref: "ACM0022 v03.0 Section 5 (Project Boundary)"
+
   ACM0003:
     full_name: "Partial substitution of fossil fuels in cement manufacture"
     url: "https://verra.org/methodologies/acm0003/"

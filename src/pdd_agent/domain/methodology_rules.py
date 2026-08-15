@@ -52,6 +52,10 @@ class MethodologyRules:
         meth = self._methodology(mid)
         return meth.get("applicability_conditions", []) if meth else []
 
+    def ghg_boundary(self, mid: str) -> list[dict[str, Any]]:
+        meth = self._methodology(mid)
+        return meth.get("ghg_boundary", []) if meth else []
+
     def _methodology(self, mid: str) -> dict[str, Any] | None:
         return self._methodologies.get(mid)
 
