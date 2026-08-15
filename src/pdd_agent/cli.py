@@ -62,6 +62,21 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Output FTS5 database path",
     )
 
+    index_report = sub.add_parser(
+        "index-report", help="Report retrieval-index health: coverage, duplication, truncation"
+    )
+    index_report.add_argument(
+        "--index-db", default="data/index/corpus.fts.db", help="FTS5 database path"
+    )
+    index_report.add_argument(
+        "--corpus-dir",
+        default="data/corpus/normalized",
+        help="Normalized corpus directory, for coverage comparison",
+    )
+    index_report.add_argument(
+        "--json", action="store_true", help="Emit the report as JSON instead of text"
+    )
+
     sub.add_parser(
         "demo-setup",
         help="Build the demo FTS5 index from the bundled demo/corpus subset",
@@ -420,6 +435,7 @@ def main() -> int:
         "bucket": lambda: _run_bucket(args.manifest),
         "ingest": lambda: _run_ingest(args.folder_id, args.manifest, args.dry_run, log),
         "build-index": lambda: _run_build_index(args, log),
+        "index-report": lambda: _run_index_report(args, log),
         "demo-setup": lambda: _run_demo_setup(args, log),
         "draft": lambda: _run_draft(args, log),
         "calc": lambda: _run_calc(args, log),
@@ -470,8 +486,45 @@ def _run_ingest(folder_id: str, manifest: str, dry_run: bool, log) -> None:
 def _run_build_index(args, log) -> None:
     log.info("build_index_start", corpus_dir=args.corpus_dir, db=args.index_db)
     idx = RetrievalIndex(db_path=args.index_db)
-    idx.build(normalized_dir=Path(args.corpus_dir))
+    stats = idx.build(normalized_dir=Path(args.corpus_dir))
     log.info("build_index_done", db=args.index_db)
+    print(f"Documents indexed: {stats['docs_indexed']}")
+    print(f"Chunks indexed: {stats['chunks_indexed']}")
+    zero_yield = stats.get("docs_with_zero_sections", [])
+    if zero_yield:
+        print(f"Documents with zero indexable sections: {', '.join(zero_yield)}")
+
+
+def _run_index_report(args, log) -> int:
+    from pdd_agent.retrieval.index import index_health
+
+    log.info("index_report_start", db=args.index_db, corpus_dir=args.corpus_dir)
+    report = index_health(db_path=Path(args.index_db), corpus_dir=Path(args.corpus_dir))
+
+    if "error" in report:
+        log.error("index_report_failed", error=report["error"], db=args.index_db)
+        print(f"Index report failed: {report['error']} ({report['db_path']})")
+        return 1
+
+    if args.json:
+        import json
+
+        print(json.dumps(report, indent=2))
+        log.info("index_report_done", db=args.index_db)
+        return 0
+
+    print(f"Index: {report['db_path']}")
+    print(f"Total rows: {report['total_rows']}")
+    print(f"Distinct texts: {report['distinct_texts']}")
+    print(f"Duplication rate: {report['duplication_rate']:.1%}")
+    print(f"Documents: {report['documents']}")
+    print(f"Mean text length: {report['mean_text_chars']:.1f} chars")
+    print(f"Median text length: {report['median_text_chars']} chars")
+    print(f"Rows at exactly 500 chars: {report['rows_at_500_chars']}")
+    if report.get("missing_documents"):
+        print(f"Missing documents: {', '.join(report['missing_documents'])}")
+    log.info("index_report_done", db=args.index_db)
+    return 0
 
 
 def _run_demo_setup(args, log) -> None:

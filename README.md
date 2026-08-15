@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/tah-allotrope/pdd-auto/actions/workflows/ci.yml/badge.svg)](https://github.com/tah-allotrope/pdd-auto/actions/workflows/ci.yml)
 
-**Status:** 752 tests collected (745 run, 7 corpus-marked deselected), green under CI on Python 3.11/3.12. Pipeline skeleton is mature: corpus RAG, rule-based review, VCS v4.4 DOCX export, LLM-judge + capped redraft loop, a local FastAPI section-review service, calc engines for ACM0022, AMS-II.G, VM0051, and VM0044 wired into the drafting pipeline via `pdd-agent calc` / `compute_for()`, truthful token/cost accounting for the `claude-code` provider, and assistant-preamble normalization for all real providers. Real LLM providers (OpenAI, Anthropic, Ollama, claude-code) are implemented; live drafting runs are pending API keys (Ollama runs today with no key required — see `pdd-agent doctor`). All demo/benchmark output to date uses the deterministic `demo`/`noop` providers.
+**Status:** 814 tests collected (807 run, 7 corpus-marked deselected), green under CI on Python 3.11/3.12. Pipeline skeleton is mature: corpus RAG, rule-based review, VCS v4.4 DOCX export, LLM-judge + capped redraft loop, a local FastAPI section-review service, calc engines for ACM0022, AMS-II.G, VM0051, and VM0044 wired into the drafting pipeline via `pdd-agent calc` / `compute_for()`, truthful token/cost accounting for the `claude-code` provider, and assistant-preamble normalization for all real providers. Real LLM providers (OpenAI, Anthropic, Ollama, claude-code) are implemented; live drafting runs are pending API keys (Ollama runs today with no key required — see `pdd-agent doctor`). All demo/benchmark output to date uses the deterministic `demo`/`noop` providers.
 
 **Demo Quickstart:** Want to see it working in 5 minutes? → [QUICKSTART.md](QUICKSTART.md)
 
@@ -77,6 +77,7 @@ pdd-agent upload --run-id <run-id>
 | `pdd-agent doctor` | Diagnose the local environment: Python version, optional packages, API keys, Ollama, external tools, retrieval index, model pricing |
 | `pdd-agent ingest` | Full pipeline: inventory → download → normalize → bucket |
 | `pdd-agent build-index` | Build SQLite FTS5 BM25 index from normalized corpus |
+| `pdd-agent index-report` | Report retrieval-index health: document coverage, duplication rate, truncation |
 | `pdd-agent draft` | Draft all PDD sections for a project (`--provider noop\|demo\|corpus\|openai\|anthropic`, `--judge` to enable the LLM-judge/redraft loop) |
 | `pdd-agent review` | Display review state for a run |
 | `pdd-agent judge` | Run the LLM judge on an existing draft run |

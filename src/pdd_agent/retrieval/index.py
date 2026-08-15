@@ -101,6 +101,7 @@ class RetrievalIndex:
         parsed = parse_corpus(normalized_dir, schema_path)
         docs_indexed = 0
         chunks_indexed = 0
+        rows_by_document: dict[str, int] = {}
 
         for doc_result in parsed:
             if "error" in doc_result:
@@ -109,6 +110,8 @@ class RetrievalIndex:
                 )
                 continue
             docs_indexed += 1
+            doc_name = doc_result["document_name"]
+            rows_by_document[doc_name] = 0
             for entry in doc_result.get("sections_mapped", []):
                 sid = entry["canonical_section_id"]
                 ssid = entry.get("canonical_sub_section_id") or ""
@@ -123,12 +126,19 @@ class RetrievalIndex:
                         (section_id, sub_section_id, document_name, canonical_heading, text, content_class, review_sensitivity)
                     VALUES (?, ?, ?, ?, ?, ?, ?)
                     """,
-                    (sid, ssid, doc_result["document_name"], heading, text_snippet, "", ""),
+                    (sid, ssid, doc_name, heading, text_snippet, "", ""),
                 )
                 chunks_indexed += 1
+                rows_by_document[doc_name] += 1
 
         conn.execute("INSERT INTO sections_fts(sections_fts) VALUES('optimize')")
         conn.commit()
+
+        docs_with_zero_sections = sorted(
+            name for name, count in rows_by_document.items() if count == 0
+        )
+        for name in docs_with_zero_sections:
+            logger.warning("corpus_document_yielded_no_sections", document=name)
 
         return {
             "docs_indexed": docs_indexed,
@@ -136,6 +146,8 @@ class RetrievalIndex:
             "db_path": str(self._db_path),
             "schema_version": _SCHEMA_VERSION,
             "built_at": datetime.now(timezone.utc).isoformat(),
+            "rows_by_document": rows_by_document,
+            "docs_with_zero_sections": docs_with_zero_sections,
         }
 
     def search(
@@ -274,6 +286,76 @@ class RetrievalIndex:
             return True
         except sqlite3.OperationalError:
             return False
+
+
+def index_health(db_path: Path | None = None, corpus_dir: Path | None = None) -> dict[str, Any]:
+    """Report retrieval-index coverage, duplication, and truncation metrics.
+
+    Opens the database read-only. This is a manually-invoked diagnostic, not a
+    consistency check: it reports whatever is committed at read time and adds
+    no locking, so a report taken concurrently with a `build()` in another
+    process may reflect a partially-written index (RISK-01-01).
+
+    Returns ``{"error": "index not found", "db_path": str(path)}`` when the
+    database file does not exist. Never raises.
+    """
+    if db_path is None:
+        db_path = Path(__file__).parent.parent.parent.parent / "data" / "index" / "corpus.fts.db"
+    path = Path(db_path)
+
+    if not path.exists():
+        return {"error": "index not found", "db_path": str(path)}
+
+    try:
+        conn = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
+        try:
+            total_row = conn.execute("SELECT COUNT(*) FROM sections_fts").fetchone()
+            total_rows = total_row[0] if total_row else 0
+
+            distinct_row = conn.execute("SELECT COUNT(DISTINCT text) FROM sections_fts").fetchone()
+            distinct_texts = distinct_row[0] if distinct_row else 0
+
+            duplication_rate = round(1 - distinct_texts / total_rows, 3) if total_rows else 0.0
+
+            doc_rows = conn.execute(
+                "SELECT document_name, COUNT(*) FROM sections_fts GROUP BY document_name"
+            ).fetchall()
+            rows_by_document = {name: count for name, count in doc_rows}
+
+            lengths = sorted(
+                len(row[0]) for row in conn.execute("SELECT text FROM sections_fts").fetchall()
+            )
+            n = len(lengths)
+            mean_text_chars = round(sum(lengths) / n, 1) if n else 0.0
+            if n == 0:
+                median_text_chars = 0
+            elif n % 2 == 1:
+                median_text_chars = lengths[n // 2]
+            else:
+                median_text_chars = round((lengths[n // 2 - 1] + lengths[n // 2]) / 2)
+            rows_at_500_chars = sum(1 for length in lengths if length == 500)
+        finally:
+            conn.close()
+    except sqlite3.Error as exc:
+        return {"error": str(exc), "db_path": str(path)}
+
+    missing_documents: list[str] = []
+    if corpus_dir is not None:
+        corpus_stems = sorted(p.stem for p in Path(corpus_dir).glob("*.norm.json"))
+        missing_documents = sorted(stem for stem in corpus_stems if stem not in rows_by_document)
+
+    return {
+        "db_path": str(path),
+        "total_rows": total_rows,
+        "distinct_texts": distinct_texts,
+        "duplication_rate": duplication_rate,
+        "documents": len(rows_by_document),
+        "rows_by_document": rows_by_document,
+        "mean_text_chars": mean_text_chars,
+        "median_text_chars": median_text_chars,
+        "rows_at_500_chars": rows_at_500_chars,
+        "missing_documents": missing_documents,
+    }
 
 
 _index: RetrievalIndex | None = None
