@@ -239,3 +239,48 @@ class TestSummary:
         assert "Vietnam" in summary
         assert "ACM0022" in summary
         assert "45,000" in summary
+
+
+class TestWasteCompositionValidator:
+    """PHASE-05 (2026-08-13 plan): waste_composition and capacity_ramp validators."""
+
+    def test_validator_over_unity(self):
+        data = make_minimal_input()
+        data["technology"]["waste_composition"] = [
+            {"waste_type": "food_waste", "mass_fraction": 0.7, "source": "t"},
+            {"waste_type": "wood", "mass_fraction": 0.4, "source": "t"},
+        ]
+        with pytest.raises(ValidationError) as exc_info:
+            ProjectInput(**data)
+        assert "exceeds 1.0" in str(exc_info.value)
+
+    def test_validator_exactly_one(self):
+        data = make_minimal_input()
+        data["technology"]["waste_composition"] = [
+            {"waste_type": "food_waste", "mass_fraction": 0.6, "source": "t"},
+            {"waste_type": "wood", "mass_fraction": 0.4, "source": "t"},
+        ]
+        obj = ProjectInput(**data)
+        assert len(obj.technology.waste_composition) == 2
+
+    def test_validator_ramp_bounds(self):
+        data = make_minimal_input()
+        data["technology"]["capacity_ramp"] = [0.5, 1.0, 1.5]
+        with pytest.raises(ValidationError):
+            ProjectInput(**data)
+        data["technology"]["capacity_ramp"] = [0.5, 1.0]
+        obj = ProjectInput(**data)
+        assert obj.technology.capacity_ramp == [0.5, 1.0]
+
+    def test_backward_compatibility_no_composition(self):
+        import yaml
+
+        for pat in [
+            "configs/projects/demo_socson_like.yaml",
+            "configs/projects/rice_vm0051_pilot.yaml",
+            "configs/demo/inegol_project_input.yaml",
+        ]:
+            data = yaml.safe_load(open(Path(__file__).parent.parent / pat, encoding="utf-8"))
+            obj = ProjectInput.model_validate(data)
+            assert obj.technology.waste_composition == []
+            assert obj.technology.capacity_ramp is None

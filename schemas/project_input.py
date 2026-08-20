@@ -7,7 +7,7 @@ A completed and validated instance of ProjectInput is the prerequisite for secti
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Literal
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 if TYPE_CHECKING:
     from pdd_agent.calc.models import ACM0022CalcResult
@@ -153,6 +153,14 @@ class BiocharProductionParams(BaseModel):
     )
 
 
+class WasteFraction(BaseModel):
+    waste_type: str = Field(..., min_length=1, description="Key into DOC_BY_WASTE_TYPE")
+    mass_fraction: float = Field(
+        ..., ge=0.0, le=1.0, description="Share of annual_waste_throughput, dimensionless 0-1"
+    )
+    source: str = Field(..., min_length=1, description="Where this fraction was published")
+
+
 class ProjectTechnology(BaseModel):
     methodology_ids: list[str] = Field(
         ..., min_length=1, description="VCS methodology IDs (e.g. [ACM0022, ACM0003])"
@@ -202,6 +210,22 @@ class ProjectTechnology(BaseModel):
     biomethanization_suitable_fraction: float | None = Field(
         None, ge=0, le=1, description="Fraction of waste suitable for biomethanization (0-1)"
     )
+    waste_composition: list[WasteFraction] = Field(
+        default_factory=list,
+        description=(
+            "Published waste-composition split. When non-empty it replaces the "
+            "even split across waste_type. Fractions may sum to less than 1.0 — "
+            "inert mass generates no landfill methane and is legitimately omitted."
+        ),
+    )
+    capacity_ramp: list[float] | None = Field(
+        None,
+        description=(
+            "Optional per-crediting-period-year capacity utilisation, dimensionless "
+            "0-1, index 0 = year 1. Reserved for a future ramp-aware baseline; "
+            "validated but not yet consumed by the calc engine."
+        ),
+    )
     cookstove_fleet: list[CookstoveFleetEntry] | None = Field(
         None, description="Cookstove cohorts for AMS-II.G projects"
     )
@@ -211,6 +235,20 @@ class ProjectTechnology(BaseModel):
     biochar_production: BiocharProductionParams | None = Field(
         None, description="Biochar production params for VM0044 projects"
     )
+
+    @model_validator(mode="after")
+    def validate_waste_composition(self) -> "ProjectTechnology":
+        if self.waste_composition:
+            total = sum(entry.mass_fraction for entry in self.waste_composition)
+            if total > 1.0 + 1e-9:
+                raise ValueError(
+                    f"waste_composition mass fractions sum to {total:.4f}, which exceeds 1.0"
+                )
+        if self.capacity_ramp is not None:
+            for idx, value in enumerate(self.capacity_ramp):
+                if not 0.0 <= value <= 1.0:
+                    raise ValueError(f"capacity_ramp[{idx}] value {value} is outside [0.0, 1.0]")
+        return self
 
 
 class MethodologyApplicability(BaseModel):

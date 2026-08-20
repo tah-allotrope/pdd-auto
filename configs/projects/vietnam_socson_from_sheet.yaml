@@ -34,6 +34,25 @@ technology:
   tip_fee_usd_per_tonne: 18.0
   landfill_diversion_claim: true
   fuel_substitution_claim: false
+  waste_composition:
+  - waste_type: food_waste
+    mass_fraction: 0.519
+    source: VCS Soc Son registered PDD, Table 8 — Components of solid waste
+  - waste_type: paper_cardboard
+    mass_fraction: 0.027
+    source: VCS Soc Son registered PDD, Table 8 — Components of solid waste
+  - waste_type: textiles
+    mass_fraction: 0.016
+    source: VCS Soc Son registered PDD, Table 8 — Components of solid waste
+  - waste_type: wood
+    mass_fraction: 0.0
+    source: VCS Soc Son registered PDD, Table 8 — Components of solid waste
+  - waste_type: garden_waste
+    mass_fraction: 0.0
+    source: VCS Soc Son registered PDD, Table 8 — Components of solid waste
+  - waste_type: rubber_leather
+    mass_fraction: 0.013
+    source: VCS Soc Son registered PDD, Table 8 — Components of solid waste
 methodology_applicability:
   eligibility_checklist:
     project treats municipal solid waste: true

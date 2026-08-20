@@ -34,7 +34,7 @@ ProjectInput YAML ──→ SectionOrchestrator ──→ DraftRun
 
 ```bash
 # Install
-pip install -e ".[dev,service,export,llm]"
+pip install -e ".[dev,service,export,llm,ingest]"
 
 # Diagnose the local environment (Python version, optional packages, API keys, Ollama, external tools)
 pdd-agent doctor
@@ -153,7 +153,11 @@ disagreement above 5% (`abs(calc - declared) / max(abs(declared), 1.0)`) raises 
 consistency flag — advisory, not a hard export block, so the run still exports as a watermarked
 DRAFT. Section drafting prompts use `ProjectInput.quantification` for the "Project-Specific Facts"
 block by default; set `PDD_CALC_AUTHORITATIVE=1` to make the calc engine's scalars authoritative
-for that block instead.
+for that block instead. When `technology.waste_composition` is declared it replaces the even split
+across `technology.waste_type`; waste types absent from `DOC_BY_WASTE_TYPE` have their mass
+redistributed across the mapped types rather than dropped, so total mass entering the engine
+always equals `annual_waste_throughput` (or the degradable fraction thereof when a composition
+is declared).
 
 ## Prerequisites
 
@@ -347,8 +351,6 @@ src/pdd_agent/
   The other eight (`cover_metadata`, `audit_history`, `proponent`, `ghg_boundary`, `applicability`,
   `monitoring_fixed_params`, `monitoring_tracked_params`, `emissions_summary`) are wired: prose and
   table now render together in the same subsection instead of the table replacing the narrative.
-- Corpus normalization discards table structure from ingested source PDDs — retrieved provenance
-  excerpts are always flattened prose, even where the original document had a table
 
 ## Key References
 

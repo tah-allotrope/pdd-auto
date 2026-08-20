@@ -17,6 +17,8 @@ log = structlog.get_logger(__name__)
 NORM_DIR = Path("data/corpus/normalized")
 HEADING_RE = re.compile(r"^(#{1,6}\s+|[A-Z0-9][\.\d]+[\s])")
 
+_pdfplumber_warning_emitted = False
+
 
 def normalize_corpus(manifest_path: str, dry_run: bool = False) -> None:
     """Read manifest, normalize each cache file, and write per-file JSON normalization records.
@@ -116,6 +118,51 @@ def _sanitize_for_json(d: dict[str, Any]) -> dict[str, Any]:
     return out
 
 
+def _extract_tables(pdf_path: Path) -> list[dict[str, Any]]:
+    """Extract tables from a PDF using pdfplumber (optional extra).
+
+    Returns one entry per detected table as
+    ``{"page": int, "table_index": int, "rows": list[list[str]]}``.
+    Returns ``[]`` when pdfplumber is not installed or extraction fails.
+    Gracefully degrades: a malformed PDF never fails normalization.
+    """
+    global _pdfplumber_warning_emitted
+    try:
+        import pdfplumber  # type: ignore
+    except ImportError:
+        if not _pdfplumber_warning_emitted:
+            log.warning("pdfplumber_not_installed", path=str(pdf_path))
+            _pdfplumber_warning_emitted = True
+        return []
+
+    tables: list[dict[str, Any]] = []
+    try:
+        with pdfplumber.open(str(pdf_path)) as pdf:
+            for page_idx, page in enumerate(pdf.pages, start=1):
+                try:
+                    raw_tables = page.extract_tables() or []
+                except Exception as exc:  # noqa: BLE001
+                    log.warning(
+                        "table_extraction_failed", path=str(pdf_path), page=page_idx, error=str(exc)
+                    )
+                    continue
+                for table_idx, raw_rows in enumerate(raw_tables):
+                    rows: list[list[str]] = []
+                    for raw_row in raw_rows or []:
+                        row: list[str] = []
+                        for cell in raw_row or []:
+                            if cell is None:
+                                row.append("")
+                            else:
+                                row.append(str(cell))
+                        rows.append(row)
+                    tables.append({"page": page_idx, "table_index": table_idx, "rows": rows})
+    except Exception as exc:  # noqa: BLE001
+        log.warning("table_extraction_failed", path=str(pdf_path), error=str(exc))
+        return tables
+    return tables
+
+
 def _extract_text(path: Path, mime_type: str, dry_run: bool = False) -> dict[str, Any]:
     """Extract plain text from a PDF or DOCX file."""
     result: dict[str, Any] = {
@@ -126,6 +173,7 @@ def _extract_text(path: Path, mime_type: str, dry_run: bool = False) -> dict[str
         "heading_count": 0,
         "pages": [],
         "text": "",
+        "tables": [],
     }
 
     if mime_type == "application/pdf":
@@ -222,6 +270,7 @@ def _extract_pdf(path: Path, dry_run: bool = False) -> dict[str, Any]:
         "text": "",
         "headings": [],
         "text_blocks": [],
+        "tables": [],
     }
 
     if dry_run:
@@ -229,6 +278,7 @@ def _extract_pdf(path: Path, dry_run: bool = False) -> dict[str, Any]:
         out["text"] = "[dry-run PDF content placeholder]"
         out["headings"] = []
         out["text_blocks"] = []
+        out["tables"] = []
         return out
 
     try:
@@ -256,10 +306,12 @@ def _extract_pdf(path: Path, dry_run: bool = False) -> dict[str, Any]:
         out["text"] = full_text
         out["headings"] = headings
         out["text_blocks"] = text_blocks
+        out["tables"] = _extract_tables(path)
         out["parseable"] = True
         out["page_count"] = len(reader.pages)
     except Exception as exc:
         out["error"] = str(exc)
+        out.setdefault("tables", [])
 
     return out
 
@@ -272,6 +324,7 @@ def _extract_docx(path: Path, dry_run: bool = False) -> dict[str, Any]:
         "text": "",
         "headings": [],
         "text_blocks": [],
+        "tables": [],
     }
 
     if dry_run:
@@ -279,6 +332,7 @@ def _extract_docx(path: Path, dry_run: bool = False) -> dict[str, Any]:
         out["text"] = "[dry-run DOCX content placeholder]"
         out["headings"] = []
         out["text_blocks"] = []
+        out["tables"] = []
         return out
 
     try:
@@ -295,10 +349,12 @@ def _extract_docx(path: Path, dry_run: bool = False) -> dict[str, Any]:
         out["text"] = full_text
         out["headings"] = headings
         out["text_blocks"] = text_blocks
+        out["tables"] = []
         out["parseable"] = True
         out["page_count"] = 1
         out["pages"] = [{"page": 1, "chars": len(full_text), "text": full_text}]
     except Exception as exc:
         out["error"] = str(exc)
+        out.setdefault("tables", [])
 
     return out

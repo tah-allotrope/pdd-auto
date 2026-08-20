@@ -111,6 +111,12 @@ def _build_parser() -> argparse.ArgumentParser:
         dest="judge",
         help="Explicitly disable the judge/redraft loop (default)",
     )
+    draft_parser.add_argument(
+        "--only-section",
+        action="append",
+        dest="only_sections",
+        help="Draft only this sub-section id (e.g. 4.1). Repeatable. Default: all 36 sections.",
+    )
 
     review_parser = sub.add_parser("review", help="Run review checks on a draft run")
     review_parser.add_argument("--run-id", required=True, help="Run identifier to review")
@@ -564,6 +570,7 @@ def _run_draft(args, log) -> None:
         run_id=args.run_id,
         enable_judge=args.judge,
         max_redraft_attempts=3,
+        only_sections=getattr(args, "only_sections", None),
     )
 
     if args.provider not in ("demo", "noop"):

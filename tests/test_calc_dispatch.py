@@ -202,3 +202,73 @@ class TestPddCalcResultPromptBlock:
         )
         assert "### Calculation Warnings" in result.to_prompt_block()
         assert "test warning" in result.to_prompt_block()
+
+
+class TestWasteCompositionMassConservation:
+    """PHASE-05 (2026-08-13 plan): S-2 mass conservation and composition weighting."""
+
+    def test_mass_conservation_fallback_path(self):
+        import copy
+
+        from pdd_agent.calc.dispatch import build_engine_inputs
+
+        data = yaml.safe_load(
+            open(
+                Path(__file__).parent.parent / "configs/projects/vietnam_socson_from_sheet.yaml",
+                encoding="utf-8",
+            )
+        )
+        data2 = copy.deepcopy(data)
+        data2["technology"]["waste_composition"] = []
+        pi = ProjectInput.model_validate(data2)
+        _mid, inputs, warnings = build_engine_inputs(pi)  # type: ignore
+        total = sum(s["annual_tonnes"] for s in inputs["waste_streams"])
+        assert total == pytest.approx(1_460_000.0)
+        assert any("plastics" in w and "redistributed" in w for w in warnings)
+
+    def test_composition_path_six_streams(self):
+        from pdd_agent.calc.dispatch import build_engine_inputs
+
+        pi = _load_pi("configs/projects/vietnam_socson_from_sheet.yaml")
+        _mid, inputs, _warnings = build_engine_inputs(pi)  # type: ignore
+        streams = {s["waste_type"]: s["annual_tonnes"] for s in inputs["waste_streams"]}
+        assert len(inputs["waste_streams"]) == 6
+        assert streams["food_waste"] == pytest.approx(1_460_000.0 * 0.519)
+        assert streams["wood"] == pytest.approx(0.0)
+
+    def test_inert_mass_not_rescaled(self):
+        from pdd_agent.calc.dispatch import build_engine_inputs
+
+        pi = _load_pi("configs/projects/vietnam_socson_from_sheet.yaml")
+        _mid, inputs, _warnings = build_engine_inputs(pi)  # type: ignore
+        total = sum(s["annual_tonnes"] for s in inputs["waste_streams"])
+        assert total == pytest.approx(1_460_000.0 * 0.575)
+
+    def test_unmapped_composition_entry_warns(self):
+        import copy
+
+        from pdd_agent.calc.dispatch import build_engine_inputs
+
+        data = yaml.safe_load(
+            open(
+                Path(__file__).parent.parent / "configs/projects/vietnam_socson_from_sheet.yaml",
+                encoding="utf-8",
+            )
+        )
+        data2 = copy.deepcopy(data)
+        data2["technology"]["waste_composition"].append(
+            {"waste_type": "plastics", "mass_fraction": 0.03, "source": "test"}
+        )
+        pi = ProjectInput.model_validate(data2)
+        _mid, inputs, warnings = build_engine_inputs(pi)  # type: ignore
+        assert not any(s["waste_type"] == "plastics" for s in inputs["waste_streams"])
+        assert any("3.0%" in w and "non-degradable or unmapped" in w for w in warnings)
+
+    def test_inegol_unchanged(self):
+        from pdd_agent.calc.dispatch import build_engine_inputs
+
+        pi = _load_pi("configs/demo/inegol_project_input.yaml")
+        _mid, inputs, _warnings = build_engine_inputs(pi)  # type: ignore
+        assert len(inputs["waste_streams"]) == 1
+        assert inputs["waste_streams"][0]["waste_type"] == "municipal_solid_waste"
+        assert inputs["waste_streams"][0]["annual_tonnes"] == pytest.approx(262_970.37)

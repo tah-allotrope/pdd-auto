@@ -248,6 +248,19 @@ def check_model_pricing() -> tuple[str, str]:
     return ("OK", "All configured models have pricing entries")
 
 
+def check_pdfplumber() -> tuple[str, str]:
+    """Return ([OK]/[WARN], message) for the optional pdfplumber dependency."""
+    try:
+        import pdfplumber  # noqa: F401
+
+        return ("OK", "pdfplumber importable")
+    except ImportError:
+        return (
+            "WARN",
+            'pdfplumber not installed — corpus tables will not be extracted (pip install -e ".[ingest]")',
+        )
+
+
 def run_doctor() -> int:
     """Run all checks, print results, and return the process exit code."""
     all_results: list[tuple[str, str]] = []
@@ -262,6 +275,7 @@ def run_doctor() -> int:
     all_results.extend(check_external_tools())
     all_results.append(check_claude_cli())
     all_results.append(check_retrieval_index())
+    all_results.append(check_pdfplumber())
     all_results.append(check_model_pricing())
 
     for status, message in all_results:

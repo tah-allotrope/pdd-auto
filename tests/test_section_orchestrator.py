@@ -603,3 +603,57 @@ class TestQuantificationSectionScope:
     def test_section_3_is_not_a_quantification_section(self):
         orch = SectionOrchestrator(provider=NoopProvider())
         assert orch._is_quantification_section("3", "3.1") is False
+
+
+class TestOnlySections:
+    """PHASE-04 (2026-08-13 plan): --only-section gate."""
+
+    def _load_socson(self):
+        import yaml
+
+        from schemas.project_input import ProjectInput
+
+        root = Path(__file__).parent.parent
+        with open(root / "configs/projects/vietnam_socson_from_sheet.yaml", encoding="utf-8") as f:
+            return ProjectInput.model_validate(yaml.safe_load(f))
+
+    def test_only_one_section(self):
+        from pdd_agent.llm.provider import DemoProvider
+
+        pi = self._load_socson()
+        orch = SectionOrchestrator(provider=DemoProvider(), project_input=pi, only_sections=["4.1"])
+        results = orch.draft_all_sections()
+        assert len(results) == 1
+        assert results[0].sub_section_id == "4.1"
+
+    def test_only_two_sections_in_order(self):
+        from pdd_agent.llm.provider import DemoProvider
+
+        pi = self._load_socson()
+        orch = SectionOrchestrator(
+            provider=DemoProvider(), project_input=pi, only_sections=["4.1", "4.2"]
+        )
+        results = orch.draft_all_sections()
+        assert len(results) == 2
+        assert [r.sub_section_id for r in results] == ["4.1", "4.2"]
+
+    def test_none_drafts_all(self):
+        from pdd_agent.llm.provider import DemoProvider
+
+        pi = self._load_socson()
+        orch = SectionOrchestrator(provider=DemoProvider(), project_input=pi, only_sections=None)
+        assert len(orch.draft_all_sections()) == 36
+
+    def test_empty_list_drafts_all(self):
+        from pdd_agent.llm.provider import DemoProvider
+
+        pi = self._load_socson()
+        orch = SectionOrchestrator(provider=DemoProvider(), project_input=pi, only_sections=[])
+        assert len(orch.draft_all_sections()) == 36
+
+    def test_unknown_section_drafts_zero(self):
+        from pdd_agent.llm.provider import DemoProvider
+
+        pi = self._load_socson()
+        orch = SectionOrchestrator(provider=DemoProvider(), project_input=pi, only_sections=["9.9"])
+        assert len(orch.draft_all_sections()) == 0

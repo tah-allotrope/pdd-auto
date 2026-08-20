@@ -237,6 +237,75 @@ def parse_document(
             blocks=len(blocks),
             headings=len(headings),
         )
+        # PHASE-02 honest-gap closure (2026-08-20): four normalized
+        # documents (ACM0022 methodology, two joint-monitoring reports,
+        # DraftProjectDescription) have 1 text_block vs 50 headings, so the
+        # strict S-1 pairing correctly flags them as misaligned. The spec's
+        # per-document fallback to _find_content_page yields no rows for
+        # them (pages table is collapsed to a single entry), so they stay
+        # invisible to index-report and to the ACM0022-retrievability check.
+        # Emit generic chunks directly from the raw text_blocks so every
+        # normalized document contributes at least one searchable row; this
+        # keeps the index retrievable for methodology text without
+        # re-running normalization (raw PDFs for these four are not in
+        # data/corpus/raw/verra).
+        fallback_blocks = doc.get("text_blocks", [])
+        # When the only block is a collapsed preamble (heading == ""), keep it;
+        # otherwise the S-1 preamble-drop already removed it and fallback_blocks
+        # is already the right source.
+        if (
+            fallback_blocks
+            and len(fallback_blocks) == 1
+            and fallback_blocks[0].get("heading", "") == ""
+        ):
+            # single preamble block actually holds the whole document
+            pass
+        for block in fallback_blocks:
+            block_text = block.get("text", "").strip()
+            if not block_text:
+                continue
+            heading_text = block.get("heading", "") or doc_name
+            # Try to map the block's heading to a canonical section, but
+            # accept empty mapping for methodology docs.
+            match = _best_match(heading_text, alias_index) if heading_text != doc_name else None
+            if match:
+                sid, ssid = match
+                span_heading = (
+                    sections[sid]["sub_sections"][ssid]["heading"]
+                    if ssid and ssid in sections[sid]["sub_sections"]
+                    else sections[sid]["canonical_heading"]
+                )
+            else:
+                sid, ssid = "", ""
+                span_heading = heading_text
+            for chunk_index, chunk_text in enumerate(_chunk_block(block_text)):
+                section_spans.append(
+                    {
+                        "canonical_section_id": sid,
+                        "canonical_sub_section_id": ssid or None,
+                        "canonical_heading": span_heading,
+                        "heading_text": heading_text,
+                        "chunk_index": chunk_index,
+                        "text": chunk_text,
+                    }
+                )
+        # If the document had a non-empty full text but no usable block
+        # (e.g. an exotic normalization shape), chunk the top-level text as
+        # a final safety net so the document is never silent.
+        if not section_spans:
+            fallback_text = doc.get("text", "").strip()
+            if fallback_text:
+                for chunk_index, chunk_text in enumerate(_chunk_block(fallback_text)):
+                    section_spans.append(
+                        {
+                            "canonical_section_id": "",
+                            "canonical_sub_section_id": None,
+                            "canonical_heading": doc_name,
+                            "heading_text": doc_name,
+                            "chunk_index": chunk_index,
+                            "text": chunk_text,
+                        }
+                    )
     else:
         for k, h in enumerate(headings):
             body = blocks[k].get("text", "").strip()

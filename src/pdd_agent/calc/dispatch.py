@@ -164,22 +164,47 @@ def _map_acm0022(pi: ProjectInput) -> tuple[dict[str, Any], list[str]] | None:
     quant = pi.quantification
     warnings: list[str] = []
 
-    waste_streams = []
-    n_types = len(tech.waste_type)
-    per_type_tonnes = tech.annual_waste_throughput / n_types if n_types else 0
-    kept = []
-    for wt in tech.waste_type:
-        if wt in DOC_BY_WASTE_TYPE:
-            kept.append(wt)
-        else:
-            warnings.append(f"waste_type '{wt}' not in DOC_BY_WASTE_TYPE; excluded from the calc")
-    if not kept:
-        logger.warning("calc_inputs_incomplete", missing=["technology.waste_type"])
-        return None
-    for wt in kept:
-        waste_streams.append({"waste_type": wt, "annual_tonnes": per_type_tonnes})
-    if n_types > 1:
-        warnings.append("waste split evenly across N declared waste types")
+    waste_streams: list[dict[str, Any]] = []
+    # S-2 waste-composition-weighted mapping (PHASE-05, 2026-08-13 plan).
+    # When a published composition is declared, it replaces the even split;
+    # otherwise the fallback conserves mass by dividing by len(kept).
+    if tech.waste_composition:
+        excluded_fraction = 0.0
+        for entry in tech.waste_composition:
+            # Surface provenance for the reviewer-issues appendix.
+            warnings.append(
+                f"waste_composition: {entry.waste_type} {entry.mass_fraction:.1%} — {entry.source}"
+            )
+            if entry.waste_type in DOC_BY_WASTE_TYPE:
+                annual_tonnes = tech.annual_waste_throughput * entry.mass_fraction
+                waste_streams.append(
+                    {"waste_type": entry.waste_type, "annual_tonnes": annual_tonnes}
+                )
+            else:
+                excluded_fraction += entry.mass_fraction
+        if excluded_fraction > 0:
+            warnings.append(
+                f"waste_composition: {excluded_fraction:.1%} of mass is non-degradable or unmapped and contributes no BE_CH4"
+            )
+        if not waste_streams:
+            logger.warning("calc_inputs_incomplete", missing=["technology.waste_type"])
+            return None
+        # Do NOT rescale remaining fractions — inert mass genuinely generates no methane.
+    else:
+        kept = [wt for wt in tech.waste_type if wt in DOC_BY_WASTE_TYPE]
+        excluded = [wt for wt in tech.waste_type if wt not in DOC_BY_WASTE_TYPE]
+        if not kept:
+            logger.warning("calc_inputs_incomplete", missing=["technology.waste_type"])
+            return None
+        per_type_tonnes = tech.annual_waste_throughput / len(kept)
+        for wt in kept:
+            waste_streams.append({"waste_type": wt, "annual_tonnes": per_type_tonnes})
+        if excluded:
+            warnings.append(
+                f"waste types {excluded} are not in DOC_BY_WASTE_TYPE; their mass was redistributed across {kept}"
+            )
+        if len(kept) > 1:
+            warnings.append("waste split evenly across N declared waste types")
 
     if tech.biomethanization_suitable_fraction is None:
         bio_frac = 0.0

@@ -122,6 +122,7 @@ class SectionOrchestrator:
         max_redraft_attempts: int = 3,
         assumption_burden_path: Path | str | None = None,
         runs_dir: Path | str | None = None,
+        only_sections: list[str] | None = None,
     ) -> None:
         self._provider = provider or NoopProvider()
         self._assumption_burden_path = assumption_burden_path
@@ -147,6 +148,7 @@ class SectionOrchestrator:
         self._max_redraft_attempts = max(0, max_redraft_attempts)
         self.redraft_count: int = 0
         self._judge_provider_cache: tuple[str, bool] | None = None
+        self._only_sections: list[str] | None = only_sections
 
         if hasattr(self._provider, "set_budget"):
             self._provider.set_budget(self._budget)
@@ -1018,10 +1020,15 @@ class SectionOrchestrator:
     def draft_all_sections(self) -> list[DraftSection]:
         """Draft all sections in the canonical schema order."""
         results: list[DraftSection] = []
+        # PHASE-04 (2026-08-13 plan): when only_sections is non-empty, draft
+        # only the listed sub-section ids; None or empty -> all 36.
+        filter_ids = set(self._only_sections) if self._only_sections else None
         for sec in self._schema["sections"]:
             sid = sec["section_id"]
             for ss in sec.get("sub_sections", []):
                 ssid = ss["sub_section_id"]
+                if filter_ids is not None and ssid not in filter_ids:
+                    continue
                 draft = self.draft_section(sid, ssid)
                 results.append(draft)
         return results

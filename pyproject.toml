@@ -35,6 +35,9 @@ llm = [
     "openai>=1.0.0",
     "anthropic>=0.40.0",
 ]
+ingest = [
+    "pdfplumber>=0.11.0",
+]
 
 [project.scripts]
 pdd-agent = "pdd_agent.cli:main"

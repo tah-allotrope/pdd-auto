@@ -9,7 +9,7 @@ class WasteStream(BaseModel):
     """A single waste stream entering the project."""
 
     waste_type: str = Field(..., description="Waste type key matching constants.DOC_BY_WASTE_TYPE")
-    annual_tonnes: float = Field(..., gt=0, description="Annual waste input (tonnes/year)")
+    annual_tonnes: float = Field(..., ge=0, description="Annual waste input (tonnes/year)")
     doc_override: float | None = Field(None, ge=0, le=1, description="Override DOC fraction")
     decay_rate_override: float | None = Field(
         None, gt=0, description="Override decay rate k (1/year)"

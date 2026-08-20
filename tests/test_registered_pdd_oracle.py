@@ -50,15 +50,20 @@ class TestSocSonOracle:
     @pytest.mark.xfail(
         strict=True,
         reason=(
-            "Summing the year-by-year FOD schedule (PHASE-03) raises this from "
-            "3,413,977 tCO2e (year-1 net x 7, -10.3% vs registered — passed before "
-            "PHASE-03) to 5,312,566 tCO2e (+39.5%). This is the same phenomenon "
-            "documented in TestInegolOracle's xfails: the FOD baseline genuinely "
-            "accumulates as more waste piles up each crediting-period year, but the "
-            "repo's config carries no waste-composition split, no ramp-up profile, "
-            "and no site-specific project-emission inputs to offset that growth the "
-            "way the registered PDD's own methodology does. Closing this gap needs "
-            "those missing inputs, not a wider tolerance."
+            "Re-measured 2026-08-20 after PHASE-05 waste-composition fix: engine "
+            "computed 5,397,730 tCO2e crediting-period total vs registered "
+            "3,808,082 tCO2e (+41.7%). Before PHASE-03 the same test passed at "
+            "3,413,977 tCO2e (year-1 net x 7, -10.3%); PHASE-03's FOD schedule "
+            "raised it to 5,312,566 tCO2e (+39.5%). With the Soc Son composition "
+            "now declared (food_waste 51.9%, paper 2.7%, textiles 1.6%, rubber 1.3%, "
+            "wood/garden 0.0%; 42.5% inert correctly excluded, so 839,500 t/yr "
+            "degradable of 1,460,000 t/yr total reaches the engine) the gap moves "
+            "to +41.7% — higher because the degradable mix is more methane-rich than "
+            "the previous even split. The remaining gap is still the same phenomenon "
+            "documented in TestInegolOracle: the repo config carries no capacity "
+            "ramp or site-specific project-emission inputs to offset FOD growth the "
+            "way the registered PDD does. Closing it needs those inputs, not a "
+            "wider tolerance."
         ),
     )
     def test_crediting_period_total_within_tolerance(self):
@@ -85,14 +90,15 @@ class TestSocSonOracle:
 _YEAR_ONE_XFAIL = pytest.mark.xfail(
     strict=True,
     reason=(
-        "Apples-to-oranges until the year-by-year schedule lands. The registered "
-        "104,285 tCO2e/yr is an AVERAGE over the 7-year crediting period, while "
-        "PddCalcResult's scalars describe YEAR 1 of a first-order-decay baseline "
-        "— the smallest year. Measured after the BE_CH4 fix: year 1 net = 50,690 "
-        "(-51.4%), year 3 = 107,226 (+2.8% of the registered average), 7-year sum "
-        "= 893,441 vs registered 730,000 (+22.4%). Summing the schedule instead of "
-        "multiplying year 1 by 7 moves this from -51% to +22%; closing the "
-        "remaining gap needs the project-emission inputs the config lacks."
+        "Re-measured 2026-08-20 after PHASE-05 (socson now 5,397,730 tCO2e, +41.7% vs "
+        "3,808,082; inegol unchanged). The registered 104,285 tCO2e/yr is an AVERAGE "
+        "over the 7-year crediting period, while PddCalcResult's scalars describe "
+        "YEAR 1 of a first-order-decay baseline — the smallest year. Measured after "
+        "the BE_CH4 fix: year 1 net = 50,690 (-51.4%), year 3 = 107,226 (+2.8% of the "
+        "registered average), 7-year sum = 893,441 vs registered 730,000 (+22.4%). "
+        "Summing the schedule instead of multiplying year 1 by 7 moves this from "
+        "-51% to +22%; closing the remaining gap needs the project-emission inputs "
+        "the config lacks."
     ),
 )
 

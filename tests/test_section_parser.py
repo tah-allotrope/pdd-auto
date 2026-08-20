@@ -254,7 +254,11 @@ class TestSectionSpans:
         with structlog.testing.capture_logs() as logs:
             result = parse_document(doc_path, SCHEMA_PATH)
 
-        assert result["section_spans"] == []
+        # After PHASE-02 honest-gap closure (2026-08-20), a misaligned document
+        # no longer yields an empty section_spans — it falls back to generic
+        # chunks from its raw text_blocks so the document stays searchable.
+        assert len(result["section_spans"]) == 2
+        assert {e["text"] for e in result["section_spans"]} == {"preamble", "Body text."}
         assert result["sections_mapped"] != []
         assert any(entry.get("event") == "corpus_block_alignment_failed" for entry in logs)
 
