@@ -210,7 +210,7 @@ class TestGroundingProvenance:
         text = output_path.read_text(encoding="utf-8")
         assert "## Grounding" in text
         assert "- Retrieval index: " in text
-        assert "- Corpus documents: " in text
+        assert "- Indexed section rows: " in text
         assert "- Calc methodology: " in text
 
     def test_grounding_block_omitted_when_nothing_ran(self):

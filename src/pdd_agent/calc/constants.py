@@ -5,11 +5,46 @@ Values sourced from:
 - CDM Tool 04 v08.0 (FOD model defaults)
 - CDM Tool 03 v04.0 (fossil fuel factors)
 - CDM Tool 05 v03.0 (electricity emissions)
+- IPCC 2006 Guidelines Volume 5 Chapter 2 Table 2.4 (dry matter, total carbon)
+  and Chapter 5 Tables 5.2/5.6 (fossil carbon fraction, N2O emission factor
+  for continuous stoker-type MSW incineration) — incineration constants.
 """
 
 from __future__ import annotations
 
 GWP_CH4: float = 28.0  # AR5, tCO2e per tCH4
+
+GWP_N2O: float = 265.0  # AR5, tCO2e per tN2O
+
+# kg N2O per tonne of wet waste incinerated — IPCC 2006 V5 Ch.5 Table 5.6,
+# continuous stoker-type MSW incineration.
+EF_N2O_INCINERATION_KG_PER_TONNE: float = 0.05
+
+# Fraction of incinerated carbon actually oxidised — IPCC default for modern
+# MSW incineration (complete oxidation). Overridable engine input.
+OXIDATION_FACTOR_INCINERATION: float = 1.0
+
+CO2_PER_C_RATIO: float = 44.0 / 12.0  # molecular mass ratio CO2/C
+
+# Per-waste-type incineration defaults (ASM-005):
+#   dm  — dry matter content as a fraction of wet weight
+#         (IPCC 2006 V5 Ch.2 Table 2.4)
+#   CF  — total carbon content as a fraction of DRY matter
+#         (IPCC 2006 V5 Ch.2 Table 2.4)
+#   FCF — fraction of that carbon which is fossil in origin
+#         (IPCC 2006 V5 Ch.5 Table 5.2)
+INCINERATION_CARBON_BY_WASTE_TYPE: dict[str, dict[str, float]] = {
+    "food_waste": {"dm": 0.40, "CF": 0.38, "FCF": 0.00},
+    "garden_waste": {"dm": 0.40, "CF": 0.49, "FCF": 0.00},
+    "paper_cardboard": {"dm": 0.90, "CF": 0.46, "FCF": 0.01},
+    "wood": {"dm": 0.85, "CF": 0.50, "FCF": 0.00},
+    "textiles": {"dm": 0.80, "CF": 0.50, "FCF": 0.20},
+    "nappies": {"dm": 0.40, "CF": 0.70, "FCF": 0.10},
+    "rubber_leather": {"dm": 0.84, "CF": 0.67, "FCF": 0.20},
+    "plastics": {"dm": 1.00, "CF": 0.75, "FCF": 1.00},
+    "inert": {"dm": 0.90, "CF": 0.03, "FCF": 1.00},
+    "municipal_solid_waste": {"dm": 0.60, "CF": 0.40, "FCF": 0.30},
+}
 
 DENSITY_CH4: float = 0.0007168  # tonnes CH4 per Nm3 at STP (0°C, 1 atm)
 

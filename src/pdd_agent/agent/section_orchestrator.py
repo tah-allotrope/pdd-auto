@@ -61,6 +61,19 @@ _METHODOLOGY_FAMILY = {
 }
 _DEFAULT_FAMILY = "wte"
 
+# Per-subsection character budgets keyed on content_class (S-2 of the
+# 2026-08-21 real-output-fidelity plan). These are ceilings, not targets.
+_CONTENT_CLASS_BUDGETS = {
+    "OPTIONAL": 2000,
+    "FACTUAL": 3000,
+    "BOILERPLATE": 4000,
+    "NARRATIVE": 8000,
+    "EVIDENCE_BASED": 8000,
+    "METHODOLOGY_DEPENDENT": 12000,
+    "QUANTITATIVE": 20000,
+}
+_DEFAULT_SECTION_BUDGET = 4000
+
 
 def family_slug_for(methodology_ids: Sequence[str] | None) -> str:
     """Resolve a methodology-family slug from a project's methodology IDs.
@@ -510,6 +523,61 @@ class SectionOrchestrator:
         info = self._section_info(section_id, sub_section_id)
         return info.get("content_class", "NARRATIVE")
 
+    def section_budget_chars(self, section_id: str, sub_section_id: str | None = None) -> int:
+        """Resolve the effective character budget for one subsection (S-2).
+
+        Order: declared ``max_chars`` in the section schema, else the
+        content_class tier, else 4000; then capped by the project's global
+        ``generation_controls.max_tokens_per_section`` character ceiling.
+        """
+        info = self._section_info(section_id, sub_section_id)
+        declared = info.get("max_chars")
+        if isinstance(declared, (int, float)):
+            budget = int(declared)
+        else:
+            budget = _CONTENT_CLASS_BUDGETS.get(
+                info.get("content_class", ""), _DEFAULT_SECTION_BUDGET
+            )
+        ceiling = getattr(
+            getattr(self._project, "generation_controls", None), "max_tokens_per_section", None
+        )
+        if ceiling:
+            budget = min(budget, int(ceiling))
+        return budget
+
+    def _apply_truncation_report(
+        self, draft: DraftSection, budget: int, original_len: int
+    ) -> DraftSection:
+        """Append a TRUNCATED issue and downgrade confidence one step when cut."""
+        if original_len <= budget:
+            return draft
+        section_key = draft.sub_section_id or draft.section_id
+        draft.issues.append(
+            f"TRUNCATED: section {section_key} output was cut from {original_len} to "
+            f"{budget} characters; the final sentence is incomplete."
+        )
+        order = ["HIGH", "MEDIUM", "LOW"]
+        if draft.confidence in order:
+            draft.confidence = order[min(order.index(draft.confidence) + 1, len(order) - 1)]
+        logger.warning(
+            "section_truncated",
+            section_key=section_key,
+            original_chars=original_len,
+            budget_chars=budget,
+        )
+        return draft
+
+    def _enforce_budget(
+        self, draft: DraftSection, section_id: str, sub_section_id: str | None
+    ) -> DraftSection:
+        """Truncate to the resolved budget and report honestly when cut."""
+        budget = self.section_budget_chars(section_id, sub_section_id)
+        original_len = len(draft.text)
+        if original_len > budget:
+            draft.text = draft.text[:budget]
+            draft = self._apply_truncation_report(draft, budget, original_len)
+        return draft
+
     def _is_high_review(self, section_id: str, sub_section_id: str | None = None) -> bool:
         return self._review_sensitivity(section_id, sub_section_id) in ("HIGH", "CRITICAL")
 
@@ -729,6 +797,20 @@ class SectionOrchestrator:
                     section_id, sub_section_id, k=k, document_family=self._family_slug()
                 )
         examples = list(examples)
+        grounding_issue: str | None = None
+        if any(getattr(e, "from_fallback_family", False) for e in examples):
+            family = self._family_slug()
+            logger.warning(
+                "grounding_family_fallback",
+                section_id=section_id,
+                sub_section_id=sub_section_id,
+                family=family,
+            )
+            grounding_issue = (
+                f"GROUNDING: no {family} corpus available; this section is grounded in "
+                f"{family} fallback precedent from other methodology families and must be "
+                "reviewed before use."
+            )
         fact_entries = relevant_fact_entries(
             self._assumption_register(), section_id, sub_section_id
         )
@@ -746,7 +828,11 @@ class SectionOrchestrator:
             sub_section_id=sub_section_id or "",
             prompt=prompt,
             provenance=provenance,
+            max_chars=self.section_budget_chars(section_id, sub_section_id),
         )
+        draft = self._enforce_budget(draft, section_id, sub_section_id)
+        if grounding_issue:
+            draft.issues.append(grounding_issue)
 
         draft = self._enrich_draft(
             draft,
@@ -936,7 +1022,9 @@ class SectionOrchestrator:
                 sub_section_id=sub_section_id or "",
                 prompt=redraft_prompt,
                 provenance=provenance + [f"[JUDGE: redraft attempt {attempt}]"],
+                max_chars=self.section_budget_chars(section_id, sub_section_id),
             )
+            current_draft = self._enforce_budget(current_draft, section_id, sub_section_id)
             current_draft = self._enrich_draft(
                 current_draft,
                 section_id=section_id,

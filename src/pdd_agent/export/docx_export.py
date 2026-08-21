@@ -9,7 +9,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 import re
 from types import SimpleNamespace
-from typing import Any
+from typing import Any, Callable
 
 import structlog
 import yaml
@@ -18,6 +18,7 @@ from pdd_agent.llm.provider import DraftRun
 from pdd_agent.review.consistency import check_quantitative_consistency
 from pdd_agent.review.judge import _EVIDENCE_ID_RE
 from schemas.project_input import ProjectInput
+from pdd_agent.export.markdown_docx import render_markdown_body
 from pdd_agent.export.table_helpers import (
     add_styled_table,
 )
@@ -44,6 +45,7 @@ class ExportGateResult:
     blocked: bool
     hard_blocks: list[str] = field(default_factory=list)
     advisories: list[str] = field(default_factory=list)
+    required_inputs: list[dict[str, str]] = field(default_factory=list)
     force_used: bool = False
 
     @property
@@ -59,10 +61,14 @@ def check_export_gate(
 ) -> ExportGateResult:
     """Run the tiered export gate against a DraftRun or its serialized dict.
 
-    Hard-blocks:
+    Hard-blocks (export refused unless ``force=True``):
       - Numbers contradicting ProjectInput / calc engine (via consistency.py)
       - Evidence citations to IDs not in the evidence registry
-      - Unresolved [MISSING] markers in Sections 3-4
+
+    Required inputs (export proceeds without ``--force``): every ``[MISSING]``
+    marker in any section is collected into ``required_inputs`` and rendered
+    as an "Appendix — Required Inputs" table — the model correctly reporting a
+    missing input is honest behaviour, not a fabrication.
 
     Everything else exports as a watermarked DRAFT with advisory markers.
     """
@@ -76,6 +82,7 @@ def check_export_gate(
     sections = [SimpleNamespace(**s) if isinstance(s, dict) else s for s in sections_raw]
     hard_blocks: list[str] = []
     advisories: list[str] = []
+    required_inputs: list[dict[str, str]] = []
 
     consistency_report = check_quantitative_consistency(
         draft_sections=sections,
@@ -90,12 +97,13 @@ def check_export_gate(
             advisories.append(f"[{flag.section_a}↔{flag.section_b}] {flag.message}")
 
     _check_evidence_registry(sections, project_input, hard_blocks)
-    _check_missing_markers(sections, hard_blocks)
+    _collect_required_inputs(sections, required_inputs)
 
     return ExportGateResult(
         blocked=bool(hard_blocks),
         hard_blocks=hard_blocks,
         advisories=advisories,
+        required_inputs=required_inputs,
         force_used=force,
     )
 
@@ -127,14 +135,23 @@ def _check_evidence_registry(
             )
 
 
-def _check_missing_markers(sections: list[Any], hard_blocks: list[str]) -> None:
+def _collect_required_inputs(sections: list[Any], required_inputs: list[dict[str, str]]) -> None:
+    """Collect every ``[MISSING]`` marker occurrence as a required-input entry.
+
+    Mutates ``required_inputs`` in place; one entry per occurrence, in every
+    section (not only Sections 3-4). Context is 200 whitespace-collapsed
+    characters centred on the marker.
+    """
     for section in sections:
         text = getattr(section, "text", "") or ""
         section_key = _gate_section_key(section)
-        if "[MISSING]" in text and _in_section_3_or_4(section_key):
-            hard_blocks.append(
-                f"[{section_key}] Unresolved [MISSING] marker in quantification/methodology section."
-            )
+        collapsed = " ".join(text.split())
+        idx = collapsed.find("[MISSING]")
+        while idx != -1:
+            start = max(0, idx - 100)
+            end = min(len(collapsed), idx + len("[MISSING]") + 100)
+            required_inputs.append({"section_key": section_key, "context": collapsed[start:end]})
+            idx = collapsed.find("[MISSING]", idx + 1)
 
 
 def _gate_section_key(section: Any) -> str:
@@ -142,10 +159,6 @@ def _gate_section_key(section: Any) -> str:
     if ssid:
         return str(ssid)
     return str(getattr(section, "section_id", ""))
-
-
-def _in_section_3_or_4(section_key: str) -> bool:
-    return section_key.startswith(("3", "4"))
 
 
 def _docx_attr(module_name: str, attr_name: str) -> Any:
@@ -222,6 +235,7 @@ def export_run_to_docx(
 
     schema = _load_schema()
     sections = run_data.get("sections", [])
+    display_math_sources: list[str] = []
     assumption_register = run_data.get("assumption_register") or {}
     blocked_items = assumption_register.get("guardrails", {}).get("blocked_review_items", [])
     blocked_paths = {item.get("field_path", ""): item.get("reason", "") for item in blocked_items}
@@ -238,7 +252,7 @@ def export_run_to_docx(
     resolved_project_name = project_name or run_data.get("project_name", "Unknown Project")
     _add_title_page(doc, resolved_project_name, run_id)
     _add_disclaimer(doc, is_demo=is_demo)
-    _add_draft_watermark(doc, force=force)
+    _add_draft_watermark(doc, force=force, had_hard_blocks=gate.blocked)
 
     cover_data = run_data.get("structured_cover") or _infer_cover_data(run_data)
     render_cover_metadata_table(doc, cover_data)
@@ -265,7 +279,7 @@ def export_run_to_docx(
             # prose (renderer called instead of the text paragraphs). Prose is
             # now rendered unconditionally first, and the table (when its
             # table_type resolves to a renderer) follows it.
-            _add_section_prose(doc, section, is_demo)
+            _add_section_prose(doc, section, is_demo, on_display_math=display_math_sources.append)
 
             structured = section.get("structured_content")
             if structured and isinstance(structured, dict):
@@ -285,6 +299,8 @@ def export_run_to_docx(
 
     _add_assumption_appendix(doc, assumption_register, sections, blocked_paths, is_demo=is_demo)
     _add_calc_audit_appendix(doc, calc_result_dict)
+    _add_formulas_appendix(doc, display_math_sources)
+    _add_required_inputs_appendix(doc, gate.required_inputs)
     if not is_demo:
         _add_reviewer_issues_appendix(doc, run_data, sections, blocked_paths, calc_result_dict)
 
@@ -400,8 +416,13 @@ def _add_disclaimer(doc: Any, is_demo: bool = False) -> None:
     _highlight_paragraph(paragraph, "FCE4D6")
 
 
-def _add_draft_watermark(doc: Any, force: bool = False) -> None:
-    """Add a prominent DRAFT stamp to every exported DOCX."""
+def _add_draft_watermark(doc: Any, force: bool = False, had_hard_blocks: bool = False) -> None:
+    """Add a prominent DRAFT stamp to every exported DOCX.
+
+    The ``(EXPORT GATE OVERRIDE)`` suffix appears only when the caller forced
+    past an export gate that actually hard-blocked — a forced export of a run
+    whose only finding is ``[MISSING]`` markers is not an override.
+    """
     WD_ALIGN_PARAGRAPH = _docx_attr("docx.enum.text", "WD_ALIGN_PARAGRAPH")
     Pt = _docx_attr("docx.shared", "Pt")
     RGBColor = _docx_attr("docx.shared", "RGBColor")
@@ -409,7 +430,7 @@ def _add_draft_watermark(doc: Any, force: bool = False) -> None:
     paragraph = doc.add_paragraph()
     paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
     message = "DRAFT — NOT FOR FILING"
-    if force:
+    if force and had_hard_blocks:
         message += " (EXPORT GATE OVERRIDE)"
     run = paragraph.add_run(message)
     run.bold = True
@@ -997,21 +1018,68 @@ def _truncate_value(value: Any, limit: int = 80) -> str:
     return f"{text[: limit - 3]}..."
 
 
-def _add_section_prose(doc: Any, section: dict[str, Any], is_demo: bool) -> None:
+def _add_section_prose(
+    doc: Any,
+    section: dict[str, Any],
+    is_demo: bool,
+    on_display_math: Callable[[str], None] | None = None,
+) -> None:
     """Append a section's narrative paragraphs (or a placeholder when empty).
 
     Extracted from the two identical arms of the old structured/unstructured
     dispatch (PHASE-03 of the 2026-08-13 grounding-rebuild plan) so prose
     renders unconditionally, independent of whether a table follows it.
+
+    Since the 2026-08-21 real-output-fidelity plan the body is rendered by
+    ``render_markdown_body`` so real model Markdown (headings, pipe tables,
+    emphasis, lists, math) becomes native Word content instead of literal
+    artifact characters.
     """
     text = section.get("text", "")
-    if text:
-        for paragraph_text in _split_paragraphs(text):
-            paragraph = doc.add_paragraph(paragraph_text)
-            if not is_demo and section.get("confidence") in {"LOW", "UNSUPPORTED"}:
-                _highlight_paragraph(paragraph, "FFF2CC")
-    else:
+    if not text:
         _safe_paragraph_style(doc.add_paragraph("[No content drafted yet]"), "Intense Quote")
+        return
+    paragraphs_before = len(doc.paragraphs)
+    render_markdown_body(doc, text, on_display_math=on_display_math)
+    if not is_demo and section.get("confidence") in {"LOW", "UNSUPPORTED"}:
+        for paragraph in doc.paragraphs[paragraphs_before:]:
+            _highlight_paragraph(paragraph, "FFF2CC")
+
+
+def _add_required_inputs_appendix(doc: Any, required_inputs: list[dict[str, str]]) -> None:
+    """Append an "Appendix — Required Inputs" table; no-op when empty.
+
+    Capped at the first 100 entries so a noop-provider run full of markers
+    cannot produce an unbounded appendix.
+    """
+    if not required_inputs:
+        return
+    doc.add_heading("Appendix — Required Inputs", level=1)
+    doc.add_paragraph(
+        "The drafting model flagged the following facts as missing from the project "
+        "inputs. Each entry needs a human-supplied value before filing."
+    )
+    rendered = required_inputs[:100]
+    rows = [["Section", "What is missing"]]
+    for item in rendered:
+        rows.append([item.get("section_key", ""), item.get("context", "")])
+    if len(required_inputs) > 100:
+        rows.append(
+            ["", f"… and {len(required_inputs) - 100} more required inputs (see the run JSON)"]
+        )
+    add_styled_table(doc, rows, widths=None, header=True, font_size=8.7)
+
+
+def _add_formulas_appendix(doc: Any, formulas: list[str]) -> None:
+    """Append an "Appendix — Formulas (verbatim source)" section; no-op when empty."""
+    if not formulas:
+        return
+    doc.add_heading("Appendix — Formulas (verbatim source)", level=1)
+    for formula in formulas:
+        paragraph = doc.add_paragraph()
+        run = paragraph.add_run(formula)
+        run.font.name = "Consolas"
+        run.font.size = _docx_attr("docx.shared", "Pt")(9)
 
 
 def _add_audit_history_front_matter(
@@ -1046,6 +1114,12 @@ def _add_audit_history_front_matter(
 
 
 def _split_paragraphs(text: str) -> list[str]:
+    """Split text into non-empty stripped lines.
+
+    Deliberately Markdown-naive: this helper is kept only for call sites that
+    render short single-purpose strings. Section bodies must go through
+    ``render_markdown_body`` instead.
+    """
     pieces = [piece.strip() for piece in text.split("\n")]
     return [piece for piece in pieces if piece]
 

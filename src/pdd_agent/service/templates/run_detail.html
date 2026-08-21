@@ -43,9 +43,28 @@
 
 <section class="card">
   <h2>Export</h2>
-  <form action="/api/runs/{{ run_id }}/approve-all" method="post" style="display:inline">
-    <button type="submit" class="button button-secondary">Approve all sections</button>
-  </form>
+  <button type="button" class="button button-secondary" id="approve-all-btn">Approve all sections</button>
+  <p id="approve-all-result" class="muted"></p>
+  <script>
+    document.getElementById("approve-all-btn").addEventListener("click", async function () {
+      const out = document.getElementById("approve-all-result");
+      try {
+        const resp = await fetch("/api/runs/{{ run_id }}/approve-all", { method: "POST" });
+        const body = await resp.json();
+        const data = body.detail && body.detail.sections_approved !== undefined ? body.detail : body;
+        if (resp.ok) {
+          out.textContent = `Approved ${data.sections_approved} section(s).`;
+        } else {
+          const skipped = (data.sections_skipped || [])
+            .map((s) => s.section_key).join(", ");
+          out.textContent = `Approved ${data.sections_approved} section(s); skipped: ${skipped}. Sections awaiting operator input are not bulk-approved.`;
+        }
+        setTimeout(() => window.location.reload(), 1200);
+      } catch (err) {
+        out.textContent = "Approve-all failed: " + err;
+      }
+    });
+  </script>
   <p>
     <a class="button" href="/api/runs/{{ run_id }}/docx?force=1">Download DOCX (force)</a>
     <a class="button button-secondary" href="/api/runs/{{ run_id }}/docx">Download DOCX (gated)</a>

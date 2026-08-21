@@ -380,3 +380,84 @@ class TestRetrievalIndexBuildStats:
 
         assert "onlydoc.norm" in stats["docs_with_zero_sections"]
         assert stats["rows_by_document"]["onlydoc.norm"] == 0
+
+
+class TestFallbackFamilyTagging:
+    """Fallback results must be tagged so the orchestrator can flag grounding."""
+
+    def test_search_tags_fallback_results(self, tmp_path):
+        from pdd_agent.retrieval.index import RetrievalIndex
+
+        db_path = tmp_path / "tagfallback.fts.db"
+        _make_fts_db_v2(
+            db_path,
+            [
+                (
+                    "1",
+                    "",
+                    "alpha",
+                    "Heading",
+                    "uniqueterm content",
+                    "",
+                    "",
+                    "wte",
+                    0,
+                ),
+            ],
+        )
+
+        idx = RetrievalIndex(db_path=db_path)
+        try:
+            results = search("uniqueterm", document_family="rice", index=idx)
+            assert results
+            assert all(r.from_fallback_family is True for r in results)
+            direct = search("uniqueterm", document_family="wte", index=idx)
+            assert all(r.from_fallback_family is False for r in direct)
+        finally:
+            idx.close()
+
+    def test_get_examples_tags_fallback_results(self, tmp_path):
+        from pdd_agent.retrieval.index import RetrievalIndex
+
+        db_path = tmp_path / "tagexamples.fts.db"
+        _make_fts_db_v2(
+            db_path,
+            [
+                ("4", "4.1", "alpha", "Heading", "text one", "", "", "wte", 0),
+                ("4", "4.1", "beta", "Heading", "text two", "", "", "wte", 1),
+            ],
+        )
+
+        idx = RetrievalIndex(db_path=db_path)
+        try:
+            results = get_examples_for_section(
+                "4", sub_section_id="4.1", k=5, index=idx, document_family="rice"
+            )
+            assert results
+            assert all(r.from_fallback_family is True for r in results)
+            direct = get_examples_for_section(
+                "4", sub_section_id="4.1", k=5, index=idx, document_family="wte"
+            )
+            assert all(r.from_fallback_family is False for r in direct)
+        finally:
+            idx.close()
+
+
+class TestReachabilityMetrics:
+    def test_index_health_reports_reachable_rows_and_documents(self, tmp_path):
+        from pdd_agent.retrieval.index import index_health
+
+        db_path = tmp_path / "reach.fts.db"
+        _make_fts_db_v2(
+            db_path,
+            [
+                ("3", "3.1", "doc-a", "Heading", "text a", "", "", "wte", 0),
+                ("4", "4.1", "doc-b", "Heading", "text b", "", "", "wte", 0),
+                ("", "", "doc-b", "Heading", "generic chunk no section", "", "", "wte", 1),
+            ],
+        )
+
+        report = index_health(db_path=db_path)
+
+        assert report["reachable_rows"] == 2
+        assert report["reachable_documents"] == 2

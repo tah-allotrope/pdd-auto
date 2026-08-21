@@ -222,8 +222,9 @@ class ProjectTechnology(BaseModel):
         None,
         description=(
             "Optional per-crediting-period-year capacity utilisation, dimensionless "
-            "0-1, index 0 = year 1. Reserved for a future ramp-aware baseline; "
-            "validated but not yet consumed by the calc engine."
+            "0-1, index 0 = year 1. Consumed by the ACM0022 engine: each year's "
+            "waste masses and electricity export are scaled by the ramp factor, "
+            "with the last value carried forward beyond the ramp's length."
         ),
     )
     cookstove_fleet: list[CookstoveFleetEntry] | None = Field(
@@ -417,7 +418,14 @@ class GenerationControls(BaseModel):
     )
     model_name: str = Field("gpt-4o", description="Model name for the provider")
     max_tokens_per_section: int = Field(
-        4000, ge=100, le=16000, description="Max tokens per section draft"
+        4000,
+        ge=100,
+        le=40000,
+        description=(
+            "Global ceiling in CHARACTERS applied on top of each subsection's "
+            "per-section schema budget; a section's effective budget is "
+            "min(schema_budget_chars, this value)."
+        ),
     )
     temperature: float = Field(0.1, ge=0.0, le=1.0, description="LLM temperature")
     token_budget: int = Field(500_000, ge=1000, description="Total token budget for the run")

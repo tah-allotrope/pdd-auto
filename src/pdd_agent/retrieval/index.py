@@ -441,6 +441,17 @@ def index_health(db_path: Path | None = None, corpus_dir: Path | None = None) ->
             else:
                 median_text_chars = round((lengths[n // 2 - 1] + lengths[n // 2]) / 2)
             rows_at_500_chars = sum(1 for length in lengths if length == 500)
+
+            reachable_row = conn.execute(
+                "SELECT COUNT(*) FROM sections_fts WHERE section_id IS NOT NULL "
+                "AND TRIM(section_id) != ''"
+            ).fetchone()
+            reachable_rows = reachable_row[0] if reachable_row else 0
+            reachable_doc_row = conn.execute(
+                "SELECT COUNT(DISTINCT document_name) FROM sections_fts "
+                "WHERE section_id IS NOT NULL AND TRIM(section_id) != ''"
+            ).fetchone()
+            reachable_documents = reachable_doc_row[0] if reachable_doc_row else 0
         finally:
             conn.close()
     except sqlite3.Error as exc:
@@ -461,6 +472,8 @@ def index_health(db_path: Path | None = None, corpus_dir: Path | None = None) ->
         "mean_text_chars": mean_text_chars,
         "median_text_chars": median_text_chars,
         "rows_at_500_chars": rows_at_500_chars,
+        "reachable_rows": reachable_rows,
+        "reachable_documents": reachable_documents,
         "missing_documents": missing_documents,
     }
 
@@ -500,7 +513,7 @@ def get_active_index_path() -> Path:
     return get_retrieval_index().db_path
 
 
-def get_active_index_doc_count() -> int:
+def get_active_index_row_count() -> int:
     """Return the number of indexed section rows in the active retrieval index.
 
     Returns 0 when the index file does not exist or is not queryable, so callers
@@ -519,6 +532,11 @@ def get_active_index_doc_count() -> int:
             conn.close()
     except sqlite3.Error:
         return 0
+
+
+def get_active_index_doc_count() -> int:
+    """Deprecated alias for :func:`get_active_index_row_count`."""
+    return get_active_index_row_count()
 
 
 def set_retrieval_index(index: RetrievalIndex) -> None:

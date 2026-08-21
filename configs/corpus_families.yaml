@@ -1,5 +1,26 @@
 # Maps a normalized corpus document stem (the .norm.json filename without its
 # extension) to a methodology-family slug: wte | rice | biochar | cookstove.
 # Any document not listed here defaults to "wte" (see default_family).
+#
+# NOTE: the Ödemiş stem below contains a mis-encoded character copied
+# byte-for-byte from the filesystem listing — do not retype it by hand.
 default_family: wte
-documents: {}
+documents:
+  Bergama_VCS-Joint-Project-Description-Monitoring-Report-v4.2.norm: wte
+  DraftProjectDescription.norm: wte
+  EB111_repan07_ACM0022_v03.0.norm: wte
+  VCS-Project-Description-HEREKO-v4.1_2022-10-24.norm: wte
+  VCS_Bergama_Project-Description.norm: wte
+  VCS_DRAFT_Yanjiang_Project-Description.norm: wte
+  VCS_Guangzhou_Project-Description.norm: wte
+  VCS_Guanxi_Zhuang_Project_Description.norm: wte
+  VCS_Inegol_Project-Description.norm: wte
+  VCS_Linfen_Project-Description.norm: wte
+  VCS_Lizuhou_Project-Description.norm: wte
+  VCS_Mahindra_Project-Description.norm: wte
+  VCS_Shunping_Project-Description.norm: wte
+  VCS_Soc_Son_Project-Description.norm: wte
+  VCS_Tamil_Nadu_Project-Description.norm: wte
+  VCS_Yingoku_Project-Description.norm: wte
+
+  "VCS_\xC3_demis_Project-Description.norm": wte

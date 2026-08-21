@@ -16,6 +16,22 @@ class WasteStream(BaseModel):
     )
 
 
+class IncinerationStream(BaseModel):
+    """A waste stream incinerated with energy recovery (drives PE_INC)."""
+
+    waste_type: str = Field(
+        ..., description="Waste type key matching constants.INCINERATION_CARBON_BY_WASTE_TYPE"
+    )
+    annual_tonnes: float = Field(..., ge=0, description="Annual incinerated mass (tonnes/year)")
+    dm_override: float | None = Field(None, ge=0, le=1, description="Override dry matter fraction")
+    cf_override: float | None = Field(
+        None, ge=0, le=1, description="Override total carbon fraction of dry matter"
+    )
+    fcf_override: float | None = Field(
+        None, ge=0, le=1, description="Override fossil carbon fraction"
+    )
+
+
 class FossilFuelInput(BaseModel):
     """Fossil fuel consumption by the project."""
 
@@ -110,6 +126,25 @@ class ACM0022CalcInput(BaseModel):
     fossil_fuels: list[FossilFuelInput] = Field(
         default_factory=list, description="Fossil fuels consumed by the project"
     )
+    incineration_streams: list[IncinerationStream] = Field(
+        default_factory=list,
+        description=(
+            "Waste streams incinerated with energy recovery. When non-empty, "
+            "PE_INC (fossil CO2 + N2O from combustion) is computed per "
+            "IPCC 2006 V5 Eq. 5.1/5.4; when empty PE_INC is zero."
+        ),
+    )
+    oxidation_factor_incineration: float = Field(
+        1.0,
+        ge=0,
+        le=1,
+        description="Oxidation factor for the incineration carbon balance (OF)",
+    )
+    ef_n2o_kg_per_tonne: float = Field(
+        0.05,
+        ge=0,
+        description="N2O emission factor per tonne of wet waste incinerated (kg N2O/tonne)",
+    )
     methane_leakage_fraction: float = Field(
         0.05,
         ge=0,
@@ -189,6 +224,9 @@ class ACM0022CalcResult(BaseModel):
     project_fossil_fuel_tco2e: float = Field(..., description="PE_FC: fossil fuel combustion")
     project_methane_leakage_tco2e: float = Field(..., description="PE_CH4: methane leakage from AD")
     project_flaring_tco2e: float = Field(..., description="PE_FLARE: incomplete flare destruction")
+    project_incineration_tco2e: float = Field(
+        0.0, description="PE_INC: waste incineration (fossil CO2 + N2O)"
+    )
 
     # Decomposed leakage
     leakage_rdf_combustion_tco2e: float = Field(

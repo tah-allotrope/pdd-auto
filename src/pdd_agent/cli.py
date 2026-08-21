@@ -96,7 +96,7 @@ def _build_parser() -> argparse.ArgumentParser:
     draft_parser.add_argument(
         "--provider",
         default="noop",
-        help="Drafting provider name: noop, demo, corpus, openai, anthropic, ollama (default: noop)",
+        help="Drafting provider name: noop, demo, corpus, openai, anthropic, ollama, claude-code (default: noop)",
     )
     judge_group = draft_parser.add_mutually_exclusive_group()
     judge_group.add_argument(
@@ -271,7 +271,7 @@ def _build_parser() -> argparse.ArgumentParser:
     benchmark_parser.add_argument(
         "--provider",
         default="demo",
-        help="LLM provider name for benchmark drafting: demo, openai, anthropic (default: demo)",
+        help="LLM provider name for benchmark drafting: demo, openai, anthropic, claude-code (default: demo)",
     )
     benchmark_parser.add_argument(
         "--demo-output-dir",
@@ -527,6 +527,8 @@ def _run_index_report(args, log) -> int:
     print(f"Mean text length: {report['mean_text_chars']:.1f} chars")
     print(f"Median text length: {report['median_text_chars']} chars")
     print(f"Rows at exactly 500 chars: {report['rows_at_500_chars']}")
+    print(f"Reachable rows: {report.get('reachable_rows', 0)}")
+    print(f"Reachable documents: {report.get('reachable_documents', 0)}")
     if report.get("missing_documents"):
         print(f"Missing documents: {', '.join(report['missing_documents'])}")
     log.info("index_report_done", db=args.index_db)

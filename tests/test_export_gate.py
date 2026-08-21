@@ -5,11 +5,9 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-import pytest
 import yaml
 
 from pdd_agent.export.docx_export import (
-    ExportBlockedError,
     ExportGateResult,
     check_export_gate,
     export_run_to_docx,
@@ -118,7 +116,7 @@ class TestEvidenceCitation:
 
 
 class TestMissingMarkerGate:
-    def test_blocks_unresolved_missing_in_section_3(self):
+    def test_missing_marker_becomes_required_input_not_hard_block(self):
         run = _make_run(
             _make_section(
                 "3",
@@ -128,10 +126,13 @@ class TestMissingMarkerGate:
             )
         )
         result = check_export_gate(run)
-        assert result.blocked is True
-        assert any("[MISSING]" in msg and "3.3" in msg for msg in result.hard_blocks)
+        assert result.blocked is False
+        assert result.hard_blocks == []
+        assert len(result.required_inputs) == 1
+        assert result.required_inputs[0]["section_key"] == "3.3"
+        assert "required detail" in result.required_inputs[0]["context"]
 
-    def test_allows_missing_marker_in_non_quant_section(self):
+    def test_missing_marker_collected_in_non_quant_section(self):
         run = _make_run(
             _make_section(
                 "1",
@@ -141,6 +142,37 @@ class TestMissingMarkerGate:
         )
         result = check_export_gate(run)
         assert result.blocked is False
+        assert len(result.required_inputs) == 1
+        assert result.required_inputs[0]["section_key"] == "1.1"
+
+    def test_missing_marker_with_critical_flag_still_blocks(self):
+        project_input = _load_project_input()
+        run = _make_run(
+            _make_section(
+                "1",
+                "1.10",
+                "The project is expected to generate 1,000 tCO2e/year and is [MISSING] detail.",
+                content_class="QUANTITATIVE",
+                review_sensitivity="HIGH",
+            )
+        )
+        result = check_export_gate(run, project_input=project_input)
+        assert result.blocked is True
+        assert len(result.hard_blocks) == 1
+        assert len(result.required_inputs) == 1
+
+    def test_two_markers_in_same_section_collected_separately(self):
+        run = _make_run(
+            _make_section(
+                "4",
+                "4.2",
+                "Grid EF is [MISSING] here and flare efficiency is [MISSING] too.",
+                content_class="QUANTITATIVE",
+            )
+        )
+        result = check_export_gate(run)
+        assert result.blocked is False
+        assert len(result.required_inputs) == 2
 
 
 class TestAdvisoryExport:
@@ -161,7 +193,7 @@ class TestAdvisoryExport:
 
 
 class TestForceOverride:
-    def test_force_records_override_but_keeps_hard_blocks(self):
+    def test_force_records_override_but_no_hard_blocks_for_missing_only(self):
         run = _make_run(
             _make_section(
                 "3",
@@ -170,12 +202,17 @@ class TestForceOverride:
             )
         )
         result = check_export_gate(run, force=True)
-        assert result.blocked is True
+        assert result.blocked is False
         assert result.force_used is True
+        assert len(result.required_inputs) == 1
 
 
 class TestDocxExportIntegration:
-    def test_export_raises_when_gate_blocked(self, tmp_path: Path, monkeypatch):
+    def test_export_succeeds_without_force_when_only_missing_markers(
+        self, tmp_path: Path, monkeypatch
+    ):
+        from docx import Document
+
         run_dir = tmp_path / "data" / "runs"
         run_dir.mkdir(parents=True, exist_ok=True)
         run = _make_run(
@@ -189,17 +226,23 @@ class TestDocxExportIntegration:
         run_path.write_text(json.dumps(run.to_dict()), encoding="utf-8")
         monkeypatch.setattr("pdd_agent.export.docx_export._DRAFT_RUNS_DIR", run_dir)
 
-        with pytest.raises(ExportBlockedError):
-            export_run_to_docx(run.run_id, output_path=tmp_path / "out.docx")
+        output = export_run_to_docx(run.run_id, output_path=tmp_path / "out.docx")
+        doc = Document(str(output))
+        assert any(p.text == "Appendix — Required Inputs" for p in doc.paragraphs)
+        assert not any("EXPORT GATE OVERRIDE" in p.text for p in doc.paragraphs)
 
-    def test_export_succeeds_with_force_override(self, tmp_path: Path, monkeypatch):
+    def test_export_with_critical_flag_and_force_shows_override(self, tmp_path: Path, monkeypatch):
+        from docx import Document
+
         run_dir = tmp_path / "data" / "runs"
         run_dir.mkdir(parents=True, exist_ok=True)
         run = _make_run(
             _make_section(
-                "3",
-                "3.3",
-                "Boundary [MISSING] detail.",
+                "1",
+                "1.10",
+                "The project is expected to generate 1,000 tCO2e/year.",
+                content_class="QUANTITATIVE",
+                review_sensitivity="HIGH",
             )
         )
         run_path = run_dir / f"{run.run_id}.json"
@@ -210,5 +253,7 @@ class TestDocxExportIntegration:
             run.run_id,
             output_path=tmp_path / "forced.docx",
             force=True,
+            project_input=_load_project_input(),
         )
-        assert output.exists()
+        doc = Document(str(output))
+        assert any("EXPORT GATE OVERRIDE" in p.text for p in doc.paragraphs)

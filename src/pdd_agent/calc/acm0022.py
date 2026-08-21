@@ -16,6 +16,7 @@ from typing import Any
 
 from pdd_agent.calc import cdm_tool_03, cdm_tool_04, cdm_tool_05, cdm_tool_06, cdm_tool_14
 from pdd_agent.calc.constants import DENSITY_CH4
+from pdd_agent.calc.incineration import incineration_emissions
 from pdd_agent.calc.methodology import ComputationResult, ValidationResult
 from pdd_agent.calc.models import ACM0022CalcInput, ACM0022CalcResult, EmissionComponent
 
@@ -164,7 +165,36 @@ class ACM0022Calculator:
             )
         )
 
-        project_total = pe_ec + pe_fc + pe_ch4 + pe_flare
+        # PE_INC: waste incineration (fossil CO2 + N2O from combustion)
+        incineration_stream_dicts = [
+            {
+                "waste_type": s.waste_type,
+                "annual_tonnes": s.annual_tonnes,
+                "dm_override": s.dm_override,
+                "cf_override": s.cf_override,
+                "fcf_override": s.fcf_override,
+            }
+            for s in self._inp.incineration_streams
+        ]
+        pe_inc = incineration_emissions(
+            incineration_stream_dicts,
+            oxidation_factor=self._inp.oxidation_factor_incineration,
+            ef_n2o_kg_per_tonne=self._inp.ef_n2o_kg_per_tonne,
+        )
+        components.append(
+            EmissionComponent(
+                name="PE_INC (waste incineration)",
+                value_tco2e=pe_inc,
+                formula_ref="ACM0022 Eq.17 + IPCC 2006 V5 Eq.5.1/5.4",
+                notes=(
+                    f"{len(incineration_stream_dicts)} stream(s), "
+                    f"OF={self._inp.oxidation_factor_incineration}, "
+                    f"EF_N2O={self._inp.ef_n2o_kg_per_tonne} kg/t"
+                ),
+            )
+        )
+
+        project_total = pe_ec + pe_fc + pe_ch4 + pe_flare + pe_inc
 
         # ========== LEAKAGE ==========
 
@@ -215,6 +245,7 @@ class ACM0022Calculator:
             project_fossil_fuel_tco2e=pe_fc,
             project_methane_leakage_tco2e=pe_ch4,
             project_flaring_tco2e=pe_flare,
+            project_incineration_tco2e=pe_inc,
             leakage_rdf_combustion_tco2e=le_rdf,
             leakage_digestate_tco2e=le_digestate,
             organic_waste_to_ad_tonnes=organic_to_ad,
@@ -266,7 +297,7 @@ class ACM0022Calculator:
         return ComputationResult(
             value=result.project_emissions_tco2e,
             unit="tCO2e/year",
-            formula="PE_y = PE_EC + PE_FC + PE_CH4 + PE_FLARE",
+            formula="PE_y = PE_EC + PE_FC + PE_CH4 + PE_FLARE + PE_INC",
             provenance=[
                 {"param": "electricity_consumed_from_grid_mwh_per_year", "source": "user_input"},
                 {"param": "fossil_fuels", "source": "user_input"},

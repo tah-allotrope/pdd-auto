@@ -33,7 +33,12 @@ from pdd_agent.ingest.extract import extract_project_input
 from pdd_agent.llm.env_config import configure_provider_from_env
 from pdd_agent.llm.provider import get_provider_registry
 from pdd_agent.phase06.spreadsheet_mapper import generate_project_artifacts
-from pdd_agent.review.states import ReviewState, ReviewStateStore, init_review_state
+from pdd_agent.review.states import (
+    ReviewState,
+    ReviewStateStore,
+    init_review_state,
+    path_to_approved,
+)
 from schemas.project_input import ProjectInput
 
 logger = structlog.get_logger()
@@ -119,6 +124,8 @@ def _get_provider(provider_name: str | None = None):
         pass
     elif name == "ollama":
         configure_provider_from_env("ollama")
+    elif name == "claude-code":
+        configure_provider_from_env("claude-code")
     elif name in ("openai", "anthropic"):
         if not os.environ.get(f"{name.upper()}_API_KEY"):
             reason = "missing_api_key"
@@ -384,13 +391,14 @@ def root():
 
 
 @app.get("/dashboard", response_class=HTMLResponse)
-def dashboard(request: Request):
+def dashboard(request: Request, limit: int = 50, offset: int = 0):
+    limit = max(1, min(limit, 200))
+    offset = max(0, offset)
     runs: list[dict[str, Any]] = []
     runs_dir = _runs_dir()
     if runs_dir.exists():
-        for path in sorted(
-            runs_dir.glob("run-*.json"), key=lambda p: p.stat().st_mtime, reverse=True
-        ):
+        paths = sorted(runs_dir.glob("run-*.json"), key=lambda p: p.stat().st_mtime, reverse=True)
+        for path in paths[offset : offset + limit]:
             run_id = path.stem
             try:
                 status = _run_status(run_id)
@@ -565,19 +573,26 @@ def api_create_run(
 
 
 @app.get("/api/runs")
-def api_list_runs():
-    """List all runs with status summaries."""
-    runs: list[dict[str, Any]] = []
+def api_list_runs(limit: int = 50, offset: int = 0):
+    """List runs with status summaries, newest first, paginated.
+
+    Pagination bounds the per-request ``stat()``/JSON-parse cost: the sorted
+    path list is sliced *before* any ``_run_status()`` call.
+    """
+    limit = max(1, min(limit, 200))
+    offset = max(0, offset)
+    paths: list[Path] = []
     runs_dir = _runs_dir()
     if runs_dir.exists():
-        for path in sorted(
-            runs_dir.glob("run-*.json"), key=lambda p: p.stat().st_mtime, reverse=True
-        ):
-            try:
-                runs.append(_run_status(path.stem))
-            except HTTPException:
-                continue
-    return {"runs": runs}
+        paths = sorted(runs_dir.glob("run-*.json"), key=lambda p: p.stat().st_mtime, reverse=True)
+    total = len(paths)
+    runs: list[dict[str, Any]] = []
+    for path in paths[offset : offset + limit]:
+        try:
+            runs.append(_run_status(path.stem))
+        except HTTPException:
+            continue
+    return {"runs": runs, "total": total, "limit": limit, "offset": offset}
 
 
 @app.get("/api/runs/{run_id}")
@@ -658,32 +673,63 @@ def api_approve_section(run_id: str, section_key: str):
 
 @app.post("/api/runs/{run_id}/approve-all")
 def api_approve_all(run_id: str):
-    """Approve all sections atomically in a single load-modify-save pass.
+    """Walk every section along the legal transition path to APPROVED (S-4).
 
-    This fixes the read-modify-write race that occurred when clients looped
-    the per-section approve endpoint. Loads state once, transitions every
-    approvable section to APPROVED in one in-memory pass, saves once.
+    Each hop goes through ``ReviewStateStore.set_state`` so transition
+    validation still runs and the note trail is preserved. Sections in
+    ``needs-input`` are never bulk-approved; when any section is skipped the
+    endpoint returns HTTP 409 so a partial bulk approval is never reported
+    as success.
     """
     run_data = _load_run_json(run_id)
     store = _ensure_review_state_for_run(run_id, run_data)
 
     sections_approved = 0
+    sections_skipped: list[dict[str, str]] = []
     for key, section_state in store.sections.items():
-        if section_state.state.can_transition_to(ReviewState.APPROVED):
-            section_state.state = ReviewState.APPROVED
-            section_state.last_updated = datetime.now(timezone.utc).isoformat()
-            section_state.updated_by = "approve_all"
-            section_state.reviewer_notes.append("Approved via approve-all endpoint")
-            sections_approved += 1
+        hops = path_to_approved(section_state.state)
+        if not hops and section_state.state != ReviewState.APPROVED:
+            sections_skipped.append(
+                {
+                    "section_key": section_state.sub_section_id or section_state.section_id,
+                    "state": section_state.state.value,
+                    "reason": "sections awaiting operator input are not bulk-approved",
+                }
+            )
+            continue
+        for hop in hops:
+            ok, msg = store.set_state(
+                section_state.section_id,
+                section_state.sub_section_id,
+                hop,
+                reviewer_notes="Approved via approve-all endpoint",
+                updated_by="approve_all",
+            )
+            if not ok:
+                sections_skipped.append(
+                    {
+                        "section_key": section_state.sub_section_id or section_state.section_id,
+                        "state": section_state.state.value,
+                        "reason": msg,
+                    }
+                )
+                break
+        else:
+            if hops:
+                sections_approved += 1
 
     store.updated_at = datetime.now(timezone.utc).isoformat()
     _save_review_state(store)
 
-    return {
+    body = {
         "run_id": run_id,
         "sections_approved": sections_approved,
+        "sections_skipped": sections_skipped,
         "all_approved": store.is_all_approved(),
     }
+    if sections_skipped:
+        raise HTTPException(status_code=409, detail=body)
+    return body
 
 
 @app.post("/api/runs/{run_id}/sections/{section_key:path}/edit")

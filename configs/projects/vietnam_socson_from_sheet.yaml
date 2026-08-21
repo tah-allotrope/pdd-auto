@@ -50,9 +50,14 @@ technology:
   - waste_type: garden_waste
     mass_fraction: 0.0
     source: VCS Soc Son registered PDD, Table 8 — Components of solid waste
-  - waste_type: rubber_leather
-    mass_fraction: 0.013
-    source: VCS Soc Son registered PDD, Table 8 — Components of solid waste
+  - waste_type: plastics
+    mass_fraction: 0.03
+    source: VCS Soc Son registered PDD, Section 3.2 applicability — 0.5% glass,
+      0.9% metal, 3% plastic of the 43.8% inert bucket in Table 8
+  - waste_type: inert
+    mass_fraction: 0.408
+    source: VCS Soc Son registered PDD, Section 3.2 applicability — 0.5% glass,
+      0.9% metal, 3% plastic of the 43.8% inert bucket in Table 8
 methodology_applicability:
   eligibility_checklist:
     project treats municipal solid waste: true

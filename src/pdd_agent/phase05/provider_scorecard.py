@@ -114,10 +114,10 @@ def _run_one_provider(
         # Record what this run is actually grounded on. Without it a scorecard
         # cannot distinguish a 17-document corpus run from a 3-document demo
         # fallback (see get_retrieval_index).
-        from pdd_agent.retrieval.index import get_active_index_doc_count, get_active_index_path
+        from pdd_agent.retrieval.index import get_active_index_row_count, get_active_index_path
 
         row.retrieval_index = str(get_active_index_path())
-        row.corpus_doc_count = get_active_index_doc_count()
+        row.corpus_doc_count = get_active_index_row_count()
 
         run = orchestrator.run()
 
@@ -206,7 +206,7 @@ def _render_grounding_block(ran_rows: list[ProviderScorecardRow]) -> list[str]:
         "## Grounding",
         "",
         f"- Retrieval index: `{first.retrieval_index or 'unknown'}`",
-        f"- Corpus documents: {first.corpus_doc_count} indexed section rows",
+        f"- Indexed section rows: {first.corpus_doc_count}",
         f"- Calc methodology: {calc}",
         "",
     ]

@@ -74,6 +74,7 @@ class RetrievalResult:
         review_sensitivity: str,
         score: float,
         matched_terms: list[str],
+        from_fallback_family: bool = False,
     ) -> None:
         self.section_id = section_id
         self.sub_section_id = sub_section_id
@@ -84,6 +85,7 @@ class RetrievalResult:
         self.review_sensitivity = review_sensitivity
         self.score = score
         self.matched_terms = matched_terms
+        self.from_fallback_family = from_fallback_family
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -165,6 +167,8 @@ def search(
         logger.warning("retrieval_family_fallback", family=document_family, section_id=section_id)
         raw = index.search(cleaned, section_id=section_id, content_class=content_class, k=k)
         results = _to_results(raw)
+        for result in results:
+            result.from_fallback_family = True
 
     return results
 
@@ -199,9 +203,11 @@ def get_examples_for_section(
         return index.get_section_examples(section_id, document_family=family, k=k)
 
     raw = _fetch(document_family)
+    from_fallback = False
     if not raw and document_family:
         logger.warning("retrieval_family_fallback", family=document_family, section_id=section_id)
         raw = _fetch(None)
+        from_fallback = True
 
     return [
         RetrievalResult(
@@ -214,6 +220,7 @@ def get_examples_for_section(
             review_sensitivity=r.get("review_sensitivity") or "",
             score=0.0,
             matched_terms=[],
+            from_fallback_family=from_fallback,
         )
         for r in raw
     ]

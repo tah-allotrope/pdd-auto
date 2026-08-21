@@ -572,3 +572,106 @@ def _make_minimal_workbook(path: Path) -> None:
         ]
     )
     workbook.save(path)
+
+
+class TestApproveAll:
+    @pytest.fixture
+    def completed_run(self, minimal_project_yaml, service_runs_dir, tmp_path: Path, monkeypatch):
+        monkeypatch.setattr(service_main, "REPO_ROOT", tmp_path)
+        upload_dir = tmp_path / "data" / "source_inputs" / "service_uploads"
+        upload_dir.mkdir(parents=True, exist_ok=True)
+
+        with open(minimal_project_yaml, "rb") as f:
+            create_response = CLIENT.post(
+                "/api/runs",
+                files={"project_input_yaml": ("project.yaml", f, "application/x-yaml")},
+                data={"provider_name": "demo"},
+            )
+
+        run_id = create_response.json()["run_id"]
+        for _ in range(50):
+            if _run_json_exists(service_runs_dir, run_id):
+                break
+            time.sleep(0.1)
+        else:
+            pytest.fail("Run JSON was not created")
+
+        return run_id
+
+    def test_approve_all_walks_transition_path(self, completed_run):
+        response = CLIENT.post(f"/api/runs/{completed_run}/approve-all")
+        assert response.status_code == 200
+        body = response.json()
+        assert body["sections_skipped"] == []
+        assert body["all_approved"] is True
+        assert body["sections_approved"] == 36
+
+    def test_approve_all_twice_second_is_noop_success(self, completed_run):
+        first = CLIENT.post(f"/api/runs/{completed_run}/approve-all")
+        assert first.status_code == 200
+        second = CLIENT.post(f"/api/runs/{completed_run}/approve-all")
+        assert second.status_code == 200
+        body = second.json()
+        assert body["sections_approved"] == 0
+        assert body["all_approved"] is True
+
+    def test_approve_all_skips_needs_input_with_409(self, completed_run):
+        from pdd_agent.review.states import ReviewState
+
+        run_data = service_main._load_run_json(completed_run)
+        store = service_main._ensure_review_state_for_run(completed_run, run_data)
+        target = next(iter(store.sections.values()))
+        target.state = ReviewState.NEEDS_INPUT
+        target.updated_by = "test"
+        service_main._save_review_state(store)
+
+        response = CLIENT.post(f"/api/runs/{completed_run}/approve-all")
+        assert response.status_code == 409
+        body = response.json()["detail"]
+        assert body["all_approved"] is False
+        assert len(body["sections_skipped"]) == 1
+        assert body["sections_skipped"][0]["state"] == "needs-input"
+        assert body["sections_approved"] > 0
+
+
+class TestRunPagination:
+    @pytest.fixture
+    def five_runs(self, service_runs_dir):
+        for i in range(5):
+            path = service_runs_dir / f"run-pagi-{i}.json"
+            path.write_text(
+                json.dumps({"run_id": f"run-pagi-{i}", "sections": [], "notes": []}),
+                encoding="utf-8",
+            )
+            time.sleep(0.01)
+        return service_runs_dir
+
+    def test_limit_returns_newest_first(self, five_runs):
+        response = CLIENT.get("/api/runs?limit=2")
+        assert response.status_code == 200
+        body = response.json()
+        assert len(body["runs"]) == 2
+        assert body["total"] == 5
+        assert body["limit"] == 2
+        assert body["offset"] == 0
+        assert body["runs"][0]["run_id"] == "run-pagi-4"
+
+    def test_offset_pages_through(self, five_runs):
+        response = CLIENT.get("/api/runs?limit=2&offset=4")
+        assert response.status_code == 200
+        body = response.json()
+        assert len(body["runs"]) == 1
+
+    def test_limit_clamped_to_200(self, five_runs):
+        response = CLIENT.get("/api/runs?limit=9999")
+        assert response.status_code == 200
+        assert response.json()["limit"] == 200
+
+
+class TestProviderSelectionClaudeCode:
+    def test_claude_code_provider_resolves_without_key(self, monkeypatch):
+        monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+        monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+        provider = service_main._get_provider("claude-code")
+        assert provider.name == "claude-code"
+        assert service_main.provider_status()["reason"] is None

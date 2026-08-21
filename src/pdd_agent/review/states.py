@@ -59,6 +59,30 @@ class ReviewState(str, Enum):
         }.get(self.value, self.value)
 
 
+def path_to_approved(state: ReviewState) -> list[ReviewState]:
+    """Return the ordered hops that take ``state`` to APPROVED (S-4).
+
+    ``NEEDS_INPUT`` returns [] — a section awaiting operator input must never
+    be bulk-approved. ``APPROVED`` also returns [] (nothing to do).
+    """
+    if state == ReviewState.APPROVED or state == ReviewState.NEEDS_INPUT:
+        return []
+    hops: list[ReviewState] = []
+    current = state
+    while current != ReviewState.APPROVED:
+        if current == ReviewState.NEEDS_INPUT:
+            return []
+        if current == ReviewState.READY_FOR_HUMAN_EDIT:
+            hops.append(ReviewState.APPROVED)
+            current = ReviewState.APPROVED
+        elif current in (ReviewState.DRAFTED, ReviewState.NEEDS_DOMAIN_REVIEW):
+            hops.append(ReviewState.READY_FOR_HUMAN_EDIT)
+            current = ReviewState.READY_FOR_HUMAN_EDIT
+        else:
+            return []
+    return hops
+
+
 @dataclass
 class SectionState:
     section_id: str

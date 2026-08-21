@@ -226,13 +226,13 @@ class TestWasteCompositionMassConservation:
         assert total == pytest.approx(1_460_000.0)
         assert any("plastics" in w and "redistributed" in w for w in warnings)
 
-    def test_composition_path_six_streams(self):
+    def test_composition_path_five_mapped_streams(self):
         from pdd_agent.calc.dispatch import build_engine_inputs
 
         pi = _load_pi("configs/projects/vietnam_socson_from_sheet.yaml")
         _mid, inputs, _warnings = build_engine_inputs(pi)  # type: ignore
         streams = {s["waste_type"]: s["annual_tonnes"] for s in inputs["waste_streams"]}
-        assert len(inputs["waste_streams"]) == 6
+        assert len(inputs["waste_streams"]) == 5
         assert streams["food_waste"] == pytest.approx(1_460_000.0 * 0.519)
         assert streams["wood"] == pytest.approx(0.0)
 
@@ -242,7 +242,9 @@ class TestWasteCompositionMassConservation:
         pi = _load_pi("configs/projects/vietnam_socson_from_sheet.yaml")
         _mid, inputs, _warnings = build_engine_inputs(pi)  # type: ignore
         total = sum(s["annual_tonnes"] for s in inputs["waste_streams"])
-        assert total == pytest.approx(1_460_000.0 * 0.575)
+        # Degradable Table 8 rows only: 0.519 + 0.027 + 0.016 = 0.562.
+        # plastics (3.0%) and inert (40.8%) reach PE_INC instead of BE_CH4.
+        assert total == pytest.approx(1_460_000.0 * 0.562)
 
     def test_unmapped_composition_entry_warns(self):
         import copy
@@ -256,13 +258,18 @@ class TestWasteCompositionMassConservation:
             )
         )
         data2 = copy.deepcopy(data)
-        data2["technology"]["waste_composition"].append(
-            {"waste_type": "plastics", "mass_fraction": 0.03, "source": "test"}
-        )
+        data2["technology"]["waste_composition"] = [
+            {"waste_type": "food_waste", "mass_fraction": 0.519, "source": "test"},
+            {"waste_type": "paper_cardboard", "mass_fraction": 0.027, "source": "test"},
+            {"waste_type": "textiles", "mass_fraction": 0.016, "source": "test"},
+            {"waste_type": "plastics", "mass_fraction": 0.03, "source": "test"},
+            {"waste_type": "inert", "mass_fraction": 0.403, "source": "test"},
+            {"waste_type": "glass", "mass_fraction": 0.005, "source": "test"},
+        ]
         pi = ProjectInput.model_validate(data2)
         _mid, inputs, warnings = build_engine_inputs(pi)  # type: ignore
-        assert not any(s["waste_type"] == "plastics" for s in inputs["waste_streams"])
-        assert any("3.0%" in w and "non-degradable or unmapped" in w for w in warnings)
+        assert not any(s["waste_type"] == "glass" for s in inputs["waste_streams"])
+        assert any("glass" in w and "PE_INC" in w for w in warnings)
 
     def test_inegol_unchanged(self):
         from pdd_agent.calc.dispatch import build_engine_inputs
@@ -272,3 +279,76 @@ class TestWasteCompositionMassConservation:
         assert len(inputs["waste_streams"]) == 1
         assert inputs["waste_streams"][0]["waste_type"] == "municipal_solid_waste"
         assert inputs["waste_streams"][0]["annual_tonnes"] == pytest.approx(262_970.37)
+
+
+class TestCapacityRamp:
+    def _socson_with_ramp(self, ramp):
+        pi = _load_pi("configs/projects/vietnam_socson_from_sheet.yaml")
+        pi.technology.capacity_ramp = ramp
+        return pi
+
+    def test_ramp_reduces_year1_and_leaves_later_years(self):
+        base = compute_for(_load_pi("configs/projects/vietnam_socson_from_sheet.yaml"))
+        ramped = compute_for(self._socson_with_ramp([0.5, 1.0]))
+        assert base is not None and ramped is not None
+        assert ramped.annual_schedule[0].baseline_tco2e < base.annual_schedule[0].baseline_tco2e
+        assert ramped.annual_schedule[1].baseline_tco2e == pytest.approx(
+            base.annual_schedule[1].baseline_tco2e
+        )
+
+    def test_ramp_last_value_carried_forward(self):
+        from pdd_agent.calc.dispatch import _ramp_factor
+
+        assert _ramp_factor(None, 1) == 1.0
+        assert _ramp_factor([], 3) == 1.0
+        assert _ramp_factor([0.5, 0.8, 1.0], 1) == 0.5
+        assert _ramp_factor([0.5, 0.8, 1.0], 3) == 1.0
+        assert _ramp_factor([0.5, 0.8, 1.0], 7) == 1.0
+
+    def test_pre_change_composition_regression_guard(self):
+        """Configs without capacity_ramp/incineration_streams must be unchanged.
+
+        Reconstructs the pre-2026-08-21 Soc Son composition inline (with the
+        since-removed rubber_leather entry) under a non-incineration technology
+        type so no incineration_streams are mapped — reproducing the exact
+        pre-phase crediting total.
+        """
+        data = yaml.safe_load(
+            (
+                Path(__file__).parent.parent / "configs/projects/vietnam_socson_from_sheet.yaml"
+            ).read_text(encoding="utf-8")
+        )
+        data["technology"]["technology_type"] = "anaerobic_digestion"
+        data["technology"]["waste_composition"] = [
+            {"waste_type": "food_waste", "mass_fraction": 0.519, "source": "pre-change"},
+            {"waste_type": "paper_cardboard", "mass_fraction": 0.027, "source": "pre-change"},
+            {"waste_type": "textiles", "mass_fraction": 0.016, "source": "pre-change"},
+            {"waste_type": "wood", "mass_fraction": 0.0, "source": "pre-change"},
+            {"waste_type": "garden_waste", "mass_fraction": 0.0, "source": "pre-change"},
+            {"waste_type": "rubber_leather", "mass_fraction": 0.013, "source": "pre-change"},
+        ]
+        result = compute_for(ProjectInput.model_validate(data))
+        assert result is not None
+        assert result.crediting_period_total_tco2e == pytest.approx(5_397_729.87, abs=0.01)
+
+
+class TestIncinerationStreamMapping:
+    def test_unmapped_composition_types_become_incineration_streams(self):
+        pi = _load_pi("configs/projects/vietnam_socson_from_sheet.yaml")
+        result = compute_for(pi)
+        assert result is not None
+        pe_inc = next(c for c in result.components if c.name.startswith("PE_INC"))
+        assert pe_inc.value_tco2e > 0.0
+        assert any("plastics" in w and "PE_INC" in w for w in result.warnings)
+        assert any("inert" in w and "PE_INC" in w for w in result.warnings)
+
+    def test_non_incineration_technology_gets_no_incineration_streams(self):
+        data = yaml.safe_load(
+            (
+                Path(__file__).parent.parent / "configs/projects/vietnam_socson_from_sheet.yaml"
+            ).read_text(encoding="utf-8")
+        )
+        data["technology"]["technology_type"] = "anaerobic_digestion"
+        result = compute_for(ProjectInput.model_validate(data))
+        assert result is not None
+        assert not any(c.name.startswith("PE_INC") and c.value_tco2e > 0 for c in result.components)

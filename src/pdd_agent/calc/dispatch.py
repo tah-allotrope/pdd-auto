@@ -165,6 +165,8 @@ def _map_acm0022(pi: ProjectInput) -> tuple[dict[str, Any], list[str]] | None:
     warnings: list[str] = []
 
     waste_streams: list[dict[str, Any]] = []
+    incineration_streams: list[dict[str, Any]] = []
+    is_incineration = tech.technology_type == "incineration_with_energy_recovery"
     # S-2 waste-composition-weighted mapping (PHASE-05, 2026-08-13 plan).
     # When a published composition is declared, it replaces the even split;
     # otherwise the fallback conserves mass by dividing by len(kept).
@@ -182,7 +184,16 @@ def _map_acm0022(pi: ProjectInput) -> tuple[dict[str, Any], list[str]] | None:
                 )
             else:
                 excluded_fraction += entry.mass_fraction
-        if excluded_fraction > 0:
+                if is_incineration:
+                    annual_tonnes = tech.annual_waste_throughput * entry.mass_fraction
+                    incineration_streams.append(
+                        {"waste_type": entry.waste_type, "annual_tonnes": annual_tonnes}
+                    )
+                    warnings.append(
+                        f"waste_composition: unmapped type {entry.waste_type} contributes "
+                        f"PE_INC (incineration) but no BE_CH4 (landfill methane)"
+                    )
+        if excluded_fraction > 0 and not is_incineration:
             warnings.append(
                 f"waste_composition: {excluded_fraction:.1%} of mass is non-degradable or unmapped and contributes no BE_CH4"
             )
@@ -235,6 +246,8 @@ def _map_acm0022(pi: ProjectInput) -> tuple[dict[str, Any], list[str]] | None:
         "grid_emission_factor_source": quant.grid_emission_factor_source,
         "crediting_period_years": pi.dates.crediting_period_years,
     }
+    if incineration_streams:
+        mapped["incineration_streams"] = incineration_streams
     if tech.energy_generation_mwh_year is not None:
         mapped["electricity_exported_mwh_per_year"] = tech.energy_generation_mwh_year
     if quant.methane_capture_rate is not None:
@@ -332,6 +345,15 @@ def build_engine_inputs(
     return mid, engine_inputs, warnings
 
 
+def _ramp_factor(capacity_ramp: list[float] | None, year: int) -> float:
+    """Return the year's utilisation factor per S-5c; 1.0 when no ramp."""
+    if not capacity_ramp:
+        return 1.0
+    if 1 <= year <= len(capacity_ramp):
+        return capacity_ramp[year - 1]
+    return capacity_ramp[-1]
+
+
 def compute_for(project_input: ProjectInput) -> PddCalcResult | None:
     mapped = build_engine_inputs(project_input)
     if mapped is None:
@@ -356,11 +378,29 @@ def compute_for(project_input: ProjectInput) -> PddCalcResult | None:
 
         # Year-by-year schedule: BE_CH4 (and therefore BE_y) varies with the
         # crediting-period year under the FOD model; PE_y and LE_y do not, since
-        # none of their inputs are time-varying in ProjectInput.
+        # none of their inputs are time-varying in ProjectInput. A declared
+        # capacity_ramp scales every year's waste masses and electricity export
+        # (S-5c); the year-1 nameplate scalars on PddCalcResult stay unramped.
+        ramp = project_input.technology.capacity_ramp
         schedule: list[AnnualErEntry] = []
         for y in range(1, cpy + 1):
             year_inputs = dict(engine_inputs)
             year_inputs["calculation_year"] = y
+            factor = _ramp_factor(ramp, y)
+            if factor != 1.0:
+                year_inputs["waste_streams"] = [
+                    {**ws, "annual_tonnes": ws["annual_tonnes"] * factor}
+                    for ws in year_inputs.get("waste_streams", [])
+                ]
+                if "incineration_streams" in year_inputs:
+                    year_inputs["incineration_streams"] = [
+                        {**s, "annual_tonnes": s["annual_tonnes"] * factor}
+                        for s in year_inputs["incineration_streams"]
+                    ]
+                if year_inputs.get("electricity_exported_mwh_per_year") is not None:
+                    year_inputs["electricity_exported_mwh_per_year"] = (
+                        year_inputs["electricity_exported_mwh_per_year"] * factor
+                    )
             year_raw = ACM0022Calculator(ACM0022CalcInput(**year_inputs)).calculate()
             schedule.append(
                 AnnualErEntry(

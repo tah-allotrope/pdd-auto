@@ -32,6 +32,7 @@ sections:
         heading: "Summary Description of the Project"
         content_class: "BOILERPLATE"
         review_sensitivity: "LOW"
+        max_chars: 4000
         boilerplate_level: "HIGH"
         aliases:
           - "1.1 Summary Description of the Project"
@@ -42,6 +43,7 @@ sections:
         heading: "Sectoral Scope and Project Type"
         content_class: "FACTUAL"
         review_sensitivity: "LOW"
+        max_chars: 3000
         boilerplate_level: "NONE"
         aliases:
           - "1.2 Sectoral Scope and Project Type"
@@ -55,6 +57,7 @@ sections:
         heading: "Project Eligibility"
         content_class: "METHODOLOGY_DEPENDENT"
         review_sensitivity: "MEDIUM"
+        max_chars: 12000
         boilerplate_level: "NONE"
         aliases:
           - "1.3 Project Eligibility"
@@ -67,6 +70,7 @@ sections:
         heading: "Project Design"
         content_class: "FACTUAL"
         review_sensitivity: "LOW"
+        max_chars: 3000
         boilerplate_level: "LOW"
         aliases:
           - "1.4 Project Design"
@@ -80,6 +84,7 @@ sections:
         heading: "Project Proponent"
         content_class: "FACTUAL"
         review_sensitivity: "LOW"
+        max_chars: 3000
         boilerplate_level: "NONE"
         aliases:
           - "1.5 Project Proponent"
@@ -93,6 +98,7 @@ sections:
         heading: "Other Entities Involved in the Project"
         content_class: "FACTUAL"
         review_sensitivity: "LOW"
+        max_chars: 3000
         boilerplate_level: "NONE"
         aliases:
           - "1.6 Other Entities Involved in the Project"
@@ -106,6 +112,7 @@ sections:
         heading: "Ownership"
         content_class: "FACTUAL"
         review_sensitivity: "LOW"
+        max_chars: 3000
         boilerplate_level: "NONE"
         aliases:
           - "1.7 Ownership"
@@ -118,6 +125,7 @@ sections:
         heading: "Project Start Date"
         content_class: "FACTUAL"
         review_sensitivity: "LOW"
+        max_chars: 3000
         boilerplate_level: "NONE"
         aliases:
           - "1.8 Project Start Date"
@@ -130,6 +138,7 @@ sections:
         heading: "Project Crediting Period"
         content_class: "FACTUAL"
         review_sensitivity: "LOW"
+        max_chars: 3000
         boilerplate_level: "LOW"
         aliases:
           - "1.9 Project Crediting Period"
@@ -143,6 +152,7 @@ sections:
         heading: "Project Scale and Estimated GHG Emission Reductions or Removals"
         content_class: "QUANTITATIVE"
         review_sensitivity: "HIGH"
+        max_chars: 20000
         boilerplate_level: "NONE"
         aliases:
           - "1.10 Project Scale and Estimated GHG Emission Reductions or Removals"
@@ -157,6 +167,7 @@ sections:
         heading: "Description of the Project Activity"
         content_class: "NARRATIVE"
         review_sensitivity: "MEDIUM"
+        max_chars: 8000
         boilerplate_level: "MEDIUM"
         aliases:
           - "1.11 Description of the Project Activity"
@@ -167,6 +178,7 @@ sections:
         heading: "Project Location"
         content_class: "FACTUAL"
         review_sensitivity: "MEDIUM"
+        max_chars: 3000
         boilerplate_level: "NONE"
         aliases:
           - "1.12 Project Location"
@@ -182,6 +194,7 @@ sections:
         heading: "Conditions Prior to Project Initiation"
         content_class: "EVIDENCE_BASED"
         review_sensitivity: "HIGH"
+        max_chars: 8000
         boilerplate_level: "NONE"
         aliases:
           - "1.13 Conditions Prior to Project Initiation"
@@ -195,6 +208,7 @@ sections:
         heading: "Compliance with Laws, Statutes and Other Regulatory Frameworks"
         content_class: "EVIDENCE_BASED"
         review_sensitivity: "MEDIUM"
+        max_chars: 8000
         boilerplate_level: "LOW"
         aliases:
           - "1.14 Compliance with Laws, Statutes and Other Regulatory Frameworks"
@@ -208,6 +222,7 @@ sections:
         heading: "Participation under Other GHG Programs"
         content_class: "EVIDENCE_BASED"
         review_sensitivity: "HIGH"
+        max_chars: 8000
         boilerplate_level: "NONE"
         aliases:
           - "1.15 Participation under Other GHG Programs"
@@ -218,6 +233,7 @@ sections:
         heading: "Other Forms of Credit"
         content_class: "EVIDENCE_BASED"
         review_sensitivity: "HIGH"
+        max_chars: 8000
         boilerplate_level: "NONE"
         aliases:
           - "1.16 Other Forms of Credit"
@@ -228,6 +244,7 @@ sections:
         heading: "Sustainable Development Contributions"
         content_class: "BOILERPLATE"
         review_sensitivity: "LOW"
+        max_chars: 4000
         boilerplate_level: "MEDIUM"
         aliases:
           - "1.17 Sustainable Development Contributions"
@@ -238,6 +255,7 @@ sections:
         heading: "Additional Information Relevant to the Project"
         content_class: "OPTIONAL"
         review_sensitivity: "LOW"
+        max_chars: 2000
         boilerplate_level: "LOW"
         aliases:
           - "1.18 Additional Information Relevant to the Project"
@@ -260,6 +278,7 @@ sections:
         heading: "No Net Harm"
         content_class: "BOILERPLATE"
         review_sensitivity: "MEDIUM"
+        max_chars: 4000
         boilerplate_level: "HIGH"
         aliases:
           - "2.1 No Net Harm"
@@ -269,6 +288,7 @@ sections:
         heading: "Local Stakeholder Consultation"
         content_class: "EVIDENCE_BASED"
         review_sensitivity: "MEDIUM"
+        max_chars: 8000
         boilerplate_level: "LOW"
         aliases:
           - "2.2 Local Stakeholder Consultation"
@@ -282,6 +302,7 @@ sections:
         heading: "Environmental Impact"
         content_class: "EVIDENCE_BASED"
         review_sensitivity: "MEDIUM"
+        max_chars: 8000
         boilerplate_level: "LOW"
         aliases:
           - "2.3 Environmental Impact"
@@ -294,6 +315,7 @@ sections:
         heading: "Public Comments"
         content_class: "BOILERPLATE"
         review_sensitivity: "LOW"
+        max_chars: 4000
         boilerplate_level: "HIGH"
         aliases:
           - "2.4 Public Comments"
@@ -303,6 +325,7 @@ sections:
         heading: "AFOLU-Specific Safeguards"
         content_class: "BOILERPLATE"
         review_sensitivity: "LOW"
+        max_chars: 4000
         boilerplate_level: "HIGH"
         aliases:
           - "2.5 AFOLU-Specific Safeguards"
@@ -324,6 +347,7 @@ sections:
         heading: "Title and Reference of Methodology"
         content_class: "FACTUAL"
         review_sensitivity: "MEDIUM"
+        max_chars: 3000
         boilerplate_level: "NONE"
         aliases:
           - "3.1 Title and Reference of Methodology"
@@ -336,6 +360,7 @@ sections:
         heading: "Applicability of Methodology"
         content_class: "METHODOLOGY_DEPENDENT"
         review_sensitivity: "HIGH"
+        max_chars: 12000
         boilerplate_level: "NONE"
         aliases:
           - "3.2 Applicability of Methodology"
@@ -348,6 +373,7 @@ sections:
         heading: "Project Boundary"
         content_class: "METHODOLOGY_DEPENDENT"
         review_sensitivity: "HIGH"
+        max_chars: 12000
         boilerplate_level: "LOW"
         aliases:
           - "3.3 Project Boundary"
@@ -363,6 +389,7 @@ sections:
         heading: "Baseline Scenario"
         content_class: "METHODOLOGY_DEPENDENT"
         review_sensitivity: "HIGH"
+        max_chars: 12000
         boilerplate_level: "NONE"
         aliases:
           - "3.4 Baseline Scenario"
@@ -372,6 +399,7 @@ sections:
         heading: "Additionality"
         content_class: "METHODOLOGY_DEPENDENT"
         review_sensitivity: "CRITICAL"
+        max_chars: 12000
         boilerplate_level: "NONE"
         aliases:
           - "3.5 Additionality"
@@ -381,6 +409,7 @@ sections:
         heading: "Methodology Deviations"
         content_class: "METHODOLOGY_DEPENDENT"
         review_sensitivity: "MEDIUM"
+        max_chars: 12000
         boilerplate_level: "LOW"
         aliases:
           - "3.6 Methodology Deviations"
@@ -404,6 +433,7 @@ sections:
         heading: "Baseline Emissions"
         content_class: "QUANTITATIVE"
         review_sensitivity: "HIGH"
+        max_chars: 20000
         boilerplate_level: "NONE"
         aliases:
           - "4.1 Baseline Emissions"
@@ -419,6 +449,7 @@ sections:
         heading: "Project Emissions"
         content_class: "QUANTITATIVE"
         review_sensitivity: "HIGH"
+        max_chars: 20000
         boilerplate_level: "NONE"
         aliases:
           - "4.2 Project Emissions"
@@ -431,6 +462,7 @@ sections:
         heading: "Leakage"
         content_class: "METHODOLOGY_DEPENDENT"
         review_sensitivity: "HIGH"
+        max_chars: 12000
         boilerplate_level: "LOW"
         aliases:
           - "4.3 Leakage"
@@ -444,6 +476,7 @@ sections:
         heading: "Net GHG Emission Reductions and Removals"
         content_class: "QUANTITATIVE"
         review_sensitivity: "HIGH"
+        max_chars: 20000
         boilerplate_level: "LOW"
         aliases:
           - "4.4 Net GHG Emission Reductions and Removals"
@@ -471,6 +504,7 @@ sections:
         heading: "Data and Parameters Available at Validation"
         content_class: "EVIDENCE_BASED"
         review_sensitivity: "MEDIUM"
+        max_chars: 8000
         boilerplate_level: "HIGH"
         aliases:
           - "5.1 Data and Parameters Available at Validation"
@@ -480,6 +514,7 @@ sections:
         heading: "Data and Parameters Monitored"
         content_class: "METHODOLOGY_DEPENDENT"
         review_sensitivity: "HIGH"
+        max_chars: 12000
         boilerplate_level: "LOW"
         aliases:
           - "5.2 Data and Parameters Monitored"
@@ -489,6 +524,7 @@ sections:
         heading: "Monitoring Plan"
         content_class: "NARRATIVE"
         review_sensitivity: "MEDIUM"
+        max_chars: 8000
         boilerplate_level: "MEDIUM"
         aliases:
           - "5.3 Monitoring Plan"

@@ -370,3 +370,29 @@ def test_upload_review_package_docx_prefers_published_artifact(tmp_path: Path):
 
     assert result["success"] is True
     mock_upload.assert_called_once_with(latest_docx, drive_folder_id="folder-123", drive_name=None)
+
+
+class TestMarkdownRendering:
+    def test_real_markdown_shapes_render_without_literal_artifacts(
+        self, tmp_path: Path, monkeypatch
+    ):
+        from docx import Document
+
+        run_path = _write_run(tmp_path, run_id="markdown-run")
+        payload = json.loads(run_path.read_text(encoding="utf-8"))
+        payload["sections"][0]["text"] = (
+            "# H\n\n## H2\n\n| A | B |\n|---|---|\n| 1 | 2 |\n\n**bold** and $x$\n\n$$y = 2x$$"
+        )
+        run_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+        monkeypatch.setattr("pdd_agent.export.docx_export._DRAFT_RUNS_DIR", run_path.parent)
+
+        output = export_run_to_docx("markdown-run", output_path=tmp_path / "md.docx")
+        doc = Document(str(output))
+
+        joined = "\n".join(p.text for p in doc.paragraphs)
+        assert "|---" not in joined
+        assert "# " not in joined
+        assert "**" not in joined
+        assert "$$" not in joined
+        assert len(doc.tables) >= 1
+        assert any("y = 2x" in p.text for p in doc.paragraphs)

@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/tah-allotrope/pdd-auto/actions/workflows/ci.yml/badge.svg)](https://github.com/tah-allotrope/pdd-auto/actions/workflows/ci.yml)
 
-**Status:** 814 tests collected (807 run, 7 corpus-marked deselected), green under CI on Python 3.11/3.12. Pipeline skeleton is mature: corpus RAG, rule-based review, VCS v4.4 DOCX export, LLM-judge + capped redraft loop, a local FastAPI section-review service, calc engines for ACM0022, AMS-II.G, VM0051, and VM0044 wired into the drafting pipeline via `pdd-agent calc` / `compute_for()`, truthful token/cost accounting for the `claude-code` provider, and assistant-preamble normalization for all real providers. Real LLM providers (OpenAI, Anthropic, Ollama, claude-code) are implemented; live drafting runs are pending API keys (Ollama runs today with no key required — see `pdd-agent doctor`). All demo/benchmark output to date uses the deterministic `demo`/`noop` providers.
+**Status:** 909 tests passing (916 collected, 7 corpus-marked deselected, 4 documented xfails), green under CI on Python 3.11/3.12. Pipeline skeleton is mature: corpus RAG, rule-based review, VCS v4.4 DOCX export with native Markdown/table/math rendering and per-section length budgets, LLM-judge + capped redraft loop, a local FastAPI section-review service with paginated run listing, calc engines for ACM0022 (now including incineration project emissions `PE_INC` and a consumed `capacity_ramp`), AMS-II.G, VM0051, and VM0044 wired into the drafting pipeline via `pdd-agent calc` / `compute_for()`, truthful token/cost accounting for the `claude-code` provider, and assistant-preamble normalization for all real providers. Real LLM providers (OpenAI, Anthropic, Ollama, claude-code) are implemented; live drafting runs are pending API keys (Ollama runs today with no key required — see `pdd-agent doctor`). All demo/benchmark output to date uses the deterministic `demo`/`noop` providers.
 
 **Demo Quickstart:** Want to see it working in 5 minutes? → [QUICKSTART.md](QUICKSTART.md)
 
@@ -78,7 +78,7 @@ pdd-agent upload --run-id <run-id>
 | `pdd-agent ingest` | Full pipeline: inventory → download → normalize → bucket |
 | `pdd-agent build-index` | Build SQLite FTS5 BM25 index from normalized corpus |
 | `pdd-agent index-report` | Report retrieval-index health: document coverage, duplication rate, truncation |
-| `pdd-agent draft` | Draft all PDD sections for a project (`--provider noop\|demo\|corpus\|openai\|anthropic`, `--judge` to enable the LLM-judge/redraft loop) |
+| `pdd-agent draft` | Draft all PDD sections for a project (`--provider noop\|demo\|corpus\|openai\|anthropic\|ollama\|claude-code`, `--judge` to enable the LLM-judge/redraft loop) |
 | `pdd-agent review` | Display review state for a run |
 | `pdd-agent judge` | Run the LLM judge on an existing draft run |
 | `pdd-agent export` | Export DraftRun to DOCX |
@@ -139,7 +139,7 @@ Both are synthetic demos with a bold cover-page disclaimer — not real PDDs. Se
 - **`src/pdd_agent/review/checks.py`** — DC-01 to DC-04 double-counting guards, quantitative cross-refs (1.10↔4.4), evidence requirements, auto-approval logic, and assumption-aware review gates.
 - **`src/pdd_agent/review/consistency.py`** — Cross-section numeric consistency: net tCO2e arithmetic, baseline/project/leakage relation, crediting period total.
 - **`src/pdd_agent/review/states.py`** — 5-state review workflow (drafted→needs-input→drafted, drafted→needs-domain-review→ready-for-human-edit→approved). JSON persistence to `data/runs/review-state-{run_id}.json`.
-- **`src/pdd_agent/export/docx_export.py`** — python-docx export with a front-matter disclaimer, cover metadata, section-level source summaries, an assumption appendix, and a reviewer issues appendix.
+- **`src/pdd_agent/export/docx_export.py`** — python-docx export with a front-matter disclaimer, cover metadata, section-level source summaries, an assumption appendix, and a reviewer issues appendix. The export gate is tiered: CRITICAL consistency flags and fabricated evidence IDs hard-block (unless `--force`), `[MISSING]` markers become a first-class "Appendix — Required Inputs" that exports without `--force`, and HIGH-severity flags stay advisory. Section bodies render real model output natively via `export/markdown_docx.py`: Markdown headings become Word headings, pipe tables become styled Word tables, emphasis becomes bold/italic runs, lists become Word lists, and `$$…$$`/`$…$` math renders as cleaned italic text with the verbatim LaTeX preserved in a "Formulas (verbatim source)" appendix.
 - **`src/pdd_agent/export/drive_upload.py`** — `gws drive files create` subprocess wrapper.
 
 ### Quantification precedence
@@ -157,7 +157,23 @@ for that block instead. When `technology.waste_composition` is declared it repla
 across `technology.waste_type`; waste types absent from `DOC_BY_WASTE_TYPE` have their mass
 redistributed across the mapped types rather than dropped, so total mass entering the engine
 always equals `annual_waste_throughput` (or the degradable fraction thereof when a composition
-is declared).
+is declared). When `technology.technology_type` is `incineration_with_energy_recovery`, unmapped
+composition entries (e.g. `plastics`, `inert`) additionally produce `incineration_streams`, which
+drive the `PE_INC` project-emission term (fossil CO2 + N2O from combustion, IPCC 2006 V5 Eq.
+5.1/5.4) — so an incinerator now reports non-zero project emissions. A declared
+`technology.capacity_ramp` scales each crediting year's waste masses and electricity export by the
+ramp factor (last value carried forward), changing the annual schedule and the crediting-period
+total while the year-1 nameplate scalars stay unramped.
+
+### Section length budgets
+
+Each of the 36 subsections carries a character budget declared as `max_chars` in
+`schemas/pdd_section_schema.yaml`, derived from its `content_class` (OPTIONAL 2,000 · FACTUAL 3,000
+· BOILERPLATE 4,000 · NARRATIVE/EVIDENCE_BASED 8,000 · METHODOLOGY_DEPENDENT 12,000 · QUANTITATIVE
+20,000). The effective budget is capped by `generation_controls.max_tokens_per_section` — a global
+ceiling in characters despite its legacy name. When a provider's output exceeds the budget it is
+truncated and the section gains a `TRUNCATED:` issue plus a one-step confidence downgrade, so
+amputation is reported rather than silent.
 
 ## Prerequisites
 
@@ -337,6 +353,7 @@ src/pdd_agent/
 
 ## Known Gaps
 
+- Real model output renders natively: Markdown headings, pipe tables, emphasis, and lists become Word content, and LaTeX math renders as cleaned italic text with the verbatim source preserved in a "Formulas (verbatim source)" appendix. OMML equation objects are deliberately not generated (ALT-003).
 - `python-docx` is declared in `pyproject.toml`, but local environments still need it installed before DOCX export works at runtime; the exporter now fails with a clear install message instead of skipping silently
 - Real LLM providers (OpenAI, Anthropic) are implemented but have never executed a live drafting run — `OPENAI_API_KEY`/`ANTHROPIC_API_KEY` are not available in the current environment. Every demo/benchmark artifact produced so far uses the deterministic `DemoProvider` (client-demo output) or `NoopProvider` (reviewer-facing placeholder draft).
 - The LLM-judge (`review/judge.py`) defaults to deterministic rule-based scoring; the use_llm=True judge prompt has not yet been calibrated against real model output.
@@ -344,7 +361,7 @@ src/pdd_agent/
 - The first benchmark is a workflow proof on one Soc Son-like case; a second project is still needed before claiming broader WTE coverage
 - The Soc Son spreadsheet mapper intentionally blocks review-sensitive quantitative splits, coordinates, and safeguards fields when they rely on synthetic assumptions
 - `ingest/registry_download.py` (public Verra/CDM registry PDD downloader) is a stub — the rice/AMS-II.G/biochar calc engines have golden tests against synthetic-but-documented values, not real registered-PDD corpora
-- The FastAPI service's `_get_provider` does not recognize `claude-code`, so that provider silently falls back to `demo` with `reason="unknown_provider"`; `/dashboard` and `/api/runs` scan every `run-*.json` in the runs directory on each request, with no pagination or retention policy
+- The FastAPI service's `/dashboard` and `/api/runs` are paginated (default page size 50, `?limit=`/`?offset=`, newest first, limit clamped to 200) so per-request cost no longer scales with the run count; `claude-code` is a first-class service provider. There is still no retention policy — run JSONs accumulate by design.
 - Three of the eleven Verra table renderers in `docx_export.py` still have no producer wiring
   `structured_content` for them: `risk_assessment`, `sustainable_development`, and `data_gaps`. These
   require model-generated content with schema validation, which is out of scope for the current push.
