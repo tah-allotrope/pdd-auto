@@ -1,7 +1,7 @@
 ---
 title: "Rebuild the Grounding Layer, Render the Verra Tables, and Give the Calc Engine Its Inputs"
 date: "2026-08-13"
-status: "open"
+status: "complete — all 6 phases landed and verified in-tree (8b77742, d595e31, fdc32f5, e14c107): index-report CLI, S-1 section-span index at 17/17 docs and 2.4% duplication, prose+8/11 Verra tables, --only-section real claude-code smoke at $0.1983, Soc Son waste_composition with mass conservation, pdfplumber ingest extra; 841 passed / 3 xfailed."
 request: "Implement the 2026-08-13 brainstorm: rebuild the retrieval/grounding layer (Track A), render prose+tables and wire the deterministic Verra renderers (Track C), give the ACM0022 engine real waste-composition inputs (Track B), with a sub-$1 single-section real-model smoke check as a mid-plan gate (Track D)."
 plan_type: "multi-phase"
 research_inputs:
@@ -442,13 +442,13 @@ impossible to miss. Everything here is offline and costs nothing.
 
 **Tasks**
 
-- [ ] TASK-01-01: Return per-document section counts and a zero-yield document list from
+- [x] TASK-01-01: Return per-document section counts and a zero-yield document list from
       `RetrievalIndex.build()`.
-- [ ] TASK-01-02: Log a WARNING for every document that yields zero indexable sections.
-- [ ] TASK-01-03: Add an `index_health()` function that reports duplication and truncation metrics.
-- [ ] TASK-01-04: Add the `pdd-agent index-report` subcommand.
-- [ ] TASK-01-05: Print the zero-yield document list at the end of `pdd-agent build-index`.
-- [ ] TASK-01-06: Add tests for `index_health()` against a synthetic in-memory index.
+- [x] TASK-01-02: Log a WARNING for every document that yields zero indexable sections.
+- [x] TASK-01-03: Add an `index_health()` function that reports duplication and truncation metrics.
+- [x] TASK-01-04: Add the `pdd-agent index-report` subcommand.
+- [x] TASK-01-05: Print the zero-yield document list at the end of `pdd-agent build-index`.
+- [x] TASK-01-06: Add tests for `index_health()` against a synthetic in-memory index.
 
 **File Changes**
 
@@ -556,16 +556,16 @@ repository is standing on.
 
 **Tasks**
 
-- [ ] TASK-02-01: Emit `section_spans` from `parse_corpus`, implementing S-1 steps 1–4.
-- [ ] TASK-02-02: Implement the S-1 chunker with its 2000/200/80 character rules.
-- [ ] TASK-02-03: Keep `_find_content_page` as the per-document fallback when alignment fails.
-- [ ] TASK-02-04: Add `document_family` and `chunk_index` columns and bump `_SCHEMA_VERSION`.
-- [ ] TASK-02-05: Populate `content_class` and `review_sensitivity` from the canonical section schema.
-- [ ] TASK-02-06: Create `configs/corpus_families.yaml` and a loader.
-- [ ] TASK-02-07: Thread a `document_family` filter through `RetrievalIndex.search`, `search()`,
+- [x] TASK-02-01: Emit `section_spans` from `parse_corpus`, implementing S-1 steps 1–4.
+- [x] TASK-02-02: Implement the S-1 chunker with its 2000/200/80 character rules.
+- [x] TASK-02-03: Keep `_find_content_page` as the per-document fallback when alignment fails.
+- [x] TASK-02-04: Add `document_family` and `chunk_index` columns and bump `_SCHEMA_VERSION`.
+- [x] TASK-02-05: Populate `content_class` and `review_sensitivity` from the canonical section schema.
+- [x] TASK-02-06: Create `configs/corpus_families.yaml` and a loader.
+- [x] TASK-02-07: Thread a `document_family` filter through `RetrievalIndex.search`, `search()`,
       and `get_examples_for_section()`, with the ASM-004 fallback.
-- [ ] TASK-02-08: Pass the project's family slug from `SectionOrchestrator` into retrieval.
-- [ ] TASK-02-09: Rebuild the local index and record the before/after `index-report` numbers.
+- [x] TASK-02-08: Pass the project's family slug from `SectionOrchestrator` into retrieval.
+- [x] TASK-02-09: Rebuild the local index and record the before/after `index-report` numbers.
 
 **File Changes**
 
@@ -707,16 +707,16 @@ narrative it is supposed to accompany. Independent of PHASE-01/02 — it can be 
 
 **Tasks**
 
-- [ ] TASK-03-01: Extract the duplicated prose-emitting block into `_add_section_prose`.
-- [ ] TASK-03-02: Change the dispatch so prose renders first and the table follows.
-- [ ] TASK-03-03: Render the audit-history table as front matter after the cover metadata table.
-- [ ] TASK-03-04: Add the S-3 `ghg_boundary` block to `rules/verra/wte_methodology_rules.yaml` and a
+- [x] TASK-03-01: Extract the duplicated prose-emitting block into `_add_section_prose`.
+- [x] TASK-03-02: Change the dispatch so prose renders first and the table follows.
+- [x] TASK-03-03: Render the audit-history table as front matter after the cover metadata table.
+- [x] TASK-03-04: Add the S-3 `ghg_boundary` block to `rules/verra/wte_methodology_rules.yaml` and a
       `MethodologyRules.ghg_boundary(mid)` accessor.
-- [ ] TASK-03-05: Add `_build_structured_content` producing `proponent`, `applicability`,
+- [x] TASK-03-05: Add `_build_structured_content` producing `proponent`, `applicability`,
       `ghg_boundary`, and `monitoring_fixed_params` payloads.
-- [ ] TASK-03-06: Split calc monitoring parameters between 5.1 (fixed) and 5.2 (tracked) on
+- [x] TASK-03-06: Split calc monitoring parameters between 5.1 (fixed) and 5.2 (tracked) on
       `section_ref`.
-- [ ] TASK-03-07: Update the Known Gaps list in `README.md`.
+- [x] TASK-03-07: Update the Known Gaps list in `README.md`.
 
 **File Changes**
 
@@ -870,12 +870,12 @@ flag on `pdd-agent draft`.
 
 **Tasks**
 
-- [ ] TASK-04-01: Add `--only-section` to `pdd-agent draft` and a `only_sections` parameter to the
+- [x] TASK-04-01: Add `--only-section` to `pdd-agent draft` and a `only_sections` parameter to the
       orchestrator.
-- [ ] TASK-04-02: Verify pre-flight state.
-- [ ] TASK-04-03: Run one real `claude-code` section draft with `PDD_MAX_COST_USD=1`.
-- [ ] TASK-04-04: Read the drafted text and record the findings.
-- [ ] TASK-04-05: Write `reports/2026-08-13-single-section-smoke.md`.
+- [x] TASK-04-02: Verify pre-flight state.
+- [x] TASK-04-03: Run one real `claude-code` section draft with `PDD_MAX_COST_USD=1`.
+- [x] TASK-04-04: Read the drafted text and record the findings.
+- [x] TASK-04-05: Write `reports/2026-08-13-single-section-smoke.md`.
 
 **File Changes**
 
@@ -971,12 +971,12 @@ re-measure the three registered-PDD oracle xfails honestly.
 
 **Tasks**
 
-- [ ] TASK-05-01: Add `WasteFraction` and the optional `waste_composition` / `capacity_ramp` fields.
-- [ ] TASK-05-02: Implement the S-2 mapping in `_map_acm0022`, including the `len(kept)` fix.
-- [ ] TASK-05-03: Add a mass-conservation regression test.
-- [ ] TASK-05-04: Declare Soc Son's published composition in its config.
-- [ ] TASK-05-05: Re-measure the three oracle xfails and update them per DEC-002.
-- [ ] TASK-05-06: Surface the composition source strings as calc warnings so they reach the DOCX
+- [x] TASK-05-01: Add `WasteFraction` and the optional `waste_composition` / `capacity_ramp` fields.
+- [x] TASK-05-02: Implement the S-2 mapping in `_map_acm0022`, including the `len(kept)` fix.
+- [x] TASK-05-03: Add a mass-conservation regression test.
+- [x] TASK-05-04: Declare Soc Son's published composition in its config.
+- [x] TASK-05-05: Re-measure the three oracle xfails and update them per DEC-002.
+- [x] TASK-05-06: Surface the composition source strings as calc warnings so they reach the DOCX
       reviewer-issues appendix.
 
 **File Changes**
@@ -1130,10 +1130,10 @@ a dependency; it is placed last so that a partial delivery of this plan still la
 
 **Tasks**
 
-- [ ] TASK-06-01: Add `pdfplumber` under a new optional `ingest` extra.
-- [ ] TASK-06-02: Extract tables during normalization into a `tables` key, degrading gracefully.
-- [ ] TASK-06-03: Report table extraction in `pdd-agent doctor`.
-- [ ] TASK-06-04: Add tests that require neither `pdfplumber` nor the corpus.
+- [x] TASK-06-01: Add `pdfplumber` under a new optional `ingest` extra.
+- [x] TASK-06-02: Extract tables during normalization into a `tables` key, degrading gracefully.
+- [x] TASK-06-03: Report table extraction in `pdd-agent doctor`.
+- [x] TASK-06-04: Add tests that require neither `pdfplumber` nor the corpus.
 
 **File Changes**
 
