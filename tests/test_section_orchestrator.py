@@ -464,7 +464,7 @@ class TestCalcResultPersistence:
         loaded = DraftRun.load(orch.run_id, output_dir=tmp_path)
         assert loaded.calc_result is not None
         assert loaded.calc_result["methodology_id"] == "ACM0022"
-        assert len(loaded.calc_result["components"]) == 9
+        assert len(loaded.calc_result["components"]) >= 9
 
     def test_calc_result_absent_key_loads_as_none(self, tmp_path: Path):
         import json

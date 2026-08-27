@@ -15,6 +15,7 @@ location:
   longitude: 105.847
   landfill_latitude: 21.275
   landfill_longitude: 105.86
+  climate_zone: tropical_wet
 dates:
   start_date: '2022-07-24'
   crediting_period_start: '2022-07-24'
@@ -25,9 +26,12 @@ technology:
   - ACM0022
   technology_type: incineration_with_energy_recovery
   waste_type:
-  - municipal_solid_waste
   - food_waste
+  - paper_cardboard
+  - textiles
+  - rubber_leather
   - plastics
+  - inert
   annual_waste_throughput: 1460000.0
   installed_capacity_mw: 52.115
   energy_generation_mwh_year: 388050.0
@@ -37,27 +41,40 @@ technology:
   waste_composition:
   - waste_type: food_waste
     mass_fraction: 0.519
-    source: VCS Soc Son registered PDD, Table 8 — Components of solid waste
+    source: VCS Soc Son registered PDD, monitoring parameter Pn,j (page 78) — waste
+      composition on wet basis
   - waste_type: paper_cardboard
     mass_fraction: 0.027
-    source: VCS Soc Son registered PDD, Table 8 — Components of solid waste
+    source: VCS Soc Son registered PDD, monitoring parameter Pn,j (page 78) — waste
+      composition on wet basis
   - waste_type: textiles
     mass_fraction: 0.016
-    source: VCS Soc Son registered PDD, Table 8 — Components of solid waste
-  - waste_type: wood
-    mass_fraction: 0.0
-    source: VCS Soc Son registered PDD, Table 8 — Components of solid waste
-  - waste_type: garden_waste
-    mass_fraction: 0.0
-    source: VCS Soc Son registered PDD, Table 8 — Components of solid waste
+    source: VCS Soc Son registered PDD, monitoring parameter Pn,j (page 78) — waste
+      composition on wet basis
+  - waste_type: rubber_leather
+    mass_fraction: 0.013
+    source: VCS Soc Son registered PDD, monitoring parameter Pn,j (page 78) — waste
+      composition on wet basis
   - waste_type: plastics
     mass_fraction: 0.03
-    source: VCS Soc Son registered PDD, Section 3.2 applicability — 0.5% glass,
-      0.9% metal, 3% plastic of the 43.8% inert bucket in Table 8
+    source: VCS Soc Son registered PDD, monitoring parameter Pn,j (page 78) — waste
+      composition on wet basis
   - waste_type: inert
-    mass_fraction: 0.408
-    source: VCS Soc Son registered PDD, Section 3.2 applicability — 0.5% glass,
-      0.9% metal, 3% plastic of the 43.8% inert bucket in Table 8
+    mass_fraction: 0.395
+    source: VCS Soc Son registered PDD, monitoring parameter Pn,j (page 78) — waste
+      composition on wet basis
+  auxiliary_fossil_fuel:
+  - fuel_type: diesel
+    annual_tonnes: 1200.0
+    ncv_gj_per_tonne: 43.3
+    ef_tco2_per_gj: 0.0748
+    source: VCS Soc Son registered PDD, Section 4.2 (2) — FSR diesel consumption
+  runoff_wastewater:
+    annual_volume_m3: 613200.0
+    cod_t_per_m3: 0.035
+    bo_t_ch4_per_t_cod: 0.25
+    mcf: 0.8
+    source: VCS Soc Son registered PDD, Section 4.2 (4) — EIA pages 248 and 252
 methodology_applicability:
   eligibility_checklist:
     project treats municipal solid waste: true
@@ -69,12 +86,13 @@ quantification:
   project_emissions_tco2e_per_year: 50000.0
   leakage_tco2e_per_year: 0.0
   net_emissions_tco2e_per_year: 544076.0
-  grid_emission_factor: 0.92
-  grid_emission_factor_source: Synthetic assumption using Vietnam national grid factor
-    placeholder pending official citation.
+  grid_emission_factor: 0.84585
+  grid_emission_factor_source: VCS Soc Son registered PDD, Section 4.1 — EF_grid,CM,y
+    (combined margin)
   methane_capture_rate: 0.2
   methane_generation_factor: 0.06
   crediting_period_total_tco2e: 3808532.0
+  grid_tdl_factor: 0.03
 monitoring:
   parameters_monitored:
   - name: Waste throughput

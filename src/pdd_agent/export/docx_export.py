@@ -19,6 +19,7 @@ from pdd_agent.review.consistency import check_quantitative_consistency
 from pdd_agent.review.judge import _EVIDENCE_ID_RE
 from schemas.project_input import ProjectInput
 from pdd_agent.export.markdown_docx import render_markdown_body
+from pdd_agent.export.assembly import canonical_subsection_title, strip_leading_title_heading
 from pdd_agent.export.table_helpers import (
     add_styled_table,
 )
@@ -267,19 +268,29 @@ def export_run_to_docx(
             ssid = sub_def["sub_section_id"]
             section = _find_section(sections, sid, ssid)
             subsection_heading = sub_def.get("heading", ssid)
-            doc.add_heading(subsection_heading, level=2)
+            doc.add_heading(canonical_subsection_title(ssid, subsection_heading), level=2)
 
             if not section:
                 _safe_paragraph_style(doc.add_paragraph("[Not drafted]"), "Intense Quote")
                 continue
 
             _add_section_metadata(doc, section)
+            # Strip title echo per S-3
+            section_for_render = dict(section)
+            try:
+                section_for_render["text"] = strip_leading_title_heading(
+                    section.get("text", ""), sub_def.get("heading", "")
+                )
+            except Exception:
+                pass
 
             # PHASE-03 fix: structured_content used to *replace* the section's
             # prose (renderer called instead of the text paragraphs). Prose is
             # now rendered unconditionally first, and the table (when its
             # table_type resolves to a renderer) follows it.
-            _add_section_prose(doc, section, is_demo, on_display_math=display_math_sources.append)
+            _add_section_prose(
+                doc, section_for_render, is_demo, on_display_math=display_math_sources.append
+            )
 
             structured = section.get("structured_content")
             if structured and isinstance(structured, dict):
@@ -302,6 +313,16 @@ def export_run_to_docx(
     _add_formulas_appendix(doc, display_math_sources)
     _add_required_inputs_appendix(doc, gate.required_inputs)
     if not is_demo:
+        # Document-level coherence findings
+        try:
+            from pdd_agent.review.document_coherence import check_document_coherence
+
+            coherence = check_document_coherence(run_data)
+            if coherence:
+                run_data = dict(run_data)
+                run_data["document_coherence"] = coherence
+        except Exception:
+            pass
         _add_reviewer_issues_appendix(doc, run_data, sections, blocked_paths, calc_result_dict)
 
     tbd_report = run_data.get("tbd")
@@ -961,6 +982,16 @@ def _add_reviewer_issues_appendix(
             paragraph = doc.add_paragraph()
             paragraph.add_run("Blocked review inputs: ").bold = True
             paragraph.add_run(", ".join(blocked))
+
+    # Document-level coherence findings
+    doc_coherence = run_data.get("document_coherence", [])
+    if doc_coherence:
+        doc.add_heading("Document-level findings", level=2)
+        for finding in doc_coherence:
+            p = doc.add_paragraph(
+                f"{finding.get('check', '')}: {finding.get('detail', '')} (sections: {', '.join(finding.get('sections', []))})"
+            )
+            _safe_paragraph_style(p, "List Bullet")
 
 
 def _find_section(

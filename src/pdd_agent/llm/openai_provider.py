@@ -10,7 +10,13 @@ import structlog
 
 from pdd_agent.llm.budget import BudgetExhaustedError
 from pdd_agent.llm.output_normalize import strip_assistant_preamble
-from pdd_agent.llm.provider import BaseProvider, DraftSection, LLMResponse, ModelConfig
+from pdd_agent.llm.provider import (
+    chars_to_max_tokens,
+    BaseProvider,
+    DraftSection,
+    LLMResponse,
+    ModelConfig,
+)
 
 logger = structlog.get_logger()
 
@@ -155,7 +161,7 @@ class OpenAIProvider(BaseProvider):
         provenance: list[str],
         max_chars: int = 4000,
     ) -> DraftSection:
-        max_tokens = min(self._config.max_tokens, max_chars)
+        max_tokens = min(self._config.max_tokens, chars_to_max_tokens(max_chars))
 
         try:
             response = self._call_api(prompt, max_tokens)

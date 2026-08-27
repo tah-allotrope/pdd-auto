@@ -13,6 +13,7 @@ import math
 
 from pdd_agent.calc.constants import (
     CH4_TO_CO2_RATIO,
+    DECAY_RATE_BY_CLIMATE_ZONE,
     DECAY_RATE_BY_WASTE_TYPE,
     DOC_BY_WASTE_TYPE,
     DOC_F_DEFAULT,
@@ -37,6 +38,7 @@ def methane_from_swds(
     oxidation_factor: float = OX_DEFAULT,
     doc_f: float = DOC_F_DEFAULT,
     f_ch4: float = F_CH4_DEFAULT,
+    climate_zone: str | None = None,
 ) -> float:
     """Calculate baseline methane emissions from SWDS using the FOD model (tCO2e/year).
 
@@ -60,16 +62,24 @@ def methane_from_swds(
         oxidation_factor: OX — oxidation in cover material.
         doc_f: Fraction of DOC that decomposes.
         f_ch4: Volume fraction of CH4 in SWDS gas.
+        climate_zone: IPCC climate zone key (e.g. tropical_wet). When set,
+            looked up in DECAY_RATE_BY_CLIMATE_ZONE; otherwise legacy table.
 
     Returns:
         Methane emissions in tCO2e for the given year.
     """
     doc_j = doc_override if doc_override is not None else DOC_BY_WASTE_TYPE.get(waste_type)
-    k_j = (
-        decay_rate_override
-        if decay_rate_override is not None
-        else DECAY_RATE_BY_WASTE_TYPE.get(waste_type)
-    )
+    if decay_rate_override is not None:
+        k_j = decay_rate_override
+    elif climate_zone is not None:
+        zone_table = DECAY_RATE_BY_CLIMATE_ZONE.get(climate_zone)
+        if zone_table is None:
+            raise ValueError(
+                f"Unknown climate_zone '{climate_zone}'. Valid: {sorted(DECAY_RATE_BY_CLIMATE_ZONE.keys())}"
+            )
+        k_j = zone_table.get(waste_type)
+    else:
+        k_j = DECAY_RATE_BY_WASTE_TYPE.get(waste_type)
 
     if doc_j is None or k_j is None:
         raise ValueError(f"Unknown waste type '{waste_type}'. Known: {list(DOC_BY_WASTE_TYPE)}")

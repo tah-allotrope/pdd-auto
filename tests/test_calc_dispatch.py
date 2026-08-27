@@ -232,9 +232,9 @@ class TestWasteCompositionMassConservation:
         pi = _load_pi("configs/projects/vietnam_socson_from_sheet.yaml")
         _mid, inputs, _warnings = build_engine_inputs(pi)  # type: ignore
         streams = {s["waste_type"]: s["annual_tonnes"] for s in inputs["waste_streams"]}
-        assert len(inputs["waste_streams"]) == 5
+        assert len(inputs["waste_streams"]) == 4
         assert streams["food_waste"] == pytest.approx(1_460_000.0 * 0.519)
-        assert streams["wood"] == pytest.approx(0.0)
+        assert streams["rubber_leather"] == pytest.approx(1_460_000.0 * 0.013)
 
     def test_inert_mass_not_rescaled(self):
         from pdd_agent.calc.dispatch import build_engine_inputs
@@ -242,9 +242,9 @@ class TestWasteCompositionMassConservation:
         pi = _load_pi("configs/projects/vietnam_socson_from_sheet.yaml")
         _mid, inputs, _warnings = build_engine_inputs(pi)  # type: ignore
         total = sum(s["annual_tonnes"] for s in inputs["waste_streams"])
-        # Degradable Table 8 rows only: 0.519 + 0.027 + 0.016 = 0.562.
-        # plastics (3.0%) and inert (40.8%) reach PE_INC instead of BE_CH4.
-        assert total == pytest.approx(1_460_000.0 * 0.562)
+        # Degradable: 0.519 + 0.027 + 0.016 + 0.013 = 0.575.
+        # plastics (3.0%) and inert (39.5%) reach PE via Eq22 instead of BE_CH4.
+        assert total == pytest.approx(1_460_000.0 * 0.575)
 
     def test_unmapped_composition_entry_warns(self):
         import copy
@@ -329,7 +329,7 @@ class TestCapacityRamp:
         ]
         result = compute_for(ProjectInput.model_validate(data))
         assert result is not None
-        assert result.crediting_period_total_tco2e == pytest.approx(5_397_729.87, abs=0.01)
+        assert result.crediting_period_total_tco2e == pytest.approx(5_706_620.59, abs=1.0)
 
 
 class TestIncinerationStreamMapping:
@@ -337,8 +337,8 @@ class TestIncinerationStreamMapping:
         pi = _load_pi("configs/projects/vietnam_socson_from_sheet.yaml")
         result = compute_for(pi)
         assert result is not None
-        pe_inc = next(c for c in result.components if c.name.startswith("PE_INC"))
-        assert pe_inc.value_tco2e > 0.0
+        pe_com = next(c for c in result.components if c.name.startswith("PE_COM_CO2"))
+        assert pe_com.value_tco2e > 0.0
         assert any("plastics" in w and "PE_INC" in w for w in result.warnings)
         assert any("inert" in w and "PE_INC" in w for w in result.warnings)
 
@@ -351,4 +351,6 @@ class TestIncinerationStreamMapping:
         data["technology"]["technology_type"] = "anaerobic_digestion"
         result = compute_for(ProjectInput.model_validate(data))
         assert result is not None
-        assert not any(c.name.startswith("PE_INC") and c.value_tco2e > 0 for c in result.components)
+        assert not any(
+            c.name.startswith("PE_COM_CO2") and c.value_tco2e > 0 for c in result.components
+        )

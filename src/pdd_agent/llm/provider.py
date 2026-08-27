@@ -166,8 +166,17 @@ class ModelConfig:
     model_name: str
     api_key: str | None = None
     base_url: str | None = None
-    max_tokens: int = 4000
+    max_tokens: int = 16000
     temperature: float = 0.1
+
+
+def chars_to_max_tokens(
+    max_chars: int, chars_per_token: float = 3.5, headroom: float = 1.15
+) -> int:
+    """Convert character budget to token ceiling, minimum 256."""
+    import math
+
+    return max(256, math.ceil(max_chars / chars_per_token * headroom))
 
 
 @dataclass

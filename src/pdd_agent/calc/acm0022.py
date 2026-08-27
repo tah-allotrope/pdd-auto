@@ -6,6 +6,10 @@ and leakage emissions per ACM0022 v3.0 "Alternative waste treatment processes".
 Key equations:
   BE_y = Σ(BE_CH4,t,y + BE_WW,t,y + BE_EN,t,y + BE_NG,t,y) × (1 - RATE_compliance,t)  [Eq.1]
   PE_y = PE_COMP,y + PE_AD,y + PE_GAS,y + PE_RDF_SB,y + PE_INC,y                       [Eq.17]
+  PE_INC,y = PE_COM,INC,y + PE_EC,INC,y + PE_FC,INC,y + PE_WW,INC,y                    [Eq.20]
+  PE_COM,CO2 = EFF × 44/12 × Σ Q_j × FCC_j × FFC_j                                      [Eq.22]
+  PE_COM,CH4,N2O = Q_waste × (EF_N2O×GWP_N2O + EF_CH4×GWP_CH4)                            [Eq.27]
+  PE_WW = Q_ww × P_COD × B_o × MCF_ww × GWP_CH4                                          [Eq.28]
   LE_y = LE_COMP,y + LE_AD,y + LE_RDF_SB,y                                               [Eq.1 leakage]
   ER_y = BE_y - PE_y - LE_y                                                               [Eq.36]
 """
@@ -16,7 +20,11 @@ from typing import Any
 
 from pdd_agent.calc import cdm_tool_03, cdm_tool_04, cdm_tool_05, cdm_tool_06, cdm_tool_14
 from pdd_agent.calc.constants import DENSITY_CH4
-from pdd_agent.calc.incineration import incineration_emissions
+from pdd_agent.calc.incineration import (
+    combustion_ch4_n2o_eq27,
+    combustion_co2_eq22,
+    wastewater_ch4_eq28,
+)
 from pdd_agent.calc.methodology import ComputationResult, ValidationResult
 from pdd_agent.calc.models import ACM0022CalcInput, ACM0022CalcResult, EmissionComponent
 
@@ -49,14 +57,6 @@ class ACM0022Calculator:
             electricity_generated_mwh = gross_kwh / 1000.0
 
         # ========== BASELINE EMISSIONS ==========
-
-        # BE_CH4: methane from SWDS (FOD model, summed over waste streams).
-        #
-        # This is the methane the landfill would have emitted for waste the
-        # project diverts, so it scales with swds_diversion_fraction — NOT with
-        # biomethanization_fraction, which only governs how much of that waste is
-        # routed to anaerobic digestion. A mass-burn plant biomethanizes nothing
-        # and still avoids the entire landfill methane stream.
         be_ch4_total = 0.0
         for ws in self._inp.waste_streams:
             diverted_from_swds = ws.annual_tonnes * self._inp.swds_diversion_fraction
@@ -72,6 +72,7 @@ class ACM0022Calculator:
                 oxidation_factor=self._inp.oxidation_factor,
                 doc_f=self._inp.doc_f,
                 f_ch4=self._inp.f_ch4,
+                climate_zone=self._inp.climate_zone,
             )
             be_ch4_total += be_ch4_ws
 
@@ -157,44 +158,54 @@ class ACM0022Calculator:
             methane_to_flare_tonnes=methane_to_flare_tonnes,
             flare_type=self._inp.flare_type,
         )
-        components.append(
-            EmissionComponent(
-                name="PE_FLARE (incomplete flaring)",
-                value_tco2e=pe_flare,
-                formula_ref="Tool 06 Eq.15",
-            )
-        )
-
-        # PE_INC: waste incineration (fossil CO2 + N2O from combustion)
-        incineration_stream_dicts = [
-            {
-                "waste_type": s.waste_type,
-                "annual_tonnes": s.annual_tonnes,
-                "dm_override": s.dm_override,
-                "cf_override": s.cf_override,
-                "fcf_override": s.fcf_override,
-            }
+        # PE_COM,CO2 via Eq.22 — fossil carbon in every combusted waste type
+        eq22_streams: list[dict[str, object]] = [
+            {"waste_type": s.waste_type, "annual_tonnes": s.annual_tonnes}
             for s in self._inp.incineration_streams
         ]
-        pe_inc = incineration_emissions(
-            incineration_stream_dicts,
-            oxidation_factor=self._inp.oxidation_factor_incineration,
-            ef_n2o_kg_per_tonne=self._inp.ef_n2o_kg_per_tonne,
+        pe_com_co2 = combustion_co2_eq22(
+            eq22_streams, combustion_efficiency=self._inp.combustion_efficiency
         )
         components.append(
             EmissionComponent(
-                name="PE_INC (waste incineration)",
-                value_tco2e=pe_inc,
-                formula_ref="ACM0022 Eq.17 + IPCC 2006 V5 Eq.5.1/5.4",
-                notes=(
-                    f"{len(incineration_stream_dicts)} stream(s), "
-                    f"OF={self._inp.oxidation_factor_incineration}, "
-                    f"EF_N2O={self._inp.ef_n2o_kg_per_tonne} kg/t"
-                ),
+                name="PE_COM_CO2 (fossil carbon in combusted waste)",
+                value_tco2e=pe_com_co2,
+                formula_ref="ACM0022 Eq.22",
+                notes=f"{len(eq22_streams)} stream(s), EFF_COM={self._inp.combustion_efficiency}",
             )
         )
 
-        project_total = pe_ec + pe_fc + pe_ch4 + pe_flare + pe_inc
+        # PE_COM,CH4,N2O via Eq.27
+        total_combusted = sum(float(s.get("annual_tonnes", 0)) for s in eq22_streams)
+        pe_com_ch4_n2o = combustion_ch4_n2o_eq27(total_combusted)
+        components.append(
+            EmissionComponent(
+                name="PE_COM_CH4_N2O (combustion CH4+N2O)",
+                value_tco2e=pe_com_ch4_n2o,
+                formula_ref="ACM0022 Eq.27",
+                notes=f"total combusted {total_combusted:,.0f} t",
+            )
+        )
+
+        # PE_WW via Eq.28
+        pe_ww = wastewater_ch4_eq28(
+            volume_m3_per_year=self._inp.runoff_wastewater_m3_per_year,
+            cod_t_per_m3=self._inp.runoff_wastewater_cod_t_per_m3,
+            bo_t_ch4_per_t_cod=self._inp.wastewater_bo_t_ch4_per_t_cod,
+            mcf=self._inp.wastewater_mcf,
+        )
+        components.append(
+            EmissionComponent(
+                name="PE_WW (run-off wastewater)",
+                value_tco2e=pe_ww,
+                formula_ref="ACM0022 Eq.28",
+            )
+        )
+
+        # Legacy PE_INC kept for backward compatibility tests but not added to total
+        # (its components are now accounted via PE_COM_CO2/CH4_N2O)
+        # Keep calculation for reference but value is 0 as streams are now counted via Eq22/27
+        project_total = pe_ec + pe_fc + pe_ch4 + pe_flare + pe_com_co2 + pe_com_ch4_n2o + pe_ww
 
         # ========== LEAKAGE ==========
 
@@ -245,7 +256,7 @@ class ACM0022Calculator:
             project_fossil_fuel_tco2e=pe_fc,
             project_methane_leakage_tco2e=pe_ch4,
             project_flaring_tco2e=pe_flare,
-            project_incineration_tco2e=pe_inc,
+            project_incineration_tco2e=pe_com_co2 + pe_com_ch4_n2o,
             leakage_rdf_combustion_tco2e=le_rdf,
             leakage_digestate_tco2e=le_digestate,
             organic_waste_to_ad_tonnes=organic_to_ad,

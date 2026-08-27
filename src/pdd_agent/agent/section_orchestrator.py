@@ -6,6 +6,9 @@ section. Enforces review gates and converts unsupported claims to TODOs.
 
 from __future__ import annotations
 
+import json
+import os
+import threading
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
@@ -136,6 +139,8 @@ class SectionOrchestrator:
         assumption_burden_path: Path | str | None = None,
         runs_dir: Path | str | None = None,
         only_sections: list[str] | None = None,
+        resume: bool = False,
+        max_workers: int = 1,
     ) -> None:
         self._provider = provider or NoopProvider()
         self._assumption_burden_path = assumption_burden_path
@@ -162,6 +167,11 @@ class SectionOrchestrator:
         self.redraft_count: int = 0
         self._judge_provider_cache: tuple[str, bool] | None = None
         self._only_sections: list[str] | None = only_sections
+        self._resume = resume
+        self._max_workers = max(1, int(max_workers))
+        self._lock = threading.Lock()
+        if self._resume:
+            self._load_resume()
 
         if hasattr(self._provider, "set_budget"):
             self._provider.set_budget(self._budget)
@@ -677,6 +687,11 @@ class SectionOrchestrator:
                     f"- {entry['field_path']}: label as synthetic assumption; rationale={entry.get('rationale', '')}\n"
                 )
 
+        budget = self.section_budget_chars(section_id, sub_section_id)
+        prompt_parts.append(
+            f"\n## Length Budget\nAim for 60-90% of {budget} characters, never pad to reach it, and never exceed it.\n"
+        )
+
         prompt_parts.append("\n## Instructions\n")
         if self._use_v2_prompt:
             prompt_parts.append(
@@ -1100,26 +1115,249 @@ class SectionOrchestrator:
         finally:
             self._enable_judge = previous
 
-    def _store_draft(self, key: str, draft: DraftSection) -> DraftSection:
-        self._drafted[key] = draft
-        self._run.add(draft)
-        return draft
+    def _load_resume(self) -> None:
+        """Load existing run file for resume, if present."""
+        runs_dir = self._runs_dir or Path("data/runs")
+        run_path = runs_dir / f"{self._run_id}.json"
+        if not run_path.exists():
+            return
+        try:
+            raw = json.loads(run_path.read_text(encoding="utf-8"))
+            sections = raw.get("sections", [])
+            loaded = 0
+            for sec in sections:
+                text = sec.get("text", "")
+                if (
+                    not text
+                    or text.startswith("[PLACEHOLDER")
+                    or text.startswith("[BUDGET EXHAUSTED")
+                ):
+                    continue
+                ds = DraftSection(
+                    section_id=sec.get("section_id", ""),
+                    sub_section_id=sec.get("sub_section_id", ""),
+                    text=text,
+                    confidence=sec.get("confidence", "MEDIUM"),
+                    provenance=sec.get("provenance", []),
+                    issues=sec.get("issues", []),
+                    provider=sec.get("provider", ""),
+                )
+                for attr in (
+                    "fact_provenance",
+                    "synthetic_uses",
+                    "output_references",
+                    "review_sensitivity",
+                    "content_class",
+                    "structured_content",
+                ):
+                    if attr in sec:
+                        setattr(ds, attr, sec[attr])
+                key = f"{ds.section_id}/{ds.sub_section_id}"
+                self._drafted[key] = ds
+                self._run.add(ds)
+                loaded += 1
+            if loaded:
+                logger.info("run_resumed", run_id=self._run_id, sections_skipped=loaded)
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("resume_load_failed", run_id=self._run_id, error=str(exc))
 
-    def draft_all_sections(self) -> list[DraftSection]:
-        """Draft all sections in the canonical schema order."""
-        results: list[DraftSection] = []
-        # PHASE-04 (2026-08-13 plan): when only_sections is non-empty, draft
-        # only the listed sub-section ids; None or empty -> all 36.
+    def checkpoint(self) -> Path:
+        """Atomically write run record to data/runs/{run_id}.json."""
+        runs_dir = self._runs_dir or Path("data/runs")
+        runs_dir.mkdir(parents=True, exist_ok=True)
+        run_path = runs_dir / f"{self._run_id}.json"
+        tmp_path = runs_dir / f".{self._run_id}.tmp"
+        with self._lock:
+            data_dict = (
+                self._run.to_dict()
+                if hasattr(self._run, "to_dict")
+                else {"run_id": self._run_id, "sections": []}
+            )
+            with open(tmp_path, "w", encoding="utf-8") as fh:
+                json.dump(data_dict, fh, ensure_ascii=False, indent=2)
+            os.replace(tmp_path, run_path)
+        return run_path
+
+    def preflight_estimate(self) -> dict[str, float]:
+        """Estimate tokens and cost before drafting."""
         filter_ids = set(self._only_sections) if self._only_sections else None
+        prompts: list[str] = []
+        section_budgets: dict[str, int] = {}
         for sec in self._schema["sections"]:
             sid = sec["section_id"]
             for ss in sec.get("sub_sections", []):
                 ssid = ss["sub_section_id"]
                 if filter_ids is not None and ssid not in filter_ids:
                     continue
+                key = f"{sid}/{ssid}"
+                if self._resume and key in self._drafted:
+                    text = self._drafted[key].text
+                    if (
+                        text
+                        and not text.startswith("[PLACEHOLDER")
+                        and not text.startswith("[BUDGET EXHAUSTED")
+                    ):
+                        continue
+                examples = []
+                if self._should_inject_retrieval():
+                    try:
+                        from pdd_agent.retrieval.search import get_examples_for_section
+
+                        examples = get_examples_for_section(
+                            sid,
+                            ssid,
+                            k=self._max_corpus_examples(),
+                            document_family=self._family_slug(),
+                        )
+                    except Exception:
+                        examples = []
+                prompt = self._build_prompt(sid, ssid, examples, self._project)
+                prompts.append(prompt)
+                section_budgets[ssid] = self.section_budget_chars(sid, ssid)
+        avg_prompt_chars = sum(len(pr) for pr in prompts) / len(prompts) if prompts else 0
+        from pdd_agent.llm.budget import estimate_run
+
+        provider_name = getattr(self._provider, "name", "noop")
+        overhead = 25000 if provider_name == "claude-code" else 0
+        model_name = (
+            getattr(getattr(self._provider, "_config", None), "model_name", "gpt-4o")
+            if hasattr(self._provider, "_config")
+            else "gpt-4o"
+        )
+        return estimate_run(
+            section_budgets,
+            avg_prompt_chars,
+            model_name,
+            provider_name,
+            overhead_tokens_per_section=overhead,
+        )
+
+    def _store_draft(self, key: str, draft: DraftSection) -> DraftSection:
+        with self._lock:
+            if key in self._drafted:
+                for idx, sec in enumerate(self._run.sections):
+                    if (
+                        getattr(sec, "section_id", "") == draft.section_id
+                        and getattr(sec, "sub_section_id", "") == draft.sub_section_id
+                    ):
+                        self._run.sections[idx] = draft
+                        break
+                self._drafted[key] = draft
+            else:
+                self._drafted[key] = draft
+                self._run.add(draft)
+        return draft
+
+    def draft_all_sections(self) -> list[DraftSection]:
+        """Draft all sections in canonical order, with optional concurrency and checkpointing."""
+        filter_ids = set(self._only_sections) if self._only_sections else None
+        ordered: list[tuple[str, str]] = []
+        for sec in self._schema["sections"]:
+            sid = sec["section_id"]
+            for ss in sec.get("sub_sections", []):
+                ssid = ss["sub_section_id"]
+                if filter_ids is not None and ssid not in filter_ids:
+                    continue
+                key = f"{sid}/{ssid}"
+                if self._resume and key in self._drafted:
+                    text = self._drafted[key].text
+                    if (
+                        text
+                        and not text.startswith("[PLACEHOLDER")
+                        and not text.startswith("[BUDGET EXHAUSTED")
+                    ):
+                        continue
+                ordered.append((sid, ssid))
+        if self._max_workers > 1:
+            from concurrent.futures import ThreadPoolExecutor, as_completed
+
+            future_to_key: dict = {}
+            ordered_results: dict[tuple[str, str], Any] = {}
+            with ThreadPoolExecutor(max_workers=self._max_workers) as executor:
+                for sid, ssid in ordered:
+                    fut = executor.submit(self.draft_section, sid, ssid)
+                    future_to_key[fut] = (sid, ssid)
+                for fut in as_completed(future_to_key):
+                    sid, ssid = future_to_key[fut]
+                    try:
+                        draft = fut.result()
+                    except Exception as exc:  # noqa: BLE001
+                        logger.warning(
+                            "draft_section_failed",
+                            section_id=sid,
+                            sub_section_id=ssid,
+                            error=str(exc),
+                        )
+                        continue
+                    ordered_results[(sid, ssid)] = draft
+                    try:
+                        self.checkpoint()
+                    except Exception:
+                        pass
+            results: list[DraftSection] = []
+            for sid, ssid in ordered:
+                if (sid, ssid) in ordered_results:
+                    results.append(ordered_results[(sid, ssid)])
+            # include resumed sections
+            for sec in self._schema["sections"]:
+                for ss in sec.get("sub_sections", []):
+                    ssid2 = ss["sub_section_id"]
+                    if filter_ids is not None and ssid2 not in filter_ids:
+                        continue
+                    key2 = f"{sec['section_id']}/{ssid2}"
+                    if key2 in self._drafted and self._drafted[key2] not in results:
+                        results.append(self._drafted[key2])
+            order_index = {
+                (sid2, ssid2): idx
+                for idx, (sid2, ssid2) in enumerate(
+                    [
+                        (s["section_id"], ss["sub_section_id"])
+                        for s in self._schema["sections"]
+                        for ss in s.get("sub_sections", [])
+                    ]
+                )
+            }
+            results.sort(key=lambda d: order_index.get((d.section_id, d.sub_section_id), 999))
+            # Ensure stored run order is canonical and checkpoint final
+            with self._lock:
+                # Reorder run.sections to canonical
+                self._run.sections.sort(key=lambda d: order_index.get((d.section_id, d.sub_section_id), 999))
+            try:
+                self.checkpoint()
+            except Exception:
+                pass
+            return results
+        else:
+            results: list[DraftSection] = []
+            for sid, ssid in ordered:
                 draft = self.draft_section(sid, ssid)
                 results.append(draft)
-        return results
+                try:
+                    self.checkpoint()
+                except Exception:
+                    pass
+            all_ordered: list[DraftSection] = []
+            for sec in self._schema["sections"]:
+                sid = sec["section_id"]
+                for ss in sec.get("sub_sections", []):
+                    ssid = ss["sub_section_id"]
+                    if filter_ids is not None and ssid not in filter_ids:
+                        continue
+                    key = f"{sid}/{ssid}"
+                    if key in self._drafted:
+                        found = next(
+                            (
+                                r
+                                for r in results
+                                if r.section_id == sid and r.sub_section_id == ssid
+                            ),
+                            None,
+                        )
+                        if found:
+                            all_ordered.append(found)
+                        else:
+                            all_ordered.append(self._drafted[key])
+            return all_ordered if all_ordered else results
 
     def draft_project_details(self) -> list[DraftSection]:
         """Draft all sub-sections of Section 1 (Project Details)."""

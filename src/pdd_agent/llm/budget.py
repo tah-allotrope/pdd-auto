@@ -7,6 +7,7 @@ a warning at 80%.
 
 from __future__ import annotations
 
+import threading
 from pathlib import Path
 
 import structlog
@@ -68,6 +69,37 @@ def _load_pricing(path: Path | None = None) -> dict[str, dict[str, float]]:
 _DEFAULT_PRICING = _load_pricing()
 
 
+def estimate_run(
+    section_budgets: dict[str, int],
+    avg_prompt_chars: float,
+    model: str,
+    provider: str,
+    overhead_tokens_per_section: int = 0,
+) -> dict[str, float]:
+    """Estimate input/output tokens and cost for a run."""
+    sections = len(section_budgets)
+    input_tokens = (
+        round(sections * avg_prompt_chars / 3.5) + overhead_tokens_per_section * sections
+        if sections
+        else 0
+    )
+    output_tokens = round(sum(section_budgets.values()) / 3.5) if section_budgets else 0
+    total_tokens = input_tokens + output_tokens
+    _PROVIDER_FALLBACK_KEY = {"ollama": "ollama-local", "claude-code": "claude-code"}
+    fallback_key = _PROVIDER_FALLBACK_KEY.get(provider, "gpt-4o")
+    pricing = _DEFAULT_PRICING.get(model, _DEFAULT_PRICING.get(fallback_key, {}))
+    input_cost = (input_tokens / 1_000_000) * pricing.get("input", 0) if pricing else 0
+    output_cost = (output_tokens / 1_000_000) * pricing.get("output", 0) if pricing else 0
+    estimated_cost_usd = input_cost + output_cost
+    return {
+        "sections": sections,
+        "input_tokens": input_tokens,
+        "output_tokens": output_tokens,
+        "total_tokens": total_tokens,
+        "estimated_cost_usd": estimated_cost_usd,
+    }
+
+
 @dataclass
 class TokenBudget:
     """Tracks token usage and cost against a per-run budget.
@@ -83,6 +115,7 @@ class TokenBudget:
     warning_threshold: float = 0.8
     calls: list[CallRecord] = field(default_factory=list)
     _warning_emitted: bool = field(default=False, repr=False)
+    _lock: threading.Lock = field(default_factory=threading.Lock, repr=False, compare=False)
 
     @property
     def total_input_tokens(self) -> int:
@@ -120,27 +153,28 @@ class TokenBudget:
 
     def check_budget(self) -> None:
         """Check budget and raise/warn as appropriate. Call before each LLM request."""
-        if self.is_exhausted:
-            raise BudgetExhaustedError(
-                f"Token budget exhausted: {self.total_tokens:,} / {self.max_tokens:,} "
-                f"({len(self.calls)} calls, ${self.estimated_cost_usd:.4f})"
-            )
-        if self.max_cost_usd is not None and self.estimated_cost_usd >= self.max_cost_usd:
-            raise BudgetExhaustedError(
-                f"Cost budget exhausted: ${self.estimated_cost_usd:.4f} / "
-                f"${self.max_cost_usd:.4f} ({len(self.calls)} calls, "
-                f"{self.total_tokens:,} tokens)"
-            )
-        if not self._warning_emitted and self.utilization >= self.warning_threshold:
-            self._warning_emitted = True
-            logger.warning(
-                "token_budget_warning",
-                utilization=f"{self.utilization:.1%}",
-                total_tokens=self.total_tokens,
-                max_tokens=self.max_tokens,
-                remaining=self.remaining,
-                calls=len(self.calls),
-            )
+        with self._lock:
+            if self.is_exhausted:
+                raise BudgetExhaustedError(
+                    f"Token budget exhausted: {self.total_tokens:,} / {self.max_tokens:,} "
+                    f"({len(self.calls)} calls, ${self.estimated_cost_usd:.4f})"
+                )
+            if self.max_cost_usd is not None and self.estimated_cost_usd >= self.max_cost_usd:
+                raise BudgetExhaustedError(
+                    f"Cost budget exhausted: ${self.estimated_cost_usd:.4f} / "
+                    f"${self.max_cost_usd:.4f} ({len(self.calls)} calls, "
+                    f"{self.total_tokens:,} tokens)"
+                )
+            if not self._warning_emitted and self.utilization >= self.warning_threshold:
+                self._warning_emitted = True
+                logger.warning(
+                    "token_budget_warning",
+                    utilization=f"{self.utilization:.1%}",
+                    total_tokens=self.total_tokens,
+                    max_tokens=self.max_tokens,
+                    remaining=self.remaining,
+                    calls=len(self.calls),
+                )
 
     def record(
         self,
@@ -167,7 +201,8 @@ class TokenBudget:
             cache_creation_tokens=cache_creation_tokens,
             cache_read_tokens=cache_read_tokens,
         )
-        self.calls.append(record)
+        with self._lock:
+            self.calls.append(record)
         logger.debug(
             "token_usage_recorded",
             section_id=section_id,

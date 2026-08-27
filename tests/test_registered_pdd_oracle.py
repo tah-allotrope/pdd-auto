@@ -26,6 +26,9 @@ from schemas.project_input import ProjectInput
 
 # Headline figures from the registered PDDs, in tCO2e.
 SOC_SON_TOTAL_ERS = 3_808_082
+SOC_SON_REGISTERED_PE = 420_336  # tCO2e/year, Section 4.2 sum
+SOC_SON_REGISTERED_BE_EC = 338_059  # tCO2e/year, 388050 MWh *0.84585*1.03
+SOC_SON_REGISTERED_BE_CH4_SUM = 4_384_018
 INEGOL_TOTAL_ERS = 730_000
 INEGOL_ANNUAL_ERS = 104_285
 
@@ -92,8 +95,8 @@ class TestSocSonOracle:
         result = compute_for(_load_pi("configs/projects/vietnam_socson_from_sheet.yaml"))
         assert result is not None
         assert result.project_emissions_tco2e > 0.0
-        pe_inc = next(c for c in result.components if c.name.startswith("PE_INC"))
-        assert pe_inc.value_tco2e > 0.0
+        pe_com = next((c for c in result.components if c.name.startswith("PE_COM_CO2")), None)
+        assert pe_com is not None and pe_com.value_tco2e > 0
 
     def test_baseline_methane_is_material(self):
         """Avoided landfill methane is the economic case for a WTE project.
@@ -105,6 +108,52 @@ class TestSocSonOracle:
         assert result is not None
         be_ch4 = next(c for c in result.components if c.name.startswith("BE_CH4"))
         assert be_ch4.value_tco2e > 0.0
+
+    def test_project_emissions_within_tolerance_of_registered(self):
+        """PE_y ~420,336 tCO2e/yr (registered Section 4.2)."""
+        result = compute_for(_load_pi("configs/projects/vietnam_socson_from_sheet.yaml"))
+        assert result is not None
+        error = _relative_error(result.project_emissions_tco2e, SOC_SON_REGISTERED_PE)
+        assert error <= TOLERANCE, (
+            f"PE {result.project_emissions_tco2e:,.0f} vs {SOC_SON_REGISTERED_PE:,} ({error:.1%})"
+        )
+
+    def test_baseline_electricity_within_tolerance_of_registered(self):
+        """BE_EC ~338,059 tCO2e/yr (388050 MWh *0.84585*1.03)."""
+        result = compute_for(_load_pi("configs/projects/vietnam_socson_from_sheet.yaml"))
+        assert result is not None
+        be_ec = next(c for c in result.components if c.name.startswith("BE_EC"))
+        error = _relative_error(be_ec.value_tco2e, SOC_SON_REGISTERED_BE_EC)
+        assert error <= TOLERANCE, (
+            f"BE_EC {be_ec.value_tco2e:,.0f} vs {SOC_SON_REGISTERED_BE_EC:,} ({error:.1%})"
+        )
+
+    def test_baseline_methane_sum_within_tolerance_of_registered(self):
+        """7-year BE_CH4 sum ~4,384,018."""
+        from pdd_agent.calc.acm0022 import ACM0022Calculator
+        from pdd_agent.calc.models import ACM0022CalcInput
+
+        mapped = build_engine_inputs(_load_pi("configs/projects/vietnam_socson_from_sheet.yaml"))
+        assert mapped is not None
+        _, engine_inputs, _ = mapped
+        s = sum(
+            ACM0022Calculator(ACM0022CalcInput(**{**engine_inputs, "calculation_year": y}))
+            .calculate()
+            .baseline_methane_swds_tco2e
+            for y in range(1, 8)
+        )
+        error = _relative_error(s, SOC_SON_REGISTERED_BE_CH4_SUM)
+        assert error <= TOLERANCE, (
+            f"BE_CH4 sum {s:,.0f} vs {SOC_SON_REGISTERED_BE_CH4_SUM:,} ({error:.1%})"
+        )
+
+    def test_socson_composition_guard(self):
+        """Composition sums to 1.0 and every source cites registered PDD."""
+        pi = _load_pi("configs/projects/vietnam_socson_from_sheet.yaml")
+        total = sum(e.mass_fraction for e in pi.technology.waste_composition)
+        assert abs(total - 1.0) <= 0.001, f"composition sum {total}"
+        for e in pi.technology.waste_composition:
+            assert "registered PDD" in e.source
 
 
 _YEAR_ONE_XFAIL = pytest.mark.xfail(
@@ -196,18 +245,6 @@ class TestSocSonAnnualSchedule:
         inputs = dict(engine_inputs, calculation_year=year)
         return ACM0022Calculator(ACM0022CalcInput(**inputs)).calculate()
 
-    @pytest.mark.xfail(
-        strict=True,
-        reason=(
-            "D-1 (baseline methane too low), re-measured 2026-08-21 after PE_INC "
-            "+ corrected composition: the engine's 7-year BE_CH4 sum is "
-            "2,826,368 tCO2e vs the registered 4,384,018 tCO2e (-35.5%). The "
-            "first-order-decay parameters (DOC, k, f_ch4, capture rate) "
-            "understate methane growth relative to the registered PDD's own FOD "
-            "run. Closing this needs an FOD parameter investigation, which is "
-            "explicitly out of scope (RISK-05-03); TOLERANCE is not widened."
-        ),
-    )
     def test_engine_be_ch4_sum_within_tolerance_of_registered(self):
         mapped = build_engine_inputs(_load_pi("configs/projects/vietnam_socson_from_sheet.yaml"))
         assert mapped is not None
@@ -221,20 +258,6 @@ class TestSocSonAnnualSchedule:
             f"{sum(SOC_SON_REGISTERED_BE_CH4_BY_YEAR):,} tCO2e ({error:.1%} error)"
         )
 
-    @pytest.mark.xfail(
-        strict=True,
-        reason=(
-            "D-2 (everything but baseline methane has the wrong sign), "
-            "re-measured 2026-08-21 after PE_INC: in the registered PDD, "
-            "ER_y = BE_CH4,y - 82,276.5 every year, i.e. the net effect of "
-            "(baseline electricity - project emissions - leakage) is a constant "
-            "charge of -82,276.5 tCO2e/yr. The engine computes +169,110.6 tCO2e/yr "
-            "for that same quantity (BE_EC 357,006.0 minus PE_INC-carrying PE "
-            "187,895.4), a discrepancy of 251,387.1 tCO2e/yr. Closing it needs the "
-            "registered PDD's actual grid-EF/displacement basis; TOLERANCE is not "
-            "widened."
-        ),
-    )
     def test_non_methane_net_charge_matches_registered(self):
         mapped = build_engine_inputs(_load_pi("configs/projects/vietnam_socson_from_sheet.yaml"))
         assert mapped is not None

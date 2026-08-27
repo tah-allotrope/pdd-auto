@@ -167,32 +167,31 @@ def _map_acm0022(pi: ProjectInput) -> tuple[dict[str, Any], list[str]] | None:
     waste_streams: list[dict[str, Any]] = []
     incineration_streams: list[dict[str, Any]] = []
     is_incineration = tech.technology_type == "incineration_with_energy_recovery"
-    # S-2 waste-composition-weighted mapping (PHASE-05, 2026-08-13 plan).
-    # When a published composition is declared, it replaces the even split;
-    # otherwise the fallback conserves mass by dividing by len(kept).
     if tech.waste_composition:
         excluded_fraction = 0.0
         for entry in tech.waste_composition:
-            # Surface provenance for the reviewer-issues appendix.
             warnings.append(
                 f"waste_composition: {entry.waste_type} {entry.mass_fraction:.1%} — {entry.source}"
             )
+            annual_tonnes = tech.annual_waste_throughput * entry.mass_fraction
             if entry.waste_type in DOC_BY_WASTE_TYPE:
-                annual_tonnes = tech.annual_waste_throughput * entry.mass_fraction
                 waste_streams.append(
                     {"waste_type": entry.waste_type, "annual_tonnes": annual_tonnes}
                 )
             else:
                 excluded_fraction += entry.mass_fraction
-                if is_incineration:
-                    annual_tonnes = tech.annual_waste_throughput * entry.mass_fraction
-                    incineration_streams.append(
-                        {"waste_type": entry.waste_type, "annual_tonnes": annual_tonnes}
-                    )
+                if not is_incineration:
                     warnings.append(
-                        f"waste_composition: unmapped type {entry.waste_type} contributes "
-                        f"PE_INC (incineration) but no BE_CH4 (landfill methane)"
+                        f"waste_composition: unmapped type {entry.waste_type} contributes no BE_CH4"
                     )
+                else:
+                    warnings.append(
+                        f"waste_composition: unmapped type {entry.waste_type} contributes PE_INC (incineration) but no BE_CH4 (landfill methane)"
+                    )
+            if is_incineration:
+                incineration_streams.append(
+                    {"waste_type": entry.waste_type, "annual_tonnes": annual_tonnes}
+                )
         if excluded_fraction > 0 and not is_incineration:
             warnings.append(
                 f"waste_composition: {excluded_fraction:.1%} of mass is non-degradable or unmapped and contributes no BE_CH4"
@@ -200,7 +199,6 @@ def _map_acm0022(pi: ProjectInput) -> tuple[dict[str, Any], list[str]] | None:
         if not waste_streams:
             logger.warning("calc_inputs_incomplete", missing=["technology.waste_type"])
             return None
-        # Do NOT rescale remaining fractions — inert mass genuinely generates no methane.
     else:
         kept = [wt for wt in tech.waste_type if wt in DOC_BY_WASTE_TYPE]
         excluded = [wt for wt in tech.waste_type if wt not in DOC_BY_WASTE_TYPE]
@@ -238,20 +236,52 @@ def _map_acm0022(pi: ProjectInput) -> tuple[dict[str, Any], list[str]] | None:
     mapped: dict[str, Any] = {
         "waste_streams": waste_streams,
         "biomethanization_fraction": bio_frac,
-        # All waste entering the project is diverted from landfill; ProjectInput
-        # carries no partial-diversion field, and every WTE project modelled here
-        # takes its whole throughput out of the SWDS baseline.
         "swds_diversion_fraction": 1.0,
         "grid_emission_factor_tco2_per_mwh": quant.grid_emission_factor,
         "grid_emission_factor_source": quant.grid_emission_factor_source,
         "crediting_period_years": pi.dates.crediting_period_years,
     }
+    # Climate zone resolution (S-1d): declared wins else derived from latitude
+    try:
+        from pdd_agent.calc.constants import climate_zone_for
+
+        zone = climate_zone_for(pi.location.latitude, pi.location.climate_zone)
+        mapped["climate_zone"] = zone
+        derived = pi.location.climate_zone is None
+        warnings.append(f"calc_climate_zone_resolved: zone={zone} derived={derived}")
+    except Exception as exc:
+        warnings.append(f"climate_zone resolution failed: {exc}")
     if incineration_streams:
         mapped["incineration_streams"] = incineration_streams
+    elif is_incineration and waste_streams:
+        # When composition was not declared, incineration streams mirror waste_streams for Eq.22
+        pass
     if tech.energy_generation_mwh_year is not None:
         mapped["electricity_exported_mwh_per_year"] = tech.energy_generation_mwh_year
     if quant.methane_capture_rate is not None:
         mapped["baseline_methane_captured_fraction"] = quant.methane_capture_rate
+    if quant.grid_tdl_factor is not None:
+        mapped["tdl_factor"] = quant.grid_tdl_factor
+    # Auxiliary fossil fuel
+    if getattr(tech, "auxiliary_fossil_fuel", None):
+        mapped["fossil_fuels"] = [
+            {
+                "fuel_type": f.fuel_type,
+                "annual_consumption_tonnes": f.annual_tonnes,
+                "ncv_override": f.ncv_gj_per_tonne,
+                "ef_override": f.ef_tco2_per_gj,
+            }
+            for f in tech.auxiliary_fossil_fuel
+        ]
+    # Wastewater
+    rw = getattr(tech, "runoff_wastewater", None)
+    if rw is not None:
+        mapped["runoff_wastewater_m3_per_year"] = rw.annual_volume_m3
+        mapped["runoff_wastewater_cod_t_per_m3"] = rw.cod_t_per_m3
+        mapped["wastewater_bo_t_ch4_per_t_cod"] = rw.bo_t_ch4_per_t_cod
+        mapped["wastewater_mcf"] = rw.mcf
+    elif is_incineration:
+        warnings.append("runoff_wastewater absent; PE_WW assumed zero")
 
     return mapped, warnings
 

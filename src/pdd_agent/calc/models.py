@@ -101,6 +101,25 @@ class ACM0022CalcInput(BaseModel):
         description="Transmission and distribution loss factor (fraction)",
     )
 
+    # IPCC climate zone for FOD decay rates
+    climate_zone: str | None = Field(
+        None,
+        description="IPCC climate zone (boreal_temperate_wet, tropical_wet, etc.); None means legacy default",
+    )
+
+    # ACM0022 Eq.22/28 inputs
+    combustion_efficiency: float = Field(
+        1.0, ge=0, le=1, description="Combustion efficiency EFF_COM (Eq.22)"
+    )
+    runoff_wastewater_m3_per_year: float = Field(
+        0.0, ge=0, description="Run-off wastewater volume m3/year (Eq.28)"
+    )
+    runoff_wastewater_cod_t_per_m3: float = Field(
+        0.0, ge=0, description="Run-off wastewater COD tCOD/m3 (Eq.28)"
+    )
+    wastewater_bo_t_ch4_per_t_cod: float = Field(0.25, gt=0, description="B_o tCH4/tCOD (Eq.28)")
+    wastewater_mcf: float = Field(0.8, ge=0, le=1, description="Wastewater MCF (Eq.28)")
+
     # Baseline SWDS parameters
     baseline_methane_captured_fraction: float = Field(
         0.0,

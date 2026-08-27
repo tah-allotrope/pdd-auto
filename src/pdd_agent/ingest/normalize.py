@@ -163,6 +163,41 @@ def _extract_tables(pdf_path: Path) -> list[dict[str, Any]]:
     return tables
 
 
+def _extract_plain_text(path: Path, dry_run: bool = False) -> dict[str, Any]:
+    """Extract text from a pre-extracted UTF-8 text file (mime_type text/plain)."""
+    out: dict[str, Any] = {
+        "parseable": False,
+        "pages": [],
+        "text": "",
+        "headings": [],
+        "text_blocks": [],
+        "tables": [],
+    }
+    if dry_run:
+        out["parseable"] = True
+        out["text"] = "[dry-run text content placeholder]"
+        out["headings"] = []
+        out["text_blocks"] = []
+        out["tables"] = []
+        out["page_count"] = 1
+        return out
+    try:
+        text = path.read_text(encoding="utf-8", errors="replace")
+        lines = text.splitlines()
+        headings, text_blocks = _build_headings_and_blocks(lines)
+        out["text"] = text
+        out["headings"] = headings
+        out["text_blocks"] = text_blocks
+        out["tables"] = []
+        out["parseable"] = True
+        out["page_count"] = 1
+        out["pages"] = [{"page": 1, "chars": len(text), "text": text}]
+    except Exception as exc:  # noqa: BLE001
+        out["error"] = str(exc)
+        out.setdefault("tables", [])
+    return out
+
+
 def _extract_text(path: Path, mime_type: str, dry_run: bool = False) -> dict[str, Any]:
     """Extract plain text from a PDF or DOCX file."""
     result: dict[str, Any] = {
@@ -183,6 +218,11 @@ def _extract_text(path: Path, mime_type: str, dry_run: bool = False) -> dict[str
         result.update(inner)
     elif mime_type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
         inner = _extract_docx(path, dry_run=dry_run)
+        if dry_run:
+            inner["parseable"] = True
+        result.update(inner)
+    elif mime_type == "text/plain":
+        inner = _extract_plain_text(path, dry_run=dry_run)
         if dry_run:
             inner["parseable"] = True
         result.update(inner)
