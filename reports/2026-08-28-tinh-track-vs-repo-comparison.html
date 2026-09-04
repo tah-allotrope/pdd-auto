@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tinh Ta's PDD Track vs Current Repo — Comparison (2026-08-28 Update)</title>
+<style>
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:0;padding:0;background:#f8fafc;color:#0f172a;line-height:1.65}
+header{background:#0f172a;color:#fff;padding:28px 36px}
+header h1{margin:0;font-size:22px}
+header .subtitle{opacity:.8;margin-top:6px;font-size:13px}
+.container{max-width:1080px;margin:0 auto;padding:24px 36px}
+.card{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:16px 18px;margin:12px 0}
+.badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:600}
+.badge-green{background:#dcfce7;color:#166534}
+.badge-amber{background:#fef9c3;color:#854d0e}
+.badge-red{background:#fee2e2;color:#991b1b}
+.badge-blue{background:#dbeafe;color:#1e40af}
+table{border-collapse:collapse;width:100%;font-size:13px;margin:12px 0}
+th,td{border:1px solid #e2e8f0;padding:8px 10px;text-align:left;vertical-align:top}
+th{background:#f1f5f9;font-weight:600}
+code{font-size:12px;background:#f1f5f9;padding:1px 4px;border-radius:4px;word-break:break-word}
+pre{background:#0f172a;color:#e2e8f0;padding:14px;border-radius:8px;overflow:auto;font-size:12px}
+pre code{background:none;color:inherit;padding:0}
+blockquote{border-left:3px solid #0ea5e9;background:#f0f9ff;padding:10px 14px;margin:14px 0;border-radius:0 8px 8px 0;font-size:13px;color:#334155}
+h1{font-size:22px;margin:0}
+h2{margin:28px 0 12px;font-size:18px;color:#0f172a;border-bottom:2px solid #e2e8f0;padding-bottom:6px}
+h3{margin:18px 0 8px;font-size:15px;color:#334155}
+h4{margin:14px 0 6px;font-size:14px;color:#475569}
+ul,ol{font-size:13px}
+a{color:#0284c7;text-decoration:none}
+a:hover{text-decoration:underline}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+.toc{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:14px 18px;margin:14px 0}
+.toc ul{margin:6px 0;padding-left:18px}
+.meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.meta span{background:#e2e8f0;color:#334155;padding:3px 8px;border-radius:999px;font-size:11px}
+.footer{margin:24px 0;color:#64748b;font-size:12px;text-align:center}
+</style>
+</head>
+<body>
+<header>
+<h1>Tinh Ta's PDD Track vs Current Repo — Comparison Report (Update)</h1>
+<div class="subtitle">Staff vs Self comparison &bull; 2026-08-28 &bull; Update to 2026-06-15 report &bull; Repo @ c1543e4 &bull; Generated for Tung Ho (Aiden)</div>
+<div class="meta">
+<span>Source: Gmail + Drive "Registered WTE PDD" + repo src</span>
+<span>Snapshot: ref/PDD staff August 2026/</span>
+<span>Original: docs/2026-08-28-tinh-track-vs-repo-comparison.md</span>
+</div>
+</header>
+<div class="container">
+<div class="card" style="border-left:4px solid #0ea5e9">
+<strong>How this was assembled</strong> — Converted from <code>docs/2026-08-28-tinh-track-vs-repo-comparison.md</code> to styled HTML for browser preview / GitHub Pages. No content changed; tables and structure preserved.
+</div>
+<h1 id="tinh-tas-pdd-track-vs-current-repo-comparison-report-update">Tinh Ta&rsquo;s PDD Track vs. Current Repo — Comparison Report (Update)</h1>
+<p><strong>Date:</strong> 2026-08-28
+<strong>Author:</strong> Generated for Tung Ho (Aiden) via Claude Code
+<strong>Scope:</strong> Update to <code>docs/2026-06-15-tinh-track-vs-repo-comparison.md</code>. Compare colleague <strong>Tinh Ta</strong>&rsquo;s PDD-automation work (Jun 15 – Aug 27 2026) against the current <code>pdd-auto</code> repository (through commit <code>c1543e4</code>, &ldquo;defensible numbers and document assembly&rdquo;).</p>
+<blockquote>
+<p><strong>How this was assembled.</strong> Sources: (1) Gmail — no new Drive links were sent since the May 13 2026 &ldquo;Project Proposal Development [PDD] introduction&rdquo; thread; the only newer Tinh emails are two calendar invites (&ldquo;[PDD] Verra registry download demonstration&rdquo;, Jul 17; &ldquo;Carbon progress meeting report and demo&rdquo;, Aug 27) with no linked artifacts in the invite body. (2) The same shared Drive folder <strong>&ldquo;Registered WTE PDD&rdquo;</strong> (<code>.../folders/1_2ethHHCfDk4pS8xIRKg2J_dlt5T5jaa</code>), re-listed via <code>gws</code> on 2026-08-28 — it has grown substantially since June. (3) Current repo state: <code>README.md</code>, <code>activeContext.md</code>, <code>plans/2026-08-28-defensible-numbers-and-document-assembly-plan.md</code> (newest plan), <code>src/pdd_agent/calc/*</code>, <code>git log</code>. A new local snapshot is saved at <code>ref/PDD staff August 2026/</code> (see <code>MANIFEST.md</code> there for the full Drive tree and what was/wasn&rsquo;t downloaded).</p>
+</blockquote>
+<hr />
+<h2 id="1-executive-summary">1. Executive summary</h2>
+<p>Both tracks made major, largely independent progress on exactly the gap the June report called out as shared and top-priority: <strong>a working emissions calculation engine</strong>. Neither track knew about the other&rsquo;s calc work in detail — this report is the first place they&rsquo;re compared.</p>
+<ul>
+<li><strong>Tinh&rsquo;s track</strong> shifted from &ldquo;prompts + a static schema&rdquo; to a real, if unpolished, <strong>software project</strong>. The Drive folder now contains an installable <code>pdd_automation</code> Python package (own <code>pyproject.toml</code>, <code>tests/</code>, <code>.egg-info</code>, a 7-stage CLI: <code>registry-download → ingest → parse → generate → check → assemble → evaluate</code>), a schema that grew from 306 to 541 lines, and — most importantly — a <strong>calculation reconciliation package</strong> (<code>Waste energy run/verra_pdd_original_and_final_package_20260722/</code>) that rebuilds baseline/project/leakage numbers against <strong>five real registered VCS projects</strong> (4818 ×2 versions, 5040, 4940, 4921) and a <code>Test PDD calculation/</code> folder with live spreadsheet calcs for two more named projects (ViOT_DOXACO under ACM0022, &ldquo;Amya&rdquo; under VM0043). A 672MB <code>PDD_Portable_Workspace_20260827_UPLOAD.zip</code> was uploaded the same day as an Aug 27 &ldquo;Carbon progress meeting report and demo&rdquo; invite to Tung/Aiden/Hang — Tinh is actively demoing this now.</li>
+<li><strong>The repo</strong> independently built and shipped a real ACM0022 calculator (plus VM0051, VM0044, AMS-II.G engines) validated against a registered oracle (Soc Son), closed the &ldquo;no real LLM output&rdquo; gap (native Markdown/table/math rendering, per-section budgets), and fixed the review-UI/export-gate issues — 909 tests passing, per <code>README.md</code>/<code>activeContext.md</code>.</li>
+<li><strong>Net:</strong> the calculation gap that was the single shared blocker in June is <strong>no longer a blocker on either side</strong> — each side solved it on its own project set, with different validation strategies (repo: one oracle project measured to a documented tolerance; Tinh: reconciliation against five real registered projects, useful as a broader spot-check). The June recommendation to &ldquo;reconcile the two schemas&rdquo; and &ldquo;wire a real LLM provider&rdquo; is now more urgent, not less — the two calc philosophies (defensible-arithmetic-with-tolerance vs. multi-project-reconciliation) are a good complement, and Tinh&rsquo;s own package now duplicates a nontrivial slice of repo functionality (registry download, DOCX assembly, schema-driven generation) that the June report explicitly flagged as a repo weakness (<code>ingest/registry_download.py</code> is still a stub in the repo today).</li>
+</ul>
+<h2 id="2-timeline-of-new-activity-since-jun-15">2. Timeline of new activity since Jun 15</h2>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Event</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>May 27 – Jun 10</td>
+<td>(Carried over from June report) <code>Schema_ver1.yaml</code>, first two prompts, Seraphine intake + first-draft Word/YAML delivered; Hang&rsquo;s Jun 11 review flags calcs producing no results.</td>
+</tr>
+<tr>
+<td>Jun 10</td>
+<td><code>md_to_vcs_docx.py</code> / <code>run_render_docx_workspace_tmp.py</code> added — first sign of a real DOCX-assembly script, not just a prompt.</td>
+</tr>
+<tr>
+<td>Jul 8</td>
+<td>Drive folder reorganized: loose files moved into <code>Old /</code>; new <code>PDD/</code> workspace created with <code>pdd_automation</code> installable package, <code>config/intakes/</code>, <code>docs/</code>, <code>library/</code>, <code>outputs/</code>, <code>projects/seraphine-wte/</code>. Schema grows to <code>Schema.yaml</code> (541 lines, from 306). <code>pdd_automation/README.md</code> documents a 7-stage CLI pipeline.</td>
+</tr>
+<tr>
+<td>Jul 14</td>
+<td>Tinh invites team to &ldquo;[PDD] Verra registry download demonstration&rdquo; (held Jul 17).</td>
+</tr>
+<tr>
+<td>Jul 16</td>
+<td>Original registry PDFs/XLS calc files for VCS 4818/4940/4921/5040 pulled into a reconciliation workspace.</td>
+</tr>
+<tr>
+<td>Jul 20–21</td>
+<td><code>verra-pdd.pptx</code> (5.3MB) and the &ldquo;Waste energy run&rdquo; 5-project original-vs-final calc reconciliation package assembled; <code>Test PDD calculation/ACM0022</code> and <code>/VM0043</code> folders added with two more live project spreadsheets.</td>
+</tr>
+<tr>
+<td>Aug 23 &amp; 27</td>
+<td>&ldquo;Carbon progress meeting report and demo&rdquo; invited and held; same day (Aug 27) a 672MB portable workspace zip is uploaded to Drive — Tung was unable to attend (personal matter) and asked to catch up later.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="3-tinhs-new-artifacts-beyond-the-june-inventory">3. Tinh&rsquo;s new artifacts (beyond the June inventory)</h2>
+<table>
+<thead>
+<tr>
+<th>Artifact</th>
+<th>What it is</th>
+<th>Assessment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pdd_automation/</code> package</td>
+<td>Installable Python package, <code>pyproject.toml</code> (<code>pdd-automation</code> v0.1.0), console script <code>pdd</code>, modular CLI: <code>registry-download, ingest, parse, generate, check, assemble, evaluate</code>; has its own <code>tests/</code>, <code>schemas/</code> (JSON: <code>canonical_section_map.json</code>, <code>section_schema.json</code>, <code>field_policies.json</code>, <code>required_fields.json</code>), and <code>Verra_registry_download/</code> submodule.</td>
+<td>Real engineering, not prompt-only. The <code>registry-download</code> command does exactly what the repo&rsquo;s <code>ingest/registry_download.py</code> stub doesn&rsquo;t yet: searches Verra by methodology ID(s)/country, classifies/ranks candidate PDs vs. monitoring/verification reports, and documents (in its README) a careful identity-verification framework (<code>confirmed/probable/conflict/unreadable</code>) for title-vs-content mismatches — a capability neither side has fully closed, but Tinh&rsquo;s design doc for it is more developed than anything in the repo.</td>
+</tr>
+<tr>
+<td><code>Waste energy run/.../</code> (5-project calc reconciliation)</td>
+<td>Rebuilds baseline/project/leakage numbers for <strong>VCS 4818 (two versions), 5040, 4940, 4921</strong> against each project&rsquo;s own registry PDF + native <code>.xls</code> calc, producing small (~7KB) <code>final_created_calculation.xlsx</code> reconciliation workbooks and a <code>final_created_pdd.docx</code> per run. README explicitly states these &ldquo;reconcile the reported calculation results from the YAML-backed pipeline&rdquo; and are &ldquo;not complete replicas of every formula chain.&rdquo; Run <code>04_4818_exante</code> is annotated as a &ldquo;disclosed repair of the legacy invalid result&rdquo; — i.e., Tinh&rsquo;s calc caught (and documents) an error in a real registered project&rsquo;s own workbook.</td>
+<td>This is the calc-gap closure on Tinh&rsquo;s side, and it&rsquo;s validated across <strong>5 real registered projects</strong> vs. the repo&rsquo;s 1 (Soc Son) + 1 unvalidated (Inegol, &ldquo;no composition declared&rdquo;). Complementary, not redundant, validation strategy.</td>
+</tr>
+<tr>
+<td><code>Test PDD calculation/ACM0022/Allotrope-ViOT_DOXACO Project_Calculation.xlsx</code> (221KB) and <code>/VM0043/2025.12.09_Amya_Updated Financial Model.xlsx</code> (624KB)</td>
+<td>Live calc spreadsheets for two more named, apparently real, prospective projects.</td>
+<td>Not opened in this pass (binary spreadsheets); worth a follow-up read if these are active client projects — VM0043 is a methodology the repo does not implement.</td>
+</tr>
+<tr>
+<td><code>Schema.yaml</code> (541 lines, up from <code>Schema_ver1.yaml</code>&rsquo;s 306)</td>
+<td>Adds <code>source_context.source_mode</code> (new/extracted/update), a <code>registry_project_id</code> field, richer crediting-period and audit-history structure.</td>
+<td>Schema is maturing toward something registry-aware, closer to what a &ldquo;reconcile the two schemas&rdquo; effort (June rec. #5) would need.</td>
+</tr>
+<tr>
+<td><code>projects/seraphine-wte/</code> (intake YAML 44.5KB + first-draft MD 56KB, both Jul 8)</td>
+<td>The same Seraphine project from June, regenerated/reorganized but <strong>still showing <code>quantification_ex_ante</code> totals as null and the ER table as all <code>[MISSING]</code></strong> — the calc breakthrough above has not yet been applied back to this project&rsquo;s own draft. Draft is candid about unresolved identity conflicts (EIA site &ldquo;Amaccao – Thành Công&rdquo; / Seraphin vs. spreadsheet&rsquo;s &ldquo;Soc Son&rdquo; location and differing capacity figures) and flags a hazardous-waste line ACM0022 excludes.</td>
+<td>Confirms the calc-reconciliation work is a separate, not-yet-integrated stream from the main drafting pipeline — an open integration gap on Tinh&rsquo;s side.</td>
+</tr>
+<tr>
+<td><code>PDD_Portable_Workspace_20260827_UPLOAD.zip</code> (672MB, uploaded Aug 27)</td>
+<td>Not downloaded (see Limitations). Almost certainly a full zipped copy of <code>PDD/</code> plus corpus/registry data, given the timing next to the Aug 27 demo invite.</td>
+<td>Follow-up: worth asking Tinh directly what&rsquo;s new in it beyond what&rsquo;s already visible unzipped in <code>PDD/</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="4-repo-capabilities-added-since-jun-15-from-git-log-readme-activecontext">4. Repo capabilities added since Jun 15 (from git log / README / activeContext)</h2>
+<p>Per commits <code>19d96b8</code> → <code>c1543e4</code> (11 feature commits since the June comparison) and <code>README.md</code>&rsquo;s status line:</p>
+<ul>
+<li><strong>Real calc engines wired into drafting</strong>: <code>src/pdd_agent/calc/{acm0022,cdm_tool_03..14,cookstove_amsiig,rice_vm0051,biochar_vm0044,incineration,dispatch,methodology}.py</code> — ACM0022 (with incineration <code>PE_INC</code>, <code>capacity_ramp</code>), AMS-II.G, VM0051, VM0044, consumed via <code>pdd-agent calc</code> / <code>compute_for()</code>. This is broader methodology coverage than the June report anticipated (it only expected ACM0022).</li>
+<li><strong>Soc Son oracle validation</strong>: year-by-year registered ER schedule constants + tests; Soc Son crediting-total test flipped from failing to passing (4,010,142 vs. registered 3,808,082, +5.3%, inside the repo&rsquo;s 20% tolerance); two known residual gaps (D-1 FOD parameter, D-2 non-methane net charge) are tracked as dated <code>xfail</code>s, not silently ignored.</li>
+<li><strong>Real-output fidelity</strong>: native Markdown/table/math rendering into DOCX (zero literal <code>|---</code>/<code>$$</code> artifacts), per-section character budgets (297,000 chars total, replacing a uniform 144,000 cap), honest truncation reporting, export gate no longer hard-blocks on <code>[MISSING]</code> (collects them into a &ldquo;Required Inputs&rdquo; appendix instead).</li>
+<li><strong>909 tests passing</strong> (up from 204 at the May 21 baseline / more since June).</li>
+<li><strong>Still a stub</strong>: <code>ingest/registry_download.py</code> (public Verra/CDM registry PDD downloader) — confirmed directly in <code>README.md</code>&rsquo;s Known Gaps — i.e., the repo still lacks what Tinh&rsquo;s <code>pdd_automation.Verra_registry_download.cli registry-download</code> command already does.</li>
+</ul>
+<h2 id="5-updated-capability-matrix-changes-from-june-only">5. Updated capability matrix (changes from June only)</h2>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Tinh (Codex/pdd_automation track)</th>
+<th>Repo (pdd-auto)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Quantification / emissions calc</td>
+<td><strong>Now working</strong>, reconciled against 5 real registered VCS projects (ACM0022-family); a repair of a legacy registry error documented (run 04). Separate live test spreadsheets for ACM0022 (ViOT_DOXACO) and VM0043 (Amya). Not yet fed back into the Seraphine draft itself.</td>
+<td><strong>Now working</strong> for ACM0022/VM0051/VM0044/AMS-II.G, validated against 1 registered oracle (Soc Son, +5.3%, within 20% tolerance) with 2 dated residual gaps tracked as xfail; wired directly into the drafting/export pipeline.</td>
+</tr>
+<tr>
+<td>Registry document acquisition</td>
+<td><strong>Yes</strong> — <code>registry-download</code> CLI command with methodology-ID/country filtering and a documented (if not yet implemented) title-vs-content identity-verification scheme.</td>
+<td><strong>No</strong> — <code>ingest/registry_download.py</code> is an explicit stub (confirmed in README Known Gaps).</td>
+</tr>
+<tr>
+<td>Packaging / installability</td>
+<td><strong>Yes now</strong> — <code>pdd_automation</code> is <code>pip</code>-installable (<code>pyproject.toml</code>, <code>.egg-info</code> present), has its own <code>tests/</code>.</td>
+<td>Yes (unchanged) — <code>pdd-agent</code> CLI.</td>
+</tr>
+<tr>
+<td>Document rendering fidelity</td>
+<td>Word drafts assembled via <code>md_to_vcs_docx.py</code>; not benchmarked here for fidelity.</td>
+<td>Native Markdown/table/math → DOCX, budgeted per-section, honest truncation — directly verified in repo tests.</td>
+</tr>
+<tr>
+<td>Methodology breadth</td>
+<td>ACM0022-focused; VM0043 test spreadsheet exists but no generation/check/assemble pipeline confirmed for it.</td>
+<td>ACM0022, AMS-II.G, VM0051, VM0044 all wired into <code>compute_for()</code>.</td>
+</tr>
+<tr>
+<td>Schema maturity</td>
+<td><code>Schema.yaml</code> grew 306→541 lines; adds registry/source-context fields.</td>
+<td><code>ProjectInput</code> + section taxonomy unchanged in structure since June (calc/rendering work was the focus).</td>
+</tr>
+<tr>
+<td>Test coverage</td>
+<td><code>pdd_automation/tests/</code> exists but not enumerated in this pass — unknown depth.</td>
+<td>909 tests passing, documented xfails with dated measurements.</td>
+</tr>
+</tbody>
+</table>
+<p><em>(Everything the June report already listed as stable — anti-hallucination discipline on both sides, the repo&rsquo;s RAG/provenance/5-state review advantage, Tinh&rsquo;s document→YAML intake advantage — is unchanged and not repeated here.)</em></p>
+<h2 id="6-recommendations-supersedes-june-9-items-34-others-still-open">6. Recommendations (supersedes June §9 items 3–4; others still open)</h2>
+<ol>
+<li><strong>Compare calc engines directly.</strong> Both sides now have a working ACM0022 calculator with different validation strategies. Feed the repo&rsquo;s <code>ACM0022Calculator</code> the same five registered projects (4818, 5040, 4940, 4921) Tinh reconciled, and vice versa — cross-validation would catch bugs neither single-oracle nor single-track testing would surface, and would settle whether the two calculators agree.</li>
+<li><strong>Ask Tinh for the <code>registry-download</code> module directly.</strong> It duplicates and likely already solves the repo&rsquo;s confirmed stub (<code>ingest/registry_download.py</code>) — this is the cleanest, lowest-risk piece to absorb wholesale rather than reimplement.</li>
+<li><strong>Close the loop on Seraphine.</strong> Tinh&rsquo;s own flagship project draft (<code>projects/seraphine-wte/</code>) still shows a null quantification block even though his calc reconciliation package next to it works — get his new calc engine wired back into that draft before the next client-facing use.</li>
+<li><strong>Get eyes on <code>PDD_Portable_Workspace_20260827_UPLOAD.zip</code>.</strong> It&rsquo;s the newest and largest artifact (uploaded the day of the Aug 27 demo Tung missed) and wasn&rsquo;t opened in this pass — ask Tinh for a walkthrough recording or notes from that demo, or download and diff it against the already-inventoried <code>PDD/</code> tree to find what&rsquo;s new inside it.</li>
+<li><strong>Investigate the two live test spreadsheets</strong> (<code>ViOT_DOXACO</code> under ACM0022, <code>Amya</code> under VM0043) — if these are active/prospective client projects, coordinate before both tracks independently draft PDDs for the same clients.</li>
+<li>Prior June recommendations #1 (real LLM provider), #2 (document→YAML intake), #5 (schema reconciliation), #6 (tracker consolidation) remain open and are now more valuable given both sides&rsquo; maturing engineering investment.</li>
+</ol>
+<h2 id="7-limitations-of-this-comparison">7. Limitations of this comparison</h2>
+<ul>
+<li>The 672MB <code>PDD_Portable_Workspace_20260827_UPLOAD.zip</code> was <strong>not downloaded or unzipped</strong> — its contents are inferred from the sibling unzipped <code>PDD/</code> folder tree, which may not be fully up to date with the zip&rsquo;s contents (the zip postdates most of <code>PDD/</code>&rsquo;s modified timestamps by ~7 weeks).</li>
+<li>The two live calc spreadsheets (<code>Allotrope-ViOT_DOXACO Project_Calculation.xlsx</code>, <code>2025.12.09_Amya_Updated Financial Model.xlsx</code>) and the reconciliation workbooks in <code>Waste energy run/</code> were <strong>not opened/parsed</strong> (native binary spreadsheets) — their actual numeric outputs and formulas are not verified here, only their existence and file sizes.</li>
+<li><code>pdd_automation/tests/</code> was listed but its contents were not enumerated — test depth/coverage on Tinh&rsquo;s side is unknown.</li>
+<li>No newer Drive link than the May 13 email exists in Tinh&rsquo;s recent correspondence; this comparison assumes the same &ldquo;Registered WTE PDD&rdquo; folder is still the canonical shared workspace (confirmed current as of this pass — folder is actively being written to, most recently Aug 27).</li>
+<li>The repo side of this comparison did not re-run the full test suite in this pass; findings are grounded in <code>README.md</code>/<code>activeContext.md</code>&rsquo;s stated status plus direct confirmation that the calc engine source files (<code>src/pdd_agent/calc/*.py</code>) and the registry-download stub exist as described.</li>
+</ul>
+<h2 id="appendix-source-references">Appendix — source references</h2>
+<p><strong>Email:</strong> No new Drive-linked emails since 2026-05-13 (<code>Project Proposal Development [PDD] introduction</code>). Newer Tinh emails are calendar invites only: &ldquo;[PDD] Verra registry download demostration&rdquo; (2026-07-14/15, held Jul 17) and &ldquo;Carbon progress meeting report and demo&rdquo; (2026-08-23/27, held Aug 27).</p>
+<p><strong>Drive (working folder &ldquo;Registered WTE PDD&rdquo;):</strong> <code>https://drive.google.com/drive/folders/1_2ethHHCfDk4pS8xIRKg2J_dlt5T5jaa</code> — re-listed 2026-08-28 via <code>gws</code>.</p>
+<p><strong>Local snapshot:</strong> <code>ref/PDD staff August 2026/</code> (this repo) — see <code>MANIFEST.md</code> there for the full Drive tree, file ids, sizes, and modified dates, including what was and wasn&rsquo;t downloaded.</p>
+<p><strong>Repo:</strong> <code>pdd-auto</code> @ <code>c1543e4</code> (&ldquo;feat: defensible numbers and document assembly — reproduce registered PDD arithmetic and own the DOCX&rdquo;) — <code>README.md</code>, <code>activeContext.md</code>, <code>src/pdd_agent/calc/</code>, <code>git log</code>.</p>
+<p><strong>Prior report:</strong> <code>docs/2026-06-15-tinh-track-vs-repo-comparison.md</code>.</p>
+<div class="footer">Generated 2026-08-28 &bull; pdd-auto &bull; Tinh Track vs Repo Comparison (Update) &bull; Markdown → HTML via python-markdown (tables, fenced_code, toc) &bull; Original: <code>docs/2026-08-28-tinh-track-vs-repo-comparison.md</code></div>
+</div>
+</body>
+</html>
