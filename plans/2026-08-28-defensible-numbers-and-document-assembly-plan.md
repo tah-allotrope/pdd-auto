@@ -1,7 +1,7 @@
 ---
 title: "Defensible Numbers and Document Assembly: reproduce the registered PDD's arithmetic, then own the document it goes into"
 date: "2026-08-28"
-status: "draft"
+status: "open — all six phases' source landed in c1543e4 (915 pass, 2 xfail), but 13 of 66 tasks remain: 5 required test files (test_table_lookup, test_climate_zone, test_assembly, test_document_coherence, test_run_survivability), the Eq.22/27/28 specs in test_incineration, all five README documentation tasks, the assumptions.yaml re-sourcing, and the run_review coherence call (coherence runs from docx_export instead)."
 request: "Implement the 2026-08-27 brainstorm: close both ACM0022 oracle discrepancies together (climate-zone-aware FOD decay rates plus a methodology-faithful project-emission model sourced from the registered PDD's own parameter tables, with corpus re-normalization so extracted tables exist), own the assembled DOCX (canonical subsection numbering, no title echo, a real section length contract, document-level coherence checks), and make the first real full model run survivable (pre-flight cost estimate, per-section checkpointing, --resume, bounded concurrency, CLI budget flags)."
 plan_type: "multi-phase"
 research_inputs:
@@ -489,23 +489,23 @@ ingested from pre-extracted text, and provide a small helper for reading a regis
 out of a normalized record.
 
 **Tasks**
-- [ ] TASK-01-01: Install the `ingest` extra and confirm pdfplumber imports:
+- [x] TASK-01-01: Install the `ingest` extra and confirm pdfplumber imports:
       `python -c "import pdfplumber; print(pdfplumber.__version__)"`.
-- [ ] TASK-01-02: Back up the current normalized corpus before touching it:
+- [x] TASK-01-02: Back up the current normalized corpus before touching it:
       `python -c "import shutil; shutil.copytree('data/corpus/normalized','data/corpus/normalized.bak')"`
       (the directory is gitignored; this form works on Windows, macOS and Linux alike).
-- [ ] TASK-01-03: Add `_extract_plain_text(path: Path, dry_run: bool = False) -> dict[str, Any]` to
+- [x] TASK-01-03: Add `_extract_plain_text(path: Path, dry_run: bool = False) -> dict[str, Any]` to
       `src/pdd_agent/ingest/normalize.py`, reading the file as UTF-8 with `errors="replace"`, splitting
       on lines, and reusing `_build_headings_and_blocks(lines)` for headings and text blocks. It
       returns the same shape as `_extract_pdf` with `"tables": []` and `"page_count": 1`.
-- [ ] TASK-01-04: Wire a `text/plain` branch into `_extract_text` alongside the PDF and DOCX branches.
+- [x] TASK-01-04: Wire a `text/plain` branch into `_extract_text` alongside the PDF and DOCX branches.
       Leave the "Unsupported MIME type" fallback in place for every other MIME type.
-- [ ] TASK-01-05: Re-normalize the corpus:
+- [x] TASK-01-05: Re-normalize the corpus:
       `PYTHONIOENCODING=utf-8 pdd-agent normalize --manifest data/corpus/manifest.jsonl`.
-- [ ] TASK-01-06: Rebuild the retrieval index:
+- [x] TASK-01-06: Rebuild the retrieval index:
       `pdd-agent build-index --corpus-dir data/corpus/normalized --index-db data/index/corpus.fts.db`,
       then record `pdd-agent index-report` output in the commit message.
-- [ ] TASK-01-07: Create `src/pdd_agent/ingest/table_lookup.py` with `find_tables()` and
+- [x] TASK-01-07: Create `src/pdd_agent/ingest/table_lookup.py` with `find_tables()` and
       `table_rows_as_pairs()` per the Function Signatures below.
 - [ ] TASK-01-08: Add `tests/test_table_lookup.py` covering the specs below, using an inline fixture
       dict written to `tmp_path` — the tests must not require the real corpus and must not carry the
@@ -577,27 +577,27 @@ Make the FOD decay rate resolvable from an IPCC climate zone, with a resolution 
 every existing project's numbers untouched until a zone is explicitly declared.
 
 **Tasks**
-- [ ] TASK-02-01: Add `DECAY_RATE_BY_CLIMATE_ZONE: dict[str, dict[str, float]]` to
+- [x] TASK-02-01: Add `DECAY_RATE_BY_CLIMATE_ZONE: dict[str, dict[str, float]]` to
       `src/pdd_agent/calc/constants.py` with the four zones and eight waste-type keys from
       Specification S-1b, each entry cited in a comment as IPCC 2006 Vol.5 Ch.3 Table 3.3.
-- [ ] TASK-02-02: Redefine `DECAY_RATE_BY_WASTE_TYPE` as
+- [x] TASK-02-02: Redefine `DECAY_RATE_BY_WASTE_TYPE` as
       `DECAY_RATE_BY_CLIMATE_ZONE["boreal_temperate_wet"]` and correct its misleading
       "wet tropical" comment to say it is the boreal/temperate wet column retained as the default.
-- [ ] TASK-02-03: Add `climate_zone: str | None = None` to `methane_from_swds()` in
+- [x] TASK-02-03: Add `climate_zone: str | None = None` to `methane_from_swds()` in
       `src/pdd_agent/calc/cdm_tool_04.py` and implement the S-1c resolution order. An unknown zone
       name raises `ValueError` naming the four valid zones.
-- [ ] TASK-02-04: Add `climate_zone: str | None` to `ACM0022CalcInput` in
+- [x] TASK-02-04: Add `climate_zone: str | None` to `ACM0022CalcInput` in
       `src/pdd_agent/calc/models.py`, with a description naming the four valid values and stating that
       `None` means the legacy default table.
-- [ ] TASK-02-05: Pass `climate_zone=self._inp.climate_zone` from the `methane_from_swds` call in
+- [x] TASK-02-05: Pass `climate_zone=self._inp.climate_zone` from the `methane_from_swds` call in
       `ACM0022Calculator.calculate()` (`src/pdd_agent/calc/acm0022.py`). Change nothing else in that
       method.
-- [ ] TASK-02-06: Add `climate_zone` as an optional `Literal` field on `ProjectLocation` in
+- [x] TASK-02-06: Add `climate_zone` as an optional `Literal` field on `ProjectLocation` in
       `schemas/project_input.py`, defaulting to `None`.
-- [ ] TASK-02-07: Add `climate_zone_for(latitude: float, declared: str | None = None) -> str` to
+- [x] TASK-02-07: Add `climate_zone_for(latitude: float, declared: str | None = None) -> str` to
       `src/pdd_agent/calc/constants.py` implementing S-1d. Do **not** call it from `dispatch.py` yet —
       PHASE-04 wires it in.
-- [ ] TASK-02-08: In `src/pdd_agent/calc/dispatch.py::_map_acm0022`, pass
+- [x] TASK-02-08: In `src/pdd_agent/calc/dispatch.py::_map_acm0022`, pass
       `pi.location.climate_zone` through to `mapped["climate_zone"]` only when it is not `None`.
 - [ ] TASK-02-09: Add `tests/test_climate_zone.py` with the specs below.
 - [ ] TASK-02-10: Document the zone mechanism in the "Quantification precedence" subsection of
@@ -666,40 +666,40 @@ Implement Equations 22, 27 and 28 with parameters the methodology publishes, pop
 `ProjectInput`, and leave the existing IPCC Eq. 5.1 helpers in place for other callers.
 
 **Tasks**
-- [ ] TASK-03-01: Add `ACM0022_CARBON_BY_WASTE_TYPE: dict[str, dict[str, float]]` to
+- [x] TASK-03-01: Add `ACM0022_CARBON_BY_WASTE_TYPE: dict[str, dict[str, float]]` to
       `src/pdd_agent/calc/constants.py` with the `FCC`/`FFC` pairs from Specification S-2c, each cited
       as ACM0022 v03.0 pages 42–43, and the bulk `municipal_solid_waste` row commented as a documented
       fallback with no registered counterpart.
-- [ ] TASK-03-02: Add `EF_N2O_INCINERATION_T_PER_TONNE = 6.05e-5` and
+- [x] TASK-03-02: Add `EF_N2O_INCINERATION_T_PER_TONNE = 6.05e-5` and
       `EF_CH4_INCINERATION_T_PER_TONNE = 2.42e-7` and `B_O_DEFAULT_T_CH4_PER_T_COD = 0.25` and
       `MCF_WASTEWATER_DEFAULT = 0.8` to `src/pdd_agent/calc/constants.py`, each with its ACM0022 page
       citation. Leave `EF_N2O_INCINERATION_KG_PER_TONNE` in place for the existing Eq. 5.1 path.
-- [ ] TASK-03-03: Add `combustion_co2_eq22()`, `combustion_ch4_n2o_eq27()`, and `wastewater_ch4_eq28()`
+- [x] TASK-03-03: Add `combustion_co2_eq22()`, `combustion_ch4_n2o_eq27()`, and `wastewater_ch4_eq28()`
       to `src/pdd_agent/calc/incineration.py` per the Function Signatures below. Do not modify
       `incineration_co2`, `incineration_n2o`, or `incineration_emissions`.
-- [ ] TASK-03-04: Add to `ACM0022CalcInput` (`src/pdd_agent/calc/models.py`):
+- [x] TASK-03-04: Add to `ACM0022CalcInput` (`src/pdd_agent/calc/models.py`):
       `combustion_efficiency: float = 1.0` (ge=0, le=1),
       `runoff_wastewater_m3_per_year: float = 0.0` (ge=0),
       `runoff_wastewater_cod_t_per_m3: float = 0.0` (ge=0),
       `wastewater_bo_t_ch4_per_t_cod: float = 0.25` (gt=0),
       `wastewater_mcf: float = 0.8` (ge=0, le=1).
-- [ ] TASK-03-05: In `ACM0022Calculator.calculate()` (`src/pdd_agent/calc/acm0022.py`), replace the
+- [x] TASK-03-05: In `ACM0022Calculator.calculate()` (`src/pdd_agent/calc/acm0022.py`), replace the
       `PE_INC` component with three components computed from `incineration_streams` **plus the
       degradable `waste_streams`** (Eq. 22 charges every combusted waste type, not only the unmapped
       ones): `PE_COM_CO2 (fossil carbon in combusted waste)`, `PE_COM_CH4_N2O (combustion CH4 + N2O)`,
       and `PE_WW (run-off wastewater)`. Keep the existing `PE_EC`, `PE_FC`, `PE_CH4` and `PE_FLARE`
       components untouched, and keep `project_emissions_tco2e` as the sum of all project components.
-- [ ] TASK-03-06: Add `AuxiliaryFuel` and `RunoffWastewater` models to `schemas/project_input.py` and
+- [x] TASK-03-06: Add `AuxiliaryFuel` and `RunoffWastewater` models to `schemas/project_input.py` and
       optional fields `technology.auxiliary_fossil_fuel: list[AuxiliaryFuel]` (default empty) and
       `technology.runoff_wastewater: RunoffWastewater | None` (default `None`).
-- [ ] TASK-03-07: Add `quantification.grid_tdl_factor: float | None` (ge=0, le=0.3, default `None`) to
+- [x] TASK-03-07: Add `quantification.grid_tdl_factor: float | None` (ge=0, le=0.3, default `None`) to
       `schemas/project_input.py`.
-- [ ] TASK-03-08: In `src/pdd_agent/calc/dispatch.py::_map_acm0022`, map the new inputs:
+- [x] TASK-03-08: In `src/pdd_agent/calc/dispatch.py::_map_acm0022`, map the new inputs:
       `fossil_fuels` from `technology.auxiliary_fossil_fuel`, the four wastewater scalars from
       `technology.runoff_wastewater`, and `tdl_factor` from `quantification.grid_tdl_factor`. Append a
       warning `runoff_wastewater absent; PE_WW assumed zero` when the wastewater block is missing and
       `technology_type == "incineration_with_energy_recovery"`.
-- [ ] TASK-03-09: In the same function, stop treating unmapped composition entries as the *only*
+- [x] TASK-03-09: In the same function, stop treating unmapped composition entries as the *only*
       incineration streams: emit an incineration stream for **every** composition entry when
       `technology_type == "incineration_with_energy_recovery"`, keeping the existing behavior that
       only `DOC_BY_WASTE_TYPE` entries also become `waste_streams`. Preserve the existing per-entry
@@ -786,47 +786,47 @@ Apply the registered PDD's own published inputs to the Soc Son config, wire lati
 zones into dispatch, and re-measure every oracle number in one change.
 
 **Tasks**
-- [ ] TASK-04-01: Re-read the registered composition table mechanically and record the result in the
+- [x] TASK-04-01: Re-read the registered composition table mechanically and record the result in the
       commit message:
       `python -c "from pdd_agent.ingest.table_lookup import find_tables, table_rows_as_pairs; t=find_tables('VCS_Soc_Son_Project-Description', ['Food waste','%']); print(table_rows_as_pairs(t[0]) if t else 'NOT FOUND')"`.
       The expected pairs are Paper and Cardboard 2.7%, Textiles 1.6%, Food waste 51.9%, Wood 0%,
       Garden and park waste 0%, Nappies 0%, Rubber and leather 1.3%, Plastic 3.0%, Metal 0.9%,
       Glass 0.5%, Others 38.1%.
-- [ ] TASK-04-02: Rewrite `technology.waste_composition` in
+- [x] TASK-04-02: Rewrite `technology.waste_composition` in
       `configs/projects/vietnam_socson_from_sheet.yaml` to exactly:
       `food_waste 0.519`, `paper_cardboard 0.027`, `textiles 0.016`, `rubber_leather 0.013`,
       `plastics 0.030`, `inert 0.395` (metal 0.9% + glass 0.5% + others 38.1%), each with
       `source: "VCS Soc Son registered PDD, monitoring parameter Pn,j (page 78) — waste composition on wet basis"`.
       The fractions must sum to 1.000.
-- [ ] TASK-04-03: Set `location.climate_zone: tropical_wet` in the same config, with a YAML comment
+- [x] TASK-04-03: Set `location.climate_zone: tropical_wet` in the same config, with a YAML comment
       citing the site latitude (21.261) and the IPCC zone definition.
-- [ ] TASK-04-04: Set `quantification.grid_emission_factor: 0.84585`,
+- [x] TASK-04-04: Set `quantification.grid_emission_factor: 0.84585`,
       `quantification.grid_emission_factor_source: "VCS Soc Son registered PDD, Section 4.1 — EF_grid,CM,y (combined margin)"`,
       and `quantification.grid_tdl_factor: 0.03` in the same config.
-- [ ] TASK-04-05: Add to the same config
+- [x] TASK-04-05: Add to the same config
       `technology.auxiliary_fossil_fuel: [{fuel_type: diesel, annual_tonnes: 1200.0, ncv_gj_per_tonne: 43.3, ef_tco2_per_gj: 0.0748, source: "VCS Soc Son registered PDD, Section 4.2 (2) — FSR diesel consumption"}]`
       and
       `technology.runoff_wastewater: {annual_volume_m3: 613200.0, cod_t_per_m3: 0.035, bo_t_ch4_per_t_cod: 0.25, mcf: 0.8, source: "VCS Soc Son registered PDD, Section 4.2 (4) — EIA pages 248 and 252"}`.
-- [ ] TASK-04-06: In `src/pdd_agent/calc/dispatch.py::_map_acm0022`, set
+- [x] TASK-04-06: In `src/pdd_agent/calc/dispatch.py::_map_acm0022`, set
       `mapped["climate_zone"] = climate_zone_for(pi.location.latitude, pi.location.climate_zone)` so
       the zone is derived when not declared (S-1d). Add a warning naming the resolved zone and whether
       it was declared or derived.
 - [ ] TASK-04-07: Update `configs/projects/vietnam_socson_from_sheet.assumptions.yaml` so any entry
       that described the old composition split, the old grid factor, or the removed rubber-and-leather
       fraction now points at the registered-PDD source instead of a synthetic assumption.
-- [ ] TASK-04-08: Re-measure and record: run
+- [x] TASK-04-08: Re-measure and record: run
       `pdd-agent calc --input configs/projects/vietnam_socson_from_sheet.yaml` and
       `pdd-agent calc --input configs/demo/inegol_project_input.yaml`, and paste both outputs into the
       commit message.
-- [ ] TASK-04-09: Update `tests/test_registered_pdd_oracle.py`: add the registered per-year project
+- [x] TASK-04-09: Update `tests/test_registered_pdd_oracle.py`: add the registered per-year project
       emissions (420,336) and baseline electricity (338,059) as module constants with their source
       comment; convert each existing `xfail` whose residual now falls inside `TOLERANCE` into a
       passing assertion; for any that remain outside, update the `reason` string with the newly
       measured residual and the date `2026-08-28`. `TOLERANCE` stays `0.20`.
-- [ ] TASK-04-10: Add three new oracle assertions: engine `PE_y` within `TOLERANCE` of 420,336;
+- [x] TASK-04-10: Add three new oracle assertions: engine `PE_y` within `TOLERANCE` of 420,336;
       engine `BE_EC` within `TOLERANCE` of 338,059; engine 7-year `BE_CH4` sum within `TOLERANCE` of
       4,384,018.
-- [ ] TASK-04-11: Add a guard test asserting `sum(mass_fraction) == 1.000 ± 0.001` for the Soc Son
+- [x] TASK-04-11: Add a guard test asserting `sum(mass_fraction) == 1.000 ± 0.001` for the Soc Son
       composition and that every entry's `source` string contains `registered PDD`.
 - [ ] TASK-04-12: Update the `**Status:**` line and the "Quantification precedence" subsection of
       `README.md` with the new test count and a one-paragraph statement of what the engine now
@@ -892,34 +892,34 @@ Make the exported DOCX read as one numbered document, give the drafting prompt a
 contract, and add a document-level coherence report that no section-scoped check can produce.
 
 **Tasks**
-- [ ] TASK-05-01: Create `src/pdd_agent/export/assembly.py` with `canonical_subsection_title()`,
+- [x] TASK-05-01: Create `src/pdd_agent/export/assembly.py` with `canonical_subsection_title()`,
       `strip_leading_title_heading()`, and `is_title_echo()` per the Function Signatures below,
       implementing Specification S-3.
-- [ ] TASK-05-02: In `src/pdd_agent/export/docx_export.py`, replace
+- [x] TASK-05-02: In `src/pdd_agent/export/docx_export.py`, replace
       `doc.add_heading(subsection_heading, level=2)` with
       `doc.add_heading(canonical_subsection_title(ssid, subsection_heading), level=2)`.
-- [ ] TASK-05-03: In the same file, pass each section's body through `strip_leading_title_heading()`
+- [x] TASK-05-03: In the same file, pass each section's body through `strip_leading_title_heading()`
       before `_add_section_prose` renders it. Do not mutate the stored run record — strip a copy.
-- [ ] TASK-05-04: In `src/pdd_agent/agent/section_orchestrator.py::_build_prompt`, append a
+- [x] TASK-05-04: In `src/pdd_agent/agent/section_orchestrator.py::_build_prompt`, append a
       `## Length Budget` block per Specification S-4 step 1, stating the resolved budget from
       `self.section_budget_chars(section_id, sub_section_id)`.
-- [ ] TASK-05-05: Add `chars_to_max_tokens(max_chars: int, chars_per_token: float = 3.5, headroom: float = 1.15) -> int`
+- [x] TASK-05-05: Add `chars_to_max_tokens(max_chars: int, chars_per_token: float = 3.5, headroom: float = 1.15) -> int`
       to `src/pdd_agent/llm/provider.py` and raise `ModelConfig.max_tokens`'s default from 4000 to
       16000, documenting it as a provider-level hard ceiling on output tokens.
-- [ ] TASK-05-06: Use `min(self._config.max_tokens, chars_to_max_tokens(max_chars))` in
+- [x] TASK-05-06: Use `min(self._config.max_tokens, chars_to_max_tokens(max_chars))` in
       `src/pdd_agent/llm/openai_provider.py`, `src/pdd_agent/llm/anthropic_provider.py`, and
       `src/pdd_agent/llm/ollama_provider.py` wherever `max_tokens` is currently derived from
       `max_chars`. `src/pdd_agent/llm/claude_code_provider.py` needs no change (the CLI takes no output
       cap) — leave its post-generation truncation as it is.
-- [ ] TASK-05-07: Delete `prompts/section_draft.md` and `prompts/section_draft_v2.md`. No module reads
+- [x] TASK-05-07: Delete `prompts/section_draft.md` and `prompts/section_draft_v2.md`. No module reads
       them (the live prompt is assembled in `_build_prompt`), and their "keep sections under 2000
       characters" rule contradicts the shipped budgets. Leave `prompts/methodologies/*.md` and
       `prompts/extract_project_input.md` untouched.
-- [ ] TASK-05-08: Create `src/pdd_agent/review/document_coherence.py` implementing the five checks in
+- [x] TASK-05-08: Create `src/pdd_agent/review/document_coherence.py` implementing the five checks in
       Specification S-5.
 - [ ] TASK-05-09: Call `check_document_coherence()` from `SectionOrchestrator.run_review()` and include
       its findings in the returned dict under the key `document_coherence`.
-- [ ] TASK-05-10: Render the coherence findings in the DOCX reviewer-issues appendix
+- [x] TASK-05-10: Render the coherence findings in the DOCX reviewer-issues appendix
       (`_add_reviewer_issues_appendix` in `src/pdd_agent/export/docx_export.py`) under a
       `Document-level findings` sub-heading, only when `is_demo` is false.
 - [ ] TASK-05-11: Add `tests/test_assembly.py`, `tests/test_document_coherence.py`, and extend
@@ -1007,37 +1007,37 @@ Let an operator see the cost before spending it, keep every completed section on
 interrupted run, and optionally draft several sections at once — without changing default behavior.
 
 **Tasks**
-- [ ] TASK-06-01: Add `estimate_run(section_budgets: dict[str, int], avg_prompt_chars: float, model: str, provider: str, overhead_tokens_per_section: int = 0) -> dict[str, float]`
+- [x] TASK-06-01: Add `estimate_run(section_budgets: dict[str, int], avg_prompt_chars: float, model: str, provider: str, overhead_tokens_per_section: int = 0) -> dict[str, float]`
       to `src/pdd_agent/llm/budget.py` implementing Specification S-6 step 1, reusing the existing
       `_DEFAULT_PRICING` lookup.
-- [ ] TASK-06-02: Add `SectionOrchestrator.preflight_estimate() -> dict[str, float]` that builds every
+- [x] TASK-06-02: Add `SectionOrchestrator.preflight_estimate() -> dict[str, float]` that builds every
       prompt it would send (retrieval included, no provider call), measures their mean length, and
       returns `estimate_run(...)` with `overhead_tokens_per_section=25000` for the `claude-code`
       provider and 0 otherwise.
-- [ ] TASK-06-03: Make `TokenBudget` thread-safe: add a `threading.Lock` guarding `record()` and
+- [x] TASK-06-03: Make `TokenBudget` thread-safe: add a `threading.Lock` guarding `record()` and
       `check_budget()`.
-- [ ] TASK-06-04: Fix `SectionOrchestrator._store_draft` so re-drafting a section replaces its entry in
+- [x] TASK-06-04: Fix `SectionOrchestrator._store_draft` so re-drafting a section replaces its entry in
       `self._run.sections` instead of appending a second one (match on
       `(section_id, sub_section_id)`).
-- [ ] TASK-06-05: Add `SectionOrchestrator.checkpoint()` that writes the run record atomically
+- [x] TASK-06-05: Add `SectionOrchestrator.checkpoint()` that writes the run record atomically
       (temporary file in the target directory plus `os.replace`) and call it after every section in
       `draft_all_sections()`.
-- [ ] TASK-06-06: Add a `resume: bool = False` constructor parameter. When true and
+- [x] TASK-06-06: Add a `resume: bool = False` constructor parameter. When true and
       `data/runs/{run_id}.json` exists, pre-populate `self._drafted` and `self._run.sections` from it,
       and skip any section whose stored text is non-empty and starts with neither `[PLACEHOLDER` nor
       `[BUDGET EXHAUSTED`. Log `run_resumed` with the number of sections skipped.
-- [ ] TASK-06-07: Add a `max_workers: int = 1` constructor parameter and use a
+- [x] TASK-06-07: Add a `max_workers: int = 1` constructor parameter and use a
       `ThreadPoolExecutor` in `draft_all_sections()` when it exceeds 1, submitting sections in
       canonical schema order and sorting results back into that order before storing.
-- [ ] TASK-06-08: Add CLI flags to the `draft` sub-parser in `src/pdd_agent/cli.py`:
+- [x] TASK-06-08: Add CLI flags to the `draft` sub-parser in `src/pdd_agent/cli.py`:
       `--max-tokens` (int), `--max-cost-usd` (float), `--workers` (int, default 1),
       `--resume` (flag), `--estimate-only` (flag), `--force-budget` (flag).
-- [ ] TASK-06-09: In `_run_draft`, build the `TokenBudget` from the flags (falling back to the
+- [x] TASK-06-09: In `_run_draft`, build the `TokenBudget` from the flags (falling back to the
       `PDD_MAX_TOKENS` / `PDD_MAX_COST_USD` environment variables, then to the existing defaults),
       print the pre-flight estimate before drafting, exit with code 0 after printing when
       `--estimate-only` is set, and exit with code 2 and an explanatory message when the estimate
       exceeds the budget unless `--force-budget` is set.
-- [ ] TASK-06-10: Raise the default `TokenBudget.max_tokens` for real providers only: when the provider
+- [x] TASK-06-10: Raise the default `TokenBudget.max_tokens` for real providers only: when the provider
       is not `demo` or `noop` and no explicit budget was given, default to
       `60_000 × number_of_sections_to_draft`. Keep 500,000 for `demo` and `noop`.
 - [ ] TASK-06-11: Add `tests/test_run_survivability.py` with the specs below, using the `noop`
