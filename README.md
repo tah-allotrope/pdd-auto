@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/tah-allotrope/pdd-auto/actions/workflows/ci.yml/badge.svg)](https://github.com/tah-allotrope/pdd-auto/actions/workflows/ci.yml)
 
-**Status:** 909 tests passing (916 collected, 7 corpus-marked deselected, 4 documented xfails), green under CI on Python 3.11/3.12. Pipeline skeleton is mature: corpus RAG, rule-based review, VCS v4.4 DOCX export with native Markdown/table/math rendering and per-section length budgets, LLM-judge + capped redraft loop, a local FastAPI section-review service with paginated run listing, calc engines for ACM0022 (now including incineration project emissions `PE_INC` and a consumed `capacity_ramp`), AMS-II.G, VM0051, and VM0044 wired into the drafting pipeline via `pdd-agent calc` / `compute_for()`, truthful token/cost accounting for the `claude-code` provider, and assistant-preamble normalization for all real providers. Real LLM providers (OpenAI, Anthropic, Ollama, claude-code) are implemented; live drafting runs are pending API keys (Ollama runs today with no key required — see `pdd-agent doctor`). All demo/benchmark output to date uses the deterministic `demo`/`noop` providers.
+**Status:** 960 tests passing (969 collected, 7 corpus-marked deselected, 2 documented xfails), green under CI on Python 3.11/3.12. Pipeline skeleton is mature: corpus RAG, rule-based review, VCS v4.4 DOCX export with native Markdown/table/math rendering and per-section length budgets, LLM-judge + capped redraft loop, a local FastAPI section-review service with paginated run listing, calc engines for ACM0022 (now including ACM0022 Eq. 22/27/28 project emissions, climate-zone decay rates, and a consumed `capacity_ramp`), AMS-II.G, VM0051, and VM0044 wired into the drafting pipeline via `pdd-agent calc` / `compute_for()`, truthful token/cost accounting for the `claude-code` provider, and assistant-preamble normalization for all real providers. Real LLM providers (OpenAI, Anthropic, Ollama, claude-code) are implemented; live drafting runs are pending API keys (Ollama runs today with no key required — see `pdd-agent doctor`). All demo/benchmark output to date uses the deterministic `demo`/`noop` providers.
 
 **Demo Quickstart:** Want to see it working in 5 minutes? → [QUICKSTART.md](QUICKSTART.md)
 
@@ -78,7 +78,7 @@ pdd-agent upload --run-id <run-id>
 | `pdd-agent ingest` | Full pipeline: inventory → download → normalize → bucket |
 | `pdd-agent build-index` | Build SQLite FTS5 BM25 index from normalized corpus |
 | `pdd-agent index-report` | Report retrieval-index health: document coverage, duplication rate, truncation |
-| `pdd-agent draft` | Draft all PDD sections for a project (`--provider noop\|demo\|corpus\|openai\|anthropic\|ollama\|claude-code`, `--judge` to enable the LLM-judge/redraft loop) |
+| `pdd-agent draft` | Draft all PDD sections for a project (`--provider noop\|demo\|corpus\|openai\|anthropic\|ollama\|claude-code`, `--judge` to enable the LLM-judge/redraft loop, `--max-tokens` / `--max-cost-usd` budget caps, `--workers N` concurrent drafting, `--resume` to continue an interrupted run, `--estimate-only` to print the pre-flight cost estimate, `--force-budget` to override a budget abort) |
 | `pdd-agent review` | Display review state for a run |
 | `pdd-agent judge` | Run the LLM judge on an existing draft run |
 | `pdd-agent export` | Export DraftRun to DOCX |
@@ -90,6 +90,19 @@ pdd-agent upload --run-id <run-id>
 | `pdd-agent run-vietnam-pdd` | Run the full Vietnam spreadsheet-to-review-package workflow |
 | `pdd-agent prove` | Run a project through every available provider, judge each, write a head-to-head scorecard |
 | `pdd-agent calc` | Compute methodology quantification for a ProjectInput without any LLM call |
+
+### Running a real drafting run
+
+Drafting bills per token, so `draft` prints a pre-flight estimate (`input_tokens`,
+`output_tokens`, `estimated_cost_usd`) before the first provider call and aborts with exit code 2
+when the estimate exceeds `--max-tokens` / `--max-cost-usd` (or `PDD_MAX_TOKENS` /
+`PDD_MAX_COST_USD`), unless `--force-budget` is given. `--estimate-only` prints the estimate and
+exits 0 without drafting. Every completed section checkpoints atomically to
+`data/runs/{run_id}.json`, so an interrupted run loses nothing: re-run with `--resume` to skip
+sections that already hold real text (placeholders and budget-exhausted markers are re-drafted).
+`--workers N` drafts through a thread pool (default 1, serial); the stored run record stays in
+canonical schema order regardless of completion order. For real (non-`demo`/`noop`) providers the
+default token budget scales as 60,000 × sections to draft.
 
 ## Example Output
 
@@ -140,6 +153,8 @@ Both are synthetic demos with a bold cover-page disclaimer — not real PDDs. Se
 - **`src/pdd_agent/review/consistency.py`** — Cross-section numeric consistency: net tCO2e arithmetic, baseline/project/leakage relation, crediting period total.
 - **`src/pdd_agent/review/states.py`** — 5-state review workflow (drafted→needs-input→drafted, drafted→needs-domain-review→ready-for-human-edit→approved). JSON persistence to `data/runs/review-state-{run_id}.json`.
 - **`src/pdd_agent/export/docx_export.py`** — python-docx export with a front-matter disclaimer, cover metadata, section-level source summaries, an assumption appendix, and a reviewer issues appendix. The export gate is tiered: CRITICAL consistency flags and fabricated evidence IDs hard-block (unless `--force`), `[MISSING]` markers become a first-class "Appendix — Required Inputs" that exports without `--force`, and HIGH-severity flags stay advisory. Section bodies render real model output natively via `export/markdown_docx.py`: Markdown headings become Word headings, pipe tables become styled Word tables, emphasis becomes bold/italic runs, lists become Word lists, and `$$…$$`/`$…$` math renders as cleaned italic text with the verbatim LaTeX preserved in a "Formulas (verbatim source)" appendix.
+- **`src/pdd_agent/export/assembly.py`** — Subsection headings export as `{sub_section_id} {heading}` at Word Heading level 2 (e.g. `4.1 Baseline Emissions`); a leading title-echo heading in the body (an ATX heading restating the canonical title) is stripped before rendering, everything else untouched.
+- **`src/pdd_agent/review/document_coherence.py`** — Document-level checks over the assembled run (not one section): `NUMBER_DISAGREEMENT` and `CALC_DISAGREEMENT` (`HIGH`), `DUPLICATE_BODY`, `DANGLING_CROSS_REFERENCE`, `TITLE_ECHO` (`ADVISORY`). `run_review()` returns them under `document_coherence`; the DOCX reviewer appendix renders them for non-demo runs. None hard-blocks export.
 - **`src/pdd_agent/export/drive_upload.py`** — `gws drive files create` subprocess wrapper.
 
 ### Quantification precedence
@@ -157,13 +172,28 @@ for that block instead. When `technology.waste_composition` is declared it repla
 across `technology.waste_type`; waste types absent from `DOC_BY_WASTE_TYPE` have their mass
 redistributed across the mapped types rather than dropped, so total mass entering the engine
 always equals `annual_waste_throughput` (or the degradable fraction thereof when a composition
-is declared). When `technology.technology_type` is `incineration_with_energy_recovery`, unmapped
-composition entries (e.g. `plastics`, `inert`) additionally produce `incineration_streams`, which
-drive the `PE_INC` project-emission term (fossil CO2 + N2O from combustion, IPCC 2006 V5 Eq.
-5.1/5.4) — so an incinerator now reports non-zero project emissions. A declared
-`technology.capacity_ramp` scales each crediting year's waste masses and electricity export by the
-ramp factor (last value carried forward), changing the annual schedule and the crediting-period
-total while the year-1 nameplate scalars stay unramped.
+is declared). A declared `technology.capacity_ramp` scales each crediting year's waste masses and
+electricity export by the ramp factor (last value carried forward), changing the annual schedule
+and the crediting-period total while the year-1 nameplate scalars stay unramped.
+
+Landfill decay rates resolve from an IPCC climate zone (IPCC 2006 Vol.5 Ch.3 Table 3.3): one of
+`tropical_wet`, `tropical_dry`, `boreal_temperate_wet`, `boreal_temperate_dry`. The zone is chosen
+by `location.climate_zone` when declared, else derived from `location.latitude` (`abs(lat) <= 23.5`
+→ `tropical_wet`, otherwise `boreal_temperate_wet`); a per-stream `decay_rate_override` still wins
+over the zone. With no zone declared anywhere the engine keeps the legacy
+boreal/temperate-wet table, so existing projects' numbers do not move.
+
+For `incineration_with_energy_recovery` projects, every composition entry becomes an incineration
+stream and project emissions follow ACM0022 v03.0: `PE_COM_CO2` from fossil carbon in combusted
+waste (Eq. 22, wet-basis `FCC × FFC` per waste type — no dry-matter term), `PE_COM_CH4_N2O` from
+combustion CH4 and N2O (Eq. 27, Option 2), and `PE_WW` from run-off wastewater treated
+anaerobically (Eq. 28). The new optional inputs are `technology.auxiliary_fossil_fuel` (feeds
+`PE_FC`), `technology.runoff_wastewater` (feeds `PE_WW`; absent means `PE_WW = 0` with a warning),
+and `quantification.grid_tdl_factor` (transmission/distribution loss, so
+`BE_EC = MWh × EF_grid × (1 + TDL)`). Soc Son carries the registered PDD's own parameters
+(composition `Pn,j`, `EF_grid,CM = 0.84585` with 3% TDL, 1,200 t/year diesel, 613,200 m³ run-off
+wastewater); against the registered 7-year crediting total of 3,808,082 tCO2e the engine reports
+3,606,564 (−5.3%), inside the 20% oracle tolerance with every parameter cited, none fitted.
 
 ### Section length budgets
 
@@ -171,9 +201,13 @@ Each of the 36 subsections carries a character budget declared as `max_chars` in
 `schemas/pdd_section_schema.yaml`, derived from its `content_class` (OPTIONAL 2,000 · FACTUAL 3,000
 · BOILERPLATE 4,000 · NARRATIVE/EVIDENCE_BASED 8,000 · METHODOLOGY_DEPENDENT 12,000 · QUANTITATIVE
 20,000). The effective budget is capped by `generation_controls.max_tokens_per_section` — a global
-ceiling in characters despite its legacy name. When a provider's output exceeds the budget it is
-truncated and the section gains a `TRUNCATED:` issue plus a one-step confidence downgrade, so
-amputation is reported rather than silent.
+ceiling in characters despite its legacy name. Every drafting prompt carries a `## Length Budget`
+block stating the resolved budget: aim for 60–90% of it, never pad to reach it, never exceed it.
+Providers convert the character budget to an output-token ceiling with
+`chars_to_max_tokens` (`min(config.max_tokens, ceil(max_chars / 3.5 × 1.15))` — 3.5 chars/token
+for English technical prose plus 15% headroom; floor 256; provider hard ceiling 16,000). When a
+provider's output exceeds the budget it is truncated and the section gains a `TRUNCATED:` issue
+plus a one-step confidence downgrade, so amputation is reported rather than silent.
 
 ## Prerequisites
 

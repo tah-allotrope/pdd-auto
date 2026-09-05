@@ -313,16 +313,18 @@ def export_run_to_docx(
     _add_formulas_appendix(doc, display_math_sources)
     _add_required_inputs_appendix(doc, gate.required_inputs)
     if not is_demo:
-        # Document-level coherence findings
-        try:
-            from pdd_agent.review.document_coherence import check_document_coherence
+        # Document-level coherence findings (canonical source is run_review;
+        # recompute here only for run files that predate it).
+        if "document_coherence" not in run_data:
+            try:
+                from pdd_agent.review.document_coherence import check_document_coherence
 
-            coherence = check_document_coherence(run_data)
-            if coherence:
-                run_data = dict(run_data)
-                run_data["document_coherence"] = coherence
-        except Exception:
-            pass
+                coherence = check_document_coherence(run_data)
+                if coherence:
+                    run_data = dict(run_data)
+                    run_data["document_coherence"] = coherence
+            except Exception:
+                pass
         _add_reviewer_issues_appendix(doc, run_data, sections, blocked_paths, calc_result_dict)
 
     tbd_report = run_data.get("tbd")

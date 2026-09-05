@@ -129,16 +129,46 @@ assumptions:
   rationale: Workbook does not provide project emissions breakdown
   confidence: low
 - field_path: quantification.grid_emission_factor
-  value: 0.92
-  source_type: demo_default
-  rationale: Conservative placeholder reused from existing Vietnam demo config
-  confidence: low
+  value: 0.84585
+  source_type: registered_pdd
+  rationale: VCS Soc Son registered PDD, Section 4.1 — EF_grid,CM,y (combined margin)
+  confidence: high
 - field_path: quantification.grid_emission_factor_source
-  value: Synthetic assumption using Vietnam national grid factor placeholder pending
-    official citation.
-  source_type: synthetic_assumption
-  rationale: Official grid factor citation is not in workbook
-  confidence: low
+  value: VCS Soc Son registered PDD, Section 4.1 — EF_grid,CM,y (combined margin)
+  source_type: registered_pdd
+  rationale: Combined-margin grid factor read from the registered PDD, not a placeholder
+  confidence: high
+- field_path: location.climate_zone
+  value: tropical_wet
+  source_type: registered_pdd
+  rationale: Site latitude 21.261 resolves to the IPCC tropical-wet zone; declared explicitly
+  confidence: high
+- field_path: technology.waste_composition
+  value: food_waste 0.519, paper_cardboard 0.027, textiles 0.016, rubber_leather 0.013,
+    plastics 0.030, inert 0.395 (metal 0.9% + glass 0.5% + others 38.1%)
+  source_type: registered_pdd
+  rationale: VCS Soc Son registered PDD, monitoring parameter Pn,j (page 78) — waste composition
+    on wet basis; rubber and leather 1.3% carried as its own fraction
+  confidence: high
+- field_path: technology.auxiliary_fossil_fuel
+  value:
+  - fuel_type: diesel
+    annual_tonnes: 1200.0
+  source_type: registered_pdd
+  rationale: VCS Soc Son registered PDD, Section 4.2 (2) — FSR diesel consumption
+  confidence: high
+- field_path: technology.runoff_wastewater
+  value:
+    annual_volume_m3: 613200.0
+    cod_t_per_m3: 0.035
+  source_type: registered_pdd
+  rationale: VCS Soc Son registered PDD, Section 4.2 (4) — EIA pages 248 and 252
+  confidence: high
+- field_path: quantification.grid_tdl_factor
+  value: 0.03
+  source_type: registered_pdd
+  rationale: VCS Soc Son registered PDD, Section 4.1 — 3% transmission and distribution loss factor
+  confidence: high
 - field_path: quantification.crediting_period_total_tco2e
   value: 3808532.0
   source_type: spreadsheet

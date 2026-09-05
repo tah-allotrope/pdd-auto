@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Evidence: remaining tasks in 2026-08-28 defensible-numbers plan</title>
+<style>
+body { font-family: sans-serif; max-width: 70em; margin: 2em auto; padding: 0 1em; }
+pre { background: #f4f4f4; padding: 0.8em; overflow-x: auto; }
+.pass { color: #0a0; font-weight: bold; }
+table { border-collapse: collapse; width: 100%; }
+th, td { border: 1px solid #ccc; padding: 0.4em 0.6em; text-align: left; vertical-align: top; }
+</style>
+</head>
+<body>
+<h1>Evidence report: remaining work in <code>plans/2026-08-28-defensible-numbers-and-document-assembly-plan.md</code></h1>
+<p>Date: 2026-09-05. Branch: <code>main</code>. All 13 remaining items closed; no redesign, plan specs followed verbatim except where the implementation's measured behavior differed from a plan prediction (recorded below, never fitted).</p>
+
+<h2>1. Tasks completed</h2>
+<table>
+<tr><th>#</th><th>Plan task</th><th>What was done</th><th>Proof</th></tr>
+<tr><td>1</td><td>TASK-01-08 <code>tests/test_table_lookup.py</code></td><td>5 tests: find_tables match / needle-miss / missing-doc, table_rows_as_pairs, _extract_plain_text shape. Fixture in tmp_path, no corpus marker.</td><td>§2 run A: 35 passed includes 5 new</td></tr>
+<tr><td>2</td><td>TASK-02-09 <code>tests/test_climate_zone.py</code></td><td>11 tests: zone resolver (Soc Son tropical_wet, Inegol boreal_temperate_wet, declared wins, ±23.5 boundary), table equality + food_waste 0.40, override precedence, ValueError naming 4 zones, compute_for smoke for both configs.</td><td>§2 run A</td></tr>
+<tr><td>3</td><td>TASK-03-10 Eq.22/27/28 specs in <code>tests/test_incineration.py</code></td><td>10 tests appended: plastics 136,510 ±1.0; full registered composition 272,843 ±50; food_waste 0.0; unknown type 0.0; Eq.27 23,418 ±5; Eq.28 120,187 ±5 and zero-volume 0.0; PE_WW zero-component; wastewater warning; Inegol no incineration streams. Helper extended with compatible <code>abs</code> kwarg.</td><td>§2 run A</td></tr>
+<tr><td>4</td><td>TASK-05-11 <code>tests/test_assembly.py</code></td><td>8 tests: canonical title, 3 is_title_echo, 2 strip_leading_title_heading, smoke-4-1 export regression (Heading 2 "4.1 Baseline Emissions", no "4.4.1" echo).</td><td>§2 run B: 20 passed</td></tr>
+<tr><td>5</td><td>TASK-05-11 <code>tests/test_document_coherence.py</code></td><td>4 tests: NUMBER_DISAGREEMENT naming both sections, DUPLICATE_BODY, DANGLING_CROSS_REFERENCE (Section 9.9), clean run → [].</td><td>§2 run B</td></tr>
+<tr><td>6</td><td>TASK-06-11 <code>tests/test_run_survivability.py</code></td><td>8 tests, noop provider + tmp_path only: estimate_run 5143/6857/cost&gt;0, +50,000 claude-code overhead, 1- and 2-section checkpoints, resume skip vs re-draft with one-entry-per-id, 36 sections canonical order with workers=4, _store_draft replace, CLI --estimate-only exit 0 + estimated_cost_usd.</td><td>§2 run B</td></tr>
+<tr><td>7</td><td>TASK-02-10 README zone mechanism</td><td>"Quantification precedence": zone table, selection order, undeclared keeps boreal/temperate-wet defaults.</td><td>§3 diff</td></tr>
+<tr><td>8</td><td>TASK-03-11 README project-emission terms</td><td>Same subsection: Eq.22/27/28 terms, auxiliary_fossil_fuel / runoff_wastewater / grid_tdl_factor inputs.</td><td>§3 diff</td></tr>
+<tr><td>9</td><td>TASK-04-12 README status + paragraph</td><td>Status line → 960 passing (969 collected, 7 deselected, 2 xfails); paragraph states measured 3,606,564 (−5.3%) residual, parameters cited none fitted.</td><td>§3 diff</td></tr>
+<tr><td>10</td><td>TASK-05-12 README export + length docs</td><td>assembly.py / document_coherence.py bullets; Length Budget prompt block + chars_to_max_tokens formula.</td><td>§3 diff</td></tr>
+<tr><td>11</td><td>TASK-06-12 README CLI docs</td><td>Draft row gains 6 flags; new "Running a real drafting run" subsection (estimate, resume, workers).</td><td>§3 diff</td></tr>
+<tr><td>12</td><td>TASK-04-07 assumptions.yaml re-sourcing</td><td>Grid factor + source → registered PDD (0.84585, high); 5 new registered_pdd entries: climate_zone, waste_composition, auxiliary_fossil_fuel, runoff_wastewater, grid_tdl_factor. Guardrails untouched.</td><td>§4</td></tr>
+<tr><td>13</td><td>TASK-05-09 run_review coherence call</td><td><code>run_review()</code> calls <code>check_document_coherence(self._run.to_dict())</code>, returns findings under <code>document_coherence</code> (failure → warning + []). docx_export keeps the call only as a fallback for run files predating run_review.</td><td>§3 diff; full suite green</td></tr>
+</table>
+
+<h2>2. Test results</h2>
+<pre>$ python -m pytest tests/test_incineration.py tests/test_table_lookup.py tests/test_climate_zone.py -q
+<span class="pass">35 passed in 1.49s</span>
+
+$ python -m pytest tests/test_assembly.py tests/test_document_coherence.py tests/test_run_survivability.py -q
+tests\test_assembly.py ........   [ 40%]
+tests\test_document_coherence.py ....   [ 60%]
+tests\test_run_survivability.py ........   [100%]
+<span class="pass">20 passed in 6.82s</span>
+
+$ python -m pytest -m "not corpus" -q
+<span class="pass">===== 960 passed, 7 deselected, 2 xfailed, 1 warning in 127.79s =====</span>
+(baseline before this change: 915 passed, 7 deselected, 2 xfailed → +45 new tests, 0 failures)
+
+$ ruff check .            → All checks passed!
+$ ruff format --check .   → 150 files already formatted
+$ uv lock --check         → Resolved 57 packages (exit 0)
+$ grep -n "TOLERANCE = " tests/test_registered_pdd_oracle.py
+60:TOLERANCE = 0.20</pre>
+
+<h2>3. Manual calc checks</h2>
+<pre>$ pdd-agent calc --input configs/projects/vietnam_socson_from_sheet.yaml
+Methodology: ACM0022
+Baseline emissions: 602,962.84 tCO2e/year
+Project emissions: 424,081.82 tCO2e/year     (registered 420,336; +0.9%, in 380k–460k band)
+Net emission reductions: 178,881.01 tCO2e/year
+Crediting period total: 3,606,564.48 tCO2e (7 years)   (registered 3,808,082; −5.3%)
+Components: BE_CH4 264,883.78 · BE_EC 338,079.06 · PE_EC 0 · PE_FC 3,886.61 · PE_CH4 0
+  PE_COM_CO2 276,590.67 (Eq.22) · PE_COM_CH4_N2O 23,417.34 (Eq.27) · PE_WW 120,187.20 (Eq.28)
+
+$ pdd-agent calc --input configs/demo/inegol_project_input.yaml
+Baseline emissions: 59,335.71 · Project emissions: 8,645.23 · Net: 50,690.48
+Crediting period total: 893,441.43 tCO2e (7 years)   (temperate-wet defaults, unchanged path)</pre>
+
+<h2>4. Measured deviations from plan predictions (recorded, not fitted — DEC-002)</h2>
+<ul>
+<li>TASK-01-08 predicted <code>text_blocks</code> length 3 (leading empty block + one per heading); the implementation skips the empty leading block and yields 2. Test asserts 2 with a NOTE comment. No implementation change: re-normalization and the FTS index already depend on this shape.</li>
+<li>TASK-02-09 predicted a tropical/default methane factor of 2.0–2.5; year-1 FOD scales as (1−e<sup>−k</sup>) = 0.330/0.169 ≈ <b>1.95</b>. Test asserts <code>pytest.approx(1.95, abs=0.05)</code> with a NOTE comment.</li>
+<li>PHASE-04 test-spec prediction of ~3,632,645 (−4.6%) measures <b>3,606,564 (−5.3%)</b> on this tree — inside TOLERANCE either way; README cites the measured figure.</li>
+</ul>
+
+<h2>5. Commit / push</h2>
+<pre id="commit">Filled in after commit.</pre>
+</body>
+</html>

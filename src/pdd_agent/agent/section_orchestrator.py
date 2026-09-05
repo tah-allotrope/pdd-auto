@@ -1321,7 +1321,9 @@ class SectionOrchestrator:
             # Ensure stored run order is canonical and checkpoint final
             with self._lock:
                 # Reorder run.sections to canonical
-                self._run.sections.sort(key=lambda d: order_index.get((d.section_id, d.sub_section_id), 999))
+                self._run.sections.sort(
+                    key=lambda d: order_index.get((d.section_id, d.sub_section_id), 999)
+                )
             try:
                 self.checkpoint()
             except Exception:
@@ -1474,12 +1476,20 @@ class SectionOrchestrator:
         assumption_burden_path = write_assumption_burden_report(
             self._run.to_dict(), output_path=self._assumption_burden_path
         )
+        try:
+            from pdd_agent.review.document_coherence import check_document_coherence
+
+            document_coherence = check_document_coherence(self._run.to_dict())
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("document_coherence_failed", run_id=self._run_id, error=str(exc))
+            document_coherence = []
 
         return {
             "run_id": self._run_id,
             "review": summarize_review_result(review_result),
             "consistency": summarize_consistency_report(consistency_report),
             "tbd": tbd_report.to_dict(),
+            "document_coherence": document_coherence,
             "review_state_path": str(state_store.save(output_dir=self._runs_dir)),
             "draft_run_path": str(self._run.save(output_dir=self._runs_dir)),
             "assumption_burden_path": str(assumption_burden_path),
